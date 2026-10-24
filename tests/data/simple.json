@@ -1,0 +1,9 @@
+{
+  "format": {"format_name": "matroska,webm", "duration": "120.5", "size": "9000"},
+  "streams": [
+    {"index": 0, "codec_name": "h264", "codec_type": "video", "width": 1920, "height": 1080, "avg_frame_rate": "24000/1001", "bits_per_raw_sample": "8", "disposition": {"default": 1}},
+    {"index": 1, "codec_name": "aac", "codec_type": "audio", "channels": 2, "sample_rate": "48000", "tags": {"language": "eng"}, "disposition": {"default": 1}},
+    {"index": 2, "codec_name": "subrip", "codec_type": "subtitle", "tags": {"language": "eng"}, "disposition": {"forced": 0}}
+  ],
+  "chapters": [{"id": 0, "start_time": "0", "end_time": "60", "tags": {"title": "Part one"}}]
+}

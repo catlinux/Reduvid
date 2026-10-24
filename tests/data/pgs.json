@@ -1,0 +1,8 @@
+{
+  "format": {"format_name": "matroska", "duration": "10", "size": "100"},
+  "streams": [
+    {"index": 0, "codec_name": "hdmv_pgs_subtitle", "codec_type": "subtitle", "disposition": {"default": 0, "forced": 1}},
+    {"index": 1, "codec_name": "subrip", "codec_type": "subtitle"}
+  ],
+  "chapters": []
+}

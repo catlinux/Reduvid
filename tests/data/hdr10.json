@@ -1,0 +1,5 @@
+{
+  "format": {"format_name": "mov,mp4,m4a,3gp,3g2,mj2", "duration": "10", "size": "100"},
+  "streams": [{"index": 0, "codec_name": "hevc", "codec_type": "video", "width": 3840, "height": 2160, "color_transfer": "smpte2084", "pix_fmt": "yuv420p10le"}],
+  "chapters": []
+}
