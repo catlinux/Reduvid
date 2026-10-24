@@ -52,7 +52,7 @@ Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esf
   - Tests con salidas de `-encoders`/`-filters` simuladas.
 - [x] 1.2 `core/probe.py` + tests: `ffprobe -v error -print_format json -show_format -show_streams -show_chapters` → dataclasses `MediaInfo`, `VideoStream` (códec, tamaño, fps, profundidad de bits, HDR/DV), `AudioStream` (códec, canales, idioma, por defecto), `SubtitleStream` (códec, idioma, imagen/texto, por defecto/forzado) y capítulos. Fixtures JSON en `tests/data/`. *(AgentRelay, esfuerzo medio; revisado)*
 - [x] 1.3 `core/profiles.py` + `core/plan.py` + tests: `build_plan(media, options) -> EncodePlan`, una función pura que decide cada pista (copiar/recodificar/descartar), filtros y avisos tipados (`Warning(code, params)`, nunca texto). Aplica las reglas de arriba. *(AgentRelay, esfuerzo alto; revisado, corregido formato con `ruff format`)*
-- [ ] 1.4 `core/command.py` + tests: `EncodePlan` → `list[str]`. Conserva `-map_chapters`, `-map_metadata`, disposiciones y orden de pistas, y adjuntos/portada en MKV. Tests de rutas con espacios, tildes, emojis y nombres que empiezan por `-`.
+- [x] 1.4 `core/command.py` + tests: `EncodePlan` → `list[str]`. Conserva `-map_chapters`, `-map_metadata`, disposiciones y orden de pistas, y adjuntos/portada en MKV. Tests de rutas con espacios, tildes, emojis y nombres que empiezan por `-`. *(AgentRelay, esfuerzo alto; revisado. Adjuntos/portada en MKV pendientes: `MediaInfo` del paso 1.2 no expone streams de adjuntos todavía; retomar si hace falta)*
 - [ ] 1.5 `core/naming.py` + `core/verify.py` + tests: nombre único, finalización sin sobrescribir (en POSIX `os.link` + `unlink`; en Windows `os.rename` falla si existe), verificación de duración y regla de «pesa más».
 - [ ] 1.6 `core/runner.py` + tests: ejecución con progreso (`out_time_us`), velocidad, tiempo restante, pausa, cancelación sin huérfanos y prioridad baja. Errores de FFmpeg → `EncodeError(code, detail)` con códigos traducibles (sin espacio, archivo dañado, códec ausente, permiso denegado, desconocido).
 - [ ] 1.7 `core/queue.py` + `core/report.py` + tests: cola secuencial, carpeta (recursiva opcional, filtro por extensión), progreso total ponderado por duración, eventos para la interfaz e informe de ahorro, errores y avisos.
@@ -91,4 +91,4 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 
 ## Dudas abiertas
 
-- (ninguna)
+- Adjuntos y portada en MKV (mencionado en 1.4): `MediaInfo` (paso 1.2) no expone streams de tipo `attachment`. Falta decidir si se añade a `probe.py` o se trata aparte antes de cerrar la Fase 1.
