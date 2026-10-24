@@ -6,6 +6,17 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.1.0] - 2026-10-24
+
+### Añadido
+
+- Motor de conversión (`reduvid.core`), sin dependencias de Qt: detección de FFmpeg y sus capacidades, sondeo con ffprobe (vídeo, audio, subtítulos, capítulos, adjuntos y portada, HDR10/HLG/Dolby Vision), perfiles de destino (`jellyfin`, `modern`, `archive`) y plan de codificación por pista con avisos tipados, construcción de los argumentos de FFmpeg, nombrado de salida sin colisiones ni sobrescritura, verificación de duración y tamaño tras convertir, y ejecución controlada con progreso, pausa, cancelación sin huérfanos y prioridad baja.
+- Cola de conversión secuencial con progreso ponderado por duración e informe final de ahorro.
+- Línea de órdenes: `reduvid probe` (resumen legible de un vídeo) y `reduvid convert` (conversión con `--target`, `--quality`, `--container`, `--max-height`, `--output-dir`, `--recursive`, `--threads`, `--replace-original` y `--dry-run`), con lectura de la ruta de FFmpeg desde un archivo de configuración si no está en el `PATH`.
+- Tests de integración de extremo a extremo con FFmpeg real (vídeos generados con `lavfi`), además de la suite unitaria de cada módulo del motor.
+- Guía de uso de la línea de órdenes en castellano e inglés (`docs/{es,en}/cli.md`).
+- Capturas de las maquetas de diseño en el README.
+
 ## [0.0.1] - 2026-10-24
 
 ### Añadido

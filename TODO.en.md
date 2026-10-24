@@ -6,13 +6,11 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 
 ## High priority
 
-- Choose the main design direction from the mockups (`docs/design/mockups.html`).
 - Decide how external code contributions are licensed before accepting the first one: the license only covers material owned by Catlinux.
-- 0.1.0, engine and CLI: FFmpeg detection, ffprobe parsing, H.264/H.265/Jellyfin profiles, keeping subtitles, chapters and audio, queue, progress, pause and cancel, verification and tests.
+- 0.2.0, interface: Wizard and Advanced modes, contextual explanations, ca/es/en languages and accessibility.
 
 ## Medium priority
 
-- 0.2.0, interface: Wizard and Advanced modes, contextual explanations, ca/es/en languages and accessibility.
 - 0.3.0, helpers: sample test, estimates, final report, saved profiles and warnings for HDR, 10-bit video and image subtitles.
 - 0.4.0 → 1.0.0: pipx, Windows installer, AppImage, screenshots and first release.
 - When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.

@@ -6,6 +6,17 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-24
+
+### Added
+
+- Conversion engine (`reduvid.core`), with no Qt dependencies: FFmpeg detection and capability inspection, ffprobe-based media probing (video, audio, subtitles, chapters, attachments and cover art, HDR10/HLG/Dolby Vision), destination profiles (`jellyfin`, `modern`, `archive`) and a per-track encoding plan with typed warnings, FFmpeg argument construction, collision-free output naming without overwriting, duration/size verification after conversion, and controlled execution with progress, pause, cancellation without orphaned files, and low priority.
+- Sequential conversion queue with duration-weighted progress and a final savings report.
+- Command line: `reduvid probe` (readable summary of a video) and `reduvid convert` (conversion with `--target`, `--quality`, `--container`, `--max-height`, `--output-dir`, `--recursive`, `--threads`, `--replace-original` and `--dry-run`), reading the FFmpeg path from a configuration file when it isn't on the `PATH`.
+- End-to-end integration tests against real FFmpeg (videos generated with `lavfi`), in addition to the unit test suite for each engine module.
+- Command-line usage guide in Spanish and English (`docs/{es,en}/cli.md`).
+- Design mockup screenshots in the README.
+
 ## [0.0.1] - 2026-10-24
 
 ### Added

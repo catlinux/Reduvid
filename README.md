@@ -15,7 +15,7 @@ Reduvid (de *reducir vídeo*) es una aplicación de escritorio para Linux y Wind
 
 ## Estado del proyecto
 
-En desarrollo, **todavía no se puede usar para convertir vídeos**. La versión actual (0.0.1) solo contiene la estructura del proyecto. Plan:
+En desarrollo. La versión actual (0.1.0) ya convierte vídeos desde la línea de órdenes; la interfaz gráfica llega en la 0.2.0. Plan:
 
 | Versión | Contenido |
 |---|---|
@@ -60,10 +60,12 @@ Habrá paquetes con `pipx`, un instalador para Windows y una AppImage para Linux
 ## Uso rápido
 
 ```bash
-reduvid --version
+reduvid probe video.mkv              # Ver qué contiene un vídeo
+reduvid convert video.mkv            # Convertirlo con el perfil Jellyfin por defecto
+reduvid convert carpeta/ --recursive # Convertir una carpeta entera
 ```
 
-Por ahora es lo único disponible. La conversión desde la línea de órdenes llega en la 0.1.0.
+Detalle completo de órdenes, opciones y códigos de salida en la [guía de la línea de órdenes](docs/es/cli.md).
 
 ## ¿H.264 o H.265 para Jellyfin?
 
