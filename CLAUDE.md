@@ -18,6 +18,7 @@ Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.age
 - **Licencia:** WNCL-CU-1.0 (`LicenseRef-WNCL-CU-1.0`) solo para el material propio; los terceros conservan la suya (ver `THIRD_PARTY_NOTICES.md`). Cambios de licencia, solo con la Skill `licencias` y autorización.
 - **Lenguaje:** Python ≥ 3.11 (CI con 3.11 y 3.13). Build con hatchling. La versión vive **solo** en `src/reduvid/__init__.py` (`__version__`).
 - **Interfaz:** PySide6-Essentials (solo QtCore/QtGui/QtWidgets, sin Addons, para no pesar) con estilo propio por QSS generado desde tokens de tema. Se permite cambiar entre varios temas.
+- **Arranque:** es una aplicación gráfica: `reduvid` abre la interfaz; la CLI es `reduvid-cli`, pensada para servidores Linux (desde la Fase 2).
 - **Dependencias de ejecución:** PySide6-Essentials (LGPL-3), platformdirs (MIT), Send2Trash (BSD-3), psutil (BSD-3). Añadir otra requiere preguntar.
 - **Traducción:** gettext (dominio `reduvid`, `.po` en `src/reduvid/locale/`), compartido por la CLI y la interfaz; Babel solo en desarrollo. Idiomas: ca, es, en.
 - **FFmpeg:** nunca dentro del repo ni de los paquetes. Se detecta en la ruta configurada y luego en el PATH.

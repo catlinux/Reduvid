@@ -66,14 +66,123 @@ Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esf
 
 ## Fase 2: interfaz y asistente (0.2.0)
 
-Se detalla con más precisión al llegar (lo hará Opus, a partir de las maquetas de `docs/design/mockups.html`). Contenido:
+En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su entrada en `## [Sin publicar]` de `CHANGELOG.md` y `CHANGELOG.en.md`; la versión sube a 0.2.0 solo en el 2.13, como se hizo con la 0.1.0. Maquetas de referencia: `docs/design/mockups.html` (pásala en `references` a los pasos de interfaz).
 
-- Sistema de **tres temas** por tokens → QSS, con claro y oscuro cada uno: **Plegat** (por defecto), **Riso** y **Cinta**. Selector de tema en Preferencias; persistido en la configuración del usuario.
-- Tipografías OFL incluidas en `src/reduvid/resources/fonts/` con su licencia (Bricolage Grotesque e Instrument Sans para Plegat; Archivo y Atkinson Hyperlegible para Riso; Barlow/Barlow Condensed y JetBrains Mono para Cinta).
-- Modos Asistente y Avanzado: elegir vídeos, destino, calidad, qué conservar, salida y resumen con semáforo Jellyfin.
-- «¿Qué es esto?» en cada opción, errores traducidos con «ver detalles técnicos», pantalla de FFmpeg ausente e i18n ca/es/en.
-- Accesibilidad: teclado, contraste y escalado.
-- Capturas en `docs/` de cada tema, en claro y oscuro.
+### Decisiones de la Fase 2
+
+- **Arranque** (usuario): Reduvid es una aplicación gráfica. `reduvid` abre la interfaz (`[project.gui-scripts]`, sin consola en Windows) y `python -m reduvid` también. La CLI pasa a ser `reduvid-cli` (`[project.scripts]`), pensada para servidores Linux. Instalar sin Qt en servidores es cosa de la Fase 4 (anotado en `TODO.md`).
+- **Qué conservar** (usuario): se elige **por idioma para toda la cola**, no pista a pista. `PlanOptions` gana `audio_languages: frozenset[str] | None = None` y `subtitle_languages: frozenset[str] | None = None` (`None` = todo). El idioma ausente se trata como `"und"`. Si en un vídeo el filtro no deja ningún audio, se conservan todos y se avisa con `Warning("audio_filter_kept_all")`. Los subtítulos sí pueden quedar en cero.
+- **Fuentes** (usuario): se incluyen las seis familias OFL en `src/reduvid/resources/fonts/<familia>/` con su `OFL.txt`.
+- **Textos**: los `msgid` van en inglés y hay catálogos `ca` y `es`; `en` usa el `msgid` tal cual. Los `.mo` no se suben (ya están en `.gitignore`): los compila un hook de hatch al construir o instalar (también en `pip install -e`), con Babel como dependencia del hook.
+- **Idioma de la interfaz**: el de la configuración; si no hay, el del sistema (`LANGUAGE`, `LC_ALL`, `LC_MESSAGES`, `LANG` y `locale.getlocale()`); si no es ca/es/en, inglés.
+- **Modo de color**: Sistema (por defecto, `QStyleHints.colorScheme()`), Claro u Oscuro. Hay una preferencia «Reducir animaciones», porque Qt no lee la del sistema.
+- **Paso «Calidad» sin tamaños**: los tamaños de la maqueta salen de la muestra de 30 s, que es de la Fase 3. En la 0.2.0 las tarjetas no muestran tamaño.
+- **HDR sin `tonemap`** (aviso bloqueante): en el Resumen, un diálogo por vídeo con «Saltar este vídeo» (por defecto) o «Convertir igualmente (los colores se verán apagados)». Los vídeos saltados no entran en la cola. La CLI no cambia.
+- **Semáforo Jellyfin**: se calcula en el motor (`core/compat.py`), no en la interfaz. Verde: se reproduce directo. Ámbar: algo hará que Jellyfin convierta (subtítulos de imagen que quemará, HDR o 10 bits conservados, perfil `modern`/`archive`). Rojo: hay un aviso bloqueante.
+- **Tests de interfaz**: sin `pytest-qt` (no se añaden dependencias). Se usa `QT_QPA_PLATFORM=offscreen` y una `QApplication` de sesión en `tests/gui/conftest.py`. Si el CI de Ubuntu falla por librerías de Qt, se añaden con apt en `ci.yml` (`libegl1`, `libxkbcommon0`, `libfontconfig1`; compruébalo antes).
+- **mypy**: estricto en todo `src/reduvid`. Si los tipos de PySide6 lo impiden, se permite un override solo para `reduvid.gui.*`, con un comentario que explique el motivo.
+
+### Pasos
+
+- [ ] 2.1 **Motor: configuración, procesado compartido y errores con código.** *AgentRelay, esfuerzo alto.* Versión: entrada «Añadido/Cambiado» en Sin publicar.
+  - `core/config.py`:
+    - `Config` (dataclass inmutable) con: `ffmpeg_path: Path | None`, `language: Literal["ca","es","en"] | None`, `theme: Literal["plegat","riso","cinta"] = "plegat"`, `color_mode: Literal["system","light","dark"] = "system"`, `ui_mode: Literal["wizard","advanced"] = "wizard"`, `reduce_motion: bool = False`, `output_dir: Path | None` y los valores por defecto de destino, calidad y contenedor.
+    - `config_path()` usa la misma llamada que hoy usa `cli.py` (`user_config_dir("reduvid")`).
+    - `load_config(path=None) -> tuple[Config, tuple[str, ...]]`: la tupla lista las claves inválidas. Ignora las claves desconocidas y sigue aceptando `ffmpeg_path` en la raíz y `[ffmpeg] path`.
+    - `save_config(config, path=None)`: escritor TOML mínimo propio (cadenas escapadas, booleanos, rutas como cadena). Escritura atómica a un temporal y luego `os.replace`; sobrescribir la configuración sí está permitido.
+  - `core/pipeline.py`: lleva aquí el cierre `process` de `cli.py` como clase `FileProcessor` con `__call__`, `pause()`, `resume()` y `cancel()`; `cancel()` cancela el `EncodeHandle` en curso. Los `RuntimeError` actuales pasan a `PipelineError(code, detail)` con los códigos `cancelled` y `verification_failed`; este lleva el motivo de la verificación en `detail`.
+  - `core/queue.py`:
+    - `cancel()` además llama a `processor.cancel()` si existe.
+    - `FileReport` gana `error_code: str | None`, que toma el `code` de `EncodeError`/`PipelineError`, `probe_failed` si falla ffprobe o `unknown`. `reason` sigue llevando el detalle técnico.
+  - `cli.py` usa `core.config` y `core.pipeline` sin cambiar su comportamiento ni su salida.
+  - Tests: ida y vuelta de configuración (rutas con espacios, tildes y comillas), claves inválidas, cancelación que llega al handle (con fakes) y `error_code` en los informes. Los tests existentes siguen en verde.
+- [ ] 2.2 **Traducción con gettext (motor y CLI).** *AgentRelay, esfuerzo alto.*
+  - `reduvid/i18n.py`, sin Qt: `setup_language(lang: str | None) -> str` (devuelve el idioma efectivo, según la regla de arriba), `_()` y `ngettext()`; el dominio es `reduvid` y la carpeta `src/reduvid/locale/<lang>/LC_MESSAGES/`.
+  - `reduvid/messages.py`, sin Qt: `warning_text(Warning) -> str` y `error_text(code) -> str`, con una frase clara sin jerga para cada código. Cubre todos los `Warning(...)` de `core/plan.py`, todos los `EncodeErrorCode`, `PipelineError` y `probe_failed`, y `audio_filter_kept_all` del paso 2.3.
+  - Hook de hatch (`hatch_build.py`, con `[tool.hatch.build.hooks.custom]` y `dependencies = ["babel"]`): compila los `.po` a `.mo` y los incluye como `artifacts`.
+  - `scripts/compile_translations.py`, para desarrollo, y la configuración de extracción de Babel (`babel.cfg`, o `[tool.babel]` si lo admite; compruébalo).
+  - `src/reduvid/locale/reduvid.pot`, con `ca` y `es` traducidos para todo lo que exista hasta aquí.
+  - `cli.py`: todos los textos pasan por `_()` y la orden acepta `--lang`.
+  - Tests: cada código de `messages` tiene texto en ca y es (no vacío y distinto del `msgid`); un test comprueba que el `.pot` está al día (re-extracción y comparación de `msgid`, sin fechas).
+  - Docs: `CONTRIBUTING(.en).md`, cómo actualizar las traducciones.
+- [ ] 2.3 **Motor: filtro por idioma y semáforo Jellyfin.** *AgentRelay, esfuerzo alto.*
+  - `PlanOptions.audio_languages`/`subtitle_languages`, con la regla de arriba, en `core/plan.py`.
+  - `core/compat.py`: `jellyfin_status(plan) -> CompatStatus(level: Literal["direct","partial","blocked"], reasons: tuple[Warning, ...])`.
+  - CLI: `--keep-audio ca,es` y `--keep-subs ca,und`, documentados en `docs/{es,en}/cli.md`.
+  - Tests de plan con varios idiomas, `und`, el caso de cero audios y los tres niveles del semáforo.
+- [ ] 2.4 **Tipografías.** *Sesión (Sonnet, esfuerzo medio), con la Skill `licencias` obligatoria.*
+  - Se descargan del repositorio oficial `google/fonts` (`ofl/<familia>/`) las seis familias: Bricolage Grotesque, Instrument Sans, Archivo, Atkinson Hyperlegible, Barlow + Barlow Condensed y JetBrains Mono. Se prefieren las variables; se comprueban la ruta y el nombre exactos al descargar, sin suponerlos.
+  - Cada familia lleva su `OFL.txt` en `src/reduvid/resources/fonts/<familia>/` y se incluye en el wheel.
+  - Se actualizan `THIRD_PARTY_NOTICES.md` (las dos secciones), el `REUSE.toml` si existe y la frase «El repositorio no incluye material de terceros».
+  - Terminado cuando `python -c` carga cada archivo con `QFontDatabase.addApplicationFont` sin devolver -1.
+- [ ] 2.5 **Temas: tokens → QSS.** *AgentRelay, esfuerzo alto; con `docs/design/mockups.html` en references.*
+  - `gui/theme/tokens.py`, Python puro: `ThemeTokens` (bg, surface, text, muted, line, accent, accent2, accent3?, fold?, on_accent, soft, warn_bg, warn_fg, track, radius, bordes, familias display/body/mono y pesos). Valores **exactos** de la maqueta para plegat/riso/cinta en claro y oscuro: `THEMES[(name, mode)]`.
+  - `gui/theme/qss.py`: `build_qss(tokens) -> str`. QSS no tiene variables: se sustituyen los valores. Los degradados se escriben con `qlineargradient` y los selectores usan `objectName` y propiedades dinámicas (`[role="primary"]`, `[checked="true"]`…). Lo que QSS no sabe hacer (sombra desplazada de Riso, esquina doblada de Plegat, tramado) queda para el 2.11.
+  - `gui/theme/fonts.py`: registra las fuentes del 2.4 una sola vez y devuelve las familias reales.
+  - `gui/theme/manager.py`: aplica un tema y un modo a la `QApplication` y reacciona al cambio de esquema del sistema.
+  - Tests:
+    - Contraste WCAG ≥ 4,5 en text/bg, text/surface, muted/bg y on_accent/accent, en los seis juegos. **Si alguno no pasa, para y anótalo en Dudas: no cambies colores**, que es una decisión de diseño.
+    - `build_qss` no deja ningún `{` sin sustituir.
+- [ ] 2.6 **Esqueleto de la aplicación.** *AgentRelay, esfuerzo xhigh; maquetas en references.*
+  - `gui/app.py` (`main()`) y entradas de `pyproject`: `reduvid` (gui-script) y `reduvid-cli`. `__main__.py` abre la interfaz.
+  - Se actualizan README(.en), `docs/{es,en}/cli.md` y los ejemplos con `reduvid-cli`.
+  - `gui/main_window.py`, con la estructura de la maqueta:
+    - Barra superior: marca y conmutador Asistente/Avanzado.
+    - Debajo, tres columnas: lista de pasos (180 px), contenido y cola (300 px).
+    - Con poca anchura, se apilan como en la maqueta.
+  - `gui/preferences.py`: tema, modo de color, idioma (se aplica al reiniciar y la interfaz lo avisa), reducir animaciones y ruta de FFmpeg con «Examinar» y «Comprobar». Todo se guarda con `core.config`.
+  - `gui/ffmpeg_missing.py`: pantalla clara cuando no hay FFmpeg, con cómo instalarlo en Windows (`winget install Gyan.FFmpeg`) y en Linux (apt/dnf), y botones «Elegir ffmpeg…» y «Volver a buscar».
+  - Tests offscreen: la ventana se crea con cada tema y modo, y la pantalla de FFmpeg ausente aparece si `detect_ffmpeg` devuelve `None`.
+- [ ] 2.7 **Trabajo en segundo plano y panel de cola.** *AgentRelay, esfuerzo xhigh.*
+  - `gui/workers.py`:
+    - `ProbeWorker` sondea los vídeos al añadirlos.
+    - `QueueWorker` ejecuta `ConversionQueue` + `core.pipeline.FileProcessor` en un `QThread`.
+    - Los callbacks del motor llegan a la interfaz solo como señales; nunca se toca un widget desde otro hilo.
+  - `gui/queue_panel.py`:
+    - Vídeo actual con tamaño, porcentaje y tiempo restante, barra, y botones Pausar/Reanudar y Cancelar.
+    - Lista con fichas de aviso por vídeo (texto de `messages.warning_text`) y total estimado.
+    - Mensajes de estado como los de la maqueta («En pausa…», «Cancelado. No queda ningún archivo a medias.», «Listo y verificado…»).
+  - `gui/error_view.py`: muestra el error traducido con `error_text(error_code)` y un desplegable «Ver detalles técnicos» con `reason`, que se puede copiar.
+  - Al cerrar con una conversión en marcha, se pregunta y se cancela limpiamente.
+  - Tests offscreen con un `FileProcessor` falso: progreso, pausa, cancelación y error.
+- [ ] 2.8 **Asistente, pasos 1-3 y componentes.** *AgentRelay, esfuerzo alto; maquetas en references.*
+  - Componentes en `gui/widgets/`:
+    - `OptionCard`: tarjeta seleccionable con nombre, etiqueta y descripción; accesible como botón de opción.
+    - `WhatIsThis`: desplegable «¿Qué es esto?».
+    - `StepList`: hecho / actual / pendiente.
+    - `WizardNav`: Atrás / Siguiente: <paso>.
+  - Paso 1, Vídeos: añadir archivos o carpeta (con casilla «incluir subcarpetas»), arrastrar y soltar, quitar, y estado del sondeo.
+  - Paso 2, ¿Dónde los vas a ver?: Jellyfin (tele, móvil, navegador), Aparatos modernos (`modern`), Guardar para archivo (`archive`) y «No lo sé», que usa `jellyfin`. Cada opción lleva su explicación.
+  - Paso 3, Calidad: las tres tarjetas con los textos de la maqueta, la recomendación según el destino y «¿Qué es esto?» con la explicación del CRF.
+  - Tests offscreen: navegación, y el botón Siguiente desactivado sin vídeos.
+- [ ] 2.9 **Asistente, pasos 4-6 y arranque.** *AgentRelay, esfuerzo alto.*
+  - Paso 4, Qué conservar: casillas de idiomas de audio y de subtítulos encontrados en la cola, con su nombre legible; `und` se muestra como «Sin idioma indicado». Por defecto, todo marcado.
+  - Paso 5, Destino:
+    - Misma carpeta u otra, y MKV/MP4 con explicación.
+    - «Reemplazar el original» desactivado por defecto y explicado («va a la papelera solo si la copia se verifica»).
+    - Opción de reducir a 1080p si hay 4K y el destino es jellyfin.
+  - Paso 6, Resumen: lista por vídeo con el semáforo de `compat.jellyfin_status`, los avisos traducidos, el diálogo de HDR bloqueante (ver decisiones) y el botón «Empezar», que lanza el `QueueWorker` y muestra el informe final (ahorro total, errores con detalle).
+  - Tests offscreen del cálculo de idiomas, del diálogo bloqueante y de la construcción de `PlanOptions`.
+- [ ] 2.10 **Modo Avanzado.** *AgentRelay, esfuerzo alto.*
+  - Una sola página con todas las opciones de la CLI (destino, calidad, contenedor, altura máxima, carpeta de salida, subcarpetas, hilos, reemplazar original e idiomas) y la misma cola y el mismo resumen con semáforo.
+  - El cambio de modo conserva la selección y el modo elegido se guarda en `ui_mode`.
+- [ ] 2.11 **Motivos pintados de cada tema.** *AgentRelay, esfuerzo xhigh; revisión visual de Opus con capturas.* En `gui/widgets/motifs.py` y `gui/widgets/progress.py`:
+  - **Plegat**: esquina doblada en la tarjeta elegida, barra en acordeón y gato de origami que se pliega con el progreso.
+  - **Riso**: sombra desplazada en tarjetas y botones, pista tramada, gato que se acurruca y cifra que se estrecha con `QFont.setVariableAxis("wdth")` (si no funciona, cifra fija).
+  - **Cinta**: franja de tres colores, bobinas que se vacían y se llenan, y contador mecánico de MB ahorrados.
+  - Con «Reducir animaciones» se salta directamente al estado final.
+  - Todo se pinta desde los tokens, sin colores fijos en el código.
+- [ ] 2.12 **Accesibilidad y traducciones completas.** *AgentRelay, esfuerzo alto; la sesión revisa los textos en catalán y castellano.*
+  - Orden de tabulación lógico, atajos (`Alt+` en botones), foco visible en el QSS de los tres temas, y `accessibleName`/`accessibleDescription` en los controles personalizados.
+  - Nada se corta con escalado de 150 % y 200 % (`QT_SCALE_FACTOR`).
+  - Re-extraer el `.pot` y completar `ca` y `es`.
+  - Test que recorre la ventana y falla si un control interactivo no tiene nombre accesible.
+- [ ] 2.13 **Capturas, documentación y 0.2.0.** *Sesión (Sonnet, esfuerzo medio).*
+  - `scripts/screenshots.py`: genera con offscreen y datos de ejemplo las capturas de los tres temas en claro y oscuro en `docs/screenshots/`.
+  - README(.en): capturas, cómo abrir la interfaz y enlace a `docs/{es,en}/gui.md` (uso del asistente y del modo Avanzado).
+  - Versión 0.2.0 en `__init__.py` y CHANGELOG(.en): se pasa Sin publicar a `[0.2.0]`. Es menor: añade la interfaz, y el cambio de `reduvid` a `reduvid-cli` antes de 1.0.0 cuenta como menor.
+  - Se quitan las tareas hechas de TODO(.en).
+  - Terminado cuando pasan `pytest`, `ruff`, `mypy`, `pre-commit` y `check_doc_sync`, y la aplicación se abre y convierte un vídeo de prueba de verdad.
 
 ## Fase 3: ayudas (0.3.0)
 

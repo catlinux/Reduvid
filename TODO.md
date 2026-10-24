@@ -19,7 +19,7 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 
 - AV1 (libsvtav1): la arquitectura de perfiles ya lo permite; falta perfil, pruebas y explicación.
 - Aceleración por hardware (NVENC, QSV, VAAPI) pulida: en 0.1.0 solo se detecta e informa.
-- Las otras direcciones de diseño como temas seleccionables.
+- Instalación sin Qt para servidores Linux (solo `reduvid-cli`): decidir en la Fase 4 cómo separar la dependencia de PySide6.
 - Perfil de destino para la plataforma de reproducción propia del autor, cuando exista.
 - OCR de subtítulos de imagen a texto (necesitaría Tesseract como herramienta externa).
 - Paquetes .deb y Flatpak.
