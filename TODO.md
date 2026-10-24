@@ -1,0 +1,36 @@
+# Pendiente
+
+**Castellano** · [English](TODO.en.md)
+
+El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](.agents/plans/reduvid/reduvid.PLAN.md).
+
+## Prioridad alta
+
+- Elegir la dirección de diseño principal a partir de las maquetas (`docs/design/mockups.html`).
+- Definir cómo se licencian las contribuciones externas de código antes de aceptar la primera: la licencia solo cubre material de Catlinux.
+- 0.1.0, motor y CLI: detección de FFmpeg, lectura con ffprobe, perfiles H.264/H.265/Jellyfin, conservación de subtítulos, capítulos y audio, cola, progreso, pausa y cancelación, verificación y tests.
+
+## Prioridad media
+
+- 0.2.0, interfaz: modos Asistente y Avanzado, explicaciones contextuales, idiomas ca/es/en y accesibilidad.
+- 0.3.0, ayudas: prueba de muestra, estimaciones, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen.
+- 0.4.0 → 1.0.0: pipx, instalador de Windows, AppImage, capturas y primera release.
+- Al crear el repositorio en GitHub: descripción «About», topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) y avisos privados de seguridad activados.
+
+## Prioridad baja / más adelante
+
+- AV1 (libsvtav1): la arquitectura de perfiles ya lo permite; falta perfil, pruebas y explicación.
+- Aceleración por hardware (NVENC, QSV, VAAPI) pulida: en 0.1.0 solo se detecta e informa.
+- Las otras direcciones de diseño como temas seleccionables.
+- Perfil de destino para la plataforma de reproducción propia del autor, cuando exista.
+- OCR de subtítulos de imagen a texto (necesitaría Tesseract como herramienta externa).
+- Paquetes .deb y Flatpak.
+- macOS: no es objetivo ahora; no romperlo sin motivo.
+- Más idiomas de la interfaz.
+
+## Descartado
+
+- **Incluir FFmpeg en el repositorio o en los paquetes:** por licencia (GPL de libx264/libx265) y por tamaño. Se usa el del sistema.
+- **Tkinter:** no permite el diseño propio que busca el proyecto.
+- **PySide6 completo (con Addons):** pesa mucho más y no hace falta; basta PySide6-Essentials.
+- **Telemetría o comprobación de actualizaciones en línea:** el programa no se conecta a la red.

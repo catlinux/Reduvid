@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maquetas de Reduvid</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;700&family=Barlow:wght@400;600&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Página: presentación neutra de tres maquetas apiladas; cada maqueta define sus propios tokens. */
+:root {
+  --bg: #F1F2F1; --fg: #1B1D21; --muted: #5C6168; --line: #D6D9DC; --panel: #FAFAF9; --chip: #E4E6E8;
+  --f-chrome: "IBM Plex Sans", system-ui, sans-serif; --f-chrome-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121315; --fg: #E7E8EA; --muted: #9AA0A8; --line: #2B2E33; --panel: #191B1E; --chip: #24272B; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #121315; --fg: #E7E8EA; --muted: #9AA0A8; --line: #2B2E33; --panel: #191B1E; --chip: #24272B; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--f-chrome);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.wrap { max-width: 1120px; margin: 0 auto }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; padding-block: 12px }
+header.top h1 { font-size: 1.05rem; margin: 0; font-weight: 600 }
+header.top h1 span { color: var(--muted); font-weight: 400 }
+.jump { display: flex; gap: 6px; flex-wrap: wrap }
+.jump a, .seg button { font: 500 .82rem var(--f-chrome-mono); color: var(--fg); text-decoration: none; padding: 5px 10px; border: 1px solid var(--line); background: var(--panel); border-radius: 2px; cursor: pointer }
+.seg { display: inline-flex }
+.seg button + button { border-left: 0 }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg) }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible + .a-opt-in { outline: 3px solid #4C8DFF; outline-offset: 2px }
+.intro { max-width: 68ch; padding-block: 28px 8px; color: var(--muted) }
+.intro p { margin: 0 0 8px }
+.intro strong { color: var(--fg) }
+section.dir { padding-block: 40px 8px; scroll-margin-top: 72px }
+.dir-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 14px }
+.dir-head h2 { margin: 0; font-size: 1.6rem; font-weight: 600; letter-spacing: -.01em }
+.dir-head p { margin: 0; color: var(--muted) }
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 28px; margin-top: 18px; padding: 18px 0; border-top: 1px solid var(--line) }
+.spec > div { min-width: 0 }
+.spec h4 { margin: 0 0 6px; font: 500 .72rem var(--f-chrome-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.spec p, .spec ul { margin: 0; font-size: .92rem }
+.spec ul { padding-left: 18px }
+.sw { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px }
+.sw span { display: inline-flex; align-items: center; gap: 6px; font: .74rem var(--f-chrome-mono); color: var(--muted) }
+.sw i { width: 18px; height: 18px; border: 1px solid var(--line); display: inline-block }
+.decide { max-width: 72ch; border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px }
+.decide h2 { font-size: 1.3rem; margin: 0 0 10px; font-weight: 600 }
+.decide ol { padding-left: 20px; margin: 0 }
+.decide li { margin-bottom: 8px }
+.note { font: .8rem var(--f-chrome-mono); color: var(--muted) }
+
+/* ---------- Ventana de la app (estructura común) ---------- */
+.app { --a-r: 0px; background: var(--a-bg); color: var(--a-text); font-family: var(--a-body); border: 1px solid var(--a-line); overflow: hidden; font-size: 15px }
+.a-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-bottom: var(--a-rule) }
+.a-brand { display: flex; align-items: center; gap: 10px; font: var(--a-brand-font); letter-spacing: var(--a-brand-ls, 0) }
+.a-brand svg { width: 26px; height: 26px }
+.a-modes { display: inline-flex; border: var(--a-rule); border-radius: var(--a-r) }
+.a-modes button { font: 600 .82rem var(--a-body); padding: 5px 12px; background: transparent; color: var(--a-muted); border: 0; cursor: pointer }
+.a-modes button[aria-pressed="true"] { background: var(--a-text); color: var(--a-bg) }
+.a-body { display: grid; grid-template-columns: 180px minmax(0, 1fr) 300px }
+.a-steps { padding: 20px 14px; border-right: var(--a-rule) }
+.a-steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; counter-reset: s }
+.a-steps li { counter-increment: s; display: flex; gap: 10px; align-items: center; padding: 7px 8px; color: var(--a-muted); font-size: .9rem; border-radius: var(--a-r) }
+.a-steps li::before { content: counter(s); font: 600 .78rem var(--a-mono); width: 22px; height: 22px; display: grid; place-items: center; border: 1.5px solid currentColor; border-radius: var(--a-step-r, 0) }
+.a-steps li.done { color: var(--a-text) }
+.a-steps li.done::before { content: "✓"; background: var(--a-text); color: var(--a-bg); border-color: var(--a-text) }
+.a-steps li.cur { color: var(--a-text); background: var(--a-soft); font-weight: 700 }
+.a-steps li.cur::before { background: var(--a-accent); color: var(--a-on-accent); border-color: var(--a-accent) }
+.a-main { padding: 26px 28px; min-width: 0 }
+.a-kicker { margin: 0 0 6px; font: 600 .74rem var(--a-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--a-muted) }
+.a-h { margin: 0 0 8px; font: var(--a-h-font); letter-spacing: var(--a-h-ls, -.01em); text-wrap: balance; text-transform: var(--a-h-tt, none) }
+.a-lead { margin: 0 0 18px; color: var(--a-muted); max-width: 56ch }
+.a-opts { display: grid; gap: 10px }
+.a-opt { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 2px 12px; align-items: start; padding: 14px 16px; border: var(--a-rule-soft); background: var(--a-surface); border-radius: var(--a-r); cursor: pointer }
+.a-opt input { position: absolute; opacity: 0; pointer-events: none }
+.a-opt-in { grid-row: span 2; width: 18px; height: 18px; margin-top: 3px; border: 2px solid var(--a-text); border-radius: 50% }
+.a-opt-name { font-weight: 700; font-size: 1.02rem }
+.a-opt-tag { font: 600 .68rem var(--a-mono); text-transform: uppercase; letter-spacing: .08em; margin-left: 8px; padding: 2px 6px; background: var(--a-soft); color: var(--a-text); border-radius: var(--a-r) }
+.a-opt-desc { grid-column: 2; color: var(--a-muted); font-size: .9rem }
+.a-opt-size { grid-row: 1 / span 2; grid-column: 3; text-align: right; font: 700 1.05rem var(--a-mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+.a-opt-size small { display: block; font-weight: 400; font-size: .78rem; color: var(--a-muted) }
+.a-opt input:checked ~ .a-opt-in { background: var(--a-accent); border-color: var(--a-text); box-shadow: inset 0 0 0 3px var(--a-surface) }
+.a-rec { margin: 16px 0 0; padding: 12px 14px; background: var(--a-soft); border-radius: var(--a-r); font-size: .92rem; max-width: 62ch }
+.a-what { margin-top: 12px; font-size: .92rem; max-width: 62ch }
+.a-what summary { cursor: pointer; font-weight: 700; color: var(--a-link, var(--a-text)); text-decoration: underline; text-underline-offset: 3px; width: fit-content }
+.a-what p { margin: 8px 0 0; color: var(--a-muted) }
+.a-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; flex-wrap: wrap }
+.a-btn, .a-btn-ghost, .a-qbtn { font: 700 .92rem var(--a-body); padding: 10px 18px; border-radius: var(--a-r); cursor: pointer }
+.a-btn { background: var(--a-text); color: var(--a-bg); border: 2px solid var(--a-text) }
+.a-btn-ghost { background: transparent; color: var(--a-text); border: 2px solid var(--a-text) }
+.a-queue { border-left: var(--a-rule); padding: 20px 18px; display: grid; gap: 14px; align-content: start; background: var(--a-queue-bg, transparent); min-width: 0 }
+.a-queue h4 { margin: 0; font: 600 .74rem var(--a-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--a-muted) }
+.a-motif { display: grid; place-items: center; height: 140px; background: var(--a-surface); border: var(--a-rule-soft); border-radius: var(--a-r); overflow: hidden }
+.a-motif svg { width: 100%; height: 100% }
+.a-cur-name { font-weight: 700; overflow-wrap: anywhere }
+.a-sizeline { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 4px }
+.a-size { font: var(--a-size-font); font-variant-numeric: tabular-nums; line-height: 1 }
+.a-meta { color: var(--a-muted); font-size: .84rem; font-variant-numeric: tabular-nums; text-align: right }
+.a-bar { height: 14px; margin-top: 10px; background: var(--a-track); border-radius: var(--a-r); overflow: hidden; position: relative }
+.a-fill { height: 100%; width: 38%; background: var(--a-fillbg) }
+.a-ctrl { display: flex; gap: 8px; flex-wrap: wrap }
+.a-qbtn { font-size: .82rem; padding: 6px 12px; background: var(--a-surface); color: var(--a-text); border: var(--a-rule-soft) }
+.a-qbtn.go { background: var(--a-accent); color: var(--a-on-accent); border-color: var(--a-accent) }
+.a-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px }
+.a-items li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; font-size: .88rem; padding-top: 8px; border-top: var(--a-rule-soft) }
+.a-items .n { overflow-wrap: anywhere }
+.a-items .s { font-family: var(--a-mono); font-variant-numeric: tabular-nums; color: var(--a-muted) }
+.a-chip { grid-column: 1 / -1; justify-self: start; font: 600 .72rem var(--a-mono); padding: 2px 7px; border-radius: var(--a-r); background: var(--a-warn-bg); color: var(--a-warn-fg) }
+.a-total { font-size: .86rem; color: var(--a-muted); border-top: var(--a-rule); padding-top: 10px; font-variant-numeric: tabular-nums }
+.a-total b { color: var(--a-text) }
+.a-msg { font-size: .84rem; color: var(--a-muted); min-height: 1.3em; margin: 0 }
+
+@media (max-width: 980px) {
+  .a-body { grid-template-columns: minmax(0, 1fr) }
+  .a-steps { border-right: 0; border-bottom: var(--a-rule); padding: 12px 14px; overflow-x: auto }
+  .a-steps ol { grid-auto-flow: column; grid-auto-columns: max-content }
+  .a-queue { border-left: 0; border-top: var(--a-rule) }
+}
+@media (max-width: 520px) {
+  .a-main { padding: 20px 16px }
+  .a-opt { grid-template-columns: 22px minmax(0, 1fr) }
+  .a-opt-size { grid-row: auto; grid-column: 2; text-align: left }
+  .a-opt-size small { display: inline; margin-left: 6px }
+}
+
+/* ---------- Riso: impresión risográfica a dos tintas ---------- */
+.app[data-dir="riso"] {
+  --a-bg: #EEF0EA; --a-surface: #F8F9F5; --a-text: #1E2440; --a-muted: #565E7E; --a-line: #1E2440;
+  --a-accent: #FF6A3D; --a-accent2: #3D5AA8; --a-on-accent: #1E2440; --a-soft: #DDE2EF;
+  --a-warn-bg: #FFD9CC; --a-warn-fg: #1E2440;
+  --a-display: "Archivo", "Arial Narrow", sans-serif; --a-body: "Atkinson Hyperlegible", "Verdana", sans-serif; --a-mono: "Archivo", sans-serif;
+  --a-rule: 2px solid var(--a-line); --a-rule-soft: 2px solid var(--a-line);
+  --a-brand-font: 800 1.15rem/1 var(--a-display); --a-h-font: 800 2rem/1.05 var(--a-display);
+  --a-size-font: 800 2.4rem var(--a-display);
+  --a-track: radial-gradient(circle, var(--a-accent2) 1.3px, transparent 1.6px) 0 0 / 6px 6px, var(--a-surface);
+  --a-fillbg: var(--a-accent);
+}
+.app[data-dir="riso"][data-m="dark"] {
+  --a-bg: #141830; --a-surface: #1C2142; --a-text: #E8EAF3; --a-muted: #A6ADC9; --a-line: #E8EAF3;
+  --a-accent: #FF7A4D; --a-accent2: #8AA2FF; --a-on-accent: #141830; --a-soft: #272E5A;
+  --a-warn-bg: #5A2C24; --a-warn-fg: #FFD9CC;
+}
+.app[data-dir="riso"] .a-h { font-variation-settings: "wdth" 112 }
+.app[data-dir="riso"] .a-opt:has(input:checked) { background: var(--a-accent); color: var(--a-on-accent); box-shadow: 4px 4px 0 var(--a-accent2) }
+.app[data-dir="riso"] .a-opt:has(input:checked) .a-opt-desc,
+.app[data-dir="riso"] .a-opt:has(input:checked) small { color: var(--a-on-accent) }
+.app[data-dir="riso"] .a-opt:has(input:checked) .a-opt-in { border-color: var(--a-on-accent); background: var(--a-on-accent); box-shadow: inset 0 0 0 3px var(--a-accent) }
+.app[data-dir="riso"] .a-bar { border: 2px solid var(--a-line); height: 18px }
+.app[data-dir="riso"] .a-btn { box-shadow: 3px 3px 0 var(--a-accent) }
+.app[data-dir="riso"] .a-size { font-variation-settings: "wdth" var(--wdth, 125); color: var(--a-text) }
+.app[data-dir="riso"] .a-steps li.cur::before { color: var(--a-on-accent) }
+
+/* ---------- Cinta: etiqueta de casete ---------- */
+.app[data-dir="cinta"] {
+  --a-r: 3px; --a-step-r: 3px;
+  --a-bg: #E6E7EA; --a-surface: #FBFBFC; --a-text: #16171A; --a-muted: #5A5E66; --a-line: #C3C6CC;
+  --a-accent: #D93A26; --a-accent2: #F2A93B; --a-accent3: #EE7330; --a-on-accent: #FFFFFF; --a-soft: #EEEFF1;
+  --a-warn-bg: #FCE3B8; --a-warn-fg: #16171A;
+  --a-display: "Barlow Condensed", "Arial Narrow", sans-serif; --a-body: "Barlow", "Segoe UI", sans-serif; --a-mono: "JetBrains Mono", ui-monospace, monospace;
+  --a-rule: 1px solid var(--a-line); --a-rule-soft: 1px solid var(--a-line);
+  --a-brand-font: 700 1.3rem/1 var(--a-display); --a-brand-ls: .06em;
+  --a-h-font: 700 2.1rem/1 var(--a-display); --a-h-ls: .02em; --a-h-tt: uppercase;
+  --a-size-font: 600 1.9rem var(--a-mono);
+  --a-track: #2A2420; --a-queue-bg: var(--a-surface);
+  --a-fillbg: linear-gradient(var(--a-accent) 0 33%, var(--a-accent3) 33% 66%, var(--a-accent2) 66%);
+}
+.app[data-dir="cinta"][data-m="dark"] {
+  --a-bg: #0F1012; --a-surface: #1D1F23; --a-text: #ECEDEF; --a-muted: #9DA2AB; --a-line: #33363C;
+  --a-accent: #F0553F; --a-accent2: #F5B54C; --a-accent3: #F5883F; --a-on-accent: #0F1012; --a-soft: #272A2F;
+  --a-warn-bg: #4A3514; --a-warn-fg: #FCE3B8; --a-track: #3A322C;
+}
+.app[data-dir="cinta"] { border-top: 0 }
+.app[data-dir="cinta"]::before { content: ""; display: block; height: 12px; background: linear-gradient(var(--a-accent) 0 33%, var(--a-accent3) 33% 66%, var(--a-accent2) 66%) }
+.app[data-dir="cinta"] .a-top { background: var(--a-surface) }
+.app[data-dir="cinta"] .a-opt:has(input:checked) { border-color: var(--a-text); outline: 1px solid var(--a-text) }
+.app[data-dir="cinta"] .a-opt-in { border-radius: 50% }
+.app[data-dir="cinta"] .a-opt input:checked ~ .a-opt-in { background: var(--a-accent); border-color: var(--a-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--a-accent) 25%, transparent) }
+.app[data-dir="cinta"] .a-opt-name { font: 700 1.15rem var(--a-display); text-transform: uppercase; letter-spacing: .04em }
+.app[data-dir="cinta"] .a-btn { background: var(--a-accent); border-color: var(--a-accent); color: var(--a-on-accent); font-family: var(--a-display); text-transform: uppercase; letter-spacing: .06em; font-size: 1.05rem }
+.app[data-dir="cinta"] .a-btn-ghost { font-family: var(--a-display); text-transform: uppercase; letter-spacing: .06em; font-size: 1.05rem; border-width: 1px }
+.app[data-dir="cinta"] .a-counter { display: inline-flex; gap: 2px }
+.app[data-dir="cinta"] .a-counter b { display: inline-block; min-width: .95em; text-align: center; padding: 3px 1px; background: var(--a-text); color: var(--a-surface); border-radius: 2px }
+.app[data-dir="cinta"] .a-steps li.cur { background: var(--a-surface); outline: 1px solid var(--a-line) }
+
+/* ---------- Plegat: papel plegado ---------- */
+.app[data-dir="plegat"] {
+  --a-bg: #F0F3F2; --a-surface: #FFFFFF; --a-text: #15292B; --a-muted: #52676A; --a-line: #CFD8D7;
+  --a-accent: #0F5E63; --a-fold: #0A4245; --a-accent2: #D39B14; --a-on-accent: #FFFFFF; --a-soft: #E1EBEA;
+  --a-warn-bg: #F6E6BC; --a-warn-fg: #15292B; --a-link: var(--a-accent);
+  --a-display: "Bricolage Grotesque", "Trebuchet MS", sans-serif; --a-body: "Instrument Sans", "Segoe UI", sans-serif; --a-mono: "Instrument Sans", sans-serif;
+  --a-rule: 1px solid var(--a-line); --a-rule-soft: 1px solid var(--a-line);
+  --a-brand-font: 750 1.2rem/1 var(--a-display); --a-h-font: 750 2.2rem/1.02 var(--a-display); --a-h-ls: -.025em;
+  --a-size-font: 750 2.3rem var(--a-display);
+  --a-track: var(--a-soft);
+  --a-fillbg: repeating-linear-gradient(90deg, var(--a-accent) 0 26px, var(--a-fold) 26px 28px, var(--a-accent) 28px 30px);
+}
+.app[data-dir="plegat"][data-m="dark"] {
+  --a-bg: #0C1819; --a-surface: #132628; --a-text: #E3EDEB; --a-muted: #92A8A7; --a-line: #264241;
+  --a-accent: #45AAAD; --a-fold: #2A7A7D; --a-accent2: #E7B33A; --a-on-accent: #0C1819; --a-soft: #183031;
+  --a-warn-bg: #4A3A12; --a-warn-fg: #F6E6BC;
+}
+.app[data-dir="plegat"] .a-h { font-variation-settings: "opsz" 72 }
+.app[data-dir="plegat"] .a-opt:has(input:checked) { background: var(--a-accent); color: var(--a-on-accent); border-color: var(--a-accent) }
+.app[data-dir="plegat"] .a-opt:has(input:checked)::after { content: ""; position: absolute; top: 0; right: 0; width: 22px; height: 22px; background: linear-gradient(225deg, var(--a-bg) 50%, var(--a-fold) 50%) }
+.app[data-dir="plegat"] .a-opt:has(input:checked) .a-opt-desc,
+.app[data-dir="plegat"] .a-opt:has(input:checked) small { color: var(--a-on-accent); opacity: .85 }
+.app[data-dir="plegat"] .a-opt:has(input:checked) .a-opt-in { border-color: var(--a-on-accent); background: var(--a-accent2); box-shadow: none }
+.app[data-dir="plegat"] .a-opt-tag { background: var(--a-accent2); color: #15292B }
+.app[data-dir="plegat"] .a-btn { background: var(--a-accent); border-color: var(--a-accent); color: var(--a-on-accent) }
+.app[data-dir="plegat"] .a-btn-ghost { border-width: 1px }
+.app[data-dir="plegat"] .a-steps li.cur::before { border-radius: 0; clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%) }
+
+@media (prefers-reduced-motion: reduce) { .spin { animation: none !important } }
+@keyframes spin { to { transform: rotate(360deg) } }
+.spin { transform-box: fill-box; transform-origin: center; animation: spin 2.4s linear infinite; animation-play-state: paused }
+.app.running .spin { animation-play-state: running }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Reduvid <span>· tres direcciones de diseño</span></h1>
+    <nav class="jump" aria-label="Ir a una dirección">
+      <a href="#riso">Riso</a><a href="#cinta">Cinta</a><a href="#plegat">Plegat</a>
+    </nav>
+    <div class="seg" role="group" aria-label="Tema">
+      <button type="button" data-t="system" aria-pressed="true">Sistema</button>
+      <button type="button" data-t="light" aria-pressed="false">Claro</button>
+      <button type="button" data-t="dark" aria-pressed="false">Oscuro</button>
+    </div>
+  </header>
+
+  <div class="intro">
+    <p>La misma pantalla del asistente, el <strong>paso 3 (calidad o tamaño)</strong> con un vídeo convirtiéndose en la cola, resuelta en tres identidades. Pulsa <strong>Simular conversión</strong> en cada una para ver su forma de «encoger». Cambia entre claro y oscuro arriba.</p>
+    <p class="note">Datos de ejemplo. Todo lo que se ve se puede reproducir en Qt; cada ficha indica qué va con QSS y qué hay que pintar a mano.</p>
+  </div>
+
+  <section class="dir" id="riso">
+    <div class="dir-head"><h2>Riso</h2><p>Impresión risográfica a dos tintas: azul y naranja flúor sobre papel, con el registro ligeramente movido.</p></div>
+    <div class="mount" data-dir="riso"></div>
+    <div class="spec">
+      <div><h4>Paleta</h4><div class="sw"><span><i style="background:#EEF0EA"></i>papel</span><span><i style="background:#1E2440"></i>tinta</span><span><i style="background:#3D5AA8"></i>azul riso</span><span><i style="background:#FF6A3D"></i>flúor</span><span><i style="background:#141830"></i>oscuro</span></div></div>
+      <div><h4>Tipografía</h4><p>Archivo (con eje de anchura variable) para títulos y cifras; Atkinson Hyperlegible, diseñada para la legibilidad, para el texto. Ambas OFL.</p></div>
+      <div><h4>Cómo encoge</h4><p>El tamaño del archivo se va <em>estrechando</em> (la anchura de la letra pasa de 125 a 62) y el gato de tramado se acurruca.</p></div>
+      <div><h4>Qué la hace distinta</h4><p>Huele a fanzine y a taller de impresión: artesanal sin ser rústica. Los bordes gruesos de tinta y el desplazamiento de registro sustituyen a las sombras.</p></div>
+      <div><h4>En Qt</h4><p>Colores, bordes y tipos con QSS. El desplazamiento de registro, el tramado y el gato, con QPainter. La anchura variable, con <code>QFont.setVariableAxis</code> (Qt ≥ 6.7, por confirmar en la fase 2); si falla, la cifra queda fija.</p></div>
+    </div>
+  </section>
+
+  <section class="dir" id="cinta">
+    <div class="dir-head"><h2>Cinta</h2><p>Etiqueta de casete: franjas de color, letra condensada en mayúsculas y un contador mecánico.</p></div>
+    <div class="mount" data-dir="cinta"></div>
+    <div class="spec">
+      <div><h4>Paleta</h4><div class="sw"><span><i style="background:#FBFBFC"></i>etiqueta</span><span><i style="background:#16171A"></i>carcasa</span><span><i style="background:#D93A26"></i>rojo</span><span><i style="background:#EE7330"></i>naranja</span><span><i style="background:#F2A93B"></i>ámbar</span></div></div>
+      <div><h4>Tipografía</h4><p>Barlow Condensed para títulos, Barlow para el texto y JetBrains Mono para el contador. Todas OFL.</p></div>
+      <div><h4>Cómo encoge</h4><p>La bobina del original se vacía y la de la copia se llena, pero <em>menos</em>: la diferencia es lo que ahorras. El contador marca los MB ahorrados.</p></div>
+      <div><h4>Qué la hace distinta</h4><p>Nostalgia de grabar cintas, que es justo lo que hace la app: copiar vídeo a otro formato. Es la más cercana a una herramienta de vídeo de verdad.</p></div>
+      <div><h4>En Qt</h4><p>La más fácil: franjas, etiquetas y botones salen enteros con QSS. Las bobinas y el contador, con QPainter y QPropertyAnimation.</p></div>
+    </div>
+  </section>
+
+  <section class="dir" id="plegat">
+    <div class="dir-head"><h2>Plegat</h2><p>Papel plegado: planos limpios, pliegues como única textura y un gato de origami.</p></div>
+    <div class="mount" data-dir="plegat"></div>
+    <div class="spec">
+      <div><h4>Paleta</h4><div class="sw"><span><i style="background:#F0F3F2"></i>papel</span><span><i style="background:#0F5E63"></i>verde azulado</span><span><i style="background:#0A4245"></i>pliegue</span><span><i style="background:#D39B14"></i>mostaza</span><span><i style="background:#0C1819"></i>oscuro</span></div></div>
+      <div><h4>Tipografía</h4><p>Bricolage Grotesque (tamaño óptico variable) para títulos e Instrument Sans para el texto. Ambas OFL.</p></div>
+      <div><h4>Cómo encoge</h4><p>La barra avanza como una tira que se pliega en acordeón y el gato de papel se dobla sobre sí mismo hasta ocupar menos.</p></div>
+      <div><h4>Qué la hace distinta</h4><p>Reducir es plegar: la metáfora sale del nombre. Es la más sobria y «de producto», con el pliegue de esquina como firma visual.</p></div>
+      <div><h4>En Qt</h4><p>Base con QSS. La esquina doblada y los pliegues, con QPainter (QSS no recorta formas). El plegado del gato, con QTransform animado.</p></div>
+    </div>
+  </section>
+
+  <div class="decide">
+    <h2>Cómo decidir</h2>
+    <ol>
+      <li><strong>Elige la identidad principal.</strong> Marca el logo, el icono, las capturas y el tema por defecto.</li>
+      <li><strong>Temas intercambiables, si quieres.</strong> La interfaz se construye sobre tokens (colores, tipos, radios), así que añadir otra dirección como tema es sobre todo una paleta y su motivo pintado. Propongo sacar la 0.2.0 con la principal bien acabada y las otras como temas en una versión posterior, para no triplicar el trabajo de pulido.</li>
+      <li><strong>Mezclar vale.</strong> Por ejemplo: la estructura y el contador de Cinta con la paleta de Plegat.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(function () {
+  const root = document.documentElement;
+  const mq = matchMedia("(prefers-color-scheme: dark)");
+  const fmt = (n, d = 1) => n.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  const motifs = {
+    riso: (id) => `
+      <svg viewBox="0 0 200 140" aria-hidden="true">
+        <defs>
+          <pattern id="${id}-b" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="2.1" fill="var(--a-accent2)"/></pattern>
+          <pattern id="${id}-o" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="3" cy="3" r="2" fill="var(--a-accent)"/></pattern>
+          <g id="${id}-cat">
+            <path d="M70 128 C64 98 72 74 88 64 L82 30 L99 48 C103 47 109 47 113 48 L130 30 L124 64 C140 74 148 98 142 128 Z"/>
+            <path d="M140 124 C166 120 168 96 154 86" fill="none" stroke-width="10" stroke-linecap="round"/>
+          </g>
+        </defs>
+        <g class="cat" style="transform-origin: 106px 128px">
+          <use href="#${id}-cat" fill="url(#${id}-o)" stroke="url(#${id}-o)" transform="translate(4 3)" style="mix-blend-mode: multiply"/>
+          <use href="#${id}-cat" fill="url(#${id}-b)" stroke="url(#${id}-b)"/>
+          <ellipse cx="97" cy="70" rx="3.5" ry="5" fill="var(--a-surface)"/><ellipse cx="115" cy="70" rx="3.5" ry="5" fill="var(--a-surface)"/>
+        </g>
+      </svg>`,
+    cinta: () => `
+      <svg viewBox="0 0 200 140" aria-hidden="true">
+        <rect x="14" y="22" width="172" height="96" rx="8" fill="var(--a-bg)" stroke="var(--a-line)"/>
+        <rect x="30" y="34" width="140" height="22" rx="2" fill="var(--a-surface)" stroke="var(--a-line)"/>
+        <rect x="30" y="34" width="140" height="5" fill="var(--a-accent)"/><rect x="30" y="39" width="140" height="4" fill="var(--a-accent3)"/>
+        <text x="36" y="53" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="10" fill="var(--a-text)" letter-spacing=".08em">MENORCA 2025 · H.264</text>
+        <g transform="translate(150 47)"><path d="M0 2 L2 -4 L5 0 L8 0 L11 -4 L13 2 C13 7 10 9 6.5 9 C3 9 0 7 0 2Z" fill="var(--a-text)"/></g>
+        <circle class="t1" cx="66" cy="88" r="24" fill="#5A4636"/>
+        <circle class="t2" cx="134" cy="88" r="12" fill="#5A4636"/>
+        <path d="M66 112 L134 100" stroke="#5A4636" stroke-width="2"/>
+        <g class="spin"><circle cx="66" cy="88" r="9" fill="var(--a-surface)" stroke="var(--a-text)" stroke-width="2"/>
+          <path d="M66 81v4M66 91v4M59 88h4M69 88h4" stroke="var(--a-text)" stroke-width="2"/></g>
+        <g class="spin"><circle cx="134" cy="88" r="9" fill="var(--a-surface)" stroke="var(--a-text)" stroke-width="2"/>
+          <path d="M134 81v4M134 91v4M127 88h4M137 88h4" stroke="var(--a-text)" stroke-width="2"/></g>
+      </svg>`,
+    plegat: () => `
+      <svg viewBox="0 0 200 140" aria-hidden="true">
+        <g class="cat" style="transform-origin: 100px 70px">
+          <polygon points="60,52 72,18 90,52" fill="var(--a-fold)"/>
+          <polygon points="110,52 128,18 140,52" fill="var(--a-accent)"/>
+          <polygon points="60,52 100,52 100,118" fill="var(--a-accent)"/>
+          <polygon points="100,52 140,52 100,118" fill="var(--a-fold)"/>
+          <line class="crease" x1="100" y1="52" x2="100" y2="118" stroke="var(--a-surface)" stroke-width="1.5"/>
+          <line class="crease" x1="74" y1="74" x2="126" y2="74" stroke="var(--a-surface)" stroke-width="1" opacity="0"/>
+          <path d="M82 68 l8 3 M118 68 l-8 3" stroke="var(--a-accent2)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>`
+  };
+
+  const sizeBox = {
+    riso: () => `<span class="a-size">4,2 GB</span>`,
+    cinta: () => `<span class="a-size a-counter" aria-label="MB ahorrados"><b>0</b><b>9</b><b>8</b><b>8</b></span>`,
+    plegat: () => `<span class="a-size">4,2 GB</span>`
+  };
+
+  function appHTML(dir) {
+    const n = `q-${dir}`;
+    const opt = (v, name, desc, size, pct, checked, tag) => `
+      <label class="a-opt"><input type="radio" name="${n}" id="${n}-${v}" value="${v}" ${checked ? "checked" : ""}>
+        <span class="a-opt-in"></span>
+        <span><span class="a-opt-name">${name}</span>${tag ? `<span class="a-opt-tag">${tag}</span>` : ""}</span>
+        <span class="a-opt-desc">${desc}</span>
+        <span class="a-opt-size">${size}<small>${pct}</small></span>
+      </label>`;
+    return `
+    <div class="app" data-dir="${dir}" role="region" aria-label="Maqueta ${dir}">
+      <div class="a-top">
+        <span class="a-brand"><svg viewBox="0 0 26 26" aria-hidden="true"><path d="M4 23 C3 15 6 10 9 8 L8 2 L12 6 L14 6 L18 2 L17 8 C20 10 23 15 22 23 Z" fill="var(--a-text)"/><rect x="7" y="15" width="12" height="2.5" fill="var(--a-accent)"/></svg>Reduvid</span>
+        <div class="a-modes" role="group" aria-label="Modo"><button type="button" aria-pressed="true">Asistente</button><button type="button" aria-pressed="false">Avanzado</button></div>
+      </div>
+      <div class="a-body">
+        <nav class="a-steps" aria-label="Pasos del asistente"><ol>
+          <li class="done">Vídeos</li><li class="done">Dónde verlos</li><li class="cur" aria-current="step">Calidad</li><li>Qué conservar</li><li>Destino</li><li>Resumen</li>
+        </ol></nav>
+        <div class="a-main">
+          <p class="a-kicker">Paso 3 de 6</p>
+          <h3 class="a-h">¿Más calidad o más espacio?</h3>
+          <p class="a-lead">Elige cuánto quieres reducir. Los tamaños salen de convertir 30 segundos de tu primer vídeo, así que son reales para él.</p>
+          <div class="a-opts" role="radiogroup" aria-label="Nivel de calidad">
+            ${opt("hi", "Casi idéntica", "No notarás la diferencia ni en una tele grande.", "2,1 GB", "−50 %", false)}
+            ${opt("mid", "Equilibrada", "La diferencia solo se ve si la buscas con lupa. La mejor relación.", "1,6 GB", "−62 %", true, "Recomendada")}
+            ${opt("lo", "Máximo ahorro", "Se nota en escenas oscuras o con mucho movimiento. Para el móvil o para archivar.", "1,1 GB", "−74 %", false)}
+          </div>
+          <p class="a-rec"><b>¿Por qué Equilibrada?</b> Vas a verlos en Jellyfin desde la tele: ahorra mucho espacio y se reproduce directo, sin que el servidor tenga que convertir nada.</p>
+          <details class="a-what"><summary>¿Qué es esto?</summary>
+            <p>Un vídeo guarda la imagen fotograma a fotograma. Reduvid decide cuánto detalle conserva de cada uno, como cuando el móvil guarda una foto con más o menos calidad. Por dentro se llama CRF: un número más bajo guarda más detalle y ocupa más.</p></details>
+          <div class="a-nav"><button type="button" class="a-btn-ghost">Atrás</button><button type="button" class="a-btn">Siguiente: qué conservar</button></div>
+        </div>
+        <aside class="a-queue" aria-label="Cola de conversión">
+          <h4>Cola · 3 vídeos</h4>
+          <div class="a-motif">${motifs[dir](dir)}</div>
+          <div>
+            <div class="a-cur-name">Vacances a Menorca 2025.mkv</div>
+            <div class="a-sizeline">${sizeBox[dir]()}<span class="a-meta"><span class="pct">38 %</span><br><span class="eta">quedan 4 min</span></span></div>
+            <div class="a-bar" role="progressbar" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="38"><div class="a-fill"></div></div>
+          </div>
+          <div class="a-ctrl">
+            <button type="button" class="a-qbtn go" data-act="sim">Simular conversión</button>
+            <button type="button" class="a-qbtn" data-act="pause">Pausar</button>
+            <button type="button" class="a-qbtn" data-act="cancel">Cancelar</button>
+          </div>
+          <p class="a-msg" aria-live="polite"></p>
+          <ul class="a-items">
+            <li><span class="n">Casament Laia i Pol.mp4</span><span class="s">11,8 GB</span><span class="a-chip">HDR → se pasará a SDR</span></li>
+            <li><span class="n">Sèrie / T1 / E01 Pilot.mkv</span><span class="s">2,3 GB</span><span class="a-chip">Subtítulos de imagen</span></li>
+          </ul>
+          <div class="a-total">Total: <b>18,3 GB → ~7,0 GB</b> estimados</div>
+        </aside>
+      </div>
+    </div>`;
+  }
+
+  const apps = [];
+  document.querySelectorAll(".mount").forEach((m) => {
+    m.innerHTML = appHTML(m.dataset.dir);
+    const el = m.firstElementChild;
+    // var() en atributos de presentación SVG no funciona en todos los navegadores; como estilo, sí.
+    el.querySelectorAll("svg *").forEach((n) => ["fill", "stroke"].forEach((a) => {
+      const v = n.getAttribute(a);
+      if (v && v.startsWith("var(")) { n.style[a] = v; n.removeAttribute(a); }
+    }));
+    apps.push(setupApp(el, m.dataset.dir));
+  });
+
+  function setupApp(el, dir) {
+    const st = { p: 0.38, running: false, last: 0 };
+    const q = (s) => el.querySelector(s);
+    const fill = q(".a-fill"), bar = q(".a-bar"), pct = q(".pct"), eta = q(".eta"), size = q(".a-size"), msg = q(".a-msg");
+    const pauseBtn = q('[data-act="pause"]');
+    const DURATION = 7000, FROM = 4.2, TO = 1.6, SAVED_MB = 2600;
+
+    function render() {
+      const p = st.p;
+      fill.style.width = (p * 100).toFixed(1) + "%";
+      bar.setAttribute("aria-valuenow", Math.round(p * 100));
+      pct.textContent = Math.round(p * 100) + " %";
+      const mins = Math.ceil(6.5 * (1 - p));
+      eta.textContent = p >= 1 ? "verificado" : mins <= 0 ? "menos de 1 min" : `quedan ${mins} min`;
+      if (dir === "cinta") {
+        const v = String(Math.round(SAVED_MB * p)).padStart(4, "0");
+        size.innerHTML = [...v].map((c) => `<b>${c}</b>`).join("") + `<span style="font:600 .8rem var(--a-body);margin-left:8px;color:var(--a-muted)">MB ahorrados</span>`;
+        el.querySelector(".t1").setAttribute("r", (24 - 14 * p).toFixed(1));
+        el.querySelector(".t2").setAttribute("r", (12 + 8 * p).toFixed(1));
+      } else {
+        size.textContent = fmt(FROM - (FROM - TO) * p) + " GB";
+      }
+      if (dir === "riso") {
+        size.style.setProperty("--wdth", (125 - 63 * p).toFixed(0));
+        el.querySelector(".cat").style.transform = `scale(${1 - 0.36 * p}, ${1 - 0.46 * p})`;
+      }
+      if (dir === "plegat") {
+        const c = el.querySelector(".cat");
+        c.style.transform = `scale(${1 - 0.35 * p}) rotate(${-8 * p}deg)`;
+        c.querySelectorAll(".crease")[1].setAttribute("opacity", p > 0.5 ? 1 : 0);
+      }
+    }
+    function tick(t) {
+      if (!st.running) return;
+      const dt = st.last ? t - st.last : 0; st.last = t;
+      st.p = Math.min(1, st.p + dt / DURATION);
+      render();
+      if (st.p >= 1) { stop(); msg.textContent = "Listo y verificado: ocupa un 62 % menos. El original sigue intacto."; return; }
+      requestAnimationFrame(tick);
+    }
+    function start() {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) { st.p = 1; render(); msg.textContent = "Listo y verificado: ocupa un 62 % menos. El original sigue intacto."; return; }
+      st.running = true; st.last = 0; el.classList.add("running"); pauseBtn.textContent = "Pausar"; requestAnimationFrame(tick);
+    }
+    function stop() { st.running = false; el.classList.remove("running") }
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      if (b.closest(".a-modes")) { b.parentElement.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x === b)); return; }
+      const act = b.dataset.act;
+      if (act === "sim") { msg.textContent = ""; st.p = 0; start(); }
+      if (act === "pause") {
+        if (st.running) { stop(); b.textContent = "Reanudar"; msg.textContent = "En pausa. Puedes seguir usando el equipo con normalidad."; }
+        else if (st.p > 0 && st.p < 1) { msg.textContent = ""; start(); }
+      }
+      if (act === "cancel") { stop(); st.p = 0; render(); pauseBtn.textContent = "Pausar"; msg.textContent = "Cancelado. No queda ningún archivo a medias."; }
+    });
+    render();
+    return el;
+  }
+
+  function applyTheme() {
+    const t = root.dataset.theme;
+    const dark = t ? t === "dark" : mq.matches;
+    apps.forEach((a) => (a.dataset.m = dark ? "dark" : "light"));
+  }
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    if (b.dataset.t === "system") delete root.dataset.theme; else root.dataset.theme = b.dataset.t;
+    applyTheme();
+  }));
+  mq.addEventListener("change", applyTheme);
+  new MutationObserver(applyTheme).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  applyTheme();
+})();
+</script>
+
+</html>

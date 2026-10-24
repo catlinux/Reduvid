@@ -1,0 +1,18 @@
+name: Idea / Feature request
+description: Propón una mejora · Suggest an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qué problema resolvería · What problem it would solve
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Cómo te lo imaginas · How you picture it
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas que has probado · Alternatives you have tried
