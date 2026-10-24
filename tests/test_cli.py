@@ -8,10 +8,17 @@ import pytest
 
 from reduvid import cli
 from reduvid.core import pipeline
+from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.probe import MediaInfo, VideoStream
 from reduvid.core.runner import EncodeResult
 from reduvid.core.verify import VerificationResult
+
+
+@pytest.fixture(autouse=True)
+def english_cli(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the CLI in English regardless of the machine's locale."""
+    monkeypatch.setattr(cli, "load_config", lambda: (Config(language="en"), ()))
 
 
 def ffmpeg_info() -> FFmpegInfo:
@@ -34,13 +41,13 @@ def media_info(path: Path, *, size: int = 20) -> MediaInfo:
 
 
 def mock_ffmpeg(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(cli, "_configured_ffmpeg_path", lambda: None)
+    monkeypatch.setattr(cli, "_configured_ffmpeg_path", lambda _config: None)
     monkeypatch.setattr(cli, "detect_ffmpeg", lambda _path=None: ffmpeg_info())
 
 
 def test_probe_reports_missing_ffmpeg(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     source = Path(__file__).resolve()
-    monkeypatch.setattr(cli, "_configured_ffmpeg_path", lambda: None)
+    monkeypatch.setattr(cli, "_configured_ffmpeg_path", lambda _config: None)
     monkeypatch.setattr(cli, "detect_ffmpeg", lambda _path=None: None)
 
     result = cli.main(["probe", str(source)])
@@ -119,7 +126,7 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
     assert "Plan: jellyfin, high, mp4" in captured.out
     assert "Video stream 0" in captured.out
     assert "scale to 480p" in captured.out
-    assert "resolution_reduced_4k_to_1080p" in captured.out
+    assert "scaled down to 1080p" in captured.out
 
 
 def test_convert_runs_pipeline_and_reports_success(monkeypatch: pytest.MonkeyPatch, capsys) -> None:

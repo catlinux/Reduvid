@@ -55,7 +55,16 @@ If you change a document, change its counterpart in the same commit. `scripts/ch
 
 ## Translating the interface
 
-The interface will be available in Català, Castellano and English, with strings in gettext files (`.po`) under `src/reduvid/locale/<language>/LC_MESSAGES/reduvid.po`. This section will explain how to add a language once the interface exists (version 0.2.0).
+The application texts (interface and command line) are available in Català, Castellano and English, with gettext files (`.po`) under `src/reduvid/locale/<language>/LC_MESSAGES/reduvid.po`. `msgid` strings are written in English and `en` uses the `msgid` as is.
+
+To update the translations:
+
+```bash
+python scripts/extract_translations.py   # extract new strings and update ca and es
+python scripts/compile_translations.py   # compile the .po files to .mo for local testing
+```
+
+`extract_translations.py` writes `src/reduvid/locale/reduvid.pot` and updates the `ca` and `es` catalogs, keeping existing translations; then fill in the empty `msgstr` entries of the `.po` files. The `.mo` files are not committed: `pip install -e .` and the wheel build generate them with the hook in `hatch_build.py`. `pytest` checks that no entry is left untranslated and that the `.pot` file is up to date.
 
 ## Code guidelines
 

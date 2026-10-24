@@ -55,7 +55,16 @@ Si cambias un documento, cambia su pareja en el mismo commit. `scripts/check_doc
 
 ## Traducir la interfaz
 
-La interfaz estará en català, castellano e inglés, con textos en archivos gettext (`.po`) dentro de `src/reduvid/locale/<idioma>/LC_MESSAGES/reduvid.po`. Esta sección explicará cómo añadir un idioma cuando la interfaz exista (versión 0.2.0).
+Los textos de la aplicación (interfaz y línea de órdenes) están en català, castellano e inglés, con gettext (`.po`) dentro de `src/reduvid/locale/<idioma>/LC_MESSAGES/reduvid.po`. Los `msgid` se escriben en inglés y `en` usa el `msgid` tal cual.
+
+Para actualizar las traducciones:
+
+```bash
+python scripts/extract_translations.py   # extrae los textos nuevos y actualiza ca y es
+python scripts/compile_translations.py   # compila los .po a .mo para probarlo en local
+```
+
+`extract_translations.py` escribe `src/reduvid/locale/reduvid.pot` y actualiza los catálogos de `ca` y `es` conservando lo ya traducido; después traduce los `msgstr` vacíos de los `.po`. Los `.mo` no se suben: los genera `pip install -e .` y la construcción del wheel mediante el hook de `hatch_build.py`. `pytest` comprueba que no queden entradas sin traducir ni que el `.pot` esté desfasado.
 
 ## Normas de código
 

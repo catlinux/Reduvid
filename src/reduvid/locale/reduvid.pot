@@ -1,0 +1,319 @@
+# Translations template for Reduvid.
+# Copyright (C) 2026 Catlinux
+# This file is distributed under the same license as the Reduvid project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Reduvid VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/catlinux/Reduvid/issues\n"
+"POT-Creation-Date: 2026-10-24 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: cli.py:204 cli.py:216
+#, python-brace-format
+msgid " as {codec}"
+msgstr ""
+
+#: cli.py:206
+#, python-brace-format
+msgid " at {bitrate}"
+msgstr ""
+
+#: cli.py:192
+#, python-brace-format
+msgid ", scale to {height}p"
+msgstr ""
+
+#: cli.py:150 cli.py:164
+#, python-brace-format
+msgid ", {language}"
+msgstr ""
+
+#: cli.py:209
+#, python-brace-format
+msgid "Audio stream {index}: {details}"
+msgstr ""
+
+#: messages.py:28
+#, python-brace-format
+msgid "Audio track {stream_index} will be converted to {codec} so that Jellyfin can play it directly."
+msgstr ""
+
+#: cli.py:155
+#, python-brace-format
+msgid "Audio {position}: {codec}, {channels} channels{language}"
+msgstr ""
+
+#: cli.py:371
+msgid "Convert media files"
+msgstr ""
+
+#: cli.py:244
+#, python-brace-format
+msgid "Converting [{index}/{total}]: {path}"
+msgstr ""
+
+#: cli.py:347
+msgid "Dry run complete."
+msgstr ""
+
+#: cli.py:287
+#, python-brace-format
+msgid "Dry run: {count} file(s)"
+msgstr ""
+
+#: cli.py:128
+#, python-brace-format
+msgid "Duration: {duration}"
+msgstr ""
+
+#: cli.py:99
+#, python-brace-format
+msgid "Error: Could not inspect FFmpeg: {error}"
+msgstr ""
+
+#: cli.py:234 cli.py:293
+#, python-brace-format
+msgid "Error: Could not probe {path}: {error}"
+msgstr ""
+
+#: cli.py:74
+#, python-brace-format
+msgid "Error: Could not resolve input {path}: {error}"
+msgstr ""
+
+#: cli.py:102
+msgid "Error: FFmpeg and ffprobe were not found."
+msgstr ""
+
+#: cli.py:82
+#, python-brace-format
+msgid "Error: Input does not exist: {path}"
+msgstr ""
+
+#: cli.py:88
+#, python-brace-format
+msgid "Error: Input is not a supported file or folder: {path}"
+msgstr ""
+
+#: cli.py:415
+#, python-brace-format
+msgid "Error: Output path is not a folder: {path}"
+msgstr ""
+
+#: cli.py:405
+#, python-brace-format
+msgid "Error: Probe input is not a file: {path}"
+msgstr ""
+
+#: cli.py:264
+#, python-brace-format
+msgid "Error: {path}{details}"
+msgstr ""
+
+#: cli.py:126
+#, python-brace-format
+msgid "File: {path}"
+msgstr ""
+
+#: cli.py:269
+#, python-brace-format
+msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
+msgstr ""
+
+#: cli.py:258
+#, python-brace-format
+msgid "Finished: {name}"
+msgstr ""
+
+#: cli.py:127
+#, python-brace-format
+msgid "Format: {format}"
+msgstr ""
+
+#: messages.py:36
+#, python-brace-format
+msgid "Image subtitle track {stream_index} cannot be stored in MP4 and will be removed."
+msgstr ""
+
+#: messages.py:32
+#, python-brace-format
+msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
+msgstr ""
+
+#: cli.py:366
+msgid "Language for messages"
+msgstr ""
+
+#: messages.py:39
+msgid "No audio track matches the selected languages, so all of them will be kept."
+msgstr ""
+
+#: cli.py:301 cli.py:327
+#, python-brace-format
+msgid "Output: {path}"
+msgstr ""
+
+#: cli.py:181
+#, python-brace-format
+msgid "Plan: {destination}, {quality}, {container}"
+msgstr ""
+
+#: cli.py:253
+#, python-brace-format
+msgid "Progress: {percent:.0f}% ({state})"
+msgstr ""
+
+#: cli.py:369
+msgid "Show media details"
+msgstr ""
+
+#: cli.py:129
+#, python-brace-format
+msgid "Size: {size:.2f} MB"
+msgstr ""
+
+#: messages.py:69
+msgid "Something went wrong while processing the file."
+msgstr ""
+
+#: cli.py:219
+#, python-brace-format
+msgid "Subtitle stream {index}: {details}"
+msgstr ""
+
+#: cli.py:170
+#, python-brace-format
+msgid "Subtitle {position}: {codec}{language}, image: {image}"
+msgstr ""
+
+#: messages.py:62
+msgid "The conversion was cancelled."
+msgstr ""
+
+#: messages.py:64
+msgid "The converted file did not pass the safety checks and was discarded."
+msgstr ""
+
+#: messages.py:55
+msgid "The file appears to be damaged and could not be read."
+msgstr ""
+
+#: messages.py:67
+msgid "The file could not be analysed. It may be damaged or in an unsupported format."
+msgstr ""
+
+#: messages.py:60
+msgid "The file or folder cannot be read or written because of a permissions problem."
+msgstr ""
+
+#: messages.py:54
+msgid "There is not enough free space on the destination drive."
+msgstr ""
+
+#: messages.py:57
+msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
+msgstr ""
+
+#: cli.py:275
+#, python-brace-format
+msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
+msgstr ""
+
+#: messages.py:44 messages.py:48
+#, python-brace-format
+msgid "Unknown warning: {code}"
+msgstr ""
+
+#: cli.py:195
+#, python-brace-format
+msgid "Video stream {index}: {action}, {details}"
+msgstr ""
+
+#: messages.py:24
+#, python-brace-format
+msgid "Video track {stream_index} is HDR and this FFmpeg installation cannot convert it to SDR."
+msgstr ""
+
+#: messages.py:20
+#, python-brace-format
+msgid ""
+"Video track {stream_index} is HDR and will be converted to SDR; colours may look slightly "
+"different."
+msgstr ""
+
+#: messages.py:16
+#, python-brace-format
+msgid "Video track {stream_index} will be scaled down to 1080p so that Jellyfin can play it directly."
+msgstr ""
+
+#: cli.py:137
+#, python-brace-format
+msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
+msgstr ""
+
+#: cli.py:43
+#, python-brace-format
+msgid "Warning: Could not read config file: {error}"
+msgstr ""
+
+#: cli.py:224
+#, python-brace-format
+msgid "Warning: {text}"
+msgstr ""
+
+#: cli.py:300
+#, python-brace-format
+msgid "Would convert: {path}"
+msgstr ""
+
+#: cli.py:119
+msgid "convert"
+msgstr ""
+
+#: cli.py:118
+msgid "copy"
+msgstr ""
+
+#: cli.py:120
+msgid "drop"
+msgstr ""
+
+#: cli.py:117
+msgid "encode"
+msgstr ""
+
+#: cli.py:32 cli.py:34
+msgid "must be a positive integer"
+msgstr ""
+
+#: cli.py:134 cli.py:168
+msgid "no"
+msgstr ""
+
+#: cli.py:132
+msgid "unknown"
+msgstr ""
+
+#: cli.py:168
+msgid "yes"
+msgstr ""
+
+#: cli.py:132
+#, python-brace-format
+msgid "yes ({variant})"
+msgstr ""
+
+#: cli.py:186
+#, python-brace-format
+msgid "{codec}, CRF {crf}, {preset} preset"
+msgstr ""
+

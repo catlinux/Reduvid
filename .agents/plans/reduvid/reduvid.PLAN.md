@@ -96,7 +96,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
     - `FileReport` gana `error_code: str | None`, que toma el `code` de `EncodeError`/`PipelineError`, `probe_failed` si falla ffprobe o `unknown`. `reason` sigue llevando el detalle técnico.
   - `cli.py` usa `core.config` y `core.pipeline` sin cambiar su comportamiento ni su salida.
   - Tests: ida y vuelta de configuración (rutas con espacios, tildes y comillas), claves inválidas, cancelación que llega al handle (con fakes) y `error_code` en los informes. Los tests existentes siguen en verde.
-- [ ] 2.2 **Traducción con gettext (motor y CLI).** *AgentRelay, esfuerzo alto.*
+- [x] 2.2 **Traducción con gettext (motor y CLI).** *AgentRelay, esfuerzo alto.*
   - `reduvid/i18n.py`, sin Qt: `setup_language(lang: str | None) -> str` (devuelve el idioma efectivo, según la regla de arriba), `_()` y `ngettext()`; el dominio es `reduvid` y la carpeta `src/reduvid/locale/<lang>/LC_MESSAGES/`.
   - `reduvid/messages.py`, sin Qt: `warning_text(Warning) -> str` y `error_text(code) -> str`, con una frase clara sin jerga para cada código. Cubre todos los `Warning(...)` de `core/plan.py`, todos los `EncodeErrorCode`, `PipelineError` y `probe_failed`, y `audio_filter_kept_all` del paso 2.3.
   - Hook de hatch (`hatch_build.py`, con `[tool.hatch.build.hooks.custom]` y `dependencies = ["babel"]`): compila los `.po` a `.mo` y los incluye como `artifacts`.

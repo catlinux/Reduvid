@@ -40,6 +40,9 @@ path = "src/reduvid/__init__.py"
 [tool.hatch.build.targets.wheel]
 packages = ["src/reduvid"]
 
+[tool.hatch.build.hooks.custom]
+dependencies = ["babel"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

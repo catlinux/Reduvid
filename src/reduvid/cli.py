@@ -13,7 +13,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from reduvid import __version__
-from reduvid.core.config import load_config
+from reduvid.core.config import Config, load_config
 from reduvid.core.ffmpeg import FFmpegInfo, detect_ffmpeg
 from reduvid.core.naming import build_output_path
 from reduvid.core.pipeline import FileProcessor
@@ -21,27 +21,46 @@ from reduvid.core.plan import EncodePlan, PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, ProbeError, probe_media
 from reduvid.core.queue import ConversionQueue, QueueProgressEvent
 from reduvid.core.report import FileReport, QueueReport
+from reduvid.i18n import _, setup_language
+from reduvid.messages import error_text, warning_text
 
 
 def _positive_int(value: str) -> int:
     try:
         parsed = int(value)
     except ValueError as error:
-        raise argparse.ArgumentTypeError("must be a positive integer") from error
+        raise argparse.ArgumentTypeError(_("must be a positive integer")) from error
     if parsed < 1:
-        raise argparse.ArgumentTypeError("must be a positive integer")
+        raise argparse.ArgumentTypeError(_("must be a positive integer"))
     return parsed
 
 
-def _configured_ffmpeg_path() -> Path | None:
+def _load_config() -> Config:
     try:
         config, _invalid_keys = load_config()
     except (OSError, tomllib.TOMLDecodeError) as error:
-        print(f"Warning: Could not read config file: {error}", file=sys.stderr)
-        return None
+        print(
+            _("Warning: Could not read config file: {error}").format(error=error),
+            file=sys.stderr,
+        )
+        return Config()
+    return config
+
+
+def _configured_ffmpeg_path(config: Config) -> Path | None:
     if config.ffmpeg_path is None:
         return None
     return config.ffmpeg_path.expanduser().resolve()
+
+
+def _language_option(arguments: Sequence[str]) -> str | None:
+    """Find ``--lang`` before argparse runs, so help texts use that language."""
+    for index, argument in enumerate(arguments):
+        if argument.startswith("--lang="):
+            return argument.partition("=")[2]
+        if argument == "--lang" and index + 1 < len(arguments):
+            return arguments[index + 1]
+    return None
 
 
 def _resolve_inputs(raw_paths: Sequence[Path], *, allow_directories: bool) -> list[Path] | None:
@@ -51,28 +70,36 @@ def _resolve_inputs(raw_paths: Sequence[Path], *, allow_directories: bool) -> li
         try:
             path = raw_path.expanduser().resolve()
         except OSError as error:
-            print(f"Error: Could not resolve input {raw_path}: {error}", file=sys.stderr)
+            print(
+                _("Error: Could not resolve input {path}: {error}").format(
+                    path=raw_path, error=error
+                ),
+                file=sys.stderr,
+            )
             valid = False
             continue
         if not path.exists():
-            print(f"Error: Input does not exist: {path}", file=sys.stderr)
+            print(_("Error: Input does not exist: {path}").format(path=path), file=sys.stderr)
             valid = False
         elif path.is_file() or (allow_directories and path.is_dir()):
             paths.append(path)
         else:
-            print(f"Error: Input is not a supported file or folder: {path}", file=sys.stderr)
+            print(
+                _("Error: Input is not a supported file or folder: {path}").format(path=path),
+                file=sys.stderr,
+            )
             valid = False
     return paths if valid else None
 
 
-def _find_ffmpeg() -> FFmpegInfo | None:
+def _find_ffmpeg(config: Config) -> FFmpegInfo | None:
     try:
-        info = detect_ffmpeg(_configured_ffmpeg_path())
+        info = detect_ffmpeg(_configured_ffmpeg_path(config))
     except OSError as error:
-        print(f"Error: Could not inspect FFmpeg: {error}", file=sys.stderr)
+        print(_("Error: Could not inspect FFmpeg: {error}").format(error=error), file=sys.stderr)
         return None
     if info is None:
-        print("Error: FFmpeg and ffprobe were not found.", file=sys.stderr)
+        print(_("Error: FFmpeg and ffprobe were not found."), file=sys.stderr)
     return info
 
 
@@ -85,50 +112,116 @@ def _format_duration(duration: float) -> str:
     return f"{minutes}:{seconds:02}"
 
 
+def _action_text(action: str) -> str:
+    texts = {
+        "encode": _("encode"),
+        "copy": _("copy"),
+        "convert": _("convert"),
+        "drop": _("drop"),
+    }
+    return texts.get(action, action)
+
+
 def _show_media(media: MediaInfo) -> None:
-    print(f"File: {media.path}")
-    print(f"Format: {media.format}")
-    print(f"Duration: {_format_duration(media.duration)}")
-    print(f"Size: {media.size / 1_000_000:.2f} MB")
+    print(_("File: {path}").format(path=media.path))
+    print(_("Format: {format}").format(format=media.format))
+    print(_("Duration: {duration}").format(duration=_format_duration(media.duration)))
+    print(_("Size: {size:.2f} MB").format(size=media.size / 1_000_000))
     for position, video_stream in enumerate(media.video_streams, start=1):
-        hdr = f"yes ({video_stream.hdr_variant or 'unknown'})" if video_stream.hdr else "no"
+        if video_stream.hdr:
+            hdr = _("yes ({variant})").format(variant=video_stream.hdr_variant or _("unknown"))
+        else:
+            hdr = _("no")
         print(
-            f"Video {position}: {video_stream.codec}, "
-            f"{video_stream.width}x{video_stream.height}, "
-            f"{video_stream.fps:g} fps, {video_stream.bit_depth}-bit, HDR {hdr}"
+            _(
+                "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
+            ).format(
+                position=position,
+                codec=video_stream.codec,
+                width=video_stream.width,
+                height=video_stream.height,
+                fps=video_stream.fps,
+                depth=video_stream.bit_depth,
+                hdr=hdr,
+            )
         )
     for position, audio_stream in enumerate(media.audio_streams, start=1):
-        language = f", {audio_stream.language}" if audio_stream.language else ""
-        print(f"Audio {position}: {audio_stream.codec}, {audio_stream.channels} channels{language}")
+        language = (
+            _(", {language}").format(language=audio_stream.language)
+            if audio_stream.language
+            else ""
+        )
+        print(
+            _("Audio {position}: {codec}, {channels} channels{language}").format(
+                position=position,
+                codec=audio_stream.codec,
+                channels=audio_stream.channels,
+                language=language,
+            )
+        )
     for position, subtitle_stream in enumerate(media.subtitle_streams, start=1):
-        language = f", {subtitle_stream.language}" if subtitle_stream.language else ""
-        image = "yes" if subtitle_stream.is_image else "no"
-        print(f"Subtitle {position}: {subtitle_stream.codec}{language}, image: {image}")
+        language = (
+            _(", {language}").format(language=subtitle_stream.language)
+            if subtitle_stream.language
+            else ""
+        )
+        image = _("yes") if subtitle_stream.is_image else _("no")
+        print(
+            _("Subtitle {position}: {codec}{language}, image: {image}").format(
+                position=position,
+                codec=subtitle_stream.codec,
+                language=language,
+                image=image,
+            )
+        )
 
 
 def _show_plan(plan: EncodePlan) -> None:
-    print(f"Plan: {plan.destination}, {plan.quality}, {plan.container}")
+    print(
+        _("Plan: {destination}, {quality}, {container}").format(
+            destination=plan.destination, quality=plan.quality, container=plan.container
+        )
+    )
     for video_decision in plan.videos:
-        details = (
-            f"{video_decision.codec}, CRF {video_decision.crf}, {video_decision.preset} preset"
+        details = _("{codec}, CRF {crf}, {preset} preset").format(
+            codec=video_decision.codec,
+            crf=video_decision.crf,
+            preset=video_decision.preset,
         )
         if video_decision.target_height is not None:
-            details += f", scale to {video_decision.target_height}p"
-        print(f"  Video stream {video_decision.stream_index}: {video_decision.action}, {details}")
+            details += _(", scale to {height}p").format(height=video_decision.target_height)
+        print(
+            "  "
+            + _("Video stream {index}: {action}, {details}").format(
+                index=video_decision.stream_index,
+                action=_action_text(video_decision.action),
+                details=details,
+            )
+        )
     for audio_decision in plan.audios:
-        details = audio_decision.action
+        details = _action_text(audio_decision.action)
         if audio_decision.codec is not None:
-            details += f" as {audio_decision.codec}"
+            details += _(" as {codec}").format(codec=audio_decision.codec)
         if audio_decision.bitrate is not None:
-            details += f" at {audio_decision.bitrate}"
-        print(f"  Audio stream {audio_decision.stream_index}: {details}")
+            details += _(" at {bitrate}").format(bitrate=audio_decision.bitrate)
+        print(
+            "  "
+            + _("Audio stream {index}: {details}").format(
+                index=audio_decision.stream_index, details=details
+            )
+        )
     for subtitle_decision in plan.subtitles:
-        details = subtitle_decision.action
+        details = _action_text(subtitle_decision.action)
         if subtitle_decision.codec is not None:
-            details += f" as {subtitle_decision.codec}"
-        print(f"  Subtitle stream {subtitle_decision.stream_index}: {details}")
+            details += _(" as {codec}").format(codec=subtitle_decision.codec)
+        print(
+            "  "
+            + _("Subtitle stream {index}: {details}").format(
+                index=subtitle_decision.stream_index, details=details
+            )
+        )
     for warning in plan.warnings:
-        print(f"  Warning: {warning.code} {warning.params}")
+        print("  " + _("Warning: {text}").format(text=warning_text(warning)))
 
 
 def _show_probe(paths: list[Path], ffmpeg_info: FFmpegInfo) -> int:
@@ -137,7 +230,10 @@ def _show_probe(paths: list[Path], ffmpeg_info: FFmpegInfo) -> int:
         try:
             media = probe_media(ffmpeg_info.ffprobe_path, path)
         except ProbeError as error:
-            print(f"Error: Could not probe {path}: {error}", file=sys.stderr)
+            print(
+                _("Error: Could not probe {path}: {error}").format(path=path, error=error),
+                file=sys.stderr,
+            )
             failed = True
             continue
         _show_media(media)
@@ -145,29 +241,41 @@ def _show_probe(paths: list[Path], ffmpeg_info: FFmpegInfo) -> int:
 
 
 def _show_file_start(path: Path, index: int, total: int) -> None:
-    print(f"Converting [{index}/{total}]: {path}")
+    print(_("Converting [{index}/{total}]: {path}").format(index=index, total=total, path=path))
 
 
 def _show_progress(event: QueueProgressEvent) -> None:
     progress = event.file_progress
     if progress is not None:
         percent = event.fraction_completed * 100
-        print(f"  Progress: {percent:.0f}% ({progress.estado})")
+        print(
+            "  "
+            + _("Progress: {percent:.0f}% ({state})").format(percent=percent, state=progress.estado)
+        )
 
 
 def _show_file_complete(report: FileReport) -> None:
-    print(f"  Finished: {report.path.name}")
+    print("  " + _("Finished: {name}").format(name=report.path.name))
 
 
 def _show_file_failed(report: FileReport) -> None:
-    reason = f": {report.reason}" if report.reason else ""
-    print(f"Error: {report.path}{reason}", file=sys.stderr)
+    details = report.reason or (error_text(report.error_code) if report.error_code else "")
+    suffix = f": {details}" if details else ""
+    print(_("Error: {path}{details}").format(path=report.path, details=suffix), file=sys.stderr)
 
 
 def _show_queue_report(report: QueueReport) -> None:
-    print(f"Files: {report.succeeded} succeeded, {report.failed} failed, {report.skipped} skipped")
+    print(
+        _("Files: {succeeded} succeeded, {failed} failed, {skipped} skipped").format(
+            succeeded=report.succeeded, failed=report.failed, skipped=report.skipped
+        )
+    )
     savings_mb = report.savings_bytes / 1_000_000
-    print(f"Total savings: {savings_mb:.2f} MB ({report.savings_percent:.1f}%)")
+    print(
+        _("Total savings: {savings:.2f} MB ({percent:.1f}%)").format(
+            savings=savings_mb, percent=report.savings_percent
+        )
+    )
 
 
 def _dry_run(
@@ -176,18 +284,21 @@ def _dry_run(
     options: PlanOptions,
     output_dir: Path | None,
 ) -> None:
-    print(f"Dry run: {len(queue.files)} file(s)")
+    print(_("Dry run: {count} file(s)").format(count=len(queue.files)))
     for path in queue.files:
         try:
             media = probe_media(ffmpeg_info.ffprobe_path, path)
         except ProbeError as error:
-            print(f"Error: Could not probe {path}: {error}", file=sys.stderr)
+            print(
+                _("Error: Could not probe {path}: {error}").format(path=path, error=error),
+                file=sys.stderr,
+            )
             continue
         plan = build_plan(media, ffmpeg_info, options)
         destination_dir = output_dir or media.path.parent
         output_path = build_output_path(media.path, destination_dir, options.container)
-        print(f"Would convert: {path}")
-        print(f"Output: {output_path}")
+        print(_("Would convert: {path}").format(path=path))
+        print(_("Output: {path}").format(path=output_path))
         _show_plan(plan)
 
 
@@ -213,7 +324,7 @@ def _convert(
     def show_file_complete(report: FileReport) -> None:
         output_path = processor.last_output_path
         if output_path is not None:
-            print(f"Output: {output_path}")
+            print(_("Output: {path}").format(path=output_path))
         _show_file_complete(report)
 
     queue = ConversionQueue(
@@ -233,7 +344,7 @@ def _convert(
 
     if dry_run:
         _dry_run(queue, ffmpeg_info, options, output_dir)
-        print("Dry run complete.")
+        print(_("Dry run complete."))
         return 0
 
     report = queue.run()
@@ -243,12 +354,21 @@ def _convert(
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Return 0 on success, 1 if FFmpeg is unavailable, or 2 on file errors."""
+    arguments = list(argv) if argv is not None else sys.argv[1:]
+    config = _load_config()
+    setup_language(_language_option(arguments) or config.language)
+
     parser = argparse.ArgumentParser(prog="reduvid")
     parser.add_argument("--version", action="version", version=f"reduvid {__version__}")
+    parser.add_argument(
+        "--lang",
+        choices=("ca", "es", "en"),
+        help=_("Language for messages"),
+    )
     subparsers = parser.add_subparsers(dest="command")
-    probe_parser = subparsers.add_parser("probe", help="Show media details")
+    probe_parser = subparsers.add_parser("probe", help=_("Show media details"))
     probe_parser.add_argument("files", nargs="+", type=Path)
-    convert_parser = subparsers.add_parser("convert", help="Convert media files")
+    convert_parser = subparsers.add_parser("convert", help=_("Convert media files"))
     convert_parser.add_argument("paths", nargs="+", type=Path)
     convert_parser.add_argument(
         "--target", choices=("jellyfin", "modern", "archive"), default="jellyfin"
@@ -264,7 +384,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     convert_parser.add_argument("--replace-original", action="store_true")
     convert_parser.add_argument("--dry-run", action="store_true")
 
-    arguments = list(argv) if argv is not None else sys.argv[1:]
     if not arguments:
         parser.print_help()
         return 0
@@ -282,17 +401,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not is_convert and any(not path.is_file() for path in paths):
         for path in paths:
             if not path.is_file():
-                print(f"Error: Probe input is not a file: {path}", file=sys.stderr)
+                print(
+                    _("Error: Probe input is not a file: {path}").format(path=path),
+                    file=sys.stderr,
+                )
         return 2
 
     output_dir = (
         parsed.output_dir.expanduser().resolve() if is_convert and parsed.output_dir else None
     )
     if output_dir is not None and output_dir.exists() and not output_dir.is_dir():
-        print(f"Error: Output path is not a folder: {output_dir}", file=sys.stderr)
+        print(
+            _("Error: Output path is not a folder: {path}").format(path=output_dir),
+            file=sys.stderr,
+        )
         return 2
 
-    ffmpeg_info = _find_ffmpeg()
+    ffmpeg_info = _find_ffmpeg(config)
     if ffmpeg_info is None:
         return 1
     if not is_convert:
