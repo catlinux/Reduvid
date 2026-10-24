@@ -28,7 +28,11 @@ Detalle en [TODO.md](TODO.md) y en el [CHANGELOG](CHANGELOG.md).
 
 ## Capturas
 
-Llegarán con la interfaz (versión 0.2.0).
+La interfaz todavía no existe (llega en la versión 0.2.0). Estas son las maquetas de diseño con las tres direcciones visuales entre las que se elegirá; **Plegat** es la elegida por defecto. Maqueta interactiva completa en [docs/design/mockups.html](docs/design/mockups.html).
+
+| Plegat (por defecto) | Riso | Cinta |
+|---|---|---|
+| [![Maqueta Plegat](docs/design/screenshots/plegat.png)](docs/design/screenshots/plegat.png) | [![Maqueta Riso](docs/design/screenshots/riso.png)](docs/design/screenshots/riso.png) | [![Maqueta Cinta](docs/design/screenshots/cinta.png)](docs/design/screenshots/cinta.png) |
 
 ## Requisitos
 

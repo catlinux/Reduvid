@@ -28,7 +28,11 @@ Details in [TODO.en.md](TODO.en.md) and the [CHANGELOG](CHANGELOG.en.md).
 
 ## Screenshots
 
-They will come with the interface (version 0.2.0).
+The interface doesn't exist yet (it arrives in version 0.2.0). These are the design mockups showing the three visual directions to choose between; **Plegat** is the default pick. Full interactive mockup in [docs/design/mockups.html](docs/design/mockups.html).
+
+| Plegat (default) | Riso | Cinta |
+|---|---|---|
+| [![Plegat mockup](docs/design/screenshots/plegat.png)](docs/design/screenshots/plegat.png) | [![Riso mockup](docs/design/screenshots/riso.png)](docs/design/screenshots/riso.png) | [![Cinta mockup](docs/design/screenshots/cinta.png)](docs/design/screenshots/cinta.png) |
 
 ## Requirements
 
