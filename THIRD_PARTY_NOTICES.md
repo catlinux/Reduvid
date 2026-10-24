@@ -4,7 +4,7 @@
 
 ## Castellano
 
-La licencia de Reduvid (WNCL-CU-1.0) solo cubre el material de Catlinux. Cada componente de terceros conserva su propia licencia y sus avisos. El repositorio no incluye material de terceros. Las licencias de esta tabla se han comprobado en los metadatos de cada paquete (24-10-2026).
+La licencia de Reduvid (WNCL-CU-1.0) solo cubre el material de Catlinux. Cada componente de terceros conserva su propia licencia y sus avisos. El repositorio incluye únicamente las tipografías de la sección «Tipografías e iconos». Las licencias de esta tabla se han comprobado en los metadatos de cada paquete (24-10-2026).
 
 ### Dependencias de ejecución
 
@@ -43,11 +43,21 @@ Reduvid **no incluye ni distribuye FFmpeg**: lo ejecuta como programa externo in
 
 ### Tipografías e iconos
 
-Ninguno todavía. Llegarán con la interfaz (0.2.0) y se documentarán aquí, cada uno con su archivo de licencia.
+Se incluyen en `src/reduvid/resources/fonts/`, descargadas del repositorio `google/fonts` (`ofl/`), sin modificar y cada una con su `OFL.txt`. Se distribuyen con Reduvid bajo la SIL Open Font License 1.1, que permite redistribuirlas con el software siempre que se conserven el aviso de copyright y la licencia, y que no se vendan por separado. Los nombres de las fuentes no se usan para versiones modificadas. Iconos: ninguno todavía.
+
+| Familia | Copyright | Origen | Licencia |
+| --- | --- | --- | --- |
+| Bricolage Grotesque | 2022 The Bricolage Grotesque Project Authors | https://github.com/ateliertriay/bricolage | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/bricolage-grotesque/OFL.txt)) |
+| Instrument Sans | 2022 The Instrument Sans Project Authors | https://github.com/Instrument/instrument-sans | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/instrument-sans/OFL.txt)) |
+| Archivo | 2020 The Archivo Project Authors | https://github.com/Omnibus-Type/Archivo | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/archivo/OFL.txt)) |
+| Atkinson Hyperlegible | 2020 Braille Institute of America, Inc. | https://github.com/googlefonts/atkinson-hyperlegible | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/atkinson-hyperlegible/OFL.txt)) |
+| Barlow | 2017 The Barlow Project Authors | https://github.com/jpt/barlow | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/barlow/OFL.txt)) |
+| Barlow Condensed | 2017 The Barlow Project Authors | https://github.com/jpt/barlow | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/barlow-condensed/OFL.txt)) |
+| JetBrains Mono | 2020 The JetBrains Mono Project Authors | https://github.com/JetBrains/JetBrainsMono | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/jetbrains-mono/OFL.txt)) |
 
 ## English
 
-Reduvid's license (WNCL-CU-1.0) only covers material owned by Catlinux. Each third-party component keeps its own license and notices. The repository contains no third-party material. The licenses below were checked against each package's metadata (2026-10-24).
+Reduvid's license (WNCL-CU-1.0) only covers material owned by Catlinux. Each third-party component keeps its own license and notices. The repository includes only the fonts listed under “Fonts and icons”. The licenses below were checked against each package's metadata (2026-10-24).
 
 ### Runtime dependencies
 
@@ -86,4 +96,14 @@ Reduvid **does not include or distribute FFmpeg**: it runs it as an external pro
 
 ### Fonts and icons
 
-None yet. They will arrive with the interface (0.2.0) and be documented here, each with its license file.
+Included in `src/reduvid/resources/fonts/`, downloaded unmodified from the `google/fonts` repository (`ofl/`), each with its `OFL.txt`. They ship with Reduvid under the SIL Open Font License 1.1, which allows bundling them with software as long as the copyright notice and license are kept and they are not sold on their own. Font names are not used for modified versions. Icons: none yet.
+
+| Family | Copyright | Source | License |
+| --- | --- | --- | --- |
+| Bricolage Grotesque | 2022 The Bricolage Grotesque Project Authors | https://github.com/ateliertriay/bricolage | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/bricolage-grotesque/OFL.txt)) |
+| Instrument Sans | 2022 The Instrument Sans Project Authors | https://github.com/Instrument/instrument-sans | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/instrument-sans/OFL.txt)) |
+| Archivo | 2020 The Archivo Project Authors | https://github.com/Omnibus-Type/Archivo | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/archivo/OFL.txt)) |
+| Atkinson Hyperlegible | 2020 Braille Institute of America, Inc. | https://github.com/googlefonts/atkinson-hyperlegible | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/atkinson-hyperlegible/OFL.txt)) |
+| Barlow | 2017 The Barlow Project Authors | https://github.com/jpt/barlow | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/barlow/OFL.txt)) |
+| Barlow Condensed | 2017 The Barlow Project Authors | https://github.com/jpt/barlow | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/barlow-condensed/OFL.txt)) |
+| JetBrains Mono | 2020 The JetBrains Mono Project Authors | https://github.com/JetBrains/JetBrainsMono | SIL OFL 1.1 ([texto](src/reduvid/resources/fonts/jetbrains-mono/OFL.txt)) |

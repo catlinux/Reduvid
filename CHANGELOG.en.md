@@ -9,6 +9,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 ### Added
 
 - User configuration in `core/config.py`: TOML reading (with the FFmpeg path at the root or under `[ffmpeg] path`, unknown keys ignored and a list of invalid keys) and its own atomic writer.
+- Interface fonts (Bricolage Grotesque, Instrument Sans, Archivo, Atkinson Hyperlegible, Barlow, Barlow Condensed and JetBrains Mono), under the SIL OFL 1.1 with their `OFL.txt`; documented in `THIRD_PARTY_NOTICES.md`.
 - Per-file processing shared in `core/pipeline.py`, with pause, resume and cancel controls, and errors carrying a code (`cancelled` and `verification_failed`); the conversion queue now also reports each file's error code.
 - gettext translation in the engine and the command line: `reduvid/i18n.py` (effective language from `--lang`, the configuration or the system), `reduvid/messages.py` with clear texts for every warning and error, `ca` and `es` catalogs with the reference `.pot`, and the global `--lang {ca,es,en}` option.
 - Development scripts to extract and compile the translations, and a Hatch hook that compiles the `.po` files to `.mo` on editable installs and wheel builds.

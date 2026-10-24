@@ -110,7 +110,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - `core/compat.py`: `jellyfin_status(plan) -> CompatStatus(level: Literal["direct","partial","blocked"], reasons: tuple[Warning, ...])`.
   - CLI: `--keep-audio ca,es` y `--keep-subs ca,und`, documentados en `docs/{es,en}/cli.md`.
   - Tests de plan con varios idiomas, `und`, el caso de cero audios y los tres niveles del semáforo.
-- [ ] 2.4 **Tipografías.** *Sesión (Sonnet, esfuerzo medio), con la Skill `licencias` obligatoria.*
+- [x] 2.4 **Tipografías.** *Sesión (Sonnet, esfuerzo medio), con la Skill `licencias` obligatoria.*
   - Se descargan del repositorio oficial `google/fonts` (`ofl/<familia>/`) las seis familias: Bricolage Grotesque, Instrument Sans, Archivo, Atkinson Hyperlegible, Barlow + Barlow Condensed y JetBrains Mono. Se prefieren las variables; se comprueban la ruta y el nombre exactos al descargar, sin suponerlos.
   - Cada familia lleva su `OFL.txt` en `src/reduvid/resources/fonts/<familia>/` y se incluye en el wheel.
   - Se actualizan `THIRD_PARTY_NOTICES.md` (las dos secciones), el `REUSE.toml` si existe y la frase «El repositorio no incluye material de terceros».
