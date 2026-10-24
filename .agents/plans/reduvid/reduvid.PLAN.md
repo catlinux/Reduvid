@@ -56,10 +56,11 @@ Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esf
 - [x] 1.5 `core/naming.py` + `core/verify.py` + tests: nombre único, finalización sin sobrescribir (en POSIX `os.link` + `unlink`; en Windows `os.rename` falla si existe), verificación de duración y regla de «pesa más». *(AgentRelay, esfuerzo alto; revisado)*
 - [x] 1.6 `core/runner.py` + tests: ejecución con progreso (`out_time_us`), velocidad, tiempo restante, pausa, cancelación sin huérfanos y prioridad baja. Errores de FFmpeg → `EncodeError(code, detail)` con códigos traducibles (sin espacio, archivo dañado, códec ausente, permiso denegado, desconocido). *(AgentRelay, esfuerzo xhigh; revisado. El ejecutor dejó archivos de validación fuera del código en el árbol de trabajo (caché pip, `runner-validation-*`, `encoded.mkv`); se limpiaron antes de aceptar)*
 - [x] 1.7 `core/queue.py` + `core/report.py` + tests: cola secuencial, carpeta (recursiva opcional, filtro por extensión), progreso total ponderado por duración, eventos para la interfaz e informe de ahorro, errores y avisos. *(AgentRelay, esfuerzo alto; revisado, 1 reintento del propio ejecutor)*
-- [ ] 1.8 `cli.py`:
+- [x] 1.8 `cli.py`:
   - Órdenes `reduvid probe <archivos>` (resumen legible) y `reduvid convert <archivos|carpeta> --target --quality --container --max-height --output-dir --recursive --threads --replace-original --dry-run`.
   - Códigos de salida documentados.
   - Configuración en `platformdirs.user_config_dir("reduvid")` (TOML de lectura con `tomllib` y escritura propia mínima).
+  - *(AgentRelay, esfuerzo xhigh; revisado. `--max-height` queda como no-op con aviso: `PlanOptions`/`build_plan` no exponen todavía un mecanismo para forzar una altura distinta de 1080p; pendiente si se quiere soportar)*
 - [ ] 1.9 Tests de integración (marcador `ffmpeg`): `tests/conftest.py` genera vídeos con lavfi (testsrc2 + 2 audios sine con idioma + srt + capítulos por ffmetadata; una variante de 10 bits) y prueba convertir, verificar, no sobrescribir y cancelar sin huérfanos. CI instala FFmpeg (apt; en Windows con `choco install ffmpeg` o una acción equivalente).
 - [ ] 1.10 Docs y versión 0.1.0: uso de la CLI en README/README.en y `docs/{es,en}/cli.md`, y CHANGELOG. *(Sonnet, esfuerzo bajo)*
 
@@ -92,3 +93,4 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 ## Dudas abiertas
 
 - Adjuntos y portada en MKV (mencionado en 1.4): `MediaInfo` (paso 1.2) no expone streams de tipo `attachment`. Falta decidir si se añade a `probe.py` o se trata aparte antes de cerrar la Fase 1.
+- `--max-height` de `convert` (1.8) es un no-op con aviso: `PlanOptions`/`build_plan` no tienen campo para forzar una altura distinta de 1080p. Decidir si se añade a `plan.py` o se descarta la opción.
