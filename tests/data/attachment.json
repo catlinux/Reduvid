@@ -1,0 +1,18 @@
+{
+  "streams": [
+    {
+      "index": 2,
+      "codec_type": "attachment",
+      "codec_name": "mjpeg",
+      "tags": {
+        "filename": "cover.jpg",
+        "mimetype": "image/jpeg"
+      }
+    }
+  ],
+  "format": {
+    "format_name": "matroska,webm",
+    "duration": "120.5",
+    "size": "9000"
+  }
+}

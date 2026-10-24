@@ -37,6 +37,13 @@ def test_parses_streams_format_and_chapters(monkeypatch: pytest.MonkeyPatch) -> 
     assert info.chapters[0].end == 60
 
 
+def test_parses_attachment_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    _mock_probe(monkeypatch, "attachment.json")
+    info = probe.probe_media(Path("C:/bin/ffprobe"), Path("C:/movie.mkv"))
+
+    assert info.attachments == [probe.AttachmentStream(2, "cover.jpg", "image/jpeg")]
+
+
 def test_detects_hdr10_and_hlg(monkeypatch: pytest.MonkeyPatch) -> None:
     _mock_probe(monkeypatch, "hdr10.json")
     info = probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv"))

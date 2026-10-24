@@ -7,11 +7,11 @@ import pytest
 
 from reduvid.core.command import build_command
 from reduvid.core.plan import AudioDecision, EncodePlan, SubtitleDecision, VideoDecision
-from reduvid.core.probe import MediaInfo
+from reduvid.core.probe import AttachmentStream, MediaInfo
 
 
-def _media() -> MediaInfo:
-    return MediaInfo(Path("/input.mkv"), "matroska", 10, 100, [], [], [], [])
+def _media(attachments: list[AttachmentStream] | None = None) -> MediaInfo:
+    return MediaInfo(Path("/input.mkv"), "matroska", 10, 100, [], [], [], [], attachments or [])
 
 
 def _plan(
@@ -19,8 +19,9 @@ def _plan(
     videos: tuple[VideoDecision, ...] = (),
     audios: tuple[AudioDecision, ...] = (),
     subtitles: tuple[SubtitleDecision, ...] = (),
+    container: str = "mkv",
 ) -> EncodePlan:
-    return EncodePlan("jellyfin", "balanced", "mkv", videos, audios, subtitles, ())
+    return EncodePlan("jellyfin", "balanced", container, videos, audios, subtitles, ())
 
 
 def _video(*, filters: tuple[str, ...] = (), target_height: int | None = None) -> VideoDecision:
@@ -69,6 +70,28 @@ def test_builds_audio_copy_and_encode_in_order() -> None:
     assert arguments[arguments.index("-c:a:0") + 1] == "copy"
     assert arguments[arguments.index("-c:a:1") + 1] == "aac"
     assert arguments[arguments.index("-b:a:1") + 1] == "192k"
+
+
+def test_maps_attachments_for_mkv() -> None:
+    media = _media([AttachmentStream(2, "cover.jpg", "image/jpeg")])
+    arguments = build_command(media, _plan(), Path.cwd() / "in.mkv", Path.cwd() / "out.mkv")
+
+    assert arguments[arguments.index("-map") : arguments.index("-map") + 4] == [
+        "-map",
+        "0:2",
+        "-c:t",
+        "copy",
+    ]
+
+
+def test_does_not_map_attachments_for_mp4() -> None:
+    media = _media([AttachmentStream(2, "cover.jpg", "image/jpeg")])
+    arguments = build_command(
+        media, _plan(container="mp4"), Path.cwd() / "in.mkv", Path.cwd() / "out.mp4"
+    )
+
+    assert "0:2" not in arguments
+    assert "-c:t" not in arguments
 
 
 def test_dropped_subtitle_is_not_mapped_and_metadata_is_kept() -> None:

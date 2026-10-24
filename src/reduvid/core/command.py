@@ -15,7 +15,6 @@ def build_command(
     media: MediaInfo, plan: EncodePlan, input_path: Path, output_path: Path
 ) -> list[str]:
     """Return FFmpeg arguments; both paths must already be absolute."""
-    del media  # MediaInfo does not currently expose attachment streams.
     if not input_path.is_absolute():
         raise ValueError("input_path must be absolute")
     if not output_path.is_absolute():
@@ -53,6 +52,10 @@ def build_command(
         arguments.extend(["-map", f"0:{subtitle.stream_index}"])
         arguments.extend([f"-c:s:{subtitle_position}", subtitle.codec or "copy"])
         subtitle_position += 1
+
+    if plan.container == "mkv":
+        for attachment in media.attachments:
+            arguments.extend(["-map", f"0:{attachment.index}", "-c:t", "copy"])
 
     arguments.extend(["-map_metadata", "0", "-map_chapters", "0"])
     arguments.append(str(output_path))

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -59,6 +59,13 @@ class Chapter:
 
 
 @dataclass(frozen=True)
+class AttachmentStream:
+    index: int
+    filename: str | None
+    mime_type: str | None
+
+
+@dataclass(frozen=True)
 class MediaInfo:
     path: Path
     format: str
@@ -68,6 +75,7 @@ class MediaInfo:
     audio_streams: list[AudioStream]
     subtitle_streams: list[SubtitleStream]
     chapters: list[Chapter]
+    attachments: list[AttachmentStream] = field(default_factory=list)
 
 
 def _mapping(value: object) -> dict[str, Any]:
@@ -154,6 +162,7 @@ def _parse(payload: object, path: Path) -> MediaInfo:
     videos: list[VideoStream] = []
     audios: list[AudioStream] = []
     subtitles: list[SubtitleStream] = []
+    attachments: list[AttachmentStream] = []
     for raw_stream in streams:
         stream = _mapping(raw_stream)
         codec_type = stream.get("codec_type")
@@ -186,6 +195,17 @@ def _parse(payload: object, path: Path) -> MediaInfo:
                     forced=bool(_disposition(stream).get("forced", 0)),
                 )
             )
+        elif codec_type == "attachment":
+            tags = _tags(stream)
+            filename = tags.get("filename")
+            mime_type = tags.get("mimetype")
+            attachments.append(
+                AttachmentStream(
+                    index=_int(stream.get("index")),
+                    filename=filename if isinstance(filename, str) else None,
+                    mime_type=mime_type if isinstance(mime_type, str) else None,
+                )
+            )
     raw_chapters = root.get("chapters")
     chapters: list[Chapter] = []
     if isinstance(raw_chapters, list):
@@ -209,6 +229,7 @@ def _parse(payload: object, path: Path) -> MediaInfo:
         audio_streams=audios,
         subtitle_streams=subtitles,
         chapters=chapters,
+        attachments=attachments,
     )
 
 
