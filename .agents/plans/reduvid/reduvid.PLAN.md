@@ -115,7 +115,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - Cada familia lleva su `OFL.txt` en `src/reduvid/resources/fonts/<familia>/` y se incluye en el wheel.
   - Se actualizan `THIRD_PARTY_NOTICES.md` (las dos secciones), el `REUSE.toml` si existe y la frase «El repositorio no incluye material de terceros».
   - Terminado cuando `python -c` carga cada archivo con `QFontDatabase.addApplicationFont` sin devolver -1.
-- [ ] 2.5 **Temas: tokens → QSS.** *AgentRelay, esfuerzo alto; con `docs/design/mockups.html` en references.*
+- [x] 2.5 **Temas: tokens → QSS.** *AgentRelay, esfuerzo alto; con `docs/design/mockups.html` en references.*
   - `gui/theme/tokens.py`, Python puro: `ThemeTokens` (bg, surface, text, muted, line, accent, accent2, accent3?, fold?, on_accent, soft, warn_bg, warn_fg, track, radius, bordes, familias display/body/mono y pesos). Valores **exactos** de la maqueta para plegat/riso/cinta en claro y oscuro: `THEMES[(name, mode)]`.
   - `gui/theme/qss.py`: `build_qss(tokens) -> str`. QSS no tiene variables: se sustituyen los valores. Los degradados se escriben con `qlineargradient` y los selectores usan `objectName` y propiedades dinámicas (`[role="primary"]`, `[checked="true"]`…). Lo que QSS no sabe hacer (sombra desplazada de Riso, esquina doblada de Plegat, tramado) queda para el 2.11.
   - `gui/theme/fonts.py`: registra las fuentes del 2.4 una sola vez y devuelve las familias reales.

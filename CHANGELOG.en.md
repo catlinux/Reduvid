@@ -14,6 +14,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - gettext translation in the engine and the command line: `reduvid/i18n.py` (effective language from `--lang`, the configuration or the system), `reduvid/messages.py` with clear texts for every warning and error, `ca` and `es` catalogs with the reference `.pot`, and the global `--lang {ca,es,en}` option.
 - Development scripts to extract and compile the translations, and a Hatch hook that compiles the `.po` files to `.mo` on editable installs and wheel builds.
 - Language filtering for audio and subtitles (`--keep-audio`, `--keep-subs`) and a Jellyfin compatibility traffic light in `core/compat.py` (`direct`, `partial`, `blocked`), with new warnings for the destination profile and 10-bit video.
+- Interface themes: exact Plegat, Riso and Cinta tokens for light and dark (`gui/theme/tokens.py`), the stylesheet generated from them (`qss.py`), registration of the bundled fonts (`fonts.py`) and a `ThemeManager` that applies theme and mode, including the system one.
 
 ## [0.1.0] - 2026-10-24
 
