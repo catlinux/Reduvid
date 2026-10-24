@@ -61,7 +61,7 @@ Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esf
   - Códigos de salida documentados.
   - Configuración en `platformdirs.user_config_dir("reduvid")` (TOML de lectura con `tomllib` y escritura propia mínima).
   - *(AgentRelay, esfuerzo xhigh; revisado. `--max-height` queda como no-op con aviso: `PlanOptions`/`build_plan` no exponen todavía un mecanismo para forzar una altura distinta de 1080p; pendiente si se quiere soportar)*
-- [ ] 1.9 Tests de integración (marcador `ffmpeg`): `tests/conftest.py` genera vídeos con lavfi (testsrc2 + 2 audios sine con idioma + srt + capítulos por ffmetadata; una variante de 10 bits) y prueba convertir, verificar, no sobrescribir y cancelar sin huérfanos. CI instala FFmpeg (apt; en Windows con `choco install ffmpeg` o una acción equivalente).
+- [x] 1.9 Tests de integración (marcador `ffmpeg`): `tests/conftest.py` genera vídeos con lavfi (testsrc2 + 2 audios sine con idioma + srt + capítulos por ffmetadata; una variante de 10 bits) y prueba convertir, verificar, no sobrescribir y cancelar sin huérfanos. CI instala FFmpeg (apt; en Windows con `choco install ffmpeg` o una acción equivalente). *(AgentRelay, esfuerzo xhigh; revisado y validado con FFmpeg real (winget, fuera del PATH de la sesión: se usó la ruta absoluta de instalación). El ejecutor no tenía FFmpeg en su sandbox y escaló; se forzó la aceptación tras comprobar personalmente que los 4 tests pasan de verdad)*
 - [ ] 1.10 Docs y versión 0.1.0: uso de la CLI en README/README.en y `docs/{es,en}/cli.md`, y CHANGELOG. *(Sonnet, esfuerzo bajo)*
 
 ## Fase 2: interfaz y asistente (0.2.0)
