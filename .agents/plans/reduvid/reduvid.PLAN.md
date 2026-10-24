@@ -46,7 +46,7 @@ Estado: `[x]` hecho · `[ ]` pendiente · `[~]` en curso. El ejecutor marca cada
 
 Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esfuerzo medio; revisión de Opus/Sonnet. Cada paso, con sus tests y sin Qt.
 
-- [ ] 1.1 `core/ffmpeg.py` + tests.
+- [x] 1.1 `core/ffmpeg.py` + tests. *(AgentRelay, esfuerzo medio; revisado)*
   - Localiza ffmpeg/ffprobe: ruta configurada, luego `shutil.which`.
   - Devuelve `FFmpegInfo`: versión, encoders `libx264`/`libx265`, filtros `zscale`/`tonemap` y encoders de hardware detectados (solo para informar).
   - Tests con salidas de `-encoders`/`-filters` simuladas.
