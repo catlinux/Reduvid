@@ -39,7 +39,8 @@ Estado: `[x]` hecho · `[ ]` pendiente · `[~]` en curso. El ejecutor marca cada
 - [x] 0.1 Licencia WNCL-CU-1.0, rama `main`, remoto SSH, `CLAUDE.md` y este plan. *(sesión)*
 - [x] 0.2 Andamiaje: `pyproject.toml` (hatchling, versión dinámica, extras `dev`, script `reduvid`), `src/reduvid/{__init__,__main__,cli}.py` con `--version` (solo eso), `tests/test_version.py`, configuración de ruff/mypy/pytest, `.pre-commit-config.yaml`, `scripts/check_doc_sync.py` + test, `.github/workflows/ci.yml` (ubuntu y windows; py 3.11 y 3.13; ruff, mypy, pytest, check_doc_sync). *Ejecutor: AgentRelay, esfuerzo medio.* Terminado cuando `pip install -e ".[dev]"`, `reduvid --version`, `pytest`, `ruff check .` y `mypy` pasan en local.
 - [x] 0.3 Documentación base bilingüe: README, CHANGELOG, TODO, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, AUTHORS, THIRD_PARTY_NOTICES, `docs/{es,en}/README.md` y plantillas de `.github`. Versión 0.0.1. *(sesión)*
-- [~] 0.4 Maquetas de las 3 direcciones de diseño en `docs/design/mockups.html`, publicadas como artifact (https://claude.ai/artifact/19SAanEVfYTEdjq8XbkAxw, privado). Pendiente: elección del usuario. Las propuestas iniciales A/B/C se descartaron por parecerse a estilos típicos de IA y se rehicieron como Riso, Cinta y Plegat. *(sesión, Opus)*
+- [x] 0.4 Maquetas de las 3 direcciones de diseño en `docs/design/mockups.html`, publicadas como artifact (https://claude.ai/artifact/19SAanEVfYTEdjq8XbkAxw, privado). **Decisión del usuario:** las tres se incluyen como temas intercambiables; **Plegat** es el tema por defecto. Riso y Cinta se implementan como alternativas en el selector de tema (fase 2). Las propuestas iniciales A/B/C se descartaron por parecerse a estilos típicos de IA y se rehicieron como Riso, Cinta y Plegat. *(sesión, Opus)*
+- [x] 0.5 FFmpeg instalado en este equipo con winget (`Gyan.FFmpeg` 9.0.2, incluye `libx264`, `libx265`, `libsvtav1`, `zscale`, `tonemap`, y aceleración NVENC/QSV/VAAPI/AMF). Los enlaces de winget quedan en el PATH de usuario; solo hace falta una terminal abierta después de instalarlo. *(sesión)*
 
 ## Fase 1: motor y CLI (0.1.0)
 
@@ -64,14 +65,14 @@ Rama `feat/motor` (pedir OK para crearla). Ejecutor por defecto: AgentRelay, esf
 
 ## Fase 2: interfaz y asistente (0.2.0)
 
-Se detalla con el diseño elegido (lo hará Opus). Contenido:
+Se detalla con más precisión al llegar (lo hará Opus, a partir de las maquetas de `docs/design/mockups.html`). Contenido:
 
-- Sistema de temas por tokens → QSS, con claro y oscuro.
-- Tipografías OFL incluidas en `src/reduvid/resources/fonts/` con su licencia.
+- Sistema de **tres temas** por tokens → QSS, con claro y oscuro cada uno: **Plegat** (por defecto), **Riso** y **Cinta**. Selector de tema en Preferencias; persistido en la configuración del usuario.
+- Tipografías OFL incluidas en `src/reduvid/resources/fonts/` con su licencia (Bricolage Grotesque e Instrument Sans para Plegat; Archivo y Atkinson Hyperlegible para Riso; Barlow/Barlow Condensed y JetBrains Mono para Cinta).
 - Modos Asistente y Avanzado: elegir vídeos, destino, calidad, qué conservar, salida y resumen con semáforo Jellyfin.
 - «¿Qué es esto?» en cada opción, errores traducidos con «ver detalles técnicos», pantalla de FFmpeg ausente e i18n ca/es/en.
 - Accesibilidad: teclado, contraste y escalado.
-- Capturas en `docs/`.
+- Capturas en `docs/` de cada tema, en claro y oscuro.
 
 ## Fase 3: ayudas (0.3.0)
 
@@ -84,6 +85,10 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 - Linux: AppImage; evaluar .deb y Flatpak.
 - CI de artefactos, capturas, revisión final de licencias y primera release (con OK).
 
+## Decisiones resueltas (histórico)
+
+- **Contribuciones externas de código:** se exigirá **DCO** (Developer Certificate of Origin), no un CLA. Quien contribuye certifica con `Signed-off-by` en el commit que el código es suyo y lo aporta bajo WNCL-CU-1.0; no hay cesión de derechos a Catlinux ni papeleo aparte. Es el mínimo habitual en proyectos pequeños de un solo mantenedor; un CLA sería desproporcionado aquí. Pendiente de aplicar en `CONTRIBUTING.md`/`.en.md` (quitar el bloqueo de PRs de código y explicar el DCO) cuando se abra el repositorio a contribuciones.
+
 ## Dudas abiertas
 
-- Licencia de las contribuciones externas de código: WNCL-CU solo cubre material de Catlinux. Hasta decidirlo (cesión, CLA o licencia de entrada) no se aceptan PR de código. Decisión del usuario, con la Skill `licencias`.
+- (ninguna)

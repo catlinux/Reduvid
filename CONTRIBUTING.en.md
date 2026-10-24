@@ -6,7 +6,7 @@ Thanks for your interest in Reduvid. Please open an issue before starting anythi
 
 ## Licensing of contributions
 
-Reduvid uses the [WNCL-CU-1.0](LICENSE) license, which covers material owned by Catlinux. How third-party code contributions are licensed has not been decided yet, so for now **code pull requests are not accepted**. Bug reports, ideas and feedback on translations are welcome. This section will be updated once that is decided.
+Reduvid uses the [WNCL-CU-1.0](LICENSE) license, which covers material owned by Catlinux. Code contributions are accepted under the **[Developer Certificate of Origin (DCO) 1.1](https://developercertificate.org/)**: by signing off your commit (`git commit -s`) you certify that you have the right to submit that code and that you do so under the project's license. No other document needs to be signed and authorship is not transferred; the DCO only certifies the code's origin. Pull requests with unsigned commits cannot be merged.
 
 ## Setting up
 

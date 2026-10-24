@@ -22,6 +22,8 @@ Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.age
 - **Traducción:** gettext (dominio `reduvid`, `.po` en `src/reduvid/locale/`), compartido por la CLI y la interfaz; Babel solo en desarrollo. Idiomas: ca, es, en.
 - **FFmpeg:** nunca dentro del repo ni de los paquetes. Se detecta en la ruta configurada y luego en el PATH.
 - **Destinos («¿dónde lo vas a ver?»)** como perfiles de datos, no como código especial: añadir el reproductor propio del autor en el futuro debe ser un perfil más.
+- **Temas visuales:** tres, intercambiables por tokens → QSS: **Plegat** (por defecto), **Riso** y **Cinta**. Maquetas en `docs/design/mockups.html`.
+- **Contribuciones de código de terceros:** se aceptan bajo DCO (`Signed-off-by`, sin CLA ni cesión de derechos); ver `CONTRIBUTING.md`.
 
 ## Arquitectura
 

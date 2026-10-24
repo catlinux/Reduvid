@@ -6,7 +6,7 @@ Gracias por tu interés en Reduvid. Abre una *issue* antes de empezar algo grand
 
 ## Licencia de las contribuciones
 
-Reduvid usa la licencia [WNCL-CU-1.0](LICENSE), que cubre el material de Catlinux. Todavía no está definido cómo se licencian las contribuciones de código de terceros, así que por ahora **no se aceptan *pull requests* de código**. Sí son bienvenidos los avisos de errores, las ideas y los comentarios sobre traducciones. Esta sección se actualizará cuando se decida.
+Reduvid usa la licencia [WNCL-CU-1.0](LICENSE), que cubre el material de Catlinux. Las contribuciones de código se aceptan bajo el **[Developer Certificate of Origin (DCO) 1.1](https://developercertificate.org/)**: al firmar tu commit (`git commit -s`) certificas que tienes derecho a aportar ese código y que lo haces bajo la licencia del proyecto. No hace falta firmar ningún otro documento ni ceder la autoría; el DCO solo certifica el origen del código. Las *pull requests* sin commits firmados no se podrán fusionar.
 
 ## Preparar el entorno
 

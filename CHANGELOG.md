@@ -13,4 +13,5 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Estructura inicial del proyecto: paquete Python con `reduvid --version`, tests, ruff, mypy, pre-commit e integración continua en Linux y Windows.
 - Licencia WNCL-CU-1.0, autoría y avisos de terceros.
 - Documentación base en castellano e inglés (README, CHANGELOG, TODO, guía de contribución, seguridad y código de conducta) y comprobación automática de que ambas versiones tienen la misma estructura.
-- Hoja de ruta por fases y maquetas de tres direcciones de diseño.
+- Hoja de ruta por fases y maquetas de tres direcciones de diseño: Riso, Cinta y Plegat (elegidas como temas intercambiables, con Plegat por defecto).
+- Política de contribuciones de código bajo DCO (Developer Certificate of Origin).
