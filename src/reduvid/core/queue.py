@@ -51,7 +51,7 @@ class QueueProgressEvent:
     file_progress: ProgressEvent | None = None
 
 
-class FileProcessor(Protocol):
+class ProcessorProtocol(Protocol):
     def __call__(
         self, media: MediaInfo, on_progress: Callable[[ProgressEvent], None]
     ) -> ProcessingResult: ...
@@ -62,7 +62,7 @@ class ConversionQueue:
 
     def __init__(
         self,
-        processor: FileProcessor,
+        processor: ProcessorProtocol,
         *,
         ffprobe_path: Path = Path("ffprobe"),
         on_progress: Callable[[QueueProgressEvent], None] | None = None,
@@ -134,7 +134,11 @@ class ConversionQueue:
             except Exception as error:
                 media_items.append(None)
                 reports_by_index[index] = build_file_report(
-                    path, "failed", _file_size(path), reason=str(error)
+                    path,
+                    "failed",
+                    _file_size(path),
+                    reason=str(error),
+                    error_code="probe_failed",
                 )
         valid = [media for media in media_items if media is not None]
         total_duration = sum(max(0.0, media.duration) for media in valid)
@@ -200,7 +204,9 @@ class ConversionQueue:
                             )
                         )
                 except Exception as error:
-                    report = build_file_report(path, "failed", media.size, reason=str(error))
+                    report = build_file_report(
+                        path, "failed", media.size, reason=str(error), error_code=_error_code(error)
+                    )
                     reports_by_index[index] = report
                     completed_duration += duration
                     if self.on_file_failed is not None:
@@ -217,6 +223,9 @@ class ConversionQueue:
 
     def cancel(self) -> None:
         self._cancelled.set()
+        control = getattr(self.processor, "cancel", None)
+        if callable(control):
+            control()
 
     def pause(self) -> None:
         """Pause is provided by processing implementations that expose queue controls."""
@@ -235,6 +244,11 @@ def _file_size(path: Path) -> int:
         return path.stat().st_size
     except OSError:
         return 0
+
+
+def _error_code(error: BaseException) -> str:
+    code = getattr(error, "code", None)
+    return code if isinstance(code, str) else "unknown"
 
 
 def _global_fraction(completed: float, processed: float, duration: float, total: float) -> float:

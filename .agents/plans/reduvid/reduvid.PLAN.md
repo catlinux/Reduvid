@@ -84,7 +84,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 
 ### Pasos
 
-- [ ] 2.1 **Motor: configuración, procesado compartido y errores con código.** *AgentRelay, esfuerzo alto.* Versión: entrada «Añadido/Cambiado» en Sin publicar.
+- [x] 2.1 **Motor: configuración, procesado compartido y errores con código.** *AgentRelay, esfuerzo alto.* Versión: entrada «Añadido/Cambiado» en Sin publicar.
   - `core/config.py`:
     - `Config` (dataclass inmutable) con: `ffmpeg_path: Path | None`, `language: Literal["ca","es","en"] | None`, `theme: Literal["plegat","riso","cinta"] = "plegat"`, `color_mode: Literal["system","light","dark"] = "system"`, `ui_mode: Literal["wizard","advanced"] = "wizard"`, `reduce_motion: bool = False`, `output_dir: Path | None` y los valores por defecto de destino, calidad y contenedor.
     - `config_path()` usa la misma llamada que hoy usa `cli.py` (`user_config_dir("reduvid")`).

@@ -22,6 +22,7 @@ class FileReport:
     final_size: int | None = None
     warnings: tuple[Warning, ...] = ()
     reason: str | None = None
+    error_code: str | None = None
 
     @property
     def savings_bytes(self) -> int:
@@ -74,13 +75,14 @@ def build_file_report(
     final_size: int | None = None,
     warnings: tuple[Warning, ...] = (),
     reason: str | None = None,
+    error_code: str | None = None,
 ) -> FileReport:
     """Create a file report from already collected processing data."""
     if original_size < 0 or (final_size is not None and final_size < 0):
         raise ValueError("sizes must not be negative")
     if status != "success":
         final_size = None
-    return FileReport(path, status, original_size, final_size, warnings, reason)
+    return FileReport(path, status, original_size, final_size, warnings, reason, error_code)
 
 
 def build_queue_report(files: tuple[FileReport, ...] | list[FileReport]) -> QueueReport:

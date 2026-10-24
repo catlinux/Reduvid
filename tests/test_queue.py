@@ -3,10 +3,11 @@
 
 from pathlib import Path
 
+from reduvid.core.pipeline import PipelineError
 from reduvid.core.plan import Warning
 from reduvid.core.probe import MediaInfo
 from reduvid.core.queue import ConversionQueue, ProcessingResult
-from reduvid.core.runner import ProgressEvent
+from reduvid.core.runner import EncodeError, ProgressEvent
 
 
 def media(path: Path, duration: float, size: int = 100) -> MediaInfo:
@@ -106,3 +107,83 @@ def test_add_folder_filters_extensions_and_recursion(tmp_path: Path) -> None:
 
     assert flat.files == (top,)
     assert recursive.files == (top, nested_video)
+
+
+def test_probe_failure_reports_probe_failed_error_code(tmp_path: Path) -> None:
+    path = tmp_path / "broken.mkv"
+    path.touch()
+
+    def failing_probe(_ffprobe: Path, _path: Path) -> MediaInfo:
+        raise RuntimeError("invalid media")
+
+    queue = ConversionQueue(lambda _media, _progress: ProcessingResult(1), probe=failing_probe)
+    queue.add_files([path])
+
+    report = queue.run()
+
+    assert report.failed == 1
+    assert report.files[0].error_code == "probe_failed"
+    assert report.files[0].reason == "invalid media"
+
+
+def test_processor_error_codes_are_reported(tmp_path: Path) -> None:
+    paths = [tmp_path / "space.mkv", tmp_path / "verify.mkv"]
+    for path in paths:
+        path.touch()
+
+    def processor(item: MediaInfo, _progress: object) -> ProcessingResult:
+        if item.path == paths[0]:
+            raise EncodeError("no_space", "No space left on device")
+        raise PipelineError("verification_failed", "duration_mismatch")
+
+    queue = ConversionQueue(processor, probe=lambda _ffprobe, path: media(path, 1))
+    queue.add_files(paths)
+
+    report = queue.run()
+
+    assert [file.error_code for file in report.files] == ["no_space", "verification_failed"]
+
+
+def test_unexpected_processor_error_uses_unknown_code(tmp_path: Path) -> None:
+    path = tmp_path / "broken.mkv"
+    path.touch()
+
+    def processor(_item: MediaInfo, _progress: object) -> ProcessingResult:
+        raise ValueError("unexpected")
+
+    queue = ConversionQueue(processor, probe=lambda _ffprobe, _path: media(_path, 1))
+    queue.add_files([path])
+
+    report = queue.run()
+
+    assert report.files[0].error_code == "unknown"
+    assert report.files[0].reason == "unexpected"
+
+
+def test_cancel_is_forwarded_to_the_processor(tmp_path: Path) -> None:
+    path = tmp_path / "clip.mkv"
+    path.touch()
+    cancelled: list[bool] = []
+
+    class Processor:
+        def __call__(self, _media: MediaInfo, _progress: object) -> ProcessingResult:
+            return ProcessingResult(10)
+
+        def cancel(self) -> None:
+            cancelled.append(True)
+
+    queue: ConversionQueue
+
+    def start(_path: Path, index: int, _total: int) -> None:
+        if index == 1:
+            queue.cancel()
+
+    queue = ConversionQueue(
+        Processor(), probe=lambda _ffprobe, _path: media(_path, 1), on_file_start=start
+    )
+    queue.add_files([path, path.with_name("next.mkv")])
+
+    report = queue.run()
+
+    assert cancelled == [True]
+    assert report.skipped == 1

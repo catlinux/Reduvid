@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from reduvid import cli
+from reduvid.core import pipeline
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.probe import MediaInfo, VideoStream
 from reduvid.core.runner import EncodeResult
@@ -93,7 +94,7 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
     def fail_if_called(*_args, **_kwargs):
         raise AssertionError("dry-run started an encoder")
 
-    monkeypatch.setattr(cli, "EncodeHandle", fail_if_called)
+    monkeypatch.setattr(pipeline, "EncodeHandle", fail_if_called)
     monkeypatch.setattr("reduvid.core.runner.subprocess.Popen", fail_if_called)
 
     result = cli.main(
@@ -128,10 +129,10 @@ def test_convert_runs_pipeline_and_reports_success(monkeypatch: pytest.MonkeyPat
     mock_ffmpeg(monkeypatch)
     monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, path: media_info(path, size=20))
     trash_calls: list[str] = []
-    monkeypatch.setattr(cli.send2trash, "send2trash", trash_calls.append)
-    monkeypatch.setattr(cli, "build_output_path", lambda *_args: output)
-    monkeypatch.setattr(cli, "build_temp_path", lambda _path: temporary)
-    monkeypatch.setattr(cli, "finalize_output", lambda _temp, _output: None)
+    monkeypatch.setattr(pipeline.send2trash, "send2trash", trash_calls.append)
+    monkeypatch.setattr(pipeline, "build_output_path", lambda *_args: output)
+    monkeypatch.setattr(pipeline, "build_temp_path", lambda _path: temporary)
+    monkeypatch.setattr(pipeline, "finalize_output", lambda _temp, _output: None)
     original_stat = Path.stat
 
     def fake_stat(path: Path, *args, **kwargs):
@@ -148,9 +149,9 @@ def test_convert_runs_pipeline_and_reports_success(monkeypatch: pytest.MonkeyPat
         def run(self) -> EncodeResult:
             return EncodeResult(0, False, None)
 
-    monkeypatch.setattr(cli, "EncodeHandle", FakeEncodeHandle)
+    monkeypatch.setattr(pipeline, "EncodeHandle", FakeEncodeHandle)
     monkeypatch.setattr(
-        cli,
+        pipeline,
         "verify_output",
         lambda *_args: VerificationResult(True, "ok", 125.5, 7),
     )
@@ -175,9 +176,9 @@ def test_replace_original_keeps_source_if_verification_fails(
     mock_ffmpeg(monkeypatch)
     monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, path: media_info(path, size=20))
     trash_calls: list[str] = []
-    monkeypatch.setattr(cli.send2trash, "send2trash", trash_calls.append)
-    monkeypatch.setattr(cli, "build_output_path", lambda *_args: output)
-    monkeypatch.setattr(cli, "build_temp_path", lambda _path: temporary)
+    monkeypatch.setattr(pipeline.send2trash, "send2trash", trash_calls.append)
+    monkeypatch.setattr(pipeline, "build_output_path", lambda *_args: output)
+    monkeypatch.setattr(pipeline, "build_temp_path", lambda _path: temporary)
 
     class FakeEncodeHandle:
         def __init__(self, _command, _duration, _temp_path, **_kwargs) -> None:
@@ -186,9 +187,9 @@ def test_replace_original_keeps_source_if_verification_fails(
         def run(self) -> EncodeResult:
             return EncodeResult(0, False, None)
 
-    monkeypatch.setattr(cli, "EncodeHandle", FakeEncodeHandle)
+    monkeypatch.setattr(pipeline, "EncodeHandle", FakeEncodeHandle)
     monkeypatch.setattr(
-        cli,
+        pipeline,
         "verify_output",
         lambda *_args: VerificationResult(False, "duration_mismatch"),
     )

@@ -9,22 +9,18 @@ import argparse
 import math
 import sys
 import tomllib
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
-import send2trash  # type: ignore[import-untyped]
-from platformdirs import user_config_dir
-
 from reduvid import __version__
-from reduvid.core.command import build_command
+from reduvid.core.config import load_config
 from reduvid.core.ffmpeg import FFmpegInfo, detect_ffmpeg
-from reduvid.core.naming import build_output_path, build_temp_path, finalize_output
+from reduvid.core.naming import build_output_path
+from reduvid.core.pipeline import FileProcessor
 from reduvid.core.plan import EncodePlan, PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, ProbeError, probe_media
-from reduvid.core.queue import ConversionQueue, ProcessingResult, QueueProgressEvent
+from reduvid.core.queue import ConversionQueue, QueueProgressEvent
 from reduvid.core.report import FileReport, QueueReport
-from reduvid.core.runner import EncodeHandle, ProgressEvent
-from reduvid.core.verify import verify_output
 
 
 def _positive_int(value: str) -> int:
@@ -38,23 +34,14 @@ def _positive_int(value: str) -> int:
 
 
 def _configured_ffmpeg_path() -> Path | None:
-    config_path = Path(user_config_dir("reduvid")) / "config.toml"
-    if not config_path.is_file():
-        return None
     try:
-        with config_path.open("rb") as config_file:
-            config = tomllib.load(config_file)
+        config, _invalid_keys = load_config()
     except (OSError, tomllib.TOMLDecodeError) as error:
         print(f"Warning: Could not read config file: {error}", file=sys.stderr)
         return None
-
-    configured_path = config.get("ffmpeg_path")
-    ffmpeg_section = config.get("ffmpeg")
-    if not isinstance(configured_path, str) and isinstance(ffmpeg_section, dict):
-        configured_path = ffmpeg_section.get("path")
-    if not isinstance(configured_path, str) or not configured_path.strip():
+    if config.ffmpeg_path is None:
         return None
-    return Path(configured_path).expanduser().resolve()
+    return config.ffmpeg_path.expanduser().resolve()
 
 
 def _resolve_inputs(raw_paths: Sequence[Path], *, allow_directories: bool) -> list[Path] | None:
@@ -215,48 +202,26 @@ def _convert(
     replace_original: bool,
     dry_run: bool,
 ) -> int:
-    def process(media: MediaInfo, on_progress: Callable[[ProgressEvent], None]) -> ProcessingResult:
-        plan = build_plan(media, ffmpeg_info, options)
-        destination_dir = output_dir or media.path.parent
-        destination_dir.mkdir(parents=True, exist_ok=True)
-        output_path = build_output_path(media.path, destination_dir, options.container)
-        temp_path = build_temp_path(output_path)
-        try:
-            command = build_command(media, plan, media.path, temp_path)
-            result = EncodeHandle(
-                command,
-                media.duration,
-                temp_path,
-                on_progress=on_progress,
-                threads=threads,
-                ffmpeg_path=ffmpeg_info.ffmpeg_path,
-            ).run()
-            if result.cancelled:
-                raise RuntimeError("Encoding was cancelled.")
-            verification = verify_output(
-                ffmpeg_info.ffprobe_path,
-                media.path,
-                media.duration,
-                media.size,
-                temp_path,
-            )
-            if not verification.passed:
-                raise RuntimeError(f"Output verification failed: {verification.reason}.")
-            finalize_output(temp_path, output_path)
-            if replace_original:
-                send2trash.send2trash(str(media.path))
+    processor = FileProcessor(
+        ffmpeg_info,
+        options,
+        output_dir=output_dir,
+        threads=threads,
+        replace_original=replace_original,
+    )
+
+    def show_file_complete(report: FileReport) -> None:
+        output_path = processor.last_output_path
+        if output_path is not None:
             print(f"Output: {output_path}")
-            return ProcessingResult(output_path.stat().st_size, plan.warnings)
-        except Exception:
-            temp_path.unlink(missing_ok=True)
-            raise
+        _show_file_complete(report)
 
     queue = ConversionQueue(
-        process,
+        processor,
         ffprobe_path=ffmpeg_info.ffprobe_path,
         on_progress=_show_progress,
         on_file_start=_show_file_start,
-        on_file_complete=_show_file_complete,
+        on_file_complete=show_file_complete,
         on_file_failed=_show_file_failed,
         probe=probe_media,
     )

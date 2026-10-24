@@ -6,6 +6,11 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Added
+
+- User configuration in `core/config.py`: TOML reading (with the FFmpeg path at the root or under `[ffmpeg] path`, unknown keys ignored and a list of invalid keys) and its own atomic writer.
+- Per-file processing shared in `core/pipeline.py`, with pause, resume and cancel controls, and errors carrying a code (`cancelled` and `verification_failed`); the conversion queue now also reports each file's error code.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added
