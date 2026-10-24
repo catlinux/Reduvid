@@ -18,27 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: cli.py:204 cli.py:216
+#: cli.py:211 cli.py:223
 #, python-brace-format
 msgid " as {codec}"
 msgstr " com a {codec}"
 
-#: cli.py:206
+#: cli.py:213
 #, python-brace-format
 msgid " at {bitrate}"
 msgstr " a {bitrate}"
 
-#: cli.py:192
+#: cli.py:199
 #, python-brace-format
 msgid ", scale to {height}p"
 msgstr ", escalar a {height}p"
 
-#: cli.py:150 cli.py:164
+#: cli.py:157 cli.py:171
 #, python-brace-format
 msgid ", {language}"
 msgstr ", {language}"
 
-#: cli.py:209
+#: cli.py:216
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
 msgstr "Pista d'àudio {index}: {details}"
@@ -50,94 +50,94 @@ msgstr ""
 "La pista d'àudio {stream_index} es convertirà a {codec} perquè el Jellyfin la pugui reproduir "
 "directament."
 
-#: cli.py:155
+#: cli.py:162
 #, python-brace-format
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr "Àudio {position}: {codec}, {channels} canals{language}"
 
-#: cli.py:371
+#: cli.py:378
 msgid "Convert media files"
 msgstr "Converteix fitxers multimèdia"
 
-#: cli.py:244
+#: cli.py:251
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convertint [{index}/{total}]: {path}"
 
-#: cli.py:347
+#: cli.py:354
 msgid "Dry run complete."
 msgstr "Simulació completada."
 
-#: cli.py:287
+#: cli.py:294
 #, python-brace-format
 msgid "Dry run: {count} file(s)"
 msgstr "Simulació: {count} fitxer(s)"
 
-#: cli.py:128
+#: cli.py:135
 #, python-brace-format
 msgid "Duration: {duration}"
 msgstr "Durada: {duration}"
 
-#: cli.py:99
+#: cli.py:106
 #, python-brace-format
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr "Error: no s'ha pogut inspeccionar FFmpeg: {error}"
 
-#: cli.py:234 cli.py:293
+#: cli.py:241 cli.py:300
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr "Error: no s'ha pogut analitzar {path}: {error}"
 
-#: cli.py:74
+#: cli.py:81
 #, python-brace-format
 msgid "Error: Could not resolve input {path}: {error}"
 msgstr "Error: no s'ha pogut resoldre l'entrada {path}: {error}"
 
-#: cli.py:102
+#: cli.py:109
 msgid "Error: FFmpeg and ffprobe were not found."
 msgstr "Error: no s'han trobat FFmpeg ni ffprobe."
 
-#: cli.py:82
+#: cli.py:89
 #, python-brace-format
 msgid "Error: Input does not exist: {path}"
 msgstr "Error: l'entrada no existeix: {path}"
 
-#: cli.py:88
+#: cli.py:95
 #, python-brace-format
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr "Error: l'entrada no és un fitxer ni una carpeta compatible: {path}"
 
-#: cli.py:415
+#: cli.py:434
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr "Error: la ruta de sortida no és una carpeta: {path}"
 
-#: cli.py:405
+#: cli.py:424
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr "Error: l'entrada d'anàlisi no és un fitxer: {path}"
 
-#: cli.py:264
+#: cli.py:271
 #, python-brace-format
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
-#: cli.py:126
+#: cli.py:133
 #, python-brace-format
 msgid "File: {path}"
 msgstr "Fitxer: {path}"
 
-#: cli.py:269
+#: cli.py:276
 #, python-brace-format
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr "Fitxers: {succeeded} correctes, {failed} amb error, {skipped} omesos"
 
-#: cli.py:258
+#: cli.py:265
 #, python-brace-format
 msgid "Finished: {name}"
 msgstr "Acabat: {name}"
 
-#: cli.py:127
+#: cli.py:134
 #, python-brace-format
 msgid "Format: {format}"
 msgstr "Format: {format}"
@@ -154,7 +154,15 @@ msgstr ""
 "La pista de subtítols d'imatge {stream_index} s'haurà de convertir durant la reproducció, cosa "
 "que consumeix més CPU."
 
-#: cli.py:366
+#: cli.py:391
+msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
+msgstr "Conserva només aquests idiomes d'àudio (separats per comes; 'und' vol dir sense idioma)"
+
+#: cli.py:397
+msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
+msgstr "Conserva només aquests idiomes de subtítols (separats per comes; 'und' vol dir sense idioma)"
+
+#: cli.py:373
 msgid "Language for messages"
 msgstr "Idioma dels missatges"
 
@@ -162,86 +170,93 @@ msgstr "Idioma dels missatges"
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr "Cap pista d'àudio no coincideix amb els idiomes seleccionats, així que es conservaran totes."
 
-#: cli.py:301 cli.py:327
+#: cli.py:308 cli.py:334
 #, python-brace-format
 msgid "Output: {path}"
 msgstr "Sortida: {path}"
 
-#: cli.py:181
+#: cli.py:188
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Pla: {destination}, {quality}, {container}"
 
-#: cli.py:253
+#: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progrés: {percent:.0f}% ({state})"
 
-#: cli.py:369
+#: cli.py:376
 msgid "Show media details"
 msgstr "Mostra els detalls del multimèdia"
 
-#: cli.py:129
+#: cli.py:136
 #, python-brace-format
 msgid "Size: {size:.2f} MB"
 msgstr "Mida: {size:.2f} MB"
 
-#: messages.py:69
+#: messages.py:77
 msgid "Something went wrong while processing the file."
 msgstr "Hi ha hagut un problema en processar el fitxer."
 
-#: cli.py:219
+#: cli.py:226
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
 msgstr "Pista de subtítols {index}: {details}"
 
-#: cli.py:170
+#: cli.py:177
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítol {position}: {codec}{language}, imatge: {image}"
 
-#: messages.py:62
+#: messages.py:70
 msgid "The conversion was cancelled."
 msgstr "S'ha cancel·lat la conversió."
 
-#: messages.py:64
+#: messages.py:72
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr "El fitxer convertit no ha superat les comprovacions de seguretat i s'ha descartat."
 
-#: messages.py:55
+#: messages.py:63
 msgid "The file appears to be damaged and could not be read."
 msgstr "El fitxer sembla malmès i no s'ha pogut llegir."
 
-#: messages.py:67
+#: messages.py:75
 msgid "The file could not be analysed. It may be damaged or in an unsupported format."
 msgstr "No s'ha pogut analitzar el fitxer. Pot ser que estigui malmès o en un format no compatible."
 
-#: messages.py:60
+#: messages.py:68
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr "No es pot llegir o escriure el fitxer o la carpeta per un problema de permisos."
 
-#: messages.py:54
+#: messages.py:62
 msgid "There is not enough free space on the destination drive."
 msgstr "No hi ha prou espai lliure al disc de destinació."
 
-#: messages.py:57
+#: messages.py:65
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
 
-#: cli.py:275
+#: cli.py:282
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr "Estalvi total: {savings:.2f} MB ({percent:.1f}%)"
 
-#: messages.py:44 messages.py:48
+#: messages.py:52 messages.py:56
 #, python-brace-format
 msgid "Unknown warning: {code}"
 msgstr "Avís desconegut: {code}"
 
-#: cli.py:195
+#: cli.py:202
 #, python-brace-format
 msgid "Video stream {index}: {action}, {details}"
 msgstr "Pista de vídeo {index}: {action}, {details}"
+
+#: messages.py:46
+#, python-brace-format
+msgid "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot play directly."
+msgstr ""
+"La pista de vídeo {stream_index} és de 10 bits i alguns clients del Jellyfin no la poden "
+"reproduir directament."
 
 #: messages.py:24
 #, python-brace-format
@@ -262,65 +277,76 @@ msgstr ""
 "La pista de vídeo {stream_index} es reduirà a 1080p perquè el Jellyfin la pugui reproduir "
 "directament."
 
-#: cli.py:137
+#: cli.py:144
 #, python-brace-format
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
-#: cli.py:43
+#: cli.py:50
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
 msgstr "Avís: no s'ha pogut llegir el fitxer de configuració: {error}"
 
-#: cli.py:224
+#: cli.py:231
 #, python-brace-format
 msgid "Warning: {text}"
 msgstr "Avís: {text}"
 
-#: cli.py:300
+#: cli.py:307
 #, python-brace-format
 msgid "Would convert: {path}"
 msgstr "Es convertiria: {path}"
 
-#: cli.py:119
+#: cli.py:126
 msgid "convert"
 msgstr "convertir"
 
-#: cli.py:118
+#: cli.py:125
 msgid "copy"
 msgstr "copiar"
 
-#: cli.py:120
+#: cli.py:127
 msgid "drop"
 msgstr "descartar"
 
-#: cli.py:117
+#: cli.py:124
 msgid "encode"
 msgstr "codificar"
+
+#: cli.py:41
+msgid "must be a comma-separated list of language codes"
+msgstr "ha de ser una llista de codis d'idioma separats per comes"
 
 #: cli.py:32 cli.py:34
 msgid "must be a positive integer"
 msgstr "ha de ser un nombre enter positiu"
 
-#: cli.py:134 cli.py:168
+#: cli.py:141 cli.py:175
 msgid "no"
 msgstr "no"
 
-#: cli.py:132
+#: cli.py:139
 msgid "unknown"
 msgstr "desconegut"
 
-#: cli.py:168
+#: cli.py:175
 msgid "yes"
 msgstr "sí"
 
-#: cli.py:132
+#: cli.py:139
 #, python-brace-format
 msgid "yes ({variant})"
 msgstr "sí ({variant})"
 
-#: cli.py:186
+#: cli.py:193
 #, python-brace-format
 msgid "{codec}, CRF {crf}, {preset} preset"
 msgstr "{codec}, CRF {crf}, predefinit {preset}"
+
+#: messages.py:42
+#, python-brace-format
+msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
+msgstr ""
+"La sortida amb el perfil {destination} no és la de Jellyfin, així que és possible que el Jellyfin"
+" l'hagi de transcodificar."
 

@@ -24,6 +24,8 @@ WARNING_PARAMS: dict[str, dict[str, object]] = {
     "image_subtitle_burn_in": {"stream_index": 2},
     "image_subtitle_dropped_mp4": {"stream_index": 2},
     "audio_filter_kept_all": {},
+    "not_direct_play_profile": {"destination": "modern"},
+    "ten_bit_video": {"stream_index": 0},
 }
 ERROR_CODES = (
     "no_space",

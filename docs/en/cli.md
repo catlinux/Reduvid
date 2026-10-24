@@ -33,6 +33,7 @@ Converts one or more files, or an entire folder.
 reduvid convert movie.mkv
 reduvid convert folder/ --recursive
 reduvid convert *.mkv --target modern --quality max_savings
+reduvid convert movie.mkv --keep-audio ca,es --keep-subs ca,und
 ```
 
 By default, the converted file is written next to the original with the `_reduvid` suffix (for example `movie_reduvid.mkv`), without touching the source. The original is only sent to the trash if you pass `--replace-original`, and only after checking the conversion is correct.
@@ -44,6 +45,8 @@ By default, the converted file is written next to the original with the `_reduvi
 | `--target` | `jellyfin`, `modern`, `archive` | `jellyfin` | Destination profile. `jellyfin` prioritizes direct playback on Jellyfin (H.264); `modern` uses H.265 for more savings; `archive` is H.265 with maximum compression and a slower preset. |
 | `--quality` | `high`, `balanced`, `max_savings` | `balanced` | Quality/size level. See the CRF table in the [README](../../README.en.md). |
 | `--container` | `mkv`, `mp4` | `mkv` | Output file format. |
+| `--keep-audio` | comma-separated languages | all | Keeps only the audio tracks in those languages; `und` means "no language". If none match, all are kept and a warning is shown. |
+| `--keep-subs` | comma-separated languages | all | Keeps only the subtitles in those languages (`und` means "no language"). There may be none left. |
 | `--max-height` | integer | `1080` (on `jellyfin`) | Forces a maximum height other than 1080p. Only has an effect on the `jellyfin` profile. |
 | `--output-dir` | folder | the original's folder | Where converted files are written. |
 | `--recursive` | — | off | If the argument is a folder, also look for videos in its subfolders. |

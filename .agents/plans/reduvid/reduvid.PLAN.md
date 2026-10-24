@@ -105,7 +105,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - `cli.py`: todos los textos pasan por `_()` y la orden acepta `--lang`.
   - Tests: cada código de `messages` tiene texto en ca y es (no vacío y distinto del `msgid`); un test comprueba que el `.pot` está al día (re-extracción y comparación de `msgid`, sin fechas).
   - Docs: `CONTRIBUTING(.en).md`, cómo actualizar las traducciones.
-- [ ] 2.3 **Motor: filtro por idioma y semáforo Jellyfin.** *AgentRelay, esfuerzo alto.*
+- [x] 2.3 **Motor: filtro por idioma y semáforo Jellyfin.** *AgentRelay, esfuerzo alto.*
   - `PlanOptions.audio_languages`/`subtitle_languages`, con la regla de arriba, en `core/plan.py`.
   - `core/compat.py`: `jellyfin_status(plan) -> CompatStatus(level: Literal["direct","partial","blocked"], reasons: tuple[Warning, ...])`.
   - CLI: `--keep-audio ca,es` y `--keep-subs ca,und`, documentados en `docs/{es,en}/cli.md`.

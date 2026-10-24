@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
 # Copyright (C) 2026 Catlinux
 
+import argparse
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -10,6 +11,7 @@ from reduvid import cli
 from reduvid.core import pipeline
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import MediaInfo, VideoStream
 from reduvid.core.runner import EncodeResult
 from reduvid.core.verify import VerificationResult
@@ -226,3 +228,39 @@ def test_missing_input_fails_before_ffmpeg_detection(
     captured = capsys.readouterr()
     assert result == 2
     assert "Input does not exist" in captured.err
+
+
+def test_keep_language_options_reach_the_plan(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, path: media_info(path))
+    captured: list[PlanOptions] = []
+    original = cli.build_plan
+
+    def spy(media: MediaInfo, ffmpeg: FFmpegInfo, options: PlanOptions | None = None):
+        assert options is not None
+        captured.append(options)
+        return original(media, ffmpeg, options)
+
+    monkeypatch.setattr(cli, "build_plan", spy)
+
+    result = cli.main(
+        [
+            "convert",
+            str(source),
+            "--dry-run",
+            "--keep-audio",
+            " SPA,und ",
+            "--keep-subs",
+            "eng",
+        ]
+    )
+
+    assert result == 0
+    assert captured[0].audio_languages == frozenset({"spa", "und"})
+    assert captured[0].subtitle_languages == frozenset({"eng"})
+
+
+def test_language_list_rejects_empty_values() -> None:
+    with pytest.raises(argparse.ArgumentTypeError, match="language"):
+        cli._language_set(" , ")

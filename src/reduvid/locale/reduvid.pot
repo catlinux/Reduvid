@@ -17,27 +17,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: cli.py:204 cli.py:216
+#: cli.py:211 cli.py:223
 #, python-brace-format
 msgid " as {codec}"
 msgstr ""
 
-#: cli.py:206
+#: cli.py:213
 #, python-brace-format
 msgid " at {bitrate}"
 msgstr ""
 
-#: cli.py:192
+#: cli.py:199
 #, python-brace-format
 msgid ", scale to {height}p"
 msgstr ""
 
-#: cli.py:150 cli.py:164
+#: cli.py:157 cli.py:171
 #, python-brace-format
 msgid ", {language}"
 msgstr ""
 
-#: cli.py:209
+#: cli.py:216
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
 msgstr ""
@@ -47,94 +47,94 @@ msgstr ""
 msgid "Audio track {stream_index} will be converted to {codec} so that Jellyfin can play it directly."
 msgstr ""
 
-#: cli.py:155
+#: cli.py:162
 #, python-brace-format
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr ""
 
-#: cli.py:371
+#: cli.py:378
 msgid "Convert media files"
 msgstr ""
 
-#: cli.py:244
+#: cli.py:251
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
 msgstr ""
 
-#: cli.py:347
+#: cli.py:354
 msgid "Dry run complete."
 msgstr ""
 
-#: cli.py:287
+#: cli.py:294
 #, python-brace-format
 msgid "Dry run: {count} file(s)"
 msgstr ""
 
-#: cli.py:128
+#: cli.py:135
 #, python-brace-format
 msgid "Duration: {duration}"
 msgstr ""
 
-#: cli.py:99
+#: cli.py:106
 #, python-brace-format
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr ""
 
-#: cli.py:234 cli.py:293
+#: cli.py:241 cli.py:300
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr ""
 
-#: cli.py:74
+#: cli.py:81
 #, python-brace-format
 msgid "Error: Could not resolve input {path}: {error}"
 msgstr ""
 
-#: cli.py:102
+#: cli.py:109
 msgid "Error: FFmpeg and ffprobe were not found."
 msgstr ""
 
-#: cli.py:82
+#: cli.py:89
 #, python-brace-format
 msgid "Error: Input does not exist: {path}"
 msgstr ""
 
-#: cli.py:88
+#: cli.py:95
 #, python-brace-format
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr ""
 
-#: cli.py:415
+#: cli.py:434
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr ""
 
-#: cli.py:405
+#: cli.py:424
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr ""
 
-#: cli.py:264
+#: cli.py:271
 #, python-brace-format
 msgid "Error: {path}{details}"
 msgstr ""
 
-#: cli.py:126
+#: cli.py:133
 #, python-brace-format
 msgid "File: {path}"
 msgstr ""
 
-#: cli.py:269
+#: cli.py:276
 #, python-brace-format
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr ""
 
-#: cli.py:258
+#: cli.py:265
 #, python-brace-format
 msgid "Finished: {name}"
 msgstr ""
 
-#: cli.py:127
+#: cli.py:134
 #, python-brace-format
 msgid "Format: {format}"
 msgstr ""
@@ -149,7 +149,15 @@ msgstr ""
 msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
 msgstr ""
 
-#: cli.py:366
+#: cli.py:391
+msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
+msgstr ""
+
+#: cli.py:397
+msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
+msgstr ""
+
+#: cli.py:373
 msgid "Language for messages"
 msgstr ""
 
@@ -157,85 +165,90 @@ msgstr ""
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr ""
 
-#: cli.py:301 cli.py:327
+#: cli.py:308 cli.py:334
 #, python-brace-format
 msgid "Output: {path}"
 msgstr ""
 
-#: cli.py:181
+#: cli.py:188
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr ""
 
-#: cli.py:253
+#: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr ""
 
-#: cli.py:369
+#: cli.py:376
 msgid "Show media details"
 msgstr ""
 
-#: cli.py:129
+#: cli.py:136
 #, python-brace-format
 msgid "Size: {size:.2f} MB"
 msgstr ""
 
-#: messages.py:69
+#: messages.py:77
 msgid "Something went wrong while processing the file."
 msgstr ""
 
-#: cli.py:219
+#: cli.py:226
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
 msgstr ""
 
-#: cli.py:170
+#: cli.py:177
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
 
-#: messages.py:62
+#: messages.py:70
 msgid "The conversion was cancelled."
 msgstr ""
 
-#: messages.py:64
+#: messages.py:72
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr ""
 
-#: messages.py:55
+#: messages.py:63
 msgid "The file appears to be damaged and could not be read."
 msgstr ""
 
-#: messages.py:67
+#: messages.py:75
 msgid "The file could not be analysed. It may be damaged or in an unsupported format."
 msgstr ""
 
-#: messages.py:60
+#: messages.py:68
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr ""
 
-#: messages.py:54
+#: messages.py:62
 msgid "There is not enough free space on the destination drive."
 msgstr ""
 
-#: messages.py:57
+#: messages.py:65
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: cli.py:275
+#: cli.py:282
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr ""
 
-#: messages.py:44 messages.py:48
+#: messages.py:52 messages.py:56
 #, python-brace-format
 msgid "Unknown warning: {code}"
 msgstr ""
 
-#: cli.py:195
+#: cli.py:202
 #, python-brace-format
 msgid "Video stream {index}: {action}, {details}"
+msgstr ""
+
+#: messages.py:46
+#, python-brace-format
+msgid "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot play directly."
 msgstr ""
 
 #: messages.py:24
@@ -255,65 +268,74 @@ msgstr ""
 msgid "Video track {stream_index} will be scaled down to 1080p so that Jellyfin can play it directly."
 msgstr ""
 
-#: cli.py:137
+#: cli.py:144
 #, python-brace-format
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
 
-#: cli.py:43
+#: cli.py:50
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
 msgstr ""
 
-#: cli.py:224
+#: cli.py:231
 #, python-brace-format
 msgid "Warning: {text}"
 msgstr ""
 
-#: cli.py:300
+#: cli.py:307
 #, python-brace-format
 msgid "Would convert: {path}"
 msgstr ""
 
-#: cli.py:119
+#: cli.py:126
 msgid "convert"
 msgstr ""
 
-#: cli.py:118
+#: cli.py:125
 msgid "copy"
 msgstr ""
 
-#: cli.py:120
+#: cli.py:127
 msgid "drop"
 msgstr ""
 
-#: cli.py:117
+#: cli.py:124
 msgid "encode"
+msgstr ""
+
+#: cli.py:41
+msgid "must be a comma-separated list of language codes"
 msgstr ""
 
 #: cli.py:32 cli.py:34
 msgid "must be a positive integer"
 msgstr ""
 
-#: cli.py:134 cli.py:168
+#: cli.py:141 cli.py:175
 msgid "no"
 msgstr ""
 
-#: cli.py:132
+#: cli.py:139
 msgid "unknown"
 msgstr ""
 
-#: cli.py:168
+#: cli.py:175
 msgid "yes"
 msgstr ""
 
-#: cli.py:132
+#: cli.py:139
 #, python-brace-format
 msgid "yes ({variant})"
 msgstr ""
 
-#: cli.py:186
+#: cli.py:193
 #, python-brace-format
 msgid "{codec}, CRF {crf}, {preset} preset"
+msgstr ""
+
+#: messages.py:42
+#, python-brace-format
+msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
 msgstr ""
 

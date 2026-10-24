@@ -120,3 +120,90 @@ def test_codec_quality_and_preset(
         assert plan.videos[0].codec == expected_codec
         assert plan.videos[0].crf == expected_crf
         assert plan.videos[0].preset == preset
+
+
+def test_audio_language_filter_keeps_only_matching_tracks() -> None:
+    audios = [
+        AudioStream(1, "aac", 2, "eng", True),
+        AudioStream(2, "aac", 2, "spa", False),
+        AudioStream(3, "aac", 2, "cat", False),
+    ]
+    plan = build_plan(
+        media(audios=audios), ffmpeg(), PlanOptions(audio_languages=frozenset({"spa"}))
+    )
+
+    assert [item.stream_index for item in plan.audios] == [2]
+
+
+def test_language_filter_is_case_insensitive_and_und_matches_missing() -> None:
+    audios = [
+        AudioStream(1, "aac", 2, None, False),
+        AudioStream(2, "aac", 2, "", False),
+        AudioStream(3, "aac", 2, "UND", False),
+        AudioStream(4, "aac", 2, "SPA", False),
+    ]
+    without_language = build_plan(
+        media(audios=audios), ffmpeg(), PlanOptions(audio_languages=frozenset({"und"}))
+    )
+    uppercase = build_plan(
+        media(audios=audios), ffmpeg(), PlanOptions(audio_languages=frozenset({"spa"}))
+    )
+
+    assert [item.stream_index for item in without_language.audios] == [1, 2, 3]
+    assert [item.stream_index for item in uppercase.audios] == [4]
+
+
+def test_no_language_filter_keeps_every_track() -> None:
+    audios = [AudioStream(1, "aac", 2, "eng", False), AudioStream(2, "aac", 2, "spa", False)]
+    subtitles = [
+        SubtitleStream(3, "subrip", "eng", False, False, False),
+        SubtitleStream(4, "subrip", "spa", False, False, False),
+    ]
+
+    plan = build_plan(media(audios=audios, subtitles=subtitles), ffmpeg(), PlanOptions())
+
+    assert [item.stream_index for item in plan.audios] == [1, 2]
+    assert [item.stream_index for item in plan.subtitles] == [3, 4]
+    assert not plan.warnings
+
+
+def test_audio_filter_falls_back_to_all_when_nothing_matches() -> None:
+    audios = [AudioStream(1, "aac", 2, "eng", False), AudioStream(2, "aac", 2, "spa", False)]
+    plan = build_plan(
+        media(audios=audios), ffmpeg(), PlanOptions(audio_languages=frozenset({"fra"}))
+    )
+
+    assert [item.stream_index for item in plan.audios] == [1, 2]
+    assert [warning.code for warning in plan.warnings] == ["audio_filter_kept_all"]
+
+
+def test_excluded_tracks_do_not_generate_warnings() -> None:
+    audios = [
+        AudioStream(1, "dts", 6, "eng", False),
+        AudioStream(2, "aac", 2, "spa", False),
+    ]
+    subtitles = [
+        SubtitleStream(3, "hdmv_pgs_subtitle", "eng", True, False, False),
+        SubtitleStream(4, "subrip", "spa", False, False, False),
+    ]
+    plan = build_plan(
+        media(audios=audios, subtitles=subtitles),
+        ffmpeg(),
+        PlanOptions(audio_languages=frozenset({"spa"}), subtitle_languages=frozenset({"spa"})),
+    )
+
+    assert [item.stream_index for item in plan.audios] == [2]
+    assert [item.stream_index for item in plan.subtitles] == [4]
+    assert not plan.warnings
+
+
+def test_subtitle_filter_can_remove_every_subtitle() -> None:
+    subtitles = [SubtitleStream(1, "subrip", "eng", False, False, False)]
+    plan = build_plan(
+        media(subtitles=subtitles),
+        ffmpeg(),
+        PlanOptions(subtitle_languages=frozenset({"fra"})),
+    )
+
+    assert plan.subtitles == ()
+    assert not plan.warnings

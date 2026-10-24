@@ -35,6 +35,13 @@ def _positive_int(value: str) -> int:
     return parsed
 
 
+def _language_set(value: str) -> frozenset[str]:
+    languages = frozenset(code.strip().lower() for code in value.split(",") if code.strip())
+    if not languages:
+        raise argparse.ArgumentTypeError(_("must be a comma-separated list of language codes"))
+    return languages
+
+
 def _load_config() -> Config:
     try:
         config, _invalid_keys = load_config()
@@ -377,6 +384,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--quality", choices=("high", "balanced", "max_savings"), default="balanced"
     )
     convert_parser.add_argument("--container", choices=("mkv", "mp4"), default="mkv")
+    convert_parser.add_argument(
+        "--keep-audio",
+        type=_language_set,
+        metavar="LANGS",
+        help=_("Keep only these audio languages (comma-separated, 'und' for no language)"),
+    )
+    convert_parser.add_argument(
+        "--keep-subs",
+        type=_language_set,
+        metavar="LANGS",
+        help=_("Keep only these subtitle languages (comma-separated, 'und' for no language)"),
+    )
     convert_parser.add_argument("--max-height", type=_positive_int)
     convert_parser.add_argument("--output-dir", type=Path)
     convert_parser.add_argument("--recursive", action="store_true")
@@ -423,7 +442,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not is_convert:
         return _show_probe(paths, ffmpeg_info)
 
-    options = PlanOptions(parsed.target, parsed.quality, parsed.container, parsed.max_height)
+    options = PlanOptions(
+        parsed.target,
+        parsed.quality,
+        parsed.container,
+        parsed.max_height,
+        parsed.keep_audio,
+        parsed.keep_subs,
+    )
     return _convert(
         paths,
         ffmpeg_info,

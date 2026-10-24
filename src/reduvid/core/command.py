@@ -39,6 +39,8 @@ def build_command(
         if filters:
             arguments.extend([f"-filter:v:{position}", ",".join(filters)])
 
+    # Tracks keep source order, so FFmpeg marks the first remaining track of each
+    # type as the default when the original default was filtered out.
     for position, audio in enumerate(plan.audios):
         arguments.extend(["-map", f"0:{audio.stream_index}"])
         arguments.extend([f"-c:a:{position}", audio.codec or "copy"])

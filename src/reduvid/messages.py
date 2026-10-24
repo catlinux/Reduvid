@@ -38,6 +38,14 @@ def warning_text(warning: Warning) -> str:
         "audio_filter_kept_all": _(
             "No audio track matches the selected languages, so all of them will be kept."
         ),
+        "not_direct_play_profile": _(
+            "{destination} output is not the Jellyfin profile, so Jellyfin may have to "
+            "transcode it."
+        ),
+        "ten_bit_video": _(
+            "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot "
+            "play directly."
+        ),
     }
     template = templates.get(warning.code)
     if template is None:

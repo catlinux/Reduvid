@@ -12,6 +12,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Procesado por archivo compartido en `core/pipeline.py`, con pausa, reanudación y cancelación, y errores con código (`cancelled` y `verification_failed`); la cola de conversión informa además del código de error de cada archivo.
 - Traducción con gettext en el motor y la línea de órdenes: `reduvid/i18n.py` (idioma efectivo desde `--lang`, la configuración o el sistema), `reduvid/messages.py` con textos claros para cada aviso y error, catálogos `ca` y `es` con el `.pot` de referencia, y la orden global `--lang {ca,es,en}`.
 - Scripts de desarrollo para extraer y compilar las traducciones, y un hook de Hatch que compila los `.po` a `.mo` al instalar en editable y al construir el wheel.
+- Filtro por idioma para audio y subtítulos (`--keep-audio`, `--keep-subs`) y semáforo de compatibilidad con Jellyfin en `core/compat.py` (`direct`, `partial`, `blocked`), con avisos nuevos para el perfil de destino y el vídeo de 10 bits.
 
 ## [0.1.0] - 2026-10-24
 

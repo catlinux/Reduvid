@@ -19,6 +19,8 @@ class PlanOptions:
     quality: str = "balanced"
     container: Literal["mkv", "mp4"] = "mkv"
     max_height: int | None = None
+    audio_languages: frozenset[str] | None = None
+    subtitle_languages: frozenset[str] | None = None
 
 
 @dataclass(frozen=True)
@@ -164,9 +166,27 @@ def build_plan(
         _video_decision(stream, profile, crf, ffmpeg_info, warnings, options.max_height)
         for stream in media.video_streams
     )
-    audios = tuple(_audio_decision(stream, warnings) for stream in media.audio_streams)
+
+    audio_languages = _language_filter(options.audio_languages)
+    selected_audio = [
+        stream
+        for stream in media.audio_streams
+        if _language_allowed(stream.language, audio_languages)
+    ]
+    if options.audio_languages is not None and media.audio_streams and not selected_audio:
+        # Keeping some audio beats producing a silent video, even if none matches.
+        selected_audio = list(media.audio_streams)
+        warnings.append(Warning("audio_filter_kept_all"))
+    audios = tuple(_audio_decision(stream, warnings) for stream in selected_audio)
+
+    subtitle_languages = _language_filter(options.subtitle_languages)
+    selected_subtitles = [
+        stream
+        for stream in media.subtitle_streams
+        if _language_allowed(stream.language, subtitle_languages)
+    ]
     subtitles = tuple(
-        _subtitle_decision(stream, options.container, warnings) for stream in media.subtitle_streams
+        _subtitle_decision(stream, options.container, warnings) for stream in selected_subtitles
     )
     return EncodePlan(
         destination=profile.name,
@@ -177,3 +197,18 @@ def build_plan(
         subtitles=subtitles,
         warnings=tuple(warnings),
     )
+
+
+def _language_filter(languages: frozenset[str] | None) -> frozenset[str] | None:
+    if languages is None:
+        return None
+    return frozenset(_normalized_language(language) for language in languages)
+
+
+def _normalized_language(language: str | None) -> str:
+    normalized = (language or "").strip().lower()
+    return normalized or "und"
+
+
+def _language_allowed(language: str | None, languages: frozenset[str] | None) -> bool:
+    return languages is None or _normalized_language(language) in languages
