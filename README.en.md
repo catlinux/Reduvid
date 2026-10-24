@@ -59,10 +59,12 @@ Packages for `pipx`, a Windows installer and a Linux AppImage are planned from v
 
 ## Quick start
 
+`reduvid` opens the graphical interface. The command line is `reduvid-cli`:
+
 ```bash
-reduvid probe video.mkv              # See what a video contains
-reduvid convert video.mkv            # Convert it with the default Jellyfin profile
-reduvid convert folder/ --recursive  # Convert an entire folder
+reduvid-cli probe video.mkv              # See what a video contains
+reduvid-cli convert video.mkv            # Convert it with the default Jellyfin profile
+reduvid-cli convert folder/ --recursive  # Convert an entire folder
 ```
 
 Full details on commands, options and exit codes in the [command-line guide](docs/en/cli.md).

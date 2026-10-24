@@ -2,14 +2,14 @@
 
 **Castellano** · [English](../en/cli.md)
 
-`reduvid` tiene dos órdenes: `probe` (ver qué contiene un vídeo) y `convert` (reducirlo). Necesitas [FFmpeg](https://ffmpeg.org/) instalado y accesible, como se explica en el [README](../../README.md#instalación).
+`reduvid-cli` tiene dos órdenes: `probe` (ver qué contiene un vídeo) y `convert` (reducirlo). La interfaz gráfica se abre con `reduvid`. Necesitas [FFmpeg](https://ffmpeg.org/) instalado y accesible, como se explica en el [README](../../README.md#instalación).
 
-## `reduvid probe`
+## `reduvid-cli probe`
 
 Muestra un resumen legible de uno o más archivos: formato, duración, tamaño, y cada pista de vídeo, audio y subtítulos.
 
 ```bash
-reduvid probe pelicula.mkv
+reduvid-cli probe pelicula.mkv
 ```
 
 ```
@@ -25,15 +25,15 @@ Subtitle 1: subrip, eng, image: no
 
 Puedes pasar varios archivos a la vez; si uno falla al analizarse, se muestra el error y se sigue con los demás.
 
-## `reduvid convert`
+## `reduvid-cli convert`
 
 Convierte uno o más archivos, o una carpeta entera.
 
 ```bash
-reduvid convert pelicula.mkv
-reduvid convert carpeta/ --recursive
-reduvid convert *.mkv --target modern --quality max_savings
-reduvid convert pelicula.mkv --keep-audio ca,es --keep-subs ca,und
+reduvid-cli convert pelicula.mkv
+reduvid-cli convert carpeta/ --recursive
+reduvid-cli convert *.mkv --target modern --quality max_savings
+reduvid-cli convert pelicula.mkv --keep-audio ca,es --keep-subs ca,und
 ```
 
 Por defecto, el archivo convertido se escribe junto al original con el sufijo `_reduvid` (por ejemplo `pelicula_reduvid.mkv`), sin tocar el archivo de partida. El original solo se envía a la papelera si pasas `--replace-original`, y solo después de comprobar que la conversión es correcta.
@@ -59,7 +59,7 @@ Por defecto, el archivo convertido se escribe junto al original con el sufijo `_
 Antes de convertir de verdad, puedes ver el plan exacto que se aplicaría:
 
 ```bash
-reduvid convert pelicula.mkv --dry-run --target modern --quality high
+reduvid-cli convert pelicula.mkv --dry-run --target modern --quality high
 ```
 
 ```

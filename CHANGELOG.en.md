@@ -8,6 +8,8 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
+- Graphical interface skeleton: main window with a top bar, Wizard/Advanced switch, step, content and queue panels (stacked in narrow windows), a preferences dialog (theme, colour mode, language, animations and FFmpeg path with checking) and a help screen when FFmpeg is missing.
+
 - User configuration in `core/config.py`: TOML reading (with the FFmpeg path at the root or under `[ffmpeg] path`, unknown keys ignored and a list of invalid keys) and its own atomic writer.
 - Interface fonts (Bricolage Grotesque, Instrument Sans, Archivo, Atkinson Hyperlegible, Barlow, Barlow Condensed and JetBrains Mono), under the SIL OFL 1.1 with their `OFL.txt`; documented in `THIRD_PARTY_NOTICES.md`.
 - Per-file processing shared in `core/pipeline.py`, with pause, resume and cancel controls, and errors carrying a code (`cancelled` and `verification_failed`); the conversion queue now also reports each file's error code.
@@ -15,6 +17,10 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Development scripts to extract and compile the translations, and a Hatch hook that compiles the `.po` files to `.mo` on editable installs and wheel builds.
 - Language filtering for audio and subtitles (`--keep-audio`, `--keep-subs`) and a Jellyfin compatibility traffic light in `core/compat.py` (`direct`, `partial`, `blocked`), with new warnings for the destination profile and 10-bit video.
 - Interface themes: exact Plegat, Riso and Cinta tokens for light and dark (`gui/theme/tokens.py`), the stylesheet generated from them (`qss.py`), registration of the bundled fonts (`fonts.py`) and a `ThemeManager` that applies theme and mode, including the system one.
+
+### Changed
+
+- `reduvid` now opens the graphical interface and the command line is `reduvid-cli`; the usage documentation has been updated.
 
 ## [0.1.0] - 2026-10-24
 

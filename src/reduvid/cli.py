@@ -365,7 +365,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     config = _load_config()
     setup_language(_language_option(arguments) or config.language)
 
-    parser = argparse.ArgumentParser(prog="reduvid")
+    parser = argparse.ArgumentParser(prog="reduvid-cli")
     parser.add_argument("--version", action="version", version=f"reduvid {__version__}")
     parser.add_argument(
         "--lang",

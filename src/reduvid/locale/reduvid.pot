@@ -37,6 +37,14 @@ msgstr ""
 msgid ", {language}"
 msgstr ""
 
+#: gui/preferences.py:125 gui/preferences.py:126
+msgid "Accept"
+msgstr ""
+
+#: gui/main_window.py:66
+msgid "Advanced"
+msgstr ""
+
 #: cli.py:216
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
@@ -52,6 +60,42 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr ""
 
+#: gui/preferences.py:94
+msgid "Browse for ffmpeg"
+msgstr ""
+
+#: gui/preferences.py:92
+msgid "Browse…"
+msgstr ""
+
+#: gui/preferences.py:127 gui/preferences.py:128
+msgid "Cancel"
+msgstr ""
+
+#: gui/preferences.py:96
+msgid "Check"
+msgstr ""
+
+#: gui/preferences.py:98
+msgid "Check FFmpeg"
+msgstr ""
+
+#: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
+msgid "Choose ffmpeg…"
+msgstr ""
+
+#: gui/ffmpeg_missing.py:106 gui/preferences.py:153
+msgid "Choose the ffmpeg executable"
+msgstr ""
+
+#: gui/preferences.py:67 gui/preferences.py:113
+msgid "Colour mode"
+msgstr ""
+
+#: gui/main_window.py:191
+msgid "Conversion queue"
+msgstr ""
+
 #: cli.py:378
 msgid "Convert media files"
 msgstr ""
@@ -59,6 +103,23 @@ msgstr ""
 #: cli.py:251
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
+msgstr ""
+
+#: gui/preferences.py:162
+#, python-brace-format
+msgid "Could not inspect FFmpeg: {error}"
+msgstr ""
+
+#: gui/preferences.py:71
+msgid "Dark"
+msgstr ""
+
+#: gui/ffmpeg_missing.py:64
+msgid "Debian / Ubuntu"
+msgstr ""
+
+#: gui/main_window.py:39
+msgid "Destination"
 msgstr ""
 
 #: cli.py:354
@@ -119,6 +180,31 @@ msgstr ""
 msgid "Error: {path}{details}"
 msgstr ""
 
+#: gui/ffmpeg_missing.py:47
+msgid "FFmpeg is required"
+msgstr ""
+
+#: gui/preferences.py:91 gui/preferences.py:117
+msgid "FFmpeg path"
+msgstr ""
+
+#: gui/preferences.py:165
+msgid "FFmpeg was not found at that path."
+msgstr ""
+
+#: gui/ffmpeg_missing.py:123
+msgid "FFmpeg was still not found."
+msgstr ""
+
+#: gui/preferences.py:167
+#, python-brace-format
+msgid "FFmpeg {version} detected."
+msgstr ""
+
+#: gui/ffmpeg_missing.py:65
+msgid "Fedora"
+msgstr ""
+
 #: cli.py:133
 #, python-brace-format
 msgid "File: {path}"
@@ -149,6 +235,11 @@ msgstr ""
 msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
 msgstr ""
 
+#: gui/ffmpeg_missing.py:98
+#, python-brace-format
+msgid "Install command for {system}"
+msgstr ""
+
 #: cli.py:391
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr ""
@@ -157,8 +248,24 @@ msgstr ""
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr ""
 
+#: gui/preferences.py:77 gui/preferences.py:114
+msgid "Language"
+msgstr ""
+
+#: gui/preferences.py:81
+msgid "Language changes take effect when Reduvid is restarted."
+msgstr ""
+
 #: cli.py:373
 msgid "Language for messages"
+msgstr ""
+
+#: gui/preferences.py:70
+msgid "Light"
+msgstr ""
+
+#: gui/main_window.py:77
+msgid "Main panels"
 msgstr ""
 
 #: messages.py:39
@@ -175,9 +282,39 @@ msgstr ""
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr ""
 
+#: gui/main_window.py:67 gui/main_window.py:69 gui/preferences.py:51
+msgid "Preferences"
+msgstr ""
+
 #: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
+msgstr ""
+
+#: gui/main_window.py:37
+msgid "Quality"
+msgstr ""
+
+#: gui/main_window.py:197
+msgid "Queue"
+msgstr ""
+
+#: gui/preferences.py:85 gui/preferences.py:87
+msgid "Reduce animations"
+msgstr ""
+
+#: gui/main_window.py:56 gui/main_window.py:135 gui/main_window.py:138
+msgid "Reduvid"
+msgstr ""
+
+#: gui/ffmpeg_missing.py:55
+msgid ""
+"Reduvid uses FFmpeg to convert videos. Install it, or choose the ffmpeg executable if you already"
+" have it."
+msgstr ""
+
+#: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
+msgid "Search again"
 msgstr ""
 
 #: cli.py:376
@@ -193,6 +330,14 @@ msgstr ""
 msgid "Something went wrong while processing the file."
 msgstr ""
 
+#: gui/main_window.py:172
+msgid "Step content"
+msgstr ""
+
+#: gui/main_window.py:159
+msgid "Steps"
+msgstr ""
+
 #: cli.py:226
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
@@ -201,6 +346,22 @@ msgstr ""
 #: cli.py:177
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
+msgstr ""
+
+#: gui/main_window.py:40
+msgid "Summary"
+msgstr ""
+
+#: gui/preferences.py:69
+msgid "System"
+msgstr ""
+
+#: gui/preferences.py:36
+msgid "System language"
+msgstr ""
+
+#: gui/main_window.py:199
+msgid "The conversion queue will appear here."
 msgstr ""
 
 #: messages.py:70
@@ -223,12 +384,20 @@ msgstr ""
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr ""
 
+#: gui/preferences.py:61 gui/preferences.py:112
+msgid "Theme"
+msgstr ""
+
 #: messages.py:62
 msgid "There is not enough free space on the destination drive."
 msgstr ""
 
 #: messages.py:65
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
+msgstr ""
+
+#: gui/main_window.py:179
+msgid "This step is not available yet."
 msgstr ""
 
 #: cli.py:282
@@ -273,6 +442,10 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
 
+#: gui/main_window.py:35
+msgid "Videos"
+msgstr ""
+
 #: cli.py:50
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
@@ -281,6 +454,26 @@ msgstr ""
 #: cli.py:231
 #, python-brace-format
 msgid "Warning: {text}"
+msgstr ""
+
+#: gui/main_window.py:38
+msgid "What to keep"
+msgstr ""
+
+#: gui/main_window.py:36
+msgid "Where to watch"
+msgstr ""
+
+#: gui/ffmpeg_missing.py:63
+msgid "Windows"
+msgstr ""
+
+#: gui/main_window.py:65
+msgid "Wizard"
+msgstr ""
+
+#: gui/main_window.py:153
+msgid "Wizard steps"
 msgstr ""
 
 #: cli.py:307

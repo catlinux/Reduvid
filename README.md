@@ -59,10 +59,12 @@ Habrá paquetes con `pipx`, un instalador para Windows y una AppImage para Linux
 
 ## Uso rápido
 
+`reduvid` abre la interfaz gráfica. La línea de órdenes es `reduvid-cli`:
+
 ```bash
-reduvid probe video.mkv              # Ver qué contiene un vídeo
-reduvid convert video.mkv            # Convertirlo con el perfil Jellyfin por defecto
-reduvid convert carpeta/ --recursive # Convertir una carpeta entera
+reduvid-cli probe video.mkv              # Ver qué contiene un vídeo
+reduvid-cli convert video.mkv            # Convertirlo con el perfil Jellyfin por defecto
+reduvid-cli convert carpeta/ --recursive # Convertir una carpeta entera
 ```
 
 Detalle completo de órdenes, opciones y códigos de salida en la [guía de la línea de órdenes](docs/es/cli.md).

@@ -22,3 +22,13 @@ def qapp():
     if application is None:
         application = QApplication([])
     yield application
+
+
+@pytest.fixture(autouse=True)
+def english_language():
+    """Keep user-facing strings deterministic in GUI tests."""
+    from reduvid.i18n import setup_language
+
+    setup_language("en")
+    yield
+    setup_language("en")

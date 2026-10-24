@@ -123,7 +123,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - Tests:
     - Contraste WCAG ≥ 4,5 en text/bg, text/surface, muted/bg y on_accent/accent, en los seis juegos. **Si alguno no pasa, para y anótalo en Dudas: no cambies colores**, que es una decisión de diseño.
     - `build_qss` no deja ningún `{` sin sustituir.
-- [ ] 2.6 **Esqueleto de la aplicación.** *AgentRelay, esfuerzo xhigh; maquetas en references.*
+- [x] 2.6 **Esqueleto de la aplicación.** *AgentRelay, esfuerzo xhigh; maquetas en references.*
   - `gui/app.py` (`main()`) y entradas de `pyproject`: `reduvid` (gui-script) y `reduvid-cli`. `__main__.py` abre la interfaz.
   - Se actualizan README(.en), `docs/{es,en}/cli.md` y los ejemplos con `reduvid-cli`.
   - `gui/main_window.py`, con la estructura de la maqueta:

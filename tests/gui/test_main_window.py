@@ -1,0 +1,85 @@
+# SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
+# Copyright (C) 2026 Catlinux
+
+"""Main window skeleton tests."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+pytest.importorskip("PySide6")
+
+from PySide6.QtCore import Qt
+
+from reduvid.core.config import Config
+from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.gui.main_window import MainWindow
+from reduvid.gui.theme.manager import ThemeManager
+from reduvid.gui.theme.tokens import THEMES
+
+
+def ffmpeg_info() -> FFmpegInfo:
+    return FFmpegInfo(
+        Path("ffmpeg"), Path("ffprobe"), "test", frozenset({"libx264"}), frozenset(), ()
+    )
+
+
+@pytest.mark.parametrize(("theme", "mode"), sorted(THEMES))
+def test_window_is_created_for_every_theme(theme: str, mode: str, qapp) -> None:
+    manager = ThemeManager(qapp)
+    manager.apply(theme, mode)
+
+    window = MainWindow(Config(theme=theme, color_mode=mode), ffmpeg_info(), manager)
+
+    assert window.objectName() == "mainWindow"
+    assert window.centralWidget() is not None
+    assert window.content.count() == 6
+
+
+def test_panels_have_the_expected_names_and_accessible_names(qapp) -> None:
+    window = MainWindow(Config(), ffmpeg_info(), ThemeManager(qapp))
+
+    assert window.step_list.objectName() == "stepList"
+    assert window.content.objectName() == "content"
+    assert window.queue_panel.objectName() == "queuePanel"
+    assert window.splitter.objectName() == "bodySplitter"
+    for widget in (
+        window.step_list,
+        window.content,
+        window.queue_panel,
+        window.preferences_button,
+        window.wizard_button,
+        window.advanced_button,
+    ):
+        assert widget.accessibleName()
+
+
+def test_ui_mode_is_reflected_in_the_toggle(qapp) -> None:
+    window = MainWindow(Config(ui_mode="advanced"), ffmpeg_info(), ThemeManager(qapp))
+
+    assert window.ui_mode == "advanced"
+    assert window.advanced_button.isChecked()
+    assert not window.wizard_button.isChecked()
+
+    window.wizard_button.click()
+
+    assert window.ui_mode == "wizard"
+    assert window.wizard_button.isChecked()
+    assert not window.advanced_button.isChecked()
+
+
+def test_layout_stacks_below_the_compact_width(qapp) -> None:
+    window = MainWindow(Config(), ffmpeg_info(), ThemeManager(qapp))
+    window.show()
+    try:
+        window.resize(800, 600)
+        qapp.processEvents()
+        assert window.splitter.orientation() == Qt.Orientation.Vertical
+
+        window.resize(1200, 800)
+        qapp.processEvents()
+        assert window.splitter.orientation() == Qt.Orientation.Horizontal
+    finally:
+        window.close()

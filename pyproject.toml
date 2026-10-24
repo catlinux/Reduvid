@@ -29,7 +29,10 @@ Repository = "https://github.com/catlinux/Reduvid"
 Issues = "https://github.com/catlinux/Reduvid/issues"
 
 [project.scripts]
-reduvid = "reduvid.cli:main"
+reduvid-cli = "reduvid.cli:main"
+
+[project.gui-scripts]
+reduvid = "reduvid.gui.app:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pre-commit>=3.8", "babel>=2.16"]

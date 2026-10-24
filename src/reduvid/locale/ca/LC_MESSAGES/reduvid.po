@@ -38,6 +38,14 @@ msgstr ", escalar a {height}p"
 msgid ", {language}"
 msgstr ", {language}"
 
+#: gui/preferences.py:125 gui/preferences.py:126
+msgid "Accept"
+msgstr "Accepta"
+
+#: gui/main_window.py:66
+msgid "Advanced"
+msgstr "Avançat"
+
 #: cli.py:216
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
@@ -55,6 +63,42 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr "Àudio {position}: {codec}, {channels} canals{language}"
 
+#: gui/preferences.py:94
+msgid "Browse for ffmpeg"
+msgstr "Cerca el fitxer de FFmpeg"
+
+#: gui/preferences.py:92
+msgid "Browse…"
+msgstr "Examina…"
+
+#: gui/preferences.py:127 gui/preferences.py:128
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#: gui/preferences.py:96
+msgid "Check"
+msgstr "Comprova"
+
+#: gui/preferences.py:98
+msgid "Check FFmpeg"
+msgstr "Comprova el FFmpeg"
+
+#: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
+msgid "Choose ffmpeg…"
+msgstr "Tria el ffmpeg…"
+
+#: gui/ffmpeg_missing.py:106 gui/preferences.py:153
+msgid "Choose the ffmpeg executable"
+msgstr "Tria l'executable de ffmpeg"
+
+#: gui/preferences.py:67 gui/preferences.py:113
+msgid "Colour mode"
+msgstr "Mode de color"
+
+#: gui/main_window.py:191
+msgid "Conversion queue"
+msgstr "Cua de conversió"
+
 #: cli.py:378
 msgid "Convert media files"
 msgstr "Converteix fitxers multimèdia"
@@ -63,6 +107,23 @@ msgstr "Converteix fitxers multimèdia"
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convertint [{index}/{total}]: {path}"
+
+#: gui/preferences.py:162
+#, python-brace-format
+msgid "Could not inspect FFmpeg: {error}"
+msgstr "No s'ha pogut inspeccionar FFmpeg: {error}"
+
+#: gui/preferences.py:71
+msgid "Dark"
+msgstr "Fosc"
+
+#: gui/ffmpeg_missing.py:64
+msgid "Debian / Ubuntu"
+msgstr "Debian / Ubuntu"
+
+#: gui/main_window.py:39
+msgid "Destination"
+msgstr "Destinació"
 
 #: cli.py:354
 msgid "Dry run complete."
@@ -122,6 +183,31 @@ msgstr "Error: l'entrada d'anàlisi no és un fitxer: {path}"
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
+#: gui/ffmpeg_missing.py:47
+msgid "FFmpeg is required"
+msgstr "Cal FFmpeg"
+
+#: gui/preferences.py:91 gui/preferences.py:117
+msgid "FFmpeg path"
+msgstr "Ruta de FFmpeg"
+
+#: gui/preferences.py:165
+msgid "FFmpeg was not found at that path."
+msgstr "No s'ha trobat FFmpeg en aquesta ruta."
+
+#: gui/ffmpeg_missing.py:123
+msgid "FFmpeg was still not found."
+msgstr "Encara no s'ha trobat FFmpeg."
+
+#: gui/preferences.py:167
+#, python-brace-format
+msgid "FFmpeg {version} detected."
+msgstr "S'ha detectat FFmpeg {version}."
+
+#: gui/ffmpeg_missing.py:65
+msgid "Fedora"
+msgstr "Fedora"
+
 #: cli.py:133
 #, python-brace-format
 msgid "File: {path}"
@@ -154,6 +240,11 @@ msgstr ""
 "La pista de subtítols d'imatge {stream_index} s'haurà de convertir durant la reproducció, cosa "
 "que consumeix més CPU."
 
+#: gui/ffmpeg_missing.py:98
+#, python-brace-format
+msgid "Install command for {system}"
+msgstr "Ordre d'instal·lació per a {system}"
+
 #: cli.py:391
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr "Conserva només aquests idiomes d'àudio (separats per comes; 'und' vol dir sense idioma)"
@@ -162,9 +253,25 @@ msgstr "Conserva només aquests idiomes d'àudio (separats per comes; 'und' vol 
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr "Conserva només aquests idiomes de subtítols (separats per comes; 'und' vol dir sense idioma)"
 
+#: gui/preferences.py:77 gui/preferences.py:114
+msgid "Language"
+msgstr "Idioma"
+
+#: gui/preferences.py:81
+msgid "Language changes take effect when Reduvid is restarted."
+msgstr "Els canvis d'idioma s'apliquen quan reinicies el Reduvid."
+
 #: cli.py:373
 msgid "Language for messages"
 msgstr "Idioma dels missatges"
+
+#: gui/preferences.py:70
+msgid "Light"
+msgstr "Clar"
+
+#: gui/main_window.py:77
+msgid "Main panels"
+msgstr "Panells principals"
 
 #: messages.py:39
 msgid "No audio track matches the selected languages, so all of them will be kept."
@@ -180,10 +287,42 @@ msgstr "Sortida: {path}"
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Pla: {destination}, {quality}, {container}"
 
+#: gui/main_window.py:67 gui/main_window.py:69 gui/preferences.py:51
+msgid "Preferences"
+msgstr "Preferències"
+
 #: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progrés: {percent:.0f}% ({state})"
+
+#: gui/main_window.py:37
+msgid "Quality"
+msgstr "Qualitat"
+
+#: gui/main_window.py:197
+msgid "Queue"
+msgstr "Cua"
+
+#: gui/preferences.py:85 gui/preferences.py:87
+msgid "Reduce animations"
+msgstr "Redueix les animacions"
+
+#: gui/main_window.py:56 gui/main_window.py:135 gui/main_window.py:138
+msgid "Reduvid"
+msgstr "Reduvid"
+
+#: gui/ffmpeg_missing.py:55
+msgid ""
+"Reduvid uses FFmpeg to convert videos. Install it, or choose the ffmpeg executable if you already"
+" have it."
+msgstr ""
+"El Reduvid fa servir FFmpeg per convertir vídeos. Instal·la'l o tria l'executable de ffmpeg si ja"
+" el tens."
+
+#: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
+msgid "Search again"
+msgstr "Torna a buscar"
 
 #: cli.py:376
 msgid "Show media details"
@@ -198,6 +337,14 @@ msgstr "Mida: {size:.2f} MB"
 msgid "Something went wrong while processing the file."
 msgstr "Hi ha hagut un problema en processar el fitxer."
 
+#: gui/main_window.py:172
+msgid "Step content"
+msgstr "Contingut del pas"
+
+#: gui/main_window.py:159
+msgid "Steps"
+msgstr "Passos"
+
 #: cli.py:226
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
@@ -207,6 +354,22 @@ msgstr "Pista de subtítols {index}: {details}"
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítol {position}: {codec}{language}, imatge: {image}"
+
+#: gui/main_window.py:40
+msgid "Summary"
+msgstr "Resum"
+
+#: gui/preferences.py:69
+msgid "System"
+msgstr "Sistema"
+
+#: gui/preferences.py:36
+msgid "System language"
+msgstr "Idioma del sistema"
+
+#: gui/main_window.py:199
+msgid "The conversion queue will appear here."
+msgstr "La cua de conversió apareixerà aquí."
 
 #: messages.py:70
 msgid "The conversion was cancelled."
@@ -228,6 +391,10 @@ msgstr "No s'ha pogut analitzar el fitxer. Pot ser que estigui malmès o en un f
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr "No es pot llegir o escriure el fitxer o la carpeta per un problema de permisos."
 
+#: gui/preferences.py:61 gui/preferences.py:112
+msgid "Theme"
+msgstr "Tema"
+
 #: messages.py:62
 msgid "There is not enough free space on the destination drive."
 msgstr "No hi ha prou espai lliure al disc de destinació."
@@ -235,6 +402,10 @@ msgstr "No hi ha prou espai lliure al disc de destinació."
 #: messages.py:65
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
+
+#: gui/main_window.py:179
+msgid "This step is not available yet."
+msgstr "Aquest pas encara no està disponible."
 
 #: cli.py:282
 #, python-brace-format
@@ -282,6 +453,10 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
+#: gui/main_window.py:35
+msgid "Videos"
+msgstr "Vídeos"
+
 #: cli.py:50
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
@@ -291,6 +466,26 @@ msgstr "Avís: no s'ha pogut llegir el fitxer de configuració: {error}"
 #, python-brace-format
 msgid "Warning: {text}"
 msgstr "Avís: {text}"
+
+#: gui/main_window.py:38
+msgid "What to keep"
+msgstr "Què conservar"
+
+#: gui/main_window.py:36
+msgid "Where to watch"
+msgstr "On veure'ls"
+
+#: gui/ffmpeg_missing.py:63
+msgid "Windows"
+msgstr "Windows"
+
+#: gui/main_window.py:65
+msgid "Wizard"
+msgstr "Assistent"
+
+#: gui/main_window.py:153
+msgid "Wizard steps"
+msgstr "Passos de l'assistent"
 
 #: cli.py:307
 #, python-brace-format

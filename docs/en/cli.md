@@ -2,14 +2,14 @@
 
 [Castellano](../es/cli.md) · **English**
 
-`reduvid` has two commands: `probe` (see what's in a video) and `convert` (shrink it). You need [FFmpeg](https://ffmpeg.org/) installed and accessible, as explained in the [README](../../README.en.md#installation).
+`reduvid-cli` has two commands: `probe` (see what's in a video) and `convert` (shrink it). The graphical interface opens with `reduvid`. You need [FFmpeg](https://ffmpeg.org/) installed and accessible, as explained in the [README](../../README.en.md#installation).
 
-## `reduvid probe`
+## `reduvid-cli probe`
 
 Shows a readable summary of one or more files: format, duration, size, and every video, audio and subtitle track.
 
 ```bash
-reduvid probe movie.mkv
+reduvid-cli probe movie.mkv
 ```
 
 ```
@@ -25,15 +25,15 @@ Subtitle 1: subrip, eng, image: no
 
 You can pass several files at once; if one fails to probe, the error is shown and the rest continue.
 
-## `reduvid convert`
+## `reduvid-cli convert`
 
 Converts one or more files, or an entire folder.
 
 ```bash
-reduvid convert movie.mkv
-reduvid convert folder/ --recursive
-reduvid convert *.mkv --target modern --quality max_savings
-reduvid convert movie.mkv --keep-audio ca,es --keep-subs ca,und
+reduvid-cli convert movie.mkv
+reduvid-cli convert folder/ --recursive
+reduvid-cli convert *.mkv --target modern --quality max_savings
+reduvid-cli convert movie.mkv --keep-audio ca,es --keep-subs ca,und
 ```
 
 By default, the converted file is written next to the original with the `_reduvid` suffix (for example `movie_reduvid.mkv`), without touching the source. The original is only sent to the trash if you pass `--replace-original`, and only after checking the conversion is correct.
@@ -59,7 +59,7 @@ By default, the converted file is written next to the original with the `_reduvi
 Before actually converting, you can see the exact plan that would be applied:
 
 ```bash
-reduvid convert movie.mkv --dry-run --target modern --quality high
+reduvid-cli convert movie.mkv --dry-run --target modern --quality high
 ```
 
 ```

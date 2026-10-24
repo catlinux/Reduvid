@@ -264,3 +264,11 @@ def test_keep_language_options_reach_the_plan(monkeypatch: pytest.MonkeyPatch, c
 def test_language_list_rejects_empty_values() -> None:
     with pytest.raises(argparse.ArgumentTypeError, match="language"):
         cli._language_set(" , ")
+
+
+def test_help_uses_the_reduvid_cli_program_name(capsys) -> None:
+    with pytest.raises(SystemExit) as raised:
+        cli.main(["--help"])
+
+    assert raised.value.code == 0
+    assert "usage: reduvid-cli" in capsys.readouterr().out
