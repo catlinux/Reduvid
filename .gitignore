@@ -17,3 +17,24 @@ agentrelay.config.json
 *.log
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Traducciones compiladas (se generan al construir)
+*.mo
+
+# Salidas de prueba
+tests/_media/
+*.reduvid-tmp.*
