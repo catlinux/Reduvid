@@ -37,7 +37,7 @@ Estado: `[x]` hecho · `[ ]` pendiente · `[~]` en curso. El ejecutor marca cada
 ## Fase 0: preparación (0.0.1)
 
 - [x] 0.1 Licencia WNCL-CU-1.0, rama `main`, remoto SSH, `CLAUDE.md` y este plan. *(sesión)*
-- [ ] 0.2 Andamiaje: `pyproject.toml` (hatchling, versión dinámica, extras `dev`, script `reduvid`), `src/reduvid/{__init__,__main__,cli}.py` con `--version` (solo eso), `tests/test_version.py`, configuración de ruff/mypy/pytest, `.pre-commit-config.yaml`, `scripts/check_doc_sync.py` + test, `.github/workflows/ci.yml` (ubuntu y windows; py 3.11 y 3.13; ruff, mypy, pytest, check_doc_sync). *Ejecutor: AgentRelay, esfuerzo medio.* Terminado cuando `pip install -e ".[dev]"`, `reduvid --version`, `pytest`, `ruff check .` y `mypy` pasan en local.
+- [x] 0.2 Andamiaje: `pyproject.toml` (hatchling, versión dinámica, extras `dev`, script `reduvid`), `src/reduvid/{__init__,__main__,cli}.py` con `--version` (solo eso), `tests/test_version.py`, configuración de ruff/mypy/pytest, `.pre-commit-config.yaml`, `scripts/check_doc_sync.py` + test, `.github/workflows/ci.yml` (ubuntu y windows; py 3.11 y 3.13; ruff, mypy, pytest, check_doc_sync). *Ejecutor: AgentRelay, esfuerzo medio.* Terminado cuando `pip install -e ".[dev]"`, `reduvid --version`, `pytest`, `ruff check .` y `mypy` pasan en local.
 - [ ] 0.3 Documentación base bilingüe: README, CHANGELOG, TODO, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, AUTHORS, THIRD_PARTY_NOTICES, `docs/{es,en}/README.md` y plantillas de `.github`. Versión 0.0.1. *(sesión)*
 - [ ] 0.4 Maquetas de las 3 direcciones de diseño en `docs/design/mockups.html`, publicadas como artifact. El usuario elige. *(sesión, Opus)*
 

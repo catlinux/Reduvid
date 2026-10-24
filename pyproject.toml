@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reduvid"
+dynamic = ["version"]
+description = "Compresor de vídeo fácil y multiplataforma basado en FFmpeg"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["video", "compression", "ffmpeg"]
+license = { file = "LICENSE" }
+authors = [{ name = "Catlinux" }]
+classifiers = [
+  "License :: Other/Proprietary License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: Microsoft :: Windows",
+  "Topic :: Multimedia :: Video :: Conversion",
+  "Environment :: X11 Applications :: Qt",
+]
+dependencies = ["PySide6-Essentials>=6.7", "platformdirs>=4", "Send2Trash>=1.8", "psutil>=5.9"]
+
+[project.urls]
+Homepage = "https://github.com/catlinux/Reduvid"
+Repository = "https://github.com/catlinux/Reduvid"
+Issues = "https://github.com/catlinux/Reduvid/issues"
+
+[project.scripts]
+reduvid = "reduvid.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pre-commit>=3.8", "babel>=2.16"]
+
+[tool.hatch.version]
+path = "src/reduvid/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reduvid"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "S", "PTH", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S603", "S607"]
+
+[tool.mypy]
+strict = true
+files = ["src/reduvid"]
+python_version = "3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+markers = ["ffmpeg: necesita ffmpeg/ffprobe instalados"]
