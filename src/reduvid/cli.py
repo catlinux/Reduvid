@@ -119,14 +119,14 @@ def _show_media(media: MediaInfo) -> None:
         print(f"Subtitle {position}: {subtitle_stream.codec}{language}, image: {image}")
 
 
-def _show_plan(plan: EncodePlan, max_height: int | None) -> None:
+def _show_plan(plan: EncodePlan) -> None:
     print(f"Plan: {plan.destination}, {plan.quality}, {plan.container}")
     for video_decision in plan.videos:
         details = (
             f"{video_decision.codec}, CRF {video_decision.crf}, {video_decision.preset} preset"
         )
-        if video_decision.reduce_to_1080p:
-            details += ", scale to 1080p"
+        if video_decision.target_height is not None:
+            details += f", scale to {video_decision.target_height}p"
         print(f"  Video stream {video_decision.stream_index}: {video_decision.action}, {details}")
     for audio_decision in plan.audios:
         details = audio_decision.action
@@ -142,8 +142,6 @@ def _show_plan(plan: EncodePlan, max_height: int | None) -> None:
         print(f"  Subtitle stream {subtitle_decision.stream_index}: {details}")
     for warning in plan.warnings:
         print(f"  Warning: {warning.code} {warning.params}")
-    if max_height is not None:
-        print(f"  Warning: --max-height is not supported yet; ignoring {max_height}.")
 
 
 def _show_probe(paths: list[Path], ffmpeg_info: FFmpegInfo) -> int:
@@ -190,7 +188,6 @@ def _dry_run(
     ffmpeg_info: FFmpegInfo,
     options: PlanOptions,
     output_dir: Path | None,
-    max_height: int | None,
 ) -> None:
     print(f"Dry run: {len(queue.files)} file(s)")
     for path in queue.files:
@@ -204,7 +201,7 @@ def _dry_run(
         output_path = build_output_path(media.path, destination_dir, options.container)
         print(f"Would convert: {path}")
         print(f"Output: {output_path}")
-        _show_plan(plan, max_height)
+        _show_plan(plan)
 
 
 def _convert(
@@ -217,7 +214,6 @@ def _convert(
     threads: int | None,
     replace_original: bool,
     dry_run: bool,
-    max_height: int | None,
 ) -> int:
     def process(media: MediaInfo, on_progress: Callable[[ProgressEvent], None]) -> ProcessingResult:
         plan = build_plan(media, ffmpeg_info, options)
@@ -271,7 +267,7 @@ def _convert(
             queue.add_files([path])
 
     if dry_run:
-        _dry_run(queue, ffmpeg_info, options, output_dir, max_height)
+        _dry_run(queue, ffmpeg_info, options, output_dir)
         print("Dry run complete.")
         return 0
 
@@ -337,7 +333,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not is_convert:
         return _show_probe(paths, ffmpeg_info)
 
-    options = PlanOptions(parsed.target, parsed.quality, parsed.container)
+    options = PlanOptions(parsed.target, parsed.quality, parsed.container, parsed.max_height)
     return _convert(
         paths,
         ffmpeg_info,
@@ -347,5 +343,4 @@ def main(argv: Sequence[str] | None = None) -> int:
         threads=parsed.threads,
         replace_original=parsed.replace_original,
         dry_run=parsed.dry_run,
-        max_height=parsed.max_height,
     )

@@ -102,9 +102,9 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
             str(source),
             "--dry-run",
             "--max-height",
-            "720",
+            "480",
             "--target",
-            "modern",
+            "jellyfin",
             "--quality",
             "high",
             "--container",
@@ -115,9 +115,10 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
     captured = capsys.readouterr()
     assert result == 0
     assert "Would convert" in captured.out
-    assert "Plan: modern, high, mp4" in captured.out
+    assert "Plan: jellyfin, high, mp4" in captured.out
     assert "Video stream 0" in captured.out
-    assert "--max-height is not supported yet" in captured.out
+    assert "scale to 480p" in captured.out
+    assert "resolution_reduced_4k_to_1080p" in captured.out
 
 
 def test_convert_runs_pipeline_and_reports_success(monkeypatch: pytest.MonkeyPatch, capsys) -> None:

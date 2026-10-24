@@ -23,9 +23,9 @@ def _plan(
     return EncodePlan("jellyfin", "balanced", "mkv", videos, audios, subtitles, ())
 
 
-def _video(*, filters: tuple[str, ...] = ()) -> VideoDecision:
+def _video(*, filters: tuple[str, ...] = (), target_height: int | None = None) -> VideoDecision:
     return VideoDecision(
-        0, "encode", "libx264", 23, "medium", "high", "4.1", "yuv420p", filters, False
+        0, "encode", "libx264", 23, "medium", "high", "4.1", "yuv420p", filters, target_height
     )
 
 
@@ -49,6 +49,17 @@ def test_builds_video_filter_argument_as_one_item() -> None:
     )
 
     assert arguments[arguments.index("-filter:v:0") + 1] == "zscale,tonemap"
+
+
+def test_builds_video_scale_filter_for_target_height() -> None:
+    arguments = build_command(
+        _media(),
+        _plan(videos=(_video(target_height=720),)),
+        Path.cwd() / "in.mkv",
+        Path.cwd() / "out.mkv",
+    )
+
+    assert arguments[arguments.index("-filter:v:0") + 1] == "scale=-2:720"
 
 
 def test_builds_audio_copy_and_encode_in_order() -> None:

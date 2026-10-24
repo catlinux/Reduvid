@@ -35,8 +35,8 @@ def build_command(
         if video.pixel_format is not None:
             arguments.extend([f"-pix_fmt:v:{position}", video.pixel_format])
         filters = list(video.filters)
-        if video.reduce_to_1080p:
-            filters.append("scale=-2:1080")
+        if video.target_height is not None:
+            filters.append(f"scale=-2:{video.target_height}")
         if filters:
             arguments.extend([f"-filter:v:{position}", ",".join(filters)])
 

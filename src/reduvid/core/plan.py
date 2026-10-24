@@ -18,6 +18,7 @@ class PlanOptions:
     destination: str = "jellyfin"
     quality: str = "balanced"
     container: Literal["mkv", "mp4"] = "mkv"
+    max_height: int | None = None
 
 
 @dataclass(frozen=True)
@@ -37,7 +38,7 @@ class VideoDecision:
     level: str | None
     pixel_format: str | None
     filters: tuple[str, ...]
-    reduce_to_1080p: bool
+    target_height: int | None
 
 
 @dataclass(frozen=True)
@@ -86,11 +87,14 @@ def _video_decision(
     crf: int,
     ffmpeg_info: FFmpegInfo,
     warnings: list[Warning],
+    max_height: int | None,
 ) -> VideoDecision:
     jellyfin = profile.name == "jellyfin"
-    # Level 4.1 tops out at 1080p.
-    reduce = jellyfin and (stream.width > 1920 or stream.height > 1080)
-    if reduce:
+    # Level 4.1 tops out at 1080p by default; max_height can override that limit.
+    height_limit = max_height if max_height is not None else 1080
+    should_reduce = jellyfin and (stream.width > 1920 or stream.height > height_limit)
+    target_height = height_limit if should_reduce else None
+    if target_height is not None:
         warnings.append(Warning("resolution_reduced_4k_to_1080p", {"stream_index": stream.index}))
 
     filters: tuple[str, ...] = ()
@@ -116,7 +120,7 @@ def _video_decision(
         level=profile.video_level,
         pixel_format=("yuv420p10le" if stream.hdr and not jellyfin else profile.pixel_format),
         filters=filters,
-        reduce_to_1080p=reduce,
+        target_height=target_height,
     )
 
 
@@ -157,7 +161,7 @@ def build_plan(
     crf = _crf(options.quality, profile.video_codec)
     warnings: list[Warning] = []
     videos = tuple(
-        _video_decision(stream, profile, crf, ffmpeg_info, warnings)
+        _video_decision(stream, profile, crf, ffmpeg_info, warnings, options.max_height)
         for stream in media.video_streams
     )
     audios = tuple(_audio_decision(stream, warnings) for stream in media.audio_streams)
