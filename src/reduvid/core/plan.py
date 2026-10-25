@@ -93,8 +93,12 @@ def _video_decision(
 ) -> VideoDecision:
     jellyfin = profile.name == "jellyfin"
     # Level 4.1 tops out at 1080p by default; max_height can override that limit.
+    # The scale filter only constrains height (scale=-2:<target_height>), so the
+    # decision must compare against height alone: otherwise an explicit
+    # max_height matching the stream's own 4K height (no real reduction) would
+    # still trigger a bogus warning and a redundant no-op filter.
     height_limit = max_height if max_height is not None else 1080
-    should_reduce = jellyfin and (stream.width > 1920 or stream.height > height_limit)
+    should_reduce = jellyfin and stream.height > height_limit
     target_height = height_limit if should_reduce else None
     if target_height is not None:
         warnings.append(Warning("resolution_reduced_4k_to_1080p", {"stream_index": stream.index}))

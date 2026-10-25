@@ -12,7 +12,6 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 ## Medium priority
 
 - When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.
-- `estimate_from_sample` (`core/estimate.py`) has had an unused `original_sample_bytes` parameter since step 3.1; clean it up if that module is revisited.
 
 ## Low priority / later
 

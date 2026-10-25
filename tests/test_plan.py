@@ -50,6 +50,22 @@ def test_jellyfin_video_below_max_height_is_not_reduced() -> None:
     assert not plan.warnings
 
 
+def test_jellyfin_max_height_matching_source_does_not_reduce() -> None:
+    video = VideoStream(0, "hevc", 3840, 2160, 24)
+    plan = build_plan(media(videos=[video]), ffmpeg(), PlanOptions(max_height=2160))
+
+    assert plan.videos[0].target_height is None
+    assert not any(item.code == "resolution_reduced_4k_to_1080p" for item in plan.warnings)
+
+
+def test_jellyfin_wide_video_within_height_limit_is_not_reduced() -> None:
+    video = VideoStream(0, "hevc", 1920, 804, 24)
+    plan = build_plan(media(videos=[video]), ffmpeg(), PlanOptions())
+
+    assert plan.videos[0].target_height is None
+    assert not plan.warnings
+
+
 @pytest.mark.parametrize("destination", ["modern", "archive"])
 def test_non_jellyfin_profiles_ignore_max_height(destination: str) -> None:
     video = VideoStream(0, "hevc", 3840, 2160, 24)

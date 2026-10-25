@@ -6,6 +6,14 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+### Corregido
+
+- Al desmarcar la reducción de 4K con un vídeo que ya está a la altura pedida (p. ej. `max_height=2160` en un vídeo 3840×2160), el motor ya no emite el aviso de reducción a 1080p ni aplica un filtro de escalado redundante; la decisión de reducir se basa solo en la altura, no en una anchura fija de 1920 px, por lo que un vídeo panorámico ancho pero de poca altura tampoco se reduce sin necesidad.
+
+### Cambiado
+
+- `core/estimate.py`: `estimate_from_sample` pierde el parámetro `original_sample_bytes`, que no se usaba en el cálculo desde el paso 3.1.
+
 ## [0.3.0] - 2026-10-25
 
 ### Añadido

@@ -17,7 +17,6 @@ class Estimate:
 
 
 def estimate_from_sample(
-    original_sample_bytes: int,
     encoded_sample_bytes: int,
     sample_duration_seconds: float,
     total_duration_seconds: float,

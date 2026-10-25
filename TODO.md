@@ -12,7 +12,6 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 ## Prioridad media
 
 - Al crear el repositorio en GitHub: descripción «About», topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) y avisos privados de seguridad activados.
-- `estimate_from_sample` (`core/estimate.py`) tiene el parámetro `original_sample_bytes` sin usar desde el paso 3.1; limpiar si se retoma ese módulo.
 
 ## Prioridad baja / más adelante
 

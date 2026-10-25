@@ -252,7 +252,6 @@ class StepSummary(QWidget):
         sample = self._state.sample_result
         if sample is not None:
             estimate = estimate_from_sample(
-                original_sample_bytes=0,
                 encoded_sample_bytes=sample.encoded_sample_bytes,
                 sample_duration_seconds=sample.sample_duration_seconds,
                 total_duration_seconds=summary.media.duration,

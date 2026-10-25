@@ -8,7 +8,6 @@ from reduvid.core.estimate import Estimate, estimate_from_sample
 
 def test_estimate_extrapolates_size_and_time() -> None:
     estimate = estimate_from_sample(
-        original_sample_bytes=5_000_000,
         encoded_sample_bytes=1_000_000,
         sample_duration_seconds=30.0,
         total_duration_seconds=300.0,
@@ -20,7 +19,6 @@ def test_estimate_extrapolates_size_and_time() -> None:
 
 def test_estimate_rounds_the_projected_bytes() -> None:
     estimate = estimate_from_sample(
-        original_sample_bytes=10,
         encoded_sample_bytes=1,
         sample_duration_seconds=3.0,
         total_duration_seconds=10.0,
@@ -33,7 +31,6 @@ def test_estimate_rounds_the_projected_bytes() -> None:
 
 def test_estimate_accepts_a_shorter_sample() -> None:
     estimate = estimate_from_sample(
-        original_sample_bytes=300,
         encoded_sample_bytes=60,
         sample_duration_seconds=18.0,
         total_duration_seconds=30.0,
@@ -45,7 +42,7 @@ def test_estimate_accepts_a_shorter_sample() -> None:
 
 
 def test_zero_total_duration_returns_zeroes() -> None:
-    estimate = estimate_from_sample(100, 10, 30, 0, 5)
+    estimate = estimate_from_sample(10, 30, 0, 5)
 
     assert estimate == Estimate(0, 0.0)
 
@@ -53,4 +50,4 @@ def test_zero_total_duration_returns_zeroes() -> None:
 @pytest.mark.parametrize("sample_duration", [0.0, -1.0])
 def test_invalid_sample_duration_raises(sample_duration: float) -> None:
     with pytest.raises(ValueError, match="sample_duration_seconds must be positive"):
-        estimate_from_sample(100, 10, sample_duration, 120, 5)
+        estimate_from_sample(10, sample_duration, 120, 5)

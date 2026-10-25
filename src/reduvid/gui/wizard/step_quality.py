@@ -406,15 +406,7 @@ class StepQuality(QWidget):
         )
 
     def _show_sample_result(self, result: SampleResult) -> None:
-        original_sample = 0
-        if result.total_duration_seconds > 0:
-            original_sample = round(
-                result.original_total_bytes
-                * result.sample_duration_seconds
-                / result.total_duration_seconds
-            )
         estimate = estimate_from_sample(
-            original_sample_bytes=original_sample,
             encoded_sample_bytes=result.encoded_sample_bytes,
             sample_duration_seconds=result.sample_duration_seconds,
             total_duration_seconds=result.total_duration_seconds,
