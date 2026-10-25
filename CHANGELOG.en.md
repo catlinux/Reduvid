@@ -6,14 +6,16 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-25
+
 ### Added
 
-- Early warnings in the Quality step: the first available video shows the plan warnings (HDR, 10-bit, image subtitles, etc.) before reaching the Summary, recalculated when options or videos change.
-- Saved profiles from the Quality step: a dropdown to apply a complete profile and a dialog to save the current combination under a name, with visible errors and nothing created when the name is empty.
-- Estimates in the Summary step: when a valid sample exists for the chosen quality, each card shows its duration-proportional estimated size and time; without a sample nothing is shown.
-- Sample and comparison in the Quality step: a button to try 30 s in the background, before/after frames, estimated total size, savings percentage and invalidation when the quality changes; temporary files use fixed names in the cache.
-- Saved profiles in the engine: `core/profile_store.py` with listing, loading, atomic saving and deletion of individual TOML profiles in the configuration directory, keeping the real names and the difference between unfiltered languages and an empty set.
 - Sample and estimation engine: fast 30-second clip reusing the encoding plan (`-ss` before `-i`), single PNG frame extraction and linear extrapolation of final size and encoding time from the sample.
+- Saved profiles in the engine: `core/profile_store.py` with listing, loading, atomic saving and deletion of individual TOML profiles in the configuration directory, keeping the real names and the difference between unfiltered languages and an empty set.
+- Sample and comparison in the Quality step: a button to try 30 s in the background, before/after frames, estimated total size, savings percentage and invalidation when the quality changes; temporary files use fixed names in the cache.
+- Estimates in the Summary step: when a valid sample exists for the chosen quality, each card shows its duration-proportional estimated size and time; without a sample nothing is shown.
+- Saved profiles from the Quality step: a dropdown to apply a complete profile and a dialog to save the current combination under a name, with visible errors and nothing created when the name is empty.
+- Early warnings in the Quality step: the first available video shows the plan warnings (HDR, 10-bit, image subtitles, etc.) before reaching the Summary, recalculated when options or videos change.
 
 ## [0.2.1] - 2026-10-25
 

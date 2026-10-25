@@ -23,10 +23,12 @@ One decision per screen. At the top you can switch to Advanced mode and back wit
 
 1. **Videos.** Add files or a folder (with the checkbox to include subfolders), or drag them onto the window. Reduvid analyses them in the background and shows each duration, or the error if a file cannot be read. You can remove the ones you do not want. You need at least one successfully analysed video to continue.
 2. **Where will you watch them?** Pick the destination: *Jellyfin* (TV, phone or browser; H.264, the most compatible), *Modern devices* (H.265, more savings) or *Save for archive* (H.265 with more compression, slower). “I don't know” uses Jellyfin.
-3. **Quality.** *Almost identical*, *Balanced* (recommended) or *Maximum savings*. The “What is this?” drop-down explains the trade-off between quality and size. This version does not show estimated sizes yet.
+3. **Quality.** *Almost identical*, *Balanced* (recommended) or *Maximum savings*. The “What is this?” drop-down explains the trade-off between quality and size. Below, if they apply to the first video in the queue, you see compatibility warnings (HDR, 10-bit, image subtitles…) so you see them before reaching the Summary.
+   - **Try a 30-second sample:** encodes a short clip from the first video (at 40% of its duration) with the chosen quality, and shows a before/after frame, the estimated size for the full video and the savings percentage. Changing quality invalidates the sample; you need to run it again.
+   - **Saved profiles:** the drop-down loads a previously saved combination of destination, quality, container and languages; **Save as profile…** saves the current combination under the name you give it.
 4. **What to keep.** Tick the audio and subtitle languages you want to keep; everything is kept by default. If a video would end up with no audio, all of its audio tracks are kept and you are warned.
 5. **Destination.** The same folder as each video or another one, MKV or MP4 and, if there is 4K video with the Jellyfin destination, the option to reduce it to 1080p. **Replace the original** is off by default: if you turn it on, the original goes to the recycle bin only once the copy has been verified.
-6. **Summary.** Review what Reduvid will do with each video before starting.
+6. **Summary.** Review what Reduvid will do with each video before starting. If you calculated a sample in the Quality step, each video also shows its estimated size and conversion time, proportional to its duration.
 
 ### The Jellyfin traffic light
 

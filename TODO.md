@@ -7,12 +7,12 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 ## Prioridad alta
 
 - Definir cómo se licencian las contribuciones externas de código antes de aceptar la primera: la licencia solo cubre material de Catlinux.
-- 0.3.0, ayudas: prueba de muestra, estimaciones, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen.
+- Fase 4 (0.4.0 → 1.0.0), empaquetado: icono de la aplicación, instalador de Windows (PyInstaller + Inno Setup) y AppImage de Linux, probados en un Windows y un Debian reales con un vídeo de prueba de unos 6 GB.
 
 ## Prioridad media
 
-- 0.4.0 → 1.0.0: pipx, instalador de Windows, AppImage, capturas y primera release.
 - Al crear el repositorio en GitHub: descripción «About», topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) y avisos privados de seguridad activados.
+- `estimate_from_sample` (`core/estimate.py`) tiene el parámetro `original_sample_bytes` sin usar desde el paso 3.1; limpiar si se retoma ese módulo.
 
 ## Prioridad baja / más adelante
 

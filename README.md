@@ -15,13 +15,13 @@ Reduvid (de *reducir vídeo*) es una aplicación de escritorio para Linux y Wind
 
 ## Estado del proyecto
 
-En desarrollo. La versión actual (0.2.0) ya tiene interfaz gráfica, asistente paso a paso y línea de órdenes. Plan:
+En desarrollo. La versión actual (0.3.0) ya tiene interfaz gráfica, asistente paso a paso, línea de órdenes, prueba de muestra y perfiles guardados. Plan:
 
 | Versión | Contenido |
 |---|---|
 | 0.1.0 | Motor de conversión y línea de órdenes |
 | 0.2.0 | Interfaz gráfica, asistente e idiomas (català, castellano, English) |
-| 0.3.0 | Prueba de muestra, estimaciones, informe final y perfiles guardados |
+| 0.3.0 | Prueba de muestra, estimaciones y perfiles guardados |
 | 0.4.0 → 1.0.0 | Instaladores para Linux y Windows y primera versión estable |
 
 Detalle en [TODO.md](TODO.md) y en el [CHANGELOG](CHANGELOG.md).
@@ -88,7 +88,7 @@ Guía de la interfaz (asistente y modo Avanzado) en [docs/es/gui.md](docs/es/gui
 | Se reproduce directo en | Casi todo: teles, móviles, navegadores | Dispositivos modernos; en otros, Jellyfin lo convierte en el servidor o falla |
 | Recomendado si | Lo ves en varios dispositivos o no lo sabes | Tus dispositivos son modernos, o solo quieres archivar |
 
-Las cifras son orientativas y dependen de cada vídeo; la prueba de muestra de Reduvid (versión 0.3.0) da el dato real. Aunque el códec sea compatible, Jellyfin también transcodifica con vídeo de 10 bits, HDR, algunos subtítulos de imagen (PGS, VobSub) y audio DTS o TrueHD. Reduvid avisa de cada caso y propone cómo resolverlo.
+Las cifras son orientativas y dependen de cada vídeo; la prueba de muestra de Reduvid (paso 3 del asistente, «Probar con una muestra de 30 s») da el dato real. Aunque el códec sea compatible, Jellyfin también transcodifica con vídeo de 10 bits, HDR, algunos subtítulos de imagen (PGS, VobSub) y audio DTS o TrueHD. Reduvid avisa de cada caso y propone cómo resolverlo.
 
 ## Privacidad
 
