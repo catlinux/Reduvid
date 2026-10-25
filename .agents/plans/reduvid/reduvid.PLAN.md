@@ -210,7 +210,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
   - Panel de resultado: dos imágenes (antes/después) con `QLabel`+`QPixmap`, tamaño estimado y porcentaje de ahorro, con los tokens de tema (tarjeta `#card`, colores habituales).
   - Si cambia la calidad elegida, la muestra anterior se invalida y hay que volver a pedirla (no se recalcula sola).
   - Tests offscreen: arranque de la muestra, resultado mostrado, invalidación al cambiar de calidad.
-- [ ] 3.4 **Interfaz: estimación de tamaño/tiempo sin muestra.** *AgentRelay, esfuerzo medio.*
+- [x] 3.4 **Interfaz: estimación de tamaño/tiempo sin muestra.** *(AgentRelay, esfuerzo medio; revisado, 311/315 tests en verde. Nota: `estimate_from_sample` tiene el parámetro `original_sample_bytes` sin usar desde el 3.1, se arrastra sin afectar al resultado; limpiar en una pasada de pulido si se retoma `core/estimate.py`)*
   - Si no hay muestra calculada, el paso Resumen no muestra tamaño/tiempo estimado (como ahora); si la hay, los usa para todos los vídeos de la cola con las mismas opciones (extrapolando por duración de cada uno).
   - Tests: con y sin muestra.
 - [ ] 3.5 **Interfaz: perfiles guardados.** *AgentRelay, esfuerzo alto.*
