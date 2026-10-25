@@ -240,10 +240,9 @@ Objetivo: instalador de Windows funcional (probado en un Windows real) y paquete
 ### Pasos
 
 - [x] 4.0 **Icono de la aplicación.** *(Sesión, Opus; aprobado por el usuario)* `src/reduvid/resources/icon/reduvid.{ico,png,svg}`: el gato de origami de Plegat (reusando `draw_origami_cat` de `gui/widgets/motifs.py` para el trazado, sin redibujarlo a mano) sobre fondo teal (`accent` de Plegat claro), cabeza en `accent2`. El `.ico` lleva 7 resoluciones (16 a 256 px); el `.svg` reproduce las mismas coordenadas, verificado renderizándolo y comparando píxel a píxel con el PNG.
-- [ ] 4.1 **Windows: PyInstaller en modo carpeta.** *AgentRelay, esfuerzo alto.*
-  - `packaging/windows/reduvid.spec` (PyInstaller): usa el icono del paso 4.0, `reduvid` (gui) como ejecutable principal, excluye módulos de desarrollo (pytest, mypy, ruff) del bundle.
-  - Script `scripts/build_windows.ps1` o `.py` que ejecuta PyInstaller y deja el resultado en `dist/windows/`.
-  - Terminado cuando el `.exe` generado abre la interfaz en este equipo sin el entorno de desarrollo activo (probarlo en una terminal nueva, sin `pip install -e`).
+- [x] 4.1 **Windows: PyInstaller en modo carpeta.** *(AgentRelay, esfuerzo alto; revisado y verificado generando el paquete de verdad: `dist/windows/Reduvid/Reduvid.exe` arranca, fuentes y traducciones incluidas, 322/326 tests en verde)*
+  - `packaging/windows/reduvid.spec` (PyInstaller): usa el icono del paso 4.0, `reduvid.__main__` como entrada, excluye módulos de desarrollo (pytest, mypy, ruff, babel, pre_commit) del bundle.
+  - `scripts/build_windows.py` compila las traducciones y ejecuta PyInstaller, deja el resultado en `dist/windows/`.
 - [ ] 4.2 **Windows: instalador Inno Setup.** *AgentRelay, esfuerzo alto; paso delicado, revisar en persona antes de aceptar.*
   - `packaging/windows/reduvid.iss`: instala la carpeta de PyInstaller en Archivos de Programa, crea acceso directo en el menú inicio (opcional en escritorio), desinstalador limpio, versión tomada de `__init__.py` (pasada como parámetro al compilar, no hardcodeada).
   - Documentar en `docs/{es,en}/instalacion.md` (o ampliar el README si es corto) cómo compilarlo (requiere Inno Setup instalado, enlазаr su descarga oficial) y qué hace el instalador.
