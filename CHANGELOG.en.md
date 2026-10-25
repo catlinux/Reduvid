@@ -6,6 +6,13 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-25
+
+### Changed
+
+- Main action buttons use `role=primary` (Start, Next and Choose ffmpeg) and the queue Cancel button uses `role=danger`, instead of the same flat style as every other button; Riso's offset shadow now also applies to primary buttons and recommended option cards show a tinted background.
+- In the Summary step, each video changes from a text line with a small badge to a full card tinted by its Jellyfin compatibility level, and the vertical gap that used to be spread between rows is now a single block.
+
 ## [0.2.0] - 2026-10-25
 
 ### Added
@@ -26,7 +33,6 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Advanced mode: a single page with every CLI option (videos, destination, quality, container, maximum height, output folder, threads, replacement, languages and the summary with start), sharing the wizard state; the switch keeps the selection, saves `ui_mode` and is blocked while a conversion runs.
 - Accessibility: accessible names on every interactive control, per-page tab order, consistent Alt+ shortcuts on the main buttons (also in Catalan and Spanish), visible focus on every control in the six themes and long texts wrapped when the font grows.
 - Hand-painted motif specific to each theme: folded corner, accordion bar and origami cat in Plegat; offset shadow, hatched track, cat and variable-width figure in Riso; three-colour stripe, reels and mechanical counter in Cinta. The queue progress bar is painted by hand from the tokens and uses no timers, so it honours "Reduce animations".
-- Main action buttons use `role=primary` (Start, Next and Choose ffmpeg) and the queue Cancel button uses `role=danger`; Riso's offset shadow now also applies to primary buttons and recommended option cards show a tinted background.
 - Interface screenshots in `docs/screenshots/` (all three themes, light and dark), linked from the README and the interface guide.
 
 ### Changed
