@@ -6,6 +6,8 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.2.0] - 2026-10-25
+
 ### Añadido
 
 - Guía de uso de la interfaz en `docs/es/gui.md` y `docs/en/gui.md`.
@@ -24,6 +26,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Modo Avanzado: una sola página con todas las opciones de la CLI (vídeos, destino, calidad, contenedor, altura máxima, carpeta de salida, hilos, reemplazo, idiomas y resumen con arranque), compartiendo el estado del asistente; el conmutador conserva la selección, guarda `ui_mode` y se bloquea durante una conversión.
 - Accesibilidad: nombre accesible en todos los controles interactivos, orden de tabulación por página, atajos Alt+ coherentes en los botones principales (también en catalán y castellano), foco visible en todos los controles de los seis temas y textos largos con ajuste de línea al aumentar la fuente.
 - Motivos pintados propios de cada tema: esquina doblada, barra en acordeón y gato de origami en Plegat; sombra desplazada, pista tramada, gato y cifra con eje variable en Riso; franja de tres colores, bobinas y contador mecánico en Cinta. La barra de progreso de la cola se pinta a mano desde los tokens y no usa temporizadores, por lo que respeta «Reducir animaciones».
+- Capturas de la interfaz en `docs/screenshots/` (los tres temas, claro y oscuro), enlazadas desde el README y la guía de la interfaz.
 
 ### Cambiado
 

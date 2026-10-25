@@ -15,7 +15,7 @@ Reduvid (de *reducir vídeo*) es una aplicación de escritorio para Linux y Wind
 
 ## Estado del proyecto
 
-En desarrollo. La versión actual (0.1.0) ya convierte vídeos desde la línea de órdenes; la interfaz gráfica llega en la 0.2.0. Plan:
+En desarrollo. La versión actual (0.2.0) ya tiene interfaz gráfica, asistente paso a paso y línea de órdenes. Plan:
 
 | Versión | Contenido |
 |---|---|
@@ -28,11 +28,22 @@ Detalle en [TODO.md](TODO.md) y en el [CHANGELOG](CHANGELOG.md).
 
 ## Capturas
 
-La interfaz todavía no existe (llega en la versión 0.2.0). Estas son las maquetas de diseño con las tres direcciones visuales entre las que se elegirá; **Plegat** es la elegida por defecto. Maqueta interactiva completa en [docs/design/mockups.html](docs/design/mockups.html).
+El asistente, en sus tres temas intercambiables; **Plegat** es el tema por defecto. Más capturas y el uso completo de la interfaz en la [guía de la interfaz gráfica](docs/es/gui.md).
 
-| Plegat (por defecto) | Riso | Cinta |
+| Plegat | Riso | Cinta |
 |---|---|---|
-| [![Maqueta Plegat](docs/design/screenshots/plegat.png)](docs/design/screenshots/plegat.png) | [![Maqueta Riso](docs/design/screenshots/riso.png)](docs/design/screenshots/riso.png) | [![Maqueta Cinta](docs/design/screenshots/cinta.png)](docs/design/screenshots/cinta.png) |
+| [![Reduvid con el tema Plegat](docs/screenshots/plegat_light.png)](docs/screenshots/plegat_light.png) | [![Reduvid con el tema Riso](docs/screenshots/riso_light.png)](docs/screenshots/riso_light.png) | [![Reduvid con el tema Cinta](docs/screenshots/cinta_light.png)](docs/screenshots/cinta_light.png) |
+
+<details>
+<summary>Modo oscuro</summary>
+
+| Plegat | Riso | Cinta |
+|---|---|---|
+| [![Reduvid con el tema Plegat en modo oscuro](docs/screenshots/plegat_dark.png)](docs/screenshots/plegat_dark.png) | [![Reduvid con el tema Riso en modo oscuro](docs/screenshots/riso_dark.png)](docs/screenshots/riso_dark.png) | [![Reduvid con el tema Cinta en modo oscuro](docs/screenshots/cinta_dark.png)](docs/screenshots/cinta_dark.png) |
+
+</details>
+
+Maquetas de diseño originales en [docs/design/mockups.html](docs/design/mockups.html).
 
 ## Requisitos
 

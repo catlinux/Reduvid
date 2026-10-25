@@ -15,7 +15,7 @@ Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for
 
 ## Project status
 
-In development. The current version (0.1.0) can already convert videos from the command line; the graphical interface arrives in 0.2.0. Plan:
+In development. The current version (0.2.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
 
 | Version | Contents |
 |---|---|
@@ -28,11 +28,22 @@ Details in [TODO.en.md](TODO.en.md) and the [CHANGELOG](CHANGELOG.en.md).
 
 ## Screenshots
 
-The interface doesn't exist yet (it arrives in version 0.2.0). These are the design mockups showing the three visual directions to choose between; **Plegat** is the default pick. Full interactive mockup in [docs/design/mockups.html](docs/design/mockups.html).
+The wizard, in its three interchangeable themes; **Plegat** is the default theme. More screenshots and the full interface walkthrough in the [graphical interface guide](docs/en/gui.md).
 
-| Plegat (default) | Riso | Cinta |
+| Plegat | Riso | Cinta |
 |---|---|---|
-| [![Plegat mockup](docs/design/screenshots/plegat.png)](docs/design/screenshots/plegat.png) | [![Riso mockup](docs/design/screenshots/riso.png)](docs/design/screenshots/riso.png) | [![Cinta mockup](docs/design/screenshots/cinta.png)](docs/design/screenshots/cinta.png) |
+| [![Reduvid with the Plegat theme](docs/screenshots/plegat_light.png)](docs/screenshots/plegat_light.png) | [![Reduvid with the Riso theme](docs/screenshots/riso_light.png)](docs/screenshots/riso_light.png) | [![Reduvid with the Cinta theme](docs/screenshots/cinta_light.png)](docs/screenshots/cinta_light.png) |
+
+<details>
+<summary>Dark mode</summary>
+
+| Plegat | Riso | Cinta |
+|---|---|---|
+| [![Reduvid with the Plegat theme in dark mode](docs/screenshots/plegat_dark.png)](docs/screenshots/plegat_dark.png) | [![Reduvid with the Riso theme in dark mode](docs/screenshots/riso_dark.png)](docs/screenshots/riso_dark.png) | [![Reduvid with the Cinta theme in dark mode](docs/screenshots/cinta_dark.png)](docs/screenshots/cinta_dark.png) |
+
+</details>
+
+Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
 
 ## Requirements
 

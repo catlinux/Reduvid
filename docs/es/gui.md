@@ -2,7 +2,16 @@
 
 **Castellano** · [English](../en/gui.md)
 
-La interfaz llega con la versión 0.2.0 (en desarrollo). Se abre con `reduvid` (o `python -m reduvid`). Para servidores sin pantalla, usa la [línea de órdenes](cli.md) (`reduvid-cli`).
+Se abre con `reduvid` (o `python -m reduvid`). Para servidores sin pantalla, usa la [línea de órdenes](cli.md) (`reduvid-cli`).
+
+## Capturas
+
+El paso Resumen del asistente, en los tres temas (rutas relativas a esta guía):
+
+| Plegat | Riso | Cinta |
+|---|---|---|
+| [![Tema Plegat](../screenshots/plegat_light.png)](../screenshots/plegat_light.png) | [![Tema Riso](../screenshots/riso_light.png)](../screenshots/riso_light.png) | [![Tema Cinta](../screenshots/cinta_light.png)](../screenshots/cinta_light.png) |
+| [![Tema Plegat, modo oscuro](../screenshots/plegat_dark.png)](../screenshots/plegat_dark.png) | [![Tema Riso, modo oscuro](../screenshots/riso_dark.png)](../screenshots/riso_dark.png) | [![Tema Cinta, modo oscuro](../screenshots/cinta_dark.png)](../screenshots/cinta_dark.png) |
 
 ## Primer arranque
 

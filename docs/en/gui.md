@@ -2,7 +2,16 @@
 
 [Castellano](../es/gui.md) · **English**
 
-The interface arrives with version 0.2.0 (in development). Open it with `reduvid` (or `python -m reduvid`). For servers without a screen, use the [command line](cli.md) (`reduvid-cli`).
+Open it with `reduvid` (or `python -m reduvid`). For servers without a screen, use the [command line](cli.md) (`reduvid-cli`).
+
+## Screenshots
+
+The wizard's Summary step, in all three themes (paths relative to this guide):
+
+| Plegat | Riso | Cinta |
+|---|---|---|
+| [![Plegat theme](../screenshots/plegat_light.png)](../screenshots/plegat_light.png) | [![Riso theme](../screenshots/riso_light.png)](../screenshots/riso_light.png) | [![Cinta theme](../screenshots/cinta_light.png)](../screenshots/cinta_light.png) |
+| [![Plegat theme, dark mode](../screenshots/plegat_dark.png)](../screenshots/plegat_dark.png) | [![Riso theme, dark mode](../screenshots/riso_dark.png)](../screenshots/riso_dark.png) | [![Cinta theme, dark mode](../screenshots/cinta_dark.png)](../screenshots/cinta_dark.png) |
 
 ## First start
 

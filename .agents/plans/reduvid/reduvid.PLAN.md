@@ -177,7 +177,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - Nada se corta con escalado de 150 % y 200 % (`QT_SCALE_FACTOR`).
   - Re-extraer el `.pot` y completar `ca` y `es`.
   - Test que recorre la ventana y falla si un control interactivo no tiene nombre accesible.
-- [ ] 2.13 **Capturas, documentación y 0.2.0.** *Sesión (Sonnet, esfuerzo medio).*
+- [x] 2.13 **Capturas, documentación y 0.2.0.** *Sesión (Opus).* *(El modo offscreen de Qt en este equipo no tiene fuentes registradas, así que `scripts/screenshots.py` offscreen habría dado capturas con texto vacío; en su lugar se generaron con la ventana real, lanzada con datos de ejemplo mediante un script de desarrollo descartable, para los 3 temas × claro/oscuro. No se creó `scripts/screenshots.py`: si se quiere automatizar en un equipo con fuentes offscreen correctas, queda pendiente)*
   - `scripts/screenshots.py`: genera con offscreen y datos de ejemplo las capturas de los tres temas en claro y oscuro en `docs/screenshots/`.
   - README(.en): capturas, cómo abrir la interfaz y enlace a `docs/{es,en}/gui.md` (uso del asistente y del modo Avanzado).
   - Versión 0.2.0 en `__init__.py` y CHANGELOG(.en): se pasa Sin publicar a `[0.2.0]`. Es menor: añade la interfaz, y el cambio de `reduvid` a `reduvid-cli` antes de 1.0.0 cuenta como menor.

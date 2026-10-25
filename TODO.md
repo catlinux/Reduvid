@@ -7,11 +7,10 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 ## Prioridad alta
 
 - Definir cómo se licencian las contribuciones externas de código antes de aceptar la primera: la licencia solo cubre material de Catlinux.
-- 0.2.0, interfaz: modos Asistente y Avanzado, explicaciones contextuales, idiomas ca/es/en y accesibilidad.
+- 0.3.0, ayudas: prueba de muestra, estimaciones, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen.
 
 ## Prioridad media
 
-- 0.3.0, ayudas: prueba de muestra, estimaciones, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen.
 - 0.4.0 → 1.0.0: pipx, instalador de Windows, AppImage, capturas y primera release.
 - Al crear el repositorio en GitHub: descripción «About», topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) y avisos privados de seguridad activados.
 
@@ -25,6 +24,7 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 - Paquetes .deb y Flatpak.
 - macOS: no es objetivo ahora; no romperlo sin motivo.
 - Más idiomas de la interfaz.
+- `scripts/screenshots.py` para automatizar las capturas con Qt offscreen: en este equipo el backend offscreen no tiene fuentes registradas (0 familias) y el texto saldría vacío; las capturas de la 0.2.0 se hicieron a mano con la ventana real.
 
 ## Descartado
 
