@@ -202,7 +202,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
   - `core/sample.py`: `build_sample_command(path, plan, start, duration) -> list[str]` (recorte + codificación con el plan ya calculado, usando `-ss`/`-t` antes de `-i` para que sea rápido) y `extract_frame_command(path, timestamp) -> list[str]` (un PNG a un temporal).
   - `core/estimate.py`: `estimate_from_sample(original_sample_bytes, encoded_sample_bytes, sample_duration, total_duration, elapsed_encode_seconds) -> Estimate` (dataclass con `estimated_total_bytes`, `estimated_total_seconds`), pura, sin I/O.
   - Tests: comandos generados (rutas con espacios/tildes, `-ss` antes de `-i`), y la extrapolación aritmética con casos límite (muestra más corta que 30 s si el vídeo dura menos de 75 s, duración cero).
-- [ ] 3.2 **Motor: perfiles guardados.** *AgentRelay, esfuerzo medio.*
+- [x] 3.2 **Motor: perfiles guardados.** *(AgentRelay, esfuerzo medio; revisado, 302/306 tests en verde)*
   - `core/profile_store.py`: `list_profiles()`, `load_profile(name)`, `save_profile(name, options)`, `delete_profile(name)`, mismo escritor TOML atómico que `core/config.py` (puede reusar su función interna si ya está extraída, o duplicarla mínimamente si no merece la pena abstraer).
   - Tests: ida y vuelta de un `PlanOptions` completo (incluye `audio_languages`/`subtitle_languages` como `frozenset`), nombres con espacios/tildes, perfil inexistente.
 - [ ] 3.3 **Interfaz: muestra y comparación en el paso Calidad.** *AgentRelay, esfuerzo xhigh; maquetas en references si hay algo relevante, si no, seguir el estilo ya establecido de `OptionCard`/`#card`.*
