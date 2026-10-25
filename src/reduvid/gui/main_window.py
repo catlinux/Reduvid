@@ -5,13 +5,17 @@
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QResizeEvent
+from collections.abc import Sequence
+from pathlib import Path
+
+from PySide6.QtCore import Qt, QThread
+from PySide6.QtGui import QCloseEvent, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QMessageBox,
     QPushButton,
     QSplitter,
     QStackedWidget,
@@ -21,8 +25,13 @@ from PySide6.QtWidgets import (
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.pipeline import FileProcessor
+from reduvid.core.plan import PlanOptions
+from reduvid.core.report import QueueReport
 from reduvid.gui.preferences import PreferencesDialog
+from reduvid.gui.queue_panel import QueuePanel
 from reduvid.gui.theme.manager import ThemeManager
+from reduvid.gui.workers import QueueWorker, start_worker_thread
 from reduvid.i18n import _
 
 STEP_LIST_WIDTH = 180
@@ -71,7 +80,10 @@ class MainWindow(QMainWindow):
 
         self.step_list = self._build_step_list()
         self.content = self._build_content()
-        self.queue_panel = self._build_queue_panel()
+        self.queue_panel = QueuePanel(self)
+        self.queue_panel.setMinimumWidth(QUEUE_PANEL_WIDTH)
+        self.queue_worker: QueueWorker | None = None
+        self.queue_thread: QThread | None = None
         self.splitter = QSplitter(Qt.Orientation.Horizontal, self)
         self.splitter.setObjectName("bodySplitter")
         self.splitter.setAccessibleName(_("Main panels"))
@@ -104,6 +116,70 @@ class MainWindow(QMainWindow):
         dialog = PreferencesDialog(self._config, self._theme_manager, self)
         if dialog.exec():
             self._config = dialog.config
+
+    def start_queue(
+        self,
+        paths: Sequence[Path],
+        options: PlanOptions,
+        *,
+        output_dir: Path | None = None,
+        threads: int | None = None,
+        replace_original: bool = False,
+    ) -> QueueWorker:
+        """Start converting *paths* in a worker thread and return its worker."""
+        if self.has_running_queue():
+            raise RuntimeError(_("A conversion is already running."))
+        processor = FileProcessor(
+            self._ffmpeg_info,
+            options,
+            output_dir=output_dir,
+            threads=threads,
+            replace_original=replace_original,
+        )
+        worker = QueueWorker(processor, self._ffmpeg_info.ffprobe_path)
+        worker.add_files(paths)
+        worker.finished.connect(self._on_queue_finished)
+        self.queue_panel.connect_worker(worker)
+        self.queue_worker = worker
+        self.queue_thread = start_worker_thread(worker)
+        return worker
+
+    def _on_queue_finished(self, _report: QueueReport) -> None:
+        # The worker and thread schedule their own deletion after finishing.
+        self.queue_worker = None
+        self.queue_thread = None
+
+    def has_running_queue(self) -> bool:
+        return self.queue_thread is not None and self.queue_thread.isRunning()
+
+    def cancel_queue(self) -> None:
+        """Cancel the running conversion and wait for its thread to stop."""
+        if self.queue_worker is not None:
+            self.queue_worker.cancel()
+        if self.queue_thread is not None:
+            self.queue_thread.quit()
+            self.queue_thread.wait(5000)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if self.has_running_queue() and not self._confirm_quit():
+            event.ignore()
+            return
+        if self.has_running_queue():
+            self.cancel_queue()
+        super().closeEvent(event)
+
+    def _confirm_quit(self) -> bool:
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle(_("Conversion in progress"))
+        box.setText(_("A conversion is still running."))
+        box.setInformativeText(_("If you quit now, the conversion will be cancelled."))
+        quit_button = box.addButton(
+            _("Cancel conversion and quit"), QMessageBox.ButtonRole.DestructiveRole
+        )
+        box.addButton(_("Keep converting"), QMessageBox.ButtonRole.RejectRole)
+        box.exec()
+        return box.clickedButton() is quit_button
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
@@ -184,22 +260,3 @@ class MainWindow(QMainWindow):
             layout.addStretch(1)
             stack.addWidget(page)
         return stack
-
-    def _build_queue_panel(self) -> QWidget:
-        panel = QWidget(self)
-        panel.setObjectName("queuePanel")
-        panel.setAccessibleName(_("Conversion queue"))
-        panel.setMinimumWidth(QUEUE_PANEL_WIDTH)
-        layout = QVBoxLayout(panel)
-        layout.setContentsMargins(18, 20, 18, 20)
-        layout.setSpacing(10)
-
-        title = QLabel(_("Queue"), panel)
-        title.setProperty("role", "kicker")
-        placeholder = QLabel(_("The conversion queue will appear here."), panel)
-        placeholder.setProperty("role", "muted")
-        placeholder.setWordWrap(True)
-        layout.addWidget(title)
-        layout.addWidget(placeholder)
-        layout.addStretch(1)
-        return panel

@@ -37,11 +37,19 @@ msgstr ""
 msgid ", {language}"
 msgstr ""
 
+#: gui/main_window.py:130
+msgid "A conversion is already running."
+msgstr ""
+
+#: gui/main_window.py:168
+msgid "A conversion is still running."
+msgstr ""
+
 #: gui/preferences.py:125 gui/preferences.py:126
 msgid "Accept"
 msgstr ""
 
-#: gui/main_window.py:66
+#: gui/main_window.py:74
 msgid "Advanced"
 msgstr ""
 
@@ -68,8 +76,24 @@ msgstr ""
 msgid "Browse…"
 msgstr ""
 
-#: gui/preferences.py:127 gui/preferences.py:128
+#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:127
 msgid "Cancel"
+msgstr ""
+
+#: gui/queue_panel.py:129
+msgid "Cancel conversion"
+msgstr ""
+
+#: gui/main_window.py:171
+msgid "Cancel conversion and quit"
+msgstr ""
+
+#: gui/queue_panel.py:247
+msgid "Cancelled. No files are left half-written."
+msgstr ""
+
+#: gui/queue_panel.py:179
+msgid "Cancelling…"
 msgstr ""
 
 #: gui/preferences.py:96
@@ -92,7 +116,15 @@ msgstr ""
 msgid "Colour mode"
 msgstr ""
 
-#: gui/main_window.py:191
+#: gui/main_window.py:167
+msgid "Conversion in progress"
+msgstr ""
+
+#: gui/queue_panel.py:117
+msgid "Conversion progress"
+msgstr ""
+
+#: gui/queue_panel.py:38
 msgid "Conversion queue"
 msgstr ""
 
@@ -118,7 +150,7 @@ msgstr ""
 msgid "Debian / Ubuntu"
 msgstr ""
 
-#: gui/main_window.py:39
+#: gui/main_window.py:47
 msgid "Destination"
 msgstr ""
 
@@ -215,6 +247,11 @@ msgstr ""
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr ""
 
+#: gui/queue_panel.py:250
+#, python-brace-format
+msgid "Finished with {count} failed file(s)."
+msgstr ""
+
 #: cli.py:265
 #, python-brace-format
 msgid "Finished: {name}"
@@ -223,6 +260,14 @@ msgstr ""
 #: cli.py:134
 #, python-brace-format
 msgid "Format: {format}"
+msgstr ""
+
+#: gui/error_view.py:65
+msgid "Hide technical details"
+msgstr ""
+
+#: gui/main_window.py:169
+msgid "If you quit now, the conversion will be cancelled."
 msgstr ""
 
 #: messages.py:36
@@ -238,6 +283,10 @@ msgstr ""
 #: gui/ffmpeg_missing.py:98
 #, python-brace-format
 msgid "Install command for {system}"
+msgstr ""
+
+#: gui/main_window.py:173
+msgid "Keep converting"
 msgstr ""
 
 #: cli.py:391
@@ -264,7 +313,7 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: gui/main_window.py:77
+#: gui/main_window.py:88
 msgid "Main panels"
 msgstr ""
 
@@ -277,12 +326,24 @@ msgstr ""
 msgid "Output: {path}"
 msgstr ""
 
+#: gui/queue_panel.py:123 gui/queue_panel.py:165 gui/queue_panel.py:239
+msgid "Pause"
+msgstr ""
+
+#: gui/queue_panel.py:125
+msgid "Pause conversion"
+msgstr ""
+
+#: gui/queue_panel.py:172
+msgid "Paused. You can keep using the computer as usual."
+msgstr ""
+
 #: cli.py:188
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr ""
 
-#: gui/main_window.py:67 gui/main_window.py:69 gui/preferences.py:51
+#: gui/main_window.py:75 gui/main_window.py:77 gui/preferences.py:51
 msgid "Preferences"
 msgstr ""
 
@@ -291,19 +352,29 @@ msgstr ""
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr ""
 
-#: gui/main_window.py:37
+#: gui/main_window.py:45
 msgid "Quality"
 msgstr ""
 
-#: gui/main_window.py:197
+#: gui/queue_panel.py:83 gui/queue_panel.py:92
 msgid "Queue"
+msgstr ""
+
+#: gui/queue_panel.py:183
+#, python-brace-format
+msgid "Queue · {count} videos"
+msgstr ""
+
+#: gui/queue_panel.py:254
+#, python-brace-format, python-format
+msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr ""
 
 #: gui/preferences.py:85 gui/preferences.py:87
 msgid "Reduce animations"
 msgstr ""
 
-#: gui/main_window.py:56 gui/main_window.py:135 gui/main_window.py:138
+#: gui/main_window.py:64 gui/main_window.py:204 gui/main_window.py:207
 msgid "Reduvid"
 msgstr ""
 
@@ -313,12 +384,20 @@ msgid ""
 " have it."
 msgstr ""
 
+#: gui/queue_panel.py:171
+msgid "Resume"
+msgstr ""
+
 #: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
 msgid "Search again"
 msgstr ""
 
 #: cli.py:376
 msgid "Show media details"
+msgstr ""
+
+#: gui/error_view.py:32 gui/error_view.py:34 gui/error_view.py:65
+msgid "Show technical details"
 msgstr ""
 
 #: cli.py:136
@@ -330,11 +409,11 @@ msgstr ""
 msgid "Something went wrong while processing the file."
 msgstr ""
 
-#: gui/main_window.py:172
+#: gui/main_window.py:241
 msgid "Step content"
 msgstr ""
 
-#: gui/main_window.py:159
+#: gui/main_window.py:228
 msgid "Steps"
 msgstr ""
 
@@ -348,7 +427,7 @@ msgstr ""
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
 
-#: gui/main_window.py:40
+#: gui/main_window.py:48
 msgid "Summary"
 msgstr ""
 
@@ -360,8 +439,8 @@ msgstr ""
 msgid "System language"
 msgstr ""
 
-#: gui/main_window.py:199
-msgid "The conversion queue will appear here."
+#: gui/error_view.py:40
+msgid "Technical details"
 msgstr ""
 
 #: messages.py:70
@@ -396,13 +475,23 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/main_window.py:179
+#: gui/main_window.py:248
 msgid "This step is not available yet."
 msgstr ""
 
 #: cli.py:282
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
+msgstr ""
+
+#: gui/queue_panel.py:296
+#, python-brace-format
+msgid "Total: {original} → {estimated} estimated"
+msgstr ""
+
+#: gui/queue_panel.py:241
+#, python-brace-format
+msgid "Total: {original} → {final}"
 msgstr ""
 
 #: messages.py:52 messages.py:56
@@ -442,7 +531,7 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
 
-#: gui/main_window.py:35
+#: gui/main_window.py:43
 msgid "Videos"
 msgstr ""
 
@@ -456,11 +545,11 @@ msgstr ""
 msgid "Warning: {text}"
 msgstr ""
 
-#: gui/main_window.py:38
+#: gui/main_window.py:46
 msgid "What to keep"
 msgstr ""
 
-#: gui/main_window.py:36
+#: gui/main_window.py:44
 msgid "Where to watch"
 msgstr ""
 
@@ -468,11 +557,11 @@ msgstr ""
 msgid "Windows"
 msgstr ""
 
-#: gui/main_window.py:65
+#: gui/main_window.py:73
 msgid "Wizard"
 msgstr ""
 
-#: gui/main_window.py:153
+#: gui/main_window.py:222
 msgid "Wizard steps"
 msgstr ""
 
@@ -497,6 +586,10 @@ msgstr ""
 msgid "encode"
 msgstr ""
 
+#: gui/queue_panel.py:211
+msgid "less than 1 min left"
+msgstr ""
+
 #: cli.py:41
 msgid "must be a comma-separated list of language codes"
 msgstr ""
@@ -511,6 +604,10 @@ msgstr ""
 
 #: cli.py:139
 msgid "unknown"
+msgstr ""
+
+#: gui/queue_panel.py:206 gui/queue_panel.py:221
+msgid "verified"
 msgstr ""
 
 #: cli.py:175
@@ -530,5 +627,20 @@ msgstr ""
 #: messages.py:42
 #, python-brace-format
 msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
+msgstr ""
+
+#: gui/queue_panel.py:212
+#, python-brace-format
+msgid "{minutes} min left"
+msgstr ""
+
+#: gui/queue_panel.py:284
+#, python-brace-format
+msgid "{name} · {size}"
+msgstr ""
+
+#: gui/queue_panel.py:186 gui/queue_panel.py:197 gui/queue_panel.py:220
+#, python-brace-format
+msgid "{percent}%"
 msgstr ""
 

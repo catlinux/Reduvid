@@ -38,11 +38,19 @@ msgstr ", escalar a {height}p"
 msgid ", {language}"
 msgstr ", {language}"
 
+#: gui/main_window.py:130
+msgid "A conversion is already running."
+msgstr "Ya hay una conversión en marcha."
+
+#: gui/main_window.py:168
+msgid "A conversion is still running."
+msgstr "Todavía hay una conversión en marcha."
+
 #: gui/preferences.py:125 gui/preferences.py:126
 msgid "Accept"
 msgstr "Aceptar"
 
-#: gui/main_window.py:66
+#: gui/main_window.py:74
 msgid "Advanced"
 msgstr "Avanzado"
 
@@ -71,9 +79,25 @@ msgstr "Buscar el archivo de FFmpeg"
 msgid "Browse…"
 msgstr "Examinar…"
 
-#: gui/preferences.py:127 gui/preferences.py:128
+#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:127
 msgid "Cancel"
 msgstr "Cancelar"
+
+#: gui/queue_panel.py:129
+msgid "Cancel conversion"
+msgstr "Cancelar la conversión"
+
+#: gui/main_window.py:171
+msgid "Cancel conversion and quit"
+msgstr "Cancelar la conversión y salir"
+
+#: gui/queue_panel.py:247
+msgid "Cancelled. No files are left half-written."
+msgstr "Cancelado. No queda ningún archivo a medias."
+
+#: gui/queue_panel.py:179
+msgid "Cancelling…"
+msgstr "Cancelando…"
 
 #: gui/preferences.py:96
 msgid "Check"
@@ -95,7 +119,15 @@ msgstr "Elige el ejecutable de ffmpeg"
 msgid "Colour mode"
 msgstr "Modo de color"
 
-#: gui/main_window.py:191
+#: gui/main_window.py:167
+msgid "Conversion in progress"
+msgstr "Conversión en marcha"
+
+#: gui/queue_panel.py:117
+msgid "Conversion progress"
+msgstr "Progreso de la conversión"
+
+#: gui/queue_panel.py:38
 msgid "Conversion queue"
 msgstr "Cola de conversión"
 
@@ -121,7 +153,7 @@ msgstr "Oscuro"
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
-#: gui/main_window.py:39
+#: gui/main_window.py:47
 msgid "Destination"
 msgstr "Destino"
 
@@ -218,6 +250,11 @@ msgstr "Archivo: {path}"
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr "Archivos: {succeeded} correctos, {failed} con error, {skipped} omitidos"
 
+#: gui/queue_panel.py:250
+#, python-brace-format
+msgid "Finished with {count} failed file(s)."
+msgstr "Terminado con {count} archivo(s) con error."
+
 #: cli.py:265
 #, python-brace-format
 msgid "Finished: {name}"
@@ -227,6 +264,14 @@ msgstr "Terminado: {name}"
 #, python-brace-format
 msgid "Format: {format}"
 msgstr "Formato: {format}"
+
+#: gui/error_view.py:65
+msgid "Hide technical details"
+msgstr "Ocultar los detalles técnicos"
+
+#: gui/main_window.py:169
+msgid "If you quit now, the conversion will be cancelled."
+msgstr "Si sales ahora, se cancelará la conversión."
 
 #: messages.py:36
 #, python-brace-format
@@ -244,6 +289,10 @@ msgstr ""
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Comando de instalación para {system}"
+
+#: gui/main_window.py:173
+msgid "Keep converting"
+msgstr "Seguir convirtiendo"
 
 #: cli.py:391
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
@@ -269,7 +318,7 @@ msgstr "Idioma de los mensajes"
 msgid "Light"
 msgstr "Claro"
 
-#: gui/main_window.py:77
+#: gui/main_window.py:88
 msgid "Main panels"
 msgstr "Paneles principales"
 
@@ -282,12 +331,24 @@ msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que 
 msgid "Output: {path}"
 msgstr "Salida: {path}"
 
+#: gui/queue_panel.py:123 gui/queue_panel.py:165 gui/queue_panel.py:239
+msgid "Pause"
+msgstr "Pausar"
+
+#: gui/queue_panel.py:125
+msgid "Pause conversion"
+msgstr "Pausar la conversión"
+
+#: gui/queue_panel.py:172
+msgid "Paused. You can keep using the computer as usual."
+msgstr "En pausa. Puedes seguir usando el equipo con normalidad."
+
 #: cli.py:188
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Plan: {destination}, {quality}, {container}"
 
-#: gui/main_window.py:67 gui/main_window.py:69 gui/preferences.py:51
+#: gui/main_window.py:75 gui/main_window.py:77 gui/preferences.py:51
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -296,19 +357,29 @@ msgstr "Preferencias"
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progreso: {percent:.0f}% ({state})"
 
-#: gui/main_window.py:37
+#: gui/main_window.py:45
 msgid "Quality"
 msgstr "Calidad"
 
-#: gui/main_window.py:197
+#: gui/queue_panel.py:83 gui/queue_panel.py:92
 msgid "Queue"
 msgstr "Cola"
+
+#: gui/queue_panel.py:183
+#, python-brace-format
+msgid "Queue · {count} videos"
+msgstr "Cola · {count} vídeos"
+
+#: gui/queue_panel.py:254
+#, python-brace-format, python-format
+msgid "Ready and verified: {percent}% smaller. The originals are untouched."
+msgstr "Listo y verificado: un {percent}% más pequeño. Los originales siguen intactos."
 
 #: gui/preferences.py:85 gui/preferences.py:87
 msgid "Reduce animations"
 msgstr "Reducir animaciones"
 
-#: gui/main_window.py:56 gui/main_window.py:135 gui/main_window.py:138
+#: gui/main_window.py:64 gui/main_window.py:204 gui/main_window.py:207
 msgid "Reduvid"
 msgstr "Reduvid"
 
@@ -320,6 +391,10 @@ msgstr ""
 "Reduvid usa FFmpeg para convertir vídeos. Instálalo o elige el ejecutable de ffmpeg si ya lo "
 "tienes."
 
+#: gui/queue_panel.py:171
+msgid "Resume"
+msgstr "Reanudar"
+
 #: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
 msgid "Search again"
 msgstr "Volver a buscar"
@@ -327,6 +402,10 @@ msgstr "Volver a buscar"
 #: cli.py:376
 msgid "Show media details"
 msgstr "Muestra los detalles del archivo multimedia"
+
+#: gui/error_view.py:32 gui/error_view.py:34 gui/error_view.py:65
+msgid "Show technical details"
+msgstr "Mostrar los detalles técnicos"
 
 #: cli.py:136
 #, python-brace-format
@@ -337,11 +416,11 @@ msgstr "Tamaño: {size:.2f} MB"
 msgid "Something went wrong while processing the file."
 msgstr "Ha ocurrido un problema al procesar el archivo."
 
-#: gui/main_window.py:172
+#: gui/main_window.py:241
 msgid "Step content"
 msgstr "Contenido del paso"
 
-#: gui/main_window.py:159
+#: gui/main_window.py:228
 msgid "Steps"
 msgstr "Pasos"
 
@@ -355,7 +434,7 @@ msgstr "Pista de subtítulos {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítulo {position}: {codec}{language}, imagen: {image}"
 
-#: gui/main_window.py:40
+#: gui/main_window.py:48
 msgid "Summary"
 msgstr "Resumen"
 
@@ -367,9 +446,9 @@ msgstr "Sistema"
 msgid "System language"
 msgstr "Idioma del sistema"
 
-#: gui/main_window.py:199
-msgid "The conversion queue will appear here."
-msgstr "La cola de conversión aparecerá aquí."
+#: gui/error_view.py:40
+msgid "Technical details"
+msgstr "Detalles técnicos"
 
 #: messages.py:70
 msgid "The conversion was cancelled."
@@ -403,7 +482,7 @@ msgstr "No hay suficiente espacio libre en el disco de destino."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
-#: gui/main_window.py:179
+#: gui/main_window.py:248
 msgid "This step is not available yet."
 msgstr "Este paso aún no está disponible."
 
@@ -411,6 +490,16 @@ msgstr "Este paso aún no está disponible."
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr "Ahorro total: {savings:.2f} MB ({percent:.1f}%)"
+
+#: gui/queue_panel.py:296
+#, python-brace-format
+msgid "Total: {original} → {estimated} estimated"
+msgstr "Total: {original} → {estimated} estimados"
+
+#: gui/queue_panel.py:241
+#, python-brace-format
+msgid "Total: {original} → {final}"
+msgstr "Total: {original} → {final}"
 
 #: messages.py:52 messages.py:56
 #, python-brace-format
@@ -455,7 +544,7 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
-#: gui/main_window.py:35
+#: gui/main_window.py:43
 msgid "Videos"
 msgstr "Vídeos"
 
@@ -469,11 +558,11 @@ msgstr "Aviso: no se ha podido leer el archivo de configuración: {error}"
 msgid "Warning: {text}"
 msgstr "Aviso: {text}"
 
-#: gui/main_window.py:38
+#: gui/main_window.py:46
 msgid "What to keep"
 msgstr "Qué conservar"
 
-#: gui/main_window.py:36
+#: gui/main_window.py:44
 msgid "Where to watch"
 msgstr "Dónde verlos"
 
@@ -481,11 +570,11 @@ msgstr "Dónde verlos"
 msgid "Windows"
 msgstr "Windows"
 
-#: gui/main_window.py:65
+#: gui/main_window.py:73
 msgid "Wizard"
 msgstr "Asistente"
 
-#: gui/main_window.py:153
+#: gui/main_window.py:222
 msgid "Wizard steps"
 msgstr "Pasos del asistente"
 
@@ -510,6 +599,10 @@ msgstr "descartar"
 msgid "encode"
 msgstr "codificar"
 
+#: gui/queue_panel.py:211
+msgid "less than 1 min left"
+msgstr "queda menos de 1 min"
+
 #: cli.py:41
 msgid "must be a comma-separated list of language codes"
 msgstr "debe ser una lista de códigos de idioma separados por comas"
@@ -525,6 +618,10 @@ msgstr "no"
 #: cli.py:139
 msgid "unknown"
 msgstr "desconocido"
+
+#: gui/queue_panel.py:206 gui/queue_panel.py:221
+msgid "verified"
+msgstr "verificado"
 
 #: cli.py:175
 msgid "yes"
@@ -546,4 +643,22 @@ msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to
 msgstr ""
 "La salida con el perfil {destination} no es la de Jellyfin, así que es posible que Jellyfin tenga"
 " que transcodificarla."
+
+#: gui/queue_panel.py:212
+#, python-brace-format
+msgid "{minutes} min left"
+msgstr "quedan {minutes} min"
+
+#: gui/queue_panel.py:284
+#, python-brace-format
+msgid "{name} · {size}"
+msgstr "{name} · {size}"
+
+#: gui/queue_panel.py:186 gui/queue_panel.py:197 gui/queue_panel.py:220
+#, python-brace-format
+msgid "{percent}%"
+msgstr "{percent}%"
+
+#~ msgid "The conversion queue will appear here."
+#~ msgstr "La cola de conversión aparecerá aquí."
 

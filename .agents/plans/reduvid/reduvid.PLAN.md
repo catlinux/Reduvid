@@ -133,7 +133,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - `gui/preferences.py`: tema, modo de color, idioma (se aplica al reiniciar y la interfaz lo avisa), reducir animaciones y ruta de FFmpeg con «Examinar» y «Comprobar». Todo se guarda con `core.config`.
   - `gui/ffmpeg_missing.py`: pantalla clara cuando no hay FFmpeg, con cómo instalarlo en Windows (`winget install Gyan.FFmpeg`) y en Linux (apt/dnf), y botones «Elegir ffmpeg…» y «Volver a buscar».
   - Tests offscreen: la ventana se crea con cada tema y modo, y la pantalla de FFmpeg ausente aparece si `detect_ffmpeg` devuelve `None`.
-- [ ] 2.7 **Trabajo en segundo plano y panel de cola.** *AgentRelay, esfuerzo xhigh.*
+- [x] 2.7 **Trabajo en segundo plano y panel de cola.** *AgentRelay, esfuerzo xhigh.*
   - `gui/workers.py`:
     - `ProbeWorker` sondea los vídeos al añadirlos.
     - `QueueWorker` ejecuta `ConversionQueue` + `core.pipeline.FileProcessor` en un `QThread`.
