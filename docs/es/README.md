@@ -10,7 +10,7 @@ Esta carpeta irá creciendo con cada versión.
 | --- | --- |
 | [Uso de la interfaz gráfica](gui.md) | Cualquiera que use la interfaz |
 | [Uso de la línea de órdenes](cli.md) | Quien usa Reduvid en servidores o scripts |
-| [Crear el instalador de Windows](instalacion.md) | Quien quiera generar el instalador en vez de ejecutar desde el código fuente |
+| [Instaladores de Windows y Linux](instalacion.md) | Quien quiera generar el instalador o el AppImage en vez de ejecutar desde el código fuente |
 
 ## Guías previstas
 

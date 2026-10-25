@@ -10,7 +10,7 @@ This folder will grow with each version.
 | --- | --- |
 | [Using the graphical interface](gui.md) | Anyone using the interface |
 | [Command-line usage](cli.md) | People using Reduvid on servers or in scripts |
-| [Building the Windows installer](instalacion.md) | People who want to build the installer instead of running from source |
+| [Windows and Linux installers](instalacion.md) | People who want to build the installer or AppImage instead of running from source |
 
 ## Planned guides
 
