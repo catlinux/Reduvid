@@ -505,7 +505,7 @@ msgstr "Si surts ara, es cancel·larà la conversió."
 #: messages.py:36
 #, python-brace-format
 msgid "Image subtitle track {stream_index} cannot be stored in MP4 and will be removed."
-msgstr "La pista de subtítols d'imatge {stream_index} no es pot guardar en MP4 i se suprimirà."
+msgstr "La pista de subtítols d'imatge {stream_index} no es pot desar en MP4 i se suprimirà."
 
 #: messages.py:32
 #, python-brace-format
@@ -738,7 +738,7 @@ msgstr "La mateixa carpeta que cada vídeo"
 
 #: gui/advanced_page.py:84 gui/wizard/step_target.py:35
 msgid "Save for archive"
-msgstr "Guardar per a l'arxiu"
+msgstr "Desa per a l'arxiu"
 
 #: cli.py:376
 msgid "Show media details"

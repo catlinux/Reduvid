@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QStyleFactory
 
 from reduvid.gui.theme.active import set_active_tokens
 from reduvid.gui.theme.fonts import register_fonts
@@ -25,6 +25,11 @@ class ThemeManager:
         self._app = app
         self._theme = "plegat"
         self._mode = "system"
+        # Fusion renders the full QSS (including :focus rings on QComboBox and
+        # similar controls) instead of falling back to the native Windows style,
+        # which only honours part of the stylesheet for those widgets.
+        if "Fusion" in QStyleFactory.keys():  # noqa: SIM118 — QStyleFactory.keys() returns list[str]
+            app.setStyle("Fusion")
         app.styleHints().colorSchemeChanged.connect(self._on_color_scheme_changed)
 
     @property

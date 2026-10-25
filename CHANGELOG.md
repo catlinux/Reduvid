@@ -28,6 +28,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 ### Cambiado
 
 - `reduvid` abre ahora la interfaz gráfica y la línea de órdenes pasa a ser `reduvid-cli`; la documentación de uso se ha actualizado.
+- La interfaz fuerza el estilo Qt Fusion para que el anillo de foco y el resto de la hoja de estilos se apliquen igual en todas las plataformas, en vez de depender del estilo nativo.
+
+### Corregido
+
+- El tamaño inicial de la ventana se ajusta a la pantalla disponible, para que un escalado alto (150 %, 200 %) no la deje más ancha que el escritorio.
+- Dos textos en catalán que usaban «guardar» en vez de «desar», para ser consistentes con el resto del catálogo.
 
 ## [0.1.0] - 2026-10-24
 

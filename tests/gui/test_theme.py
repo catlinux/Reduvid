@@ -89,6 +89,7 @@ class FakeApp:
         self.hints = hints
         self.stylesheet = ""
         self.font = None
+        self.style_name: str | None = None
 
     def styleHints(self) -> FakeStyleHints:
         return self.hints
@@ -98,6 +99,9 @@ class FakeApp:
 
     def setStyleSheet(self, stylesheet: str) -> None:
         self.stylesheet = stylesheet
+
+    def setStyle(self, style_name: str) -> None:
+        self.style_name = style_name
 
 
 def test_manager_resolves_system_mode(qapp) -> None:

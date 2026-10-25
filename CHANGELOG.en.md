@@ -28,6 +28,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 ### Changed
 
 - `reduvid` now opens the graphical interface and the command line is `reduvid-cli`; the usage documentation has been updated.
+- The interface forces the Qt Fusion style so the focus ring and the rest of the stylesheet apply the same way on every platform, instead of depending on the native style.
+
+### Fixed
+
+- The window's initial size is clamped to the available screen, so high scaling (150%, 200%) no longer leaves it wider than the desktop.
+- Two Catalan strings that used "guardar" instead of "desar", to match the rest of the catalog.
 
 ## [0.1.0] - 2026-10-24
 

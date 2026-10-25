@@ -9,7 +9,7 @@ from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread
+from PySide6.QtCore import QSize, Qt, QThread
 from PySide6.QtGui import QCloseEvent, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         QWidget.setTabOrder(self.wizard_button, self.advanced_button)
         QWidget.setTabOrder(self.advanced_button, self.preferences_button)
         QWidget.setTabOrder(self.preferences_button, self.step_list)
-        self.resize(1100, 720)
+        self.resize(self._initial_size())
         self.set_ui_mode(config.ui_mode, save=False)
         self.wizard_state.changed.connect(self._update_navigation)
         self.set_current_step(0)
@@ -295,6 +295,20 @@ class MainWindow(QMainWindow):
         box.addButton(_("Keep converting"), QMessageBox.ButtonRole.RejectRole)
         box.exec()
         return box.clickedButton() is quit_button
+
+    def _initial_size(self) -> QSize:
+        # Clamp to the available screen so high DPI scaling (e.g. 200%) does not
+        # start the window larger than the desktop, which would leave the queue
+        # panel cut off instead of falling back to the compact stacked layout.
+        preferred = QSize(1100, 720)
+        screen = self.screen()
+        if screen is None:
+            return preferred
+        available = screen.availableSize()
+        return QSize(
+            min(preferred.width(), available.width()),
+            min(preferred.height(), available.height()),
+        )
 
     def resizeEvent(self, event: QResizeEvent) -> None:
         super().resizeEvent(event)
