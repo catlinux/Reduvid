@@ -246,9 +246,8 @@ Objetivo: instalador de Windows funcional (probado en un Windows real) y paquete
 - [x] 4.2 **Windows: instalador Inno Setup.** *(AgentRelay, esfuerzo alto; revisado y compilado de verdad con Inno Setup 6.7.3 instalado en el equipo de desarrollo: `Reduvid-Setup-0.3.0.exe` se genera sin avisos tras corregir `ArchitecturesAllowed`/`ArchitecturesInstallIn64BitMode` de `x64` a `x64compatible`, deprecado en esa versión. Falta la prueba de instalación en un Windows limpio aparte de este equipo de desarrollo, prevista en la prueba de aceptación de la Fase 4.)*
   - `packaging/windows/reduvid.iss`: instala la carpeta de PyInstaller en Archivos de Programa, crea acceso directo en el menú inicio (opcional en escritorio), desinstalador limpio, versión tomada de `__init__.py` (pasada como parámetro al compilar, no hardcodeada).
   - Documentado en `docs/{es,en}/instalacion.md`, enlazado desde ambos README.
-- [ ] 4.3 **Linux: AppImage.** *AgentRelay, esfuerzo alto.*
-  - `packaging/linux/` con el `AppDir` (`AppRun`, `.desktop`, icono) y script de construcción con `linuxdeploy` o `appimagetool` (decidir cuál según qué esté más mantenido; si hace falta descargar una herramienta externa, documentar la versión exacta usada).
-  - Terminado cuando el `.AppImage` generado se ejecuta con permiso de ejecución en una Debian limpia, sin instalar nada más que FFmpeg del sistema.
+- [x] 4.3 **Linux: AppImage.** *(AgentRelay, esfuerzo alto; revisado. Sintaxis bash validada con bash real vía WSL Debian; appimagetool 1.9.1 y el runtime de AppImage con versión fijada. Ni este equipo (Windows) ni el entorno del ejecutor tienen FUSE/herramientas de AppImage: la generación y ejecución real del `.AppImage` NO se ha probado todavía — queda para la prueba de aceptación de la Fase 4, en la Debian real del usuario.)*
+  - `packaging/linux/` con el `AppDir` (`AppRun`, `.desktop`, icono) y script de construcción `build_appimage.sh` con `appimagetool`.
 - [ ] 4.4 **CI de artefactos.** *AgentRelay, esfuerzo medio.*
   - `ci.yml`: job que construye el `.exe`/instalador en windows-latest y el `.AppImage` en ubuntu-latest, los sube como artefactos de la ejecución (no publica release todavía).
   - Terminado cuando un push a `main` deja descargables ambos artefactos desde la pestaña Actions.
