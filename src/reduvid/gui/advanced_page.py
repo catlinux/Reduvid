@@ -95,9 +95,9 @@ class AdvancedPage(QWidget):
             self.quality_combo.addItem(label, value)
 
         height_row = QHBoxLayout()
-        self.max_height_check = QCheckBox(_("Maximum height"), form_group)
+        self.max_height_check = QCheckBox(_("&Maximum height"), form_group)
         self.max_height_check.setObjectName("advancedMaxHeight")
-        self.max_height_check.setAccessibleName(_("Maximum height"))
+        self.max_height_check.setAccessibleName(_("&Maximum height"))
         self.max_height_spin = QSpinBox(form_group)
         self.max_height_spin.setObjectName("advancedMaxHeightSpin")
         self.max_height_spin.setAccessibleName(_("Maximum height in pixels"))
@@ -109,9 +109,9 @@ class AdvancedPage(QWidget):
         height_row.addStretch(1)
 
         threads_row = QHBoxLayout()
-        self.threads_check = QCheckBox(_("Limit encoding threads"), form_group)
+        self.threads_check = QCheckBox(_("&Limit encoding threads"), form_group)
         self.threads_check.setObjectName("advancedThreads")
-        self.threads_check.setAccessibleName(_("Limit encoding threads"))
+        self.threads_check.setAccessibleName(_("&Limit encoding threads"))
         self.threads_spin = QSpinBox(form_group)
         self.threads_spin.setObjectName("advancedThreadsSpin")
         self.threads_spin.setAccessibleName(_("Number of encoding threads"))
@@ -143,6 +143,11 @@ class AdvancedPage(QWidget):
         self.max_height_spin.valueChanged.connect(self._height_value_changed)
         self.threads_check.toggled.connect(self._threads_toggled)
         self.threads_spin.valueChanged.connect(self._threads_value_changed)
+        QWidget.setTabOrder(self.destination_combo, self.quality_combo)
+        QWidget.setTabOrder(self.quality_combo, self.max_height_check)
+        QWidget.setTabOrder(self.max_height_check, self.max_height_spin)
+        QWidget.setTabOrder(self.max_height_spin, self.threads_check)
+        QWidget.setTabOrder(self.threads_check, self.threads_spin)
 
     def refresh(self) -> None:
         self.refresh_controls()

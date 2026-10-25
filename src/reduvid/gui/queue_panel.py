@@ -120,11 +120,11 @@ class QueuePanel(QWidget):
         layout.addWidget(self.progress_bar)
 
         controls = QHBoxLayout()
-        self.pause_button = QPushButton(_("Pause"), self)
+        self.pause_button = QPushButton(_("&Pause"), self)
         self.pause_button.setObjectName("pauseButton")
         self.pause_button.setAccessibleName(_("Pause conversion"))
         self.pause_button.clicked.connect(self._toggle_pause)
-        self.cancel_button = QPushButton(_("Cancel"), self)
+        self.cancel_button = QPushButton(_("&Cancel"), self)
         self.cancel_button.setObjectName("cancelButton")
         self.cancel_button.setAccessibleName(_("Cancel conversion"))
         self.cancel_button.clicked.connect(self._cancel)
@@ -132,6 +132,7 @@ class QueuePanel(QWidget):
         controls.addWidget(self.cancel_button)
         controls.addStretch(1)
         layout.addLayout(controls)
+        QWidget.setTabOrder(self.pause_button, self.cancel_button)
 
         self.status_label = QLabel(self)
         self.status_label.setObjectName("statusMessage")
@@ -162,13 +163,13 @@ class QueuePanel(QWidget):
         if self._state == "paused":
             if self._worker is not None:
                 self._worker.resume()
-            self.pause_button.setText(_("Pause"))
+            self.pause_button.setText(_("&Pause"))
             self.status_label.clear()
             self._set_state("converting")
         elif self._state == "converting":
             if self._worker is not None:
                 self._worker.pause()
-            self.pause_button.setText(_("Resume"))
+            self.pause_button.setText(_("&Resume"))
             self.status_label.setText(_("Paused. You can keep using the computer as usual."))
             self._set_state("paused")
 
@@ -236,7 +237,7 @@ class QueuePanel(QWidget):
 
     def _on_finished(self, report: QueueReport) -> None:
         self._set_state("finished")
-        self.pause_button.setText(_("Pause"))
+        self.pause_button.setText(_("&Pause"))
         self.total_label.setText(
             _("Total: {original} → {final}").format(
                 original=_format_size(report.original_size),

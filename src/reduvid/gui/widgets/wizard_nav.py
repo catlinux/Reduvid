@@ -24,19 +24,20 @@ class WizardNav(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
-        self.back_button = QPushButton(_("Back"), self)
+        self.back_button = QPushButton(_("&Back"), self)
         self.back_button.setObjectName("backButton")
-        self.back_button.setAccessibleName(_("Back"))
+        self.back_button.setAccessibleName(_("&Back"))
         self.back_button.setMinimumWidth(0)
         self.back_button.clicked.connect(self.back_clicked.emit)
-        self.next_button = QPushButton(_("Next"), self)
+        self.next_button = QPushButton(_("&Next"), self)
         self.next_button.setObjectName("nextButton")
-        self.next_button.setAccessibleName(_("Next"))
+        self.next_button.setAccessibleName(_("&Next"))
         self.next_button.setMinimumWidth(0)
         self.next_button.clicked.connect(self.next_clicked.emit)
         layout.addWidget(self.back_button)
         layout.addStretch(1)
         layout.addWidget(self.next_button)
+        QWidget.setTabOrder(self.back_button, self.next_button)
 
     def set_back_enabled(self, enabled: bool) -> None:
         self.back_button.setEnabled(enabled)
@@ -46,8 +47,8 @@ class WizardNav(QWidget):
 
     def set_next_text(self, step: str | None) -> None:
         if step is None:
-            self.next_button.setText(_("Next"))
-            self.next_button.setAccessibleName(_("Next"))
+            self.next_button.setText(_("&Next"))
+            self.next_button.setAccessibleName(_("&Next"))
             return
-        self.next_button.setText(_("Next: {step}").format(step=step))
-        self.next_button.setAccessibleName(_("Next: {step}").format(step=step))
+        self.next_button.setText(_("&Next: {step}").format(step=step))
+        self.next_button.setAccessibleName(_("&Next: {step}").format(step=step))

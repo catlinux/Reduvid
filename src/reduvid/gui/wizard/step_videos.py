@@ -109,6 +109,10 @@ class StepVideos(QWidget):
         footer.addWidget(self.remove_button)
         footer.addStretch(1)
         layout.addLayout(footer)
+        QWidget.setTabOrder(self.add_files_button, self.add_folder_button)
+        QWidget.setTabOrder(self.add_folder_button, self.include_subfolders)
+        QWidget.setTabOrder(self.include_subfolders, self.video_list)
+        QWidget.setTabOrder(self.video_list, self.remove_button)
 
     @property
     def threads(self) -> tuple[QThread, ...]:

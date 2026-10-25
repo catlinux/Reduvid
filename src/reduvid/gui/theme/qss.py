@@ -233,6 +233,20 @@ QCheckBox:focus::indicator, QRadioButton:focus::indicator {
     border-color: ${accent};
 }
 
+QSpinBox:focus {
+    border-color: ${accent};
+    border-width: 2px;
+}
+QListWidget:focus {
+    border: ${border_width}px solid ${accent};
+}
+QToolButton:focus {
+    border: 1px solid ${accent};
+}
+QPlainTextEdit:focus {
+    border: ${border_width}px solid ${accent};
+}
+
 QProgressBar {
     background-color: ${track};
     border: ${border_width}px solid ${line};

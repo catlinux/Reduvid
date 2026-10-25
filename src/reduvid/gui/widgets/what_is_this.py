@@ -23,8 +23,8 @@ class WhatIsThis(QWidget):
         self.button = QToolButton(self)
         self.button.setObjectName("whatIsThisButton")
         self.button.setCheckable(True)
-        self.button.setText(_("What is this?"))
-        self.button.setAccessibleName(_("What is this?"))
+        self.button.setText(_("&What is this?"))
+        self.button.setAccessibleName(_("&What is this?"))
         self.button.toggled.connect(self._toggle)
         layout.addWidget(self.button)
 

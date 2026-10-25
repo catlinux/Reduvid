@@ -87,13 +87,13 @@ def test_pause_and_resume_update_the_panel(qapp) -> None:
     panel.pause_button.click()
     assert worker.paused
     assert panel.state == "paused"
-    assert panel.pause_button.text() == "Resume"
+    assert panel.pause_button.text() == "&Resume"
     assert "Paused" in panel.status_label.text()
 
     panel.pause_button.click()
     assert worker.resumed
     assert panel.state == "converting"
-    assert panel.pause_button.text() == "Pause"
+    assert panel.pause_button.text() == "&Pause"
     assert panel.status_label.text() == ""
 
 

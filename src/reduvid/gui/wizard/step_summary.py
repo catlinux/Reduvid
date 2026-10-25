@@ -109,7 +109,7 @@ class StepSummary(QWidget):
         self.items_layout.setSpacing(8)
         layout.addWidget(self.items_container, 1)
 
-        self.start_button = QPushButton(_("Start"), self)
+        self.start_button = QPushButton(_("&Start"), self)
         self.start_button.setObjectName("startButton")
         self.start_button.setAccessibleName(_("Start conversion"))
         self.start_button.clicked.connect(self._start)
@@ -166,7 +166,7 @@ class StepSummary(QWidget):
 
     def set_running(self, running: bool) -> None:
         self._running = running
-        self.start_button.setText(_("Converting…") if running else _("Start"))
+        self.start_button.setText(_("Converting…") if running else _("&Start"))
         self._update_start_button()
 
     def show_report(self, report: QueueReport) -> None:

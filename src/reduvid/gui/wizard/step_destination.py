@@ -70,7 +70,7 @@ class StepDestination(QWidget):
         self.folder_edit.setObjectName("outputFolderEdit")
         self.folder_edit.setAccessibleName(_("Output folder"))
         self.folder_edit.editingFinished.connect(self._folder_edited)
-        self.browse_button = QPushButton(_("Browse…"), folder_group)
+        self.browse_button = QPushButton(_("&Browse…"), folder_group)
         self.browse_button.setObjectName("browseOutputFolder")
         self.browse_button.setAccessibleName(_("Browse for the output folder"))
         self.browse_button.clicked.connect(self._browse_folder)
@@ -127,6 +127,13 @@ class StepDestination(QWidget):
         self.reduce_4k_hint.setWordWrap(True)
         layout.addWidget(self.reduce_4k_hint)
         layout.addStretch(1)
+        QWidget.setTabOrder(self.same_folder_radio, self.other_folder_radio)
+        QWidget.setTabOrder(self.other_folder_radio, self.folder_edit)
+        QWidget.setTabOrder(self.folder_edit, self.browse_button)
+        QWidget.setTabOrder(self.browse_button, self.container_cards["mkv"])
+        QWidget.setTabOrder(self.container_cards["mkv"], self.container_cards["mp4"])
+        QWidget.setTabOrder(self.container_cards["mp4"], self.replace_original)
+        QWidget.setTabOrder(self.replace_original, self.reduce_4k)
 
     def refresh(self) -> None:
         output_dir = self._state.output_dir

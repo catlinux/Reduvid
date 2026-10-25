@@ -29,9 +29,9 @@ class ErrorView(QWidget):
 
         self.details_button = QToolButton(self)
         self.details_button.setObjectName("detailsButton")
-        self.details_button.setAccessibleName(_("Show technical details"))
+        self.details_button.setAccessibleName(_("&Show technical details"))
         self.details_button.setCheckable(True)
-        self.details_button.setText(_("Show technical details"))
+        self.details_button.setText(_("&Show technical details"))
         self.details_button.toggled.connect(self._toggle_details)
         layout.addWidget(self.details_button)
 
@@ -62,5 +62,5 @@ class ErrorView(QWidget):
     def _toggle_details(self, visible: bool) -> None:
         self.details.setVisible(visible)
         self.details_button.setText(
-            _("Hide technical details") if visible else _("Show technical details")
+            _("&Hide technical details") if visible else _("&Show technical details")
         )

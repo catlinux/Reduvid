@@ -89,7 +89,7 @@ class PreferencesDialog(QDialog):
         self.ffmpeg_edit = QLineEdit(self)
         self.ffmpeg_edit.setObjectName("ffmpegPathEdit")
         self.ffmpeg_edit.setAccessibleName(_("FFmpeg path"))
-        self.browse_button = QPushButton(_("Browse…"), self)
+        self.browse_button = QPushButton(_("&Browse…"), self)
         self.browse_button.setObjectName("browseFfmpegButton")
         self.browse_button.setAccessibleName(_("Browse for ffmpeg"))
         self.browse_button.clicked.connect(self._browse_ffmpeg)
@@ -122,10 +122,10 @@ class PreferencesDialog(QDialog):
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
             parent=self,
         )
-        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(_("Accept"))
-        buttons.button(QDialogButtonBox.StandardButton.Ok).setAccessibleName(_("Accept"))
-        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(_("Cancel"))
-        buttons.button(QDialogButtonBox.StandardButton.Cancel).setAccessibleName(_("Cancel"))
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(_("&Accept"))
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setAccessibleName(_("&Accept"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(_("&Cancel"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setAccessibleName(_("&Cancel"))
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         self.buttons = buttons
@@ -133,6 +133,18 @@ class PreferencesDialog(QDialog):
         layout = QVBoxLayout(self)
         layout.addLayout(form)
         layout.addWidget(buttons)
+        ok_button = buttons.button(QDialogButtonBox.StandardButton.Ok)
+        cancel_button = buttons.button(QDialogButtonBox.StandardButton.Cancel)
+        QWidget.setTabOrder(self.theme_combo, self.mode_combo)
+        QWidget.setTabOrder(self.mode_combo, self.language_combo)
+        QWidget.setTabOrder(self.language_combo, self.reduce_motion)
+        QWidget.setTabOrder(self.reduce_motion, self.ffmpeg_edit)
+        QWidget.setTabOrder(self.ffmpeg_edit, self.browse_button)
+        QWidget.setTabOrder(self.browse_button, self.check_button)
+        if ok_button is not None:
+            QWidget.setTabOrder(self.check_button, ok_button)
+            if cancel_button is not None:
+                QWidget.setTabOrder(ok_button, cancel_button)
 
     def _load(self, config: Config) -> None:
         self.theme_combo.setCurrentIndex(max(0, self.theme_combo.findData(config.theme)))

@@ -172,7 +172,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - **Cinta**: franja de tres colores, bobinas que se vacían y se llenan, y contador mecánico de MB ahorrados.
   - Con «Reducir animaciones» se salta directamente al estado final.
   - Todo se pinta desde los tokens, sin colores fijos en el código.
-- [ ] 2.12 **Accesibilidad y traducciones completas.** *AgentRelay, esfuerzo alto; la sesión revisa los textos en catalán y castellano.*
+- [~] 2.12 **Accesibilidad y traducciones completas.** *AgentRelay, esfuerzo alto; la sesión revisa los textos en catalán y castellano.* *(Hecha la parte interna; falta la revisión visual en casa: mnemónicos Alt, foco en botones primarios/peligro, escalado 150 %/200 % — a 200 % el asistente necesita ~1168 px de ancho — y naturalidad de ca/es.)*
   - Orden de tabulación lógico, atajos (`Alt+` en botones), foco visible en el QSS de los tres temas, y `accessibleName`/`accessibleDescription` en los controles personalizados.
   - Nada se corta con escalado de 150 % y 200 % (`QT_SCALE_FACTOR`).
   - Re-extraer el `.pot` y completar `ca` y `es`.

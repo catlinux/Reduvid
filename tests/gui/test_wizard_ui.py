@@ -96,7 +96,7 @@ def test_wizard_nav_shows_the_next_step_and_can_disable_it(qapp) -> None:
     nav.set_next_enabled(False)
     nav.set_back_enabled(False)
 
-    assert nav.next_button.text() == "Next: Quality"
+    assert nav.next_button.text() == "&Next: Quality"
     assert not nav.next_button.isEnabled()
     assert not nav.back_button.isEnabled()
 
@@ -119,7 +119,7 @@ def test_navigation_needs_a_probed_video_and_step_list_navigates(tmp_path: Path,
         assert window.current_step == 1
         assert window.content.currentIndex() == 1
         assert window.wizard_nav.back_button.isEnabled()
-        assert window.wizard_nav.next_button.text() == "Next: Quality"
+        assert window.wizard_nav.next_button.text() == "&Next: Quality"
 
         window.wizard_nav.back_button.click()
         assert window.current_step == 0
