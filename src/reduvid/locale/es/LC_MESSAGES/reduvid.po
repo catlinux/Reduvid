@@ -38,11 +38,11 @@ msgstr ", escalar a {height}p"
 msgid ", {language}"
 msgstr ", {language}"
 
-#: gui/main_window.py:184
+#: gui/main_window.py:218
 msgid "A conversion is already running."
 msgstr "Ya hay una conversión en marcha."
 
-#: gui/main_window.py:246
+#: gui/main_window.py:287
 msgid "A conversion is still running."
 msgstr "Todavía hay una conversión en marcha."
 
@@ -84,13 +84,21 @@ msgstr "Añadir vídeos…"
 msgid "Added videos"
 msgstr "Vídeos añadidos"
 
-#: gui/main_window.py:84
+#: gui/advanced_page.py:54 gui/main_window.py:86
 msgid "Advanced"
 msgstr "Avanzado"
+
+#: gui/advanced_page.py:66
+msgid "Advanced options"
+msgstr "Opciones avanzadas"
 
 #: gui/wizard/step_videos.py:143
 msgid "All files (*)"
 msgstr "Todos los archivos (*)"
+
+#: gui/advanced_page.py:57
+msgid "All options in one place. They are shared with the assistant."
+msgstr "Todas las opciones en un solo lugar. Se comparten con el asistente."
 
 #: gui/wizard/step_quality.py:20
 msgid "Almost identical"
@@ -137,7 +145,7 @@ msgstr "Audio {position}: {codec}, {channels} canales{language}"
 msgid "Back"
 msgstr "Atrás"
 
-#: gui/wizard/step_quality.py:25
+#: gui/advanced_page.py:92 gui/wizard/step_quality.py:25
 msgid "Balanced"
 msgstr "Equilibrada"
 
@@ -161,7 +169,7 @@ msgstr "Cancelar"
 msgid "Cancel conversion"
 msgstr "Cancelar la conversión"
 
-#: gui/main_window.py:249
+#: gui/main_window.py:290
 msgid "Cancel conversion and quit"
 msgstr "Cancelar la conversión y salir"
 
@@ -233,7 +241,7 @@ msgstr "Modo de color"
 msgid "Container"
 msgstr "Contenedor"
 
-#: gui/main_window.py:245
+#: gui/main_window.py:286
 msgid "Conversion in progress"
 msgstr "Conversión en marcha"
 
@@ -262,7 +270,7 @@ msgstr "Convierte archivos multimedia"
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convirtiendo [{index}/{total}]: {path}"
 
-#: gui/wizard/step_summary.py:156
+#: gui/wizard/step_summary.py:169
 msgid "Converting…"
 msgstr "Convirtiendo…"
 
@@ -279,7 +287,8 @@ msgstr "Oscuro"
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
-#: gui/main_window.py:57 gui/wizard/step_destination.py:48
+#: gui/advanced_page.py:80 gui/advanced_page.py:124 gui/main_window.py:59
+#: gui/wizard/step_destination.py:48
 msgid "Destination"
 msgstr "Destino"
 
@@ -423,6 +432,10 @@ msgstr "Vídeo HDR"
 msgid "Hide technical details"
 msgstr "Ocultar los detalles técnicos"
 
+#: gui/advanced_page.py:91
+msgid "High"
+msgstr "Alta"
+
 #: gui/wizard/step_target.py:42
 msgid "I don't know"
 msgstr "No lo sé"
@@ -431,7 +444,7 @@ msgstr "No lo sé"
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr "Si conservas el 4K, Jellyfin tendrá que transcodificarlo."
 
-#: gui/main_window.py:247
+#: gui/main_window.py:288
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si sales ahora, se cancelará la conversión."
 
@@ -464,7 +477,7 @@ msgstr "Italiano"
 msgid "Japanese"
 msgstr "Japonés"
 
-#: gui/wizard/step_target.py:21
+#: gui/advanced_page.py:82 gui/wizard/step_target.py:21
 msgid "Jellyfin"
 msgstr "Jellyfin"
 
@@ -472,7 +485,7 @@ msgstr "Jellyfin"
 msgid "Jellyfin will transcode"
 msgstr "Jellyfin transcodificará"
 
-#: gui/main_window.py:251
+#: gui/main_window.py:292
 msgid "Keep converting"
 msgstr "Seguir convirtiendo"
 
@@ -508,6 +521,10 @@ msgstr "Idioma de los mensajes"
 msgid "Light"
 msgstr "Claro"
 
+#: gui/advanced_page.py:112 gui/advanced_page.py:114
+msgid "Limit encoding threads"
+msgstr "Limitar los hilos de codificación"
+
 #: gui/wizard/step_destination.py:88
 msgid "MKV"
 msgstr "MKV"
@@ -516,15 +533,23 @@ msgstr "MKV"
 msgid "MP4"
 msgstr "MP4"
 
-#: gui/main_window.py:106
+#: gui/main_window.py:115
 msgid "Main panels"
 msgstr "Paneles principales"
 
-#: gui/wizard/step_quality.py:30
+#: gui/advanced_page.py:98 gui/advanced_page.py:100
+msgid "Maximum height"
+msgstr "Altura máxima"
+
+#: gui/advanced_page.py:103
+msgid "Maximum height in pixels"
+msgstr "Altura máxima en píxeles"
+
+#: gui/advanced_page.py:93 gui/wizard/step_quality.py:30
 msgid "Maximum savings"
 msgstr "Máximo ahorro"
 
-#: gui/wizard/step_target.py:28
+#: gui/advanced_page.py:83 gui/wizard/step_target.py:28
 msgid "Modern devices"
 msgstr "Dispositivos modernos"
 
@@ -566,6 +591,10 @@ msgstr "Sin idioma indicado"
 msgid "No videos added yet."
 msgstr "Todavía no has añadido ningún vídeo."
 
+#: gui/advanced_page.py:117
+msgid "Number of encoding threads"
+msgstr "Número de hilos de codificación"
+
 #: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
 msgid "Output folder"
 msgstr "Carpeta de salida"
@@ -600,7 +629,7 @@ msgstr "Se reproduce en más dispositivos, pero los subtítulos de imagen se des
 msgid "Portuguese"
 msgstr "Portugués"
 
-#: gui/main_window.py:85 gui/main_window.py:87 gui/preferences.py:51
+#: gui/main_window.py:87 gui/main_window.py:89 gui/preferences.py:51
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -609,7 +638,7 @@ msgstr "Preferencias"
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progreso: {percent:.0f}% ({state})"
 
-#: gui/main_window.py:55
+#: gui/advanced_page.py:89 gui/advanced_page.py:125 gui/main_window.py:57
 msgid "Quality"
 msgstr "Calidad"
 
@@ -643,7 +672,7 @@ msgstr "Reduce el vídeo 4K a 1080p"
 msgid "Reduce animations"
 msgstr "Reducir animaciones"
 
-#: gui/main_window.py:74 gui/main_window.py:282 gui/main_window.py:285
+#: gui/main_window.py:76 gui/main_window.py:323 gui/main_window.py:326
 msgid "Reduvid"
 msgstr "Reduvid"
 
@@ -667,7 +696,7 @@ msgstr "Reemplazar el original"
 msgid "Resume"
 msgstr "Reanudar"
 
-#: gui/wizard/step_summary.py:98
+#: gui/wizard/step_summary.py:99
 msgid "Review what Reduvid will do with each video before starting."
 msgstr "Revisa qué hará Reduvid con cada vídeo antes de empezar."
 
@@ -679,7 +708,7 @@ msgstr "Ruso"
 msgid "Same folder as each video"
 msgstr "La misma carpeta que cada vídeo"
 
-#: gui/wizard/step_target.py:35
+#: gui/advanced_page.py:84 gui/wizard/step_target.py:35
 msgid "Save for archive"
 msgstr "Guardar para archivo"
 
@@ -704,7 +733,7 @@ msgstr "Tamaño: {size:.2f} MB"
 msgid "Skip this video"
 msgstr "Saltar este vídeo"
 
-#: gui/wizard/step_summary.py:237
+#: gui/wizard/step_summary.py:250
 msgid "Skipped"
 msgstr "Omitido"
 
@@ -716,15 +745,15 @@ msgstr "Ha ocurrido un problema al procesar el archivo."
 msgid "Spanish"
 msgstr "Español"
 
-#: gui/wizard/step_summary.py:111 gui/wizard/step_summary.py:156
+#: gui/wizard/step_summary.py:112 gui/wizard/step_summary.py:169
 msgid "Start"
 msgstr "Empezar"
 
-#: gui/wizard/step_summary.py:113
+#: gui/wizard/step_summary.py:114
 msgid "Start conversion"
 msgstr "Empezar la conversión"
 
-#: gui/main_window.py:310
+#: gui/main_window.py:355
 msgid "Step content"
 msgstr "Contenido del paso"
 
@@ -742,7 +771,7 @@ msgstr "Pista de subtítulos {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítulo {position}: {codec}{language}, imagen: {image}"
 
-#: gui/main_window.py:58 gui/wizard/step_summary.py:95
+#: gui/main_window.py:60 gui/wizard/step_summary.py:96
 msgid "Summary"
 msgstr "Resumen"
 
@@ -802,7 +831,7 @@ msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para con
 msgid "This video needs your attention."
 msgstr "Este vídeo necesita tu atención."
 
-#: gui/wizard/step_summary.py:163
+#: gui/wizard/step_summary.py:176
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "
@@ -877,7 +906,7 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
-#: gui/main_window.py:53 gui/wizard/step_videos.py:60
+#: gui/main_window.py:55 gui/wizard/step_videos.py:60
 msgid "Videos"
 msgstr "Vídeos"
 
@@ -899,11 +928,11 @@ msgstr "Aviso: {text}"
 msgid "What is this?"
 msgstr "¿Qué es esto?"
 
-#: gui/main_window.py:56 gui/wizard/step_keep.py:41
+#: gui/main_window.py:58 gui/wizard/step_keep.py:41
 msgid "What to keep"
 msgstr "Qué conservar"
 
-#: gui/main_window.py:54
+#: gui/main_window.py:56
 msgid "Where to watch"
 msgstr "Dónde verlos"
 
@@ -941,7 +970,7 @@ msgstr "Windows"
 msgid "With no audio language selected, every video keeps all its audio tracks."
 msgstr "Sin ningún idioma de audio seleccionado, cada vídeo conserva todas sus pistas de audio."
 
-#: gui/main_window.py:83
+#: gui/main_window.py:85
 msgid "Wizard"
 msgstr "Asistente"
 

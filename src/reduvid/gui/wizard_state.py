@@ -48,6 +48,8 @@ class WizardState(QObject):
         self._output_dir: Path | None = config.output_dir
         self._replace_original = False
         self._reduce_4k = True
+        self._max_height: int | None = None
+        self._threads: int | None = None
         self._audio_selected: frozenset[str] | None = None
         self._subtitle_selected: frozenset[str] | None = None
         self._videos: list[VideoEntry] = []
@@ -85,6 +87,14 @@ class WizardState(QObject):
     def reduce_4k(self) -> bool:
         return self._reduce_4k
 
+    @property
+    def max_height(self) -> int | None:
+        return self._max_height
+
+    @property
+    def threads(self) -> int | None:
+        return self._threads
+
     def set_destination(self, destination: str) -> None:
         if destination not in DESTINATIONS:
             raise ValueError(f"Unknown destination: {destination}")
@@ -120,6 +130,21 @@ class WizardState(QObject):
     def set_reduce_4k(self, reduce: bool) -> None:
         if reduce != self._reduce_4k:
             self._reduce_4k = reduce
+            self._max_height = None
+            self.changed.emit()
+
+    def set_max_height(self, max_height: int | None) -> None:
+        if max_height is not None and max_height < 1:
+            raise ValueError("max_height must be positive")
+        if max_height != self._max_height:
+            self._max_height = max_height
+            self.changed.emit()
+
+    def set_threads(self, threads: int | None) -> None:
+        if threads is not None and threads < 1:
+            raise ValueError("threads must be positive")
+        if threads != self._threads:
+            self._threads = threads
             self.changed.emit()
 
     def available_audio_languages(self) -> tuple[str, ...]:
@@ -164,7 +189,11 @@ class WizardState(QObject):
         subtitles = (
             None if subtitle_selected == subtitle_available else frozenset(subtitle_selected)
         )
-        max_height = 2160 if self._keep_4k() else None
+        max_height: int | None
+        if self._max_height is not None:
+            max_height = self._max_height
+        else:
+            max_height = 2160 if self._keep_4k() else None
         return PlanOptions(
             destination=self._destination,
             quality=self._quality,

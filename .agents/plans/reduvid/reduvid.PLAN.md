@@ -163,7 +163,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
     - Opción de reducir a 1080p si hay 4K y el destino es jellyfin.
   - Paso 6, Resumen: lista por vídeo con el semáforo de `compat.jellyfin_status`, los avisos traducidos, el diálogo de HDR bloqueante (ver decisiones) y el botón «Empezar», que lanza el `QueueWorker` y muestra el informe final (ahorro total, errores con detalle).
   - Tests offscreen del cálculo de idiomas, del diálogo bloqueante y de la construcción de `PlanOptions`.
-- [ ] 2.10 **Modo Avanzado.** *AgentRelay, esfuerzo alto.*
+- [x] 2.10 **Modo Avanzado.** *AgentRelay, esfuerzo alto.*
   - Una sola página con todas las opciones de la CLI (destino, calidad, contenedor, altura máxima, carpeta de salida, subcarpetas, hilos, reemplazar original e idiomas) y la misma cola y el mismo resumen con semáforo.
   - El cambio de modo conserva la selección y el modo elegido se guarda en `ui_mode`.
 - [ ] 2.11 **Motivos pintados de cada tema.** *AgentRelay, esfuerzo xhigh; revisión visual de Opus con capturas.* En `gui/widgets/motifs.py` y `gui/widgets/progress.py`:

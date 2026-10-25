@@ -25,6 +25,16 @@ def qapp():
 
 
 @pytest.fixture(autouse=True)
+def isolated_user_config(monkeypatch: pytest.MonkeyPatch, tmp_path_factory: pytest.TempPathFactory):
+    """Never read or write the real user configuration from GUI tests."""
+    from reduvid.core import config as config_module
+
+    target = tmp_path_factory.mktemp("user-config") / "config.toml"
+    monkeypatch.setattr(config_module, "config_path", lambda: target)
+    return target
+
+
+@pytest.fixture(autouse=True)
 def english_language():
     """Keep user-facing strings deterministic in GUI tests."""
     from reduvid.i18n import setup_language

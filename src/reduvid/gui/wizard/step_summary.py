@@ -138,16 +138,28 @@ class StepSummary(QWidget):
                 del self._decisions[path]
                 self.skipped.discard(path)
         if prompt_blocking:
-            for summary in self.summaries:
-                if summary.blocking and summary.path not in self._decisions:
-                    keep = self.blocking_prompt.ask(summary)
-                    self._decisions[summary.path] = keep
-                    if keep:
-                        self.skipped.discard(summary.path)
-                    else:
-                        self.skipped.add(summary.path)
+            self._ask_unresolved()
         self._build_rows()
         self._update_start_button()
+
+    def resolve_blocking(self) -> None:
+        """Ask about every unresolved blocking video before starting."""
+        if self._ask_unresolved():
+            self._build_rows()
+            self._update_start_button()
+
+    def _ask_unresolved(self) -> bool:
+        changed = False
+        for summary in self.summaries:
+            if summary.blocking and summary.path not in self._decisions:
+                keep = self.blocking_prompt.ask(summary)
+                self._decisions[summary.path] = keep
+                if keep:
+                    self.skipped.discard(summary.path)
+                else:
+                    self.skipped.add(summary.path)
+                changed = True
+        return changed
 
     def remaining_paths(self) -> list[Path]:
         return [summary.path for summary in self.summaries if summary.path not in self.skipped]
@@ -242,12 +254,7 @@ class StepSummary(QWidget):
         return row
 
     def _update_start_button(self) -> None:
-        unresolved = any(
-            summary.blocking and summary.path not in self._decisions for summary in self.summaries
-        )
-        self.start_button.setEnabled(
-            bool(self.remaining_paths()) and not unresolved and not self._running
-        )
+        self.start_button.setEnabled(bool(self.remaining_paths()) and not self._running)
 
     def _start(self) -> None:
         if self.start_button.isEnabled():

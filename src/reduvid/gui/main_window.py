@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import replace
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread
@@ -23,11 +24,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from reduvid.core.config import Config
+from reduvid.core.config import Config, UiMode, save_config
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import FileProcessor
 from reduvid.core.plan import PlanOptions
 from reduvid.core.report import QueueReport
+from reduvid.gui.advanced_page import AdvancedPage
 from reduvid.gui.preferences import PreferencesDialog
 from reduvid.gui.queue_panel import QueuePanel
 from reduvid.gui.theme.manager import ThemeManager
@@ -75,7 +77,7 @@ class MainWindow(QMainWindow):
         self._config = config
         self._ffmpeg_info = ffmpeg_info
         self._theme_manager = theme_manager
-        self._ui_mode = config.ui_mode
+        self._ui_mode: UiMode = config.ui_mode
         self._compact = False
 
         self.mode_group = QButtonGroup(self)
@@ -97,6 +99,13 @@ class MainWindow(QMainWindow):
         self.wizard_nav.back_clicked.connect(self._go_back)
         self.wizard_nav.next_clicked.connect(self._go_next)
         self._current_step = 0
+        self.advanced_page = AdvancedPage(self.wizard_state, self._ffmpeg_info, self)
+        self.advanced_page.summary.start_requested.connect(self._start_from_summary)
+        self.wizard_panel = self._build_content_panel()
+        self.center_stack = QStackedWidget(self)
+        self.center_stack.setObjectName("centerStack")
+        self.center_stack.addWidget(self.wizard_panel)
+        self.center_stack.addWidget(self.advanced_page)
         self.queue_panel = QueuePanel(self)
         self.queue_panel.setMinimumWidth(QUEUE_PANEL_WIDTH)
         self.queue_worker: QueueWorker | None = None
@@ -105,7 +114,7 @@ class MainWindow(QMainWindow):
         self.splitter.setObjectName("bodySplitter")
         self.splitter.setAccessibleName(_("Main panels"))
         self.splitter.addWidget(self.step_list)
-        self.splitter.addWidget(self._build_content_panel())
+        self.splitter.addWidget(self.center_stack)
         self.splitter.addWidget(self.queue_panel)
         self.splitter.setSizes([STEP_LIST_WIDTH, 640, QUEUE_PANEL_WIDTH])
 
@@ -117,7 +126,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.splitter, 1)
         self.setCentralWidget(central)
         self.resize(1100, 720)
-        self.set_ui_mode(config.ui_mode)
+        self.set_ui_mode(config.ui_mode, save=False)
         self.wizard_state.changed.connect(self._update_navigation)
         self.set_current_step(0)
 
@@ -159,11 +168,36 @@ class MainWindow(QMainWindow):
     def ui_mode(self) -> str:
         return self._ui_mode
 
-    def set_ui_mode(self, mode: str) -> None:
-        """Reflect ``wizard`` or ``advanced`` in the exclusive toggle."""
-        self._ui_mode = "advanced" if mode == "advanced" else "wizard"
+    def set_ui_mode(self, mode: str, *, save: bool = True) -> None:
+        """Switch between the assistant and the advanced page, keeping the state."""
+        if self.has_running_queue():
+            self._sync_mode_buttons()
+            return
+        normalized: UiMode = "advanced" if mode == "advanced" else "wizard"
+        changed = normalized != self._ui_mode
+        self._ui_mode = normalized
+        self._sync_mode_buttons()
+        advanced = self._ui_mode == "advanced"
+        self.step_list.setVisible(not advanced)
+        self.center_stack.setCurrentWidget(self.advanced_page if advanced else self.wizard_panel)
+        if advanced:
+            self.advanced_page.refresh()
+        if save and changed:
+            self._config = replace(self._config, ui_mode=self._ui_mode)
+            save_config(self._config)
+
+    def _sync_mode_buttons(self) -> None:
         self.wizard_button.setChecked(self._ui_mode == "wizard")
         self.advanced_button.setChecked(self._ui_mode == "advanced")
+
+    def set_mode_switch_enabled(self, enabled: bool) -> None:
+        self.wizard_button.setEnabled(enabled)
+        self.advanced_button.setEnabled(enabled)
+
+    def _active_summary(self) -> StepSummary:
+        if self._ui_mode == "advanced":
+            return self.advanced_page.summary
+        return self.step_summary
 
     def open_preferences(self) -> None:
         dialog = PreferencesDialog(self._config, self._theme_manager, self)
@@ -198,22 +232,29 @@ class MainWindow(QMainWindow):
         return worker
 
     def _start_from_summary(self) -> None:
-        paths = self.step_summary.remaining_paths()
-        if not paths or self.has_running_queue():
+        if self.has_running_queue():
+            return
+        summary = self._active_summary()
+        summary.resolve_blocking()
+        paths = summary.remaining_paths()
+        if not paths:
             return
         worker = self.start_queue(
             paths,
             self.wizard_state.options(),
             output_dir=self.wizard_state.output_dir,
-            threads=None,
+            threads=self.wizard_state.threads,
             replace_original=self.wizard_state.replace_original,
         )
         worker.finished.connect(self._on_queue_report)
-        self.step_summary.set_running(True)
+        summary.set_running(True)
+        self.set_mode_switch_enabled(False)
 
     def _on_queue_report(self, report: QueueReport) -> None:
-        self.step_summary.set_running(False)
-        self.step_summary.show_report(report)
+        summary = self._active_summary()
+        summary.set_running(False)
+        summary.show_report(report)
+        self.set_mode_switch_enabled(True)
 
     def _on_queue_finished(self, _report: QueueReport) -> None:
         # The worker and thread schedule their own deletion after finishing.
@@ -292,7 +333,11 @@ class MainWindow(QMainWindow):
         return bar
 
     def _on_mode_clicked(self, button_id: int) -> None:
-        self.set_ui_mode("advanced" if button_id == 1 else "wizard")
+        mode = "advanced" if button_id == 1 else "wizard"
+        if self.has_running_queue():
+            self._sync_mode_buttons()
+            return
+        self.set_ui_mode(mode)
 
     def _build_content_panel(self) -> QWidget:
         panel = QWidget(self)

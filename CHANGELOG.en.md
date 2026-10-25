@@ -20,6 +20,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Background work and queue panel: probing and conversion in their own threads with Qt signals, progress with remaining time, pause and resume, cancellation without half-written files, per-video warning chips, estimated total, an error view with technical details and a confirmation when closing with a conversion in progress.
 - Assistant steps 1-3: shared wizard state, accessible option cards, done/current/pending step list, Back/Next navigation, adding videos with drag and drop and background probing, destination selection (including "I don't know") and quality selection with a recommendation for the destination and a plain-language CRF explanation.
 - Assistant steps 4-6: audio and subtitle language selection with readable names, output folder, container, replacing the original and 4K reduction, per-video summary with a compatibility traffic light, a dialog for blocking HDR videos, starting the conversion and a final report with errors and skipped videos.
+- Advanced mode: a single page with every CLI option (videos, destination, quality, container, maximum height, output folder, threads, replacement, languages and the summary with start), sharing the wizard state; the switch keeps the selection, saves `ui_mode` and is blocked while a conversion runs.
 
 ### Changed
 
