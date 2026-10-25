@@ -198,7 +198,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 
 ### Pasos
 
-- [ ] 3.1 **Motor: recorte de muestra y estimación.** *AgentRelay, esfuerzo alto.* Versión: entrada en Sin publicar.
+- [x] 3.1 **Motor: recorte de muestra y estimación.** *(AgentRelay, esfuerzo alto; revisado, 288/292 tests en verde, 4 de integración saltados por no detectar FFmpeg en el PATH de esta sesión de Bash)* *AgentRelay, esfuerzo alto.* Versión: entrada en Sin publicar.
   - `core/sample.py`: `build_sample_command(path, plan, start, duration) -> list[str]` (recorte + codificación con el plan ya calculado, usando `-ss`/`-t` antes de `-i` para que sea rápido) y `extract_frame_command(path, timestamp) -> list[str]` (un PNG a un temporal).
   - `core/estimate.py`: `estimate_from_sample(original_sample_bytes, encoded_sample_bytes, sample_duration, total_duration, elapsed_encode_seconds) -> Estimate` (dataclass con `estimated_total_bytes`, `estimated_total_seconds`), pura, sin I/O.
   - Tests: comandos generados (rutas con espacios/tildes, `-ss` antes de `-i`), y la extrapolación aritmética con casos límite (muestra más corta que 30 s si el vídeo dura menos de 75 s, duración cero).
