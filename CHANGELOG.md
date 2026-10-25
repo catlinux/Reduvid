@@ -8,6 +8,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Añadido
 
+- Perfiles guardados en el motor: `core/profile_store.py` con lista, carga, guardado atómico y borrado de perfiles TOML individuales en la carpeta de configuración, conservando los nombres reales y la diferencia entre idiomas sin filtrar y conjunto vacío.
 - Motor de muestra y estimación: recorte rápido de un fragmento de 30 s reutilizando el plan de codificación (`-ss` antes de `-i`), extracción de un fotograma PNG y extrapolación lineal de tamaño y tiempo de conversión desde la muestra.
 
 ## [0.2.1] - 2026-10-25

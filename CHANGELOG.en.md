@@ -8,6 +8,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
+- Saved profiles in the engine: `core/profile_store.py` with listing, loading, atomic saving and deletion of individual TOML profiles in the configuration directory, keeping the real names and the difference between unfiltered languages and an empty set.
 - Sample and estimation engine: fast 30-second clip reusing the encoding plan (`-ss` before `-i`), single PNG frame extraction and linear extrapolation of final size and encoding time from the sample.
 
 ## [0.2.1] - 2026-10-25
