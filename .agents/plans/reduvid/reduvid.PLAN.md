@@ -248,9 +248,8 @@ Objetivo: instalador de Windows funcional (probado en un Windows real) y paquete
   - Documentado en `docs/{es,en}/instalacion.md`, enlazado desde ambos README.
 - [x] 4.3 **Linux: AppImage.** *(AgentRelay, esfuerzo alto; revisado. Sintaxis bash validada con bash real vía WSL Debian; appimagetool 1.9.1 y el runtime de AppImage con versión fijada. Ni este equipo (Windows) ni el entorno del ejecutor tienen FUSE/herramientas de AppImage: la generación y ejecución real del `.AppImage` NO se ha probado todavía — queda para la prueba de aceptación de la Fase 4, en la Debian real del usuario.)*
   - `packaging/linux/` con el `AppDir` (`AppRun`, `.desktop`, icono) y script de construcción `build_appimage.sh` con `appimagetool`.
-- [ ] 4.4 **CI de artefactos.** *AgentRelay, esfuerzo medio.*
-  - `ci.yml`: job que construye el `.exe`/instalador en windows-latest y el `.AppImage` en ubuntu-latest, los sube como artefactos de la ejecución (no publica release todavía).
-  - Terminado cuando un push a `main` deja descargables ambos artefactos desde la pestaña Actions.
+- [x] 4.4 **CI de artefactos.** *(AgentRelay, esfuerzo medio; revisado, YAML validado con PyYAML. Pendiente de confirmar con una ejecución real: el repositorio no tiene remoto en GitHub todavía.)*
+  - `ci.yml`: jobs `build-windows`/`build-linux` (dependientes de `checks`) que construyen el instalador y el `.AppImage` y los suben como artefactos de la ejecución (no publica release).
 - [ ] 4.5 **pipx/PyPI (si procede tras probar los instaladores).** *Pendiente de decidir alcance tras 4.1-4.4.*
 - [ ] 4.6 **Revisión final de licencias, capturas actualizadas y primera release.** *Sesión (Opus); Skill `licencias` obligatoria.* Requiere OK explícito del usuario para crear el tag y publicar. Versión 1.0.0 (mayor: primera versión considerada estable/instalable por cualquiera, puede justificar el salto si hay algún cambio incompatible pendiente; si no hay ninguno, valorar si no sería más bien 0.4.0 y dejar 1.0.0 para más adelante — decidirlo en el momento con lo que haya cambiado realmente, no de antemano).
 
