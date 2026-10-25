@@ -94,7 +94,7 @@ msgstr "&Volver a buscar"
 msgid "&Show technical details"
 msgstr "&Mostrar los detalles técnicos"
 
-#: gui/wizard/step_summary.py:114 gui/wizard/step_summary.py:171
+#: gui/wizard/step_summary.py:115 gui/wizard/step_summary.py:172
 msgid "&Start"
 msgstr "&Comenzar"
 
@@ -323,11 +323,11 @@ msgstr "Progreso de la conversión"
 msgid "Conversion queue"
 msgstr "Cola de conversión"
 
-#: gui/wizard/step_summary.py:60
+#: gui/wizard/step_summary.py:61
 msgid "Convert anyway (colours will look washed out)"
 msgstr "Convertir igualmente (los colores se verán apagados)"
 
-#: gui/wizard/step_summary.py:57
+#: gui/wizard/step_summary.py:58
 msgid "Convert it anyway? Colours will look washed out."
 msgstr "¿Quieres convertirlo igualmente? Los colores se verán apagados."
 
@@ -340,7 +340,7 @@ msgstr "Convierte archivos multimedia"
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convirtiendo [{index}/{total}]: {path}"
 
-#: gui/wizard/step_summary.py:171
+#: gui/wizard/step_summary.py:172
 msgid "Converting…"
 msgstr "Convirtiendo…"
 
@@ -367,7 +367,7 @@ msgstr "Debian / Ubuntu"
 msgid "Destination"
 msgstr "Destino"
 
-#: gui/wizard/step_summary.py:37 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:38 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr "Reproducción directa"
 
@@ -451,6 +451,11 @@ msgstr "Ahorro estimado: {percent:.0f}%"
 msgid "Estimated total size: {size}"
 msgstr "Tamaño total estimado: {size}"
 
+#: gui/wizard/step_summary.py:262
+#, python-brace-format
+msgid "Estimated: {size} · {time}"
+msgstr "Estimado: {size} · {time}"
+
 #: gui/widgets/what_is_this.py:33
 msgid "Explanation"
 msgstr "Explicación"
@@ -505,7 +510,7 @@ msgstr "Terminado: {name}"
 msgid "Format: {format}"
 msgstr "Formato: {format}"
 
-#: gui/wizard/step_quality.py:315
+#: gui/wizard/step_quality.py:316
 msgid "Frame unavailable"
 msgstr "Fotograma no disponible"
 
@@ -521,7 +526,7 @@ msgstr "Alemán"
 msgid "H.265"
 msgstr "H.265"
 
-#: gui/wizard/step_summary.py:52
+#: gui/wizard/step_summary.py:53
 msgid "HDR video"
 msgstr "Vídeo HDR"
 
@@ -574,7 +579,7 @@ msgstr "Japonés"
 msgid "Jellyfin"
 msgstr "Jellyfin"
 
-#: gui/wizard/step_summary.py:39
+#: gui/wizard/step_summary.py:40
 msgid "Jellyfin will transcode"
 msgstr "Jellyfin transcodificará"
 
@@ -646,7 +651,7 @@ msgstr "Más compatible"
 msgid "More quality or more space?"
 msgstr "¿Más calidad o más espacio?"
 
-#: gui/wizard/step_summary.py:40
+#: gui/wizard/step_summary.py:41
 msgid "Needs attention"
 msgstr "Necesita atención"
 
@@ -771,7 +776,7 @@ msgstr "Quitar los seleccionados"
 msgid "Replace the original"
 msgstr "Reemplazar el original"
 
-#: gui/wizard/step_summary.py:100
+#: gui/wizard/step_summary.py:101
 msgid "Review what Reduvid will do with each video before starting."
 msgstr "Revisa qué hará Reduvid con cada vídeo antes de empezar."
 
@@ -783,7 +788,7 @@ msgstr "Ruso"
 msgid "Same folder as each video"
 msgstr "La misma carpeta que cada vídeo"
 
-#: gui/wizard/step_quality.py:310
+#: gui/wizard/step_quality.py:311
 msgid "Sample ready."
 msgstr "Muestra lista."
 
@@ -800,11 +805,11 @@ msgstr "Muestra los detalles del archivo multimedia"
 msgid "Size: {size:.2f} MB"
 msgstr "Tamaño: {size:.2f} MB"
 
-#: gui/wizard/step_summary.py:58
+#: gui/wizard/step_summary.py:59
 msgid "Skip this video"
 msgstr "Saltar este vídeo"
 
-#: gui/wizard/step_summary.py:257
+#: gui/wizard/step_summary.py:279
 msgid "Skipped"
 msgstr "Omitido"
 
@@ -816,7 +821,7 @@ msgstr "Ha ocurrido un problema al procesar el archivo."
 msgid "Spanish"
 msgstr "Español"
 
-#: gui/wizard/step_summary.py:116
+#: gui/wizard/step_summary.py:117
 msgid "Start conversion"
 msgstr "Empezar la conversión"
 
@@ -838,7 +843,7 @@ msgstr "Pista de subtítulos {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítulo {position}: {codec}{language}, imagen: {image}"
 
-#: gui/main_window.py:60 gui/wizard/step_summary.py:97
+#: gui/main_window.py:60 gui/wizard/step_summary.py:98
 msgid "Summary"
 msgstr "Resumen"
 
@@ -898,11 +903,11 @@ msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para con
 msgid "This video is too short to try a sample."
 msgstr "Este vídeo es demasiado corto para probar una muestra."
 
-#: gui/wizard/step_summary.py:56
+#: gui/wizard/step_summary.py:57
 msgid "This video needs your attention."
 msgstr "Este vídeo necesita tu atención."
 
-#: gui/wizard/step_summary.py:178
+#: gui/wizard/step_summary.py:179
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "

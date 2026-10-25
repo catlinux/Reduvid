@@ -307,6 +307,7 @@ class StepQuality(QWidget):
         self.sample_result.setVisible(True)
         self._result_quality = self._sample_quality
         self._sample_quality = None
+        self._state.set_sample_result(result)
         self.sample_status.setText(_("Sample ready."))
 
     def _load_frame(self, label: QLabel, path: Path) -> None:
@@ -333,3 +334,4 @@ class StepQuality(QWidget):
         self.estimate_label.clear()
         self.savings_label.clear()
         self._result_quality = None
+        self._state.clear_sample_result()

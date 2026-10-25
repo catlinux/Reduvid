@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from reduvid.core.estimate import estimate_from_sample
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.report import QueueReport
 from reduvid.gui.error_view import ErrorView
@@ -247,6 +248,27 @@ class StepSummary(QWidget):
         )
         meta.setProperty("role", "muted")
         column.addWidget(meta)
+
+        sample = self._state.sample_result
+        if sample is not None:
+            estimate = estimate_from_sample(
+                original_sample_bytes=0,
+                encoded_sample_bytes=sample.encoded_sample_bytes,
+                sample_duration_seconds=sample.sample_duration_seconds,
+                total_duration_seconds=summary.media.duration,
+                elapsed_encode_seconds=sample.encode_seconds,
+            )
+            estimate_label = QLabel(
+                _("Estimated: {size} · {time}").format(
+                    size=format_size(estimate.estimated_total_bytes),
+                    time=format_duration(estimate.estimated_total_seconds),
+                ),
+                row,
+            )
+            estimate_label.setObjectName("estimateInfo")
+            estimate_label.setProperty("role", "muted")
+            estimate_label.setWordWrap(True)
+            column.addWidget(estimate_label)
 
         for warning in summary.warnings:
             label = QLabel(warning_text(warning), row)

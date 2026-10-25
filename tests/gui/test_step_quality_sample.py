@@ -138,6 +138,7 @@ def test_sample_runs_and_shows_comparison(
     assert "20 MB" in page.estimate_label.text()
     assert "80%" in page.savings_label.text()
     assert page.sample_status.text() == "Sample ready."
+    assert page._state.sample_result is not None
 
 
 def test_changing_quality_invalidates_the_result(
@@ -153,6 +154,7 @@ def test_changing_quality_invalidates_the_result(
 
     assert page.sample_result.isHidden()
     assert page.estimate_label.text() == ""
+    assert page._state.sample_result is None
     assert "Quality changed" in page.sample_status.text()
 
 
@@ -167,6 +169,7 @@ def test_changing_quality_while_running_discards_the_result(
     qapp.processEvents()
 
     assert page.sample_result.isHidden()
+    assert page._state.sample_result is None
     assert "Quality changed" in page.sample_status.text()
     assert page.sample_button.isEnabled()
 

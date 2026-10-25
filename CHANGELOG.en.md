@@ -8,6 +8,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
+- Estimates in the Summary step: when a valid sample exists for the chosen quality, each card shows its duration-proportional estimated size and time; without a sample nothing is shown.
 - Sample and comparison in the Quality step: a button to try 30 s in the background, before/after frames, estimated total size, savings percentage and invalidation when the quality changes; temporary files use fixed names in the cache.
 - Saved profiles in the engine: `core/profile_store.py` with listing, loading, atomic saving and deletion of individual TOML profiles in the configuration directory, keeping the real names and the difference between unfiltered languages and an empty set.
 - Sample and estimation engine: fast 30-second clip reusing the encoding plan (`-ss` before `-i`), single PNG frame extraction and linear extrapolation of final size and encoding time from the sample.

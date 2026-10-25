@@ -93,7 +93,7 @@ msgstr ""
 msgid "&Show technical details"
 msgstr ""
 
-#: gui/wizard/step_summary.py:114 gui/wizard/step_summary.py:171
+#: gui/wizard/step_summary.py:115 gui/wizard/step_summary.py:172
 msgid "&Start"
 msgstr ""
 
@@ -315,11 +315,11 @@ msgstr ""
 msgid "Conversion queue"
 msgstr ""
 
-#: gui/wizard/step_summary.py:60
+#: gui/wizard/step_summary.py:61
 msgid "Convert anyway (colours will look washed out)"
 msgstr ""
 
-#: gui/wizard/step_summary.py:57
+#: gui/wizard/step_summary.py:58
 msgid "Convert it anyway? Colours will look washed out."
 msgstr ""
 
@@ -332,7 +332,7 @@ msgstr ""
 msgid "Converting [{index}/{total}]: {path}"
 msgstr ""
 
-#: gui/wizard/step_summary.py:171
+#: gui/wizard/step_summary.py:172
 msgid "Converting…"
 msgstr ""
 
@@ -359,7 +359,7 @@ msgstr ""
 msgid "Destination"
 msgstr ""
 
-#: gui/wizard/step_summary.py:37 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:38 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr ""
 
@@ -443,6 +443,11 @@ msgstr ""
 msgid "Estimated total size: {size}"
 msgstr ""
 
+#: gui/wizard/step_summary.py:262
+#, python-brace-format
+msgid "Estimated: {size} · {time}"
+msgstr ""
+
 #: gui/widgets/what_is_this.py:33
 msgid "Explanation"
 msgstr ""
@@ -497,7 +502,7 @@ msgstr ""
 msgid "Format: {format}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:315
+#: gui/wizard/step_quality.py:316
 msgid "Frame unavailable"
 msgstr ""
 
@@ -513,7 +518,7 @@ msgstr ""
 msgid "H.265"
 msgstr ""
 
-#: gui/wizard/step_summary.py:52
+#: gui/wizard/step_summary.py:53
 msgid "HDR video"
 msgstr ""
 
@@ -564,7 +569,7 @@ msgstr ""
 msgid "Jellyfin"
 msgstr ""
 
-#: gui/wizard/step_summary.py:39
+#: gui/wizard/step_summary.py:40
 msgid "Jellyfin will transcode"
 msgstr ""
 
@@ -636,7 +641,7 @@ msgstr ""
 msgid "More quality or more space?"
 msgstr ""
 
-#: gui/wizard/step_summary.py:40
+#: gui/wizard/step_summary.py:41
 msgid "Needs attention"
 msgstr ""
 
@@ -759,7 +764,7 @@ msgstr ""
 msgid "Replace the original"
 msgstr ""
 
-#: gui/wizard/step_summary.py:100
+#: gui/wizard/step_summary.py:101
 msgid "Review what Reduvid will do with each video before starting."
 msgstr ""
 
@@ -771,7 +776,7 @@ msgstr ""
 msgid "Same folder as each video"
 msgstr ""
 
-#: gui/wizard/step_quality.py:310
+#: gui/wizard/step_quality.py:311
 msgid "Sample ready."
 msgstr ""
 
@@ -788,11 +793,11 @@ msgstr ""
 msgid "Size: {size:.2f} MB"
 msgstr ""
 
-#: gui/wizard/step_summary.py:58
+#: gui/wizard/step_summary.py:59
 msgid "Skip this video"
 msgstr ""
 
-#: gui/wizard/step_summary.py:257
+#: gui/wizard/step_summary.py:279
 msgid "Skipped"
 msgstr ""
 
@@ -804,7 +809,7 @@ msgstr ""
 msgid "Spanish"
 msgstr ""
 
-#: gui/wizard/step_summary.py:116
+#: gui/wizard/step_summary.py:117
 msgid "Start conversion"
 msgstr ""
 
@@ -826,7 +831,7 @@ msgstr ""
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
 
-#: gui/main_window.py:60 gui/wizard/step_summary.py:97
+#: gui/main_window.py:60 gui/wizard/step_summary.py:98
 msgid "Summary"
 msgstr ""
 
@@ -886,11 +891,11 @@ msgstr ""
 msgid "This video is too short to try a sample."
 msgstr ""
 
-#: gui/wizard/step_summary.py:56
+#: gui/wizard/step_summary.py:57
 msgid "This video needs your attention."
 msgstr ""
 
-#: gui/wizard/step_summary.py:178
+#: gui/wizard/step_summary.py:179
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "

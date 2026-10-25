@@ -16,6 +16,7 @@ from reduvid.core.config import Config, Container
 from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import MediaInfo
 from reduvid.core.queue import VIDEO_EXTENSIONS
+from reduvid.gui.workers import SampleResult
 
 DESTINATIONS = ("jellyfin", "modern", "archive")
 QUALITIES = ("high", "balanced", "max_savings")
@@ -52,6 +53,8 @@ class WizardState(QObject):
         self._threads: int | None = None
         self._audio_selected: frozenset[str] | None = None
         self._subtitle_selected: frozenset[str] | None = None
+        self._sample_result: SampleResult | None = None
+        self._sample_quality: str | None = None
         self._videos: list[VideoEntry] = []
 
     @property
@@ -65,6 +68,13 @@ class WizardState(QObject):
     @property
     def quality(self) -> str:
         return self._quality
+
+    @property
+    def sample_result(self) -> SampleResult | None:
+        """Sample valid for the current quality, if one has been calculated."""
+        if self._sample_quality == self._quality:
+            return self._sample_result
+        return None
 
     @property
     def ready(self) -> bool:
@@ -107,7 +117,17 @@ class WizardState(QObject):
             raise ValueError(f"Unknown quality: {quality}")
         if quality != self._quality:
             self._quality = quality
+            self._sample_result = None
+            self._sample_quality = None
             self.changed.emit()
+
+    def set_sample_result(self, result: SampleResult) -> None:
+        self._sample_result = result
+        self._sample_quality = self._quality
+
+    def clear_sample_result(self) -> None:
+        self._sample_result = None
+        self._sample_quality = None
 
     def set_container(self, container: str) -> None:
         if container not in CONTAINERS:
