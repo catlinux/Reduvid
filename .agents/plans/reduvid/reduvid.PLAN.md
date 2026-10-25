@@ -213,8 +213,8 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 - [x] 3.4 **Interfaz: estimación de tamaño/tiempo sin muestra.** *(AgentRelay, esfuerzo medio; revisado, 311/315 tests en verde. Nota: `estimate_from_sample` tiene el parámetro `original_sample_bytes` sin usar desde el 3.1, se arrastra sin afectar al resultado; limpiar en una pasada de pulido si se retoma `core/estimate.py`)*
   - Si no hay muestra calculada, el paso Resumen no muestra tamaño/tiempo estimado (como ahora); si la hay, los usa para todos los vídeos de la cola con las mismas opciones (extrapolando por duración de cada uno).
   - Tests: con y sin muestra.
-- [ ] 3.5 **Interfaz: perfiles guardados.** *AgentRelay, esfuerzo alto.*
-  - En el paso Calidad o en una nueva entrada del menú de Preferencias (decide el ejecutor lo más simple de enganchar sin romper el asistente; si duda, para y anota la duda), desplegable para cargar un perfil y botón «Guardar como perfil…» con diálogo de nombre.
+- [x] 3.5 **Interfaz: perfiles guardados.** *(AgentRelay, esfuerzo alto; revisado, 316/320 tests en verde. Decisión de la sesión: va en el paso Calidad, no en Preferencias, por ser el paso central de decisión del asistente)*
+  - En el paso Calidad, desplegable para cargar un perfil y botón «Guardar como perfil…» con diálogo de nombre.
   - Aplicar un perfil rellena todo el estado del asistente (destino, calidad, contenedor, idiomas, etc.), igual que si el usuario lo hubiera elegido paso a paso.
   - Tests offscreen: guardar, listar, cargar, eliminar.
 - [ ] 3.6 **Interfaz: avisos tempranos de HDR/10 bits/subtítulos de imagen.** *AgentRelay, esfuerzo medio.*
