@@ -8,13 +8,13 @@ Esta carpeta irá creciendo con cada versión.
 
 | Documento | Para quién |
 | --- | --- |
+| [Uso de la interfaz gráfica](gui.md) | Cualquiera que use la interfaz |
 | [Uso de la línea de órdenes](cli.md) | Quien usa Reduvid en servidores o scripts |
 
 ## Guías previstas
 
 | Documento | Para quién | Versión |
 | --- | --- | --- |
-| Guía de usuario | Cualquiera que use la interfaz | 0.2.0 |
 | Glosario sin jerga | Quien no sabe qué es un códec | 0.2.0 |
 | Guía Jellyfin | Quien quiere que todo se reproduzca sin transcodificar | 0.2.0 |
 | Preguntas frecuentes | Todos | 0.3.0 |

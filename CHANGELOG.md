@@ -8,6 +8,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Añadido
 
+- Guía de uso de la interfaz en `docs/es/gui.md` y `docs/en/gui.md`.
 - Esqueleto de la interfaz gráfica: ventana principal con barra superior, conmutador Asistente/Avanzado, paneles de pasos, contenido y cola (apilados en ventanas estrechas), diálogo de preferencias (tema, modo de color, idioma, animaciones y ruta de FFmpeg con comprobación) y pantalla de ayuda cuando falta FFmpeg.
 
 - Configuración de usuario en `core/config.py`: lectura TOML (con la ruta de FFmpeg en la raíz o en `[ffmpeg] path`, claves desconocidas ignoradas y lista de claves inválidas) y escritura atómica propia.

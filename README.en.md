@@ -67,7 +67,7 @@ reduvid-cli convert video.mkv            # Convert it with the default Jellyfin 
 reduvid-cli convert folder/ --recursive  # Convert an entire folder
 ```
 
-Full details on commands, options and exit codes in the [command-line guide](docs/en/cli.md).
+Interface guide (wizard and Advanced mode) in [docs/en/gui.md](docs/en/gui.md). Full details on commands, options and exit codes in the [command-line guide](docs/en/cli.md).
 
 ## H.264 or H.265 for Jellyfin?
 
