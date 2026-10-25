@@ -12,9 +12,12 @@ from PySide6.QtCore import Qt, QThread
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QButtonGroup,
+    QComboBox,
     QHBoxLayout,
+    QInputDialog,
     QLabel,
     QPushButton,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -23,6 +26,7 @@ from reduvid.core.estimate import estimate_from_sample
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.plan import EncodePlan, build_plan
 from reduvid.core.probe import MediaInfo
+from reduvid.core.profile_store import list_profiles, load_profile, save_profile
 from reduvid.core.sample import sample_window
 from reduvid.gui.widgets.option_card import OptionCard
 from reduvid.gui.widgets.what_is_this import WhatIsThis
@@ -92,10 +96,13 @@ class StepQuality(QWidget):
         state: WizardState,
         ffmpeg_info: FFmpegInfo,
         parent: QWidget | None = None,
+        *,
+        profiles_dir: Path | None = None,
     ) -> None:
         super().__init__(parent)
         self._state = state
         self._ffmpeg_info = ffmpeg_info
+        self._profiles_dir = profiles_dir
         self._group = QButtonGroup(self)
         self._group.setExclusive(True)
         self.cards: dict[str, OptionCard] = {}
@@ -149,8 +156,95 @@ class StepQuality(QWidget):
         layout.addWidget(self.sample_button)
         layout.addWidget(self.sample_status)
         layout.addWidget(self.sample_result)
+
+        profile_row = QHBoxLayout()
+        self.profile_combo = QComboBox(self)
+        self.profile_combo.setObjectName("profileCombo")
+        self.profile_combo.setAccessibleName(_("Saved profiles"))
+        self.profile_combo.setMinimumWidth(0)
+        self.profile_combo.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
+        self.apply_profile_button = QPushButton(_("Apply profile"), self)
+        self.apply_profile_button.setObjectName("applyProfileButton")
+        self.apply_profile_button.setAccessibleName(_("Apply profile"))
+        self.apply_profile_button.setMinimumWidth(0)
+        self.apply_profile_button.setSizePolicy(
+            QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed
+        )
+        self.apply_profile_button.clicked.connect(self.apply_selected_profile)
+        self.save_profile_button = QPushButton(_("Save as profile…"), self)
+        self.save_profile_button.setObjectName("saveProfileButton")
+        self.save_profile_button.setAccessibleName(_("Save as profile…"))
+        self.save_profile_button.setMinimumWidth(0)
+        self.save_profile_button.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
+        self.save_profile_button.clicked.connect(self.save_current_profile)
+        profile_row.addWidget(self.profile_combo, 1)
+        profile_buttons = QHBoxLayout()
+        profile_buttons.addWidget(self.apply_profile_button, 1)
+        profile_buttons.addWidget(self.save_profile_button, 1)
+        self.profile_status = QLabel(self)
+        self.profile_status.setObjectName("profileStatus")
+        self.profile_status.setProperty("role", "muted")
+        self.profile_status.setWordWrap(True)
+        layout.addLayout(profile_row)
+        layout.addLayout(profile_buttons)
+        layout.addWidget(self.profile_status)
         layout.addStretch(1)
         self._group.idClicked.connect(self._on_selected)
+        self.reload_profiles()
+
+    def reload_profiles(self) -> None:
+        names = list_profiles(self._profiles_dir)
+        current = self.profile_combo.currentData()
+        self.profile_combo.blockSignals(True)
+        self.profile_combo.clear()
+        for name in names:
+            self.profile_combo.addItem(name, name)
+        if current in names:
+            self.profile_combo.setCurrentIndex(self.profile_combo.findData(current))
+        self.profile_combo.blockSignals(False)
+        enabled = bool(names)
+        self.profile_combo.setEnabled(enabled)
+        self.apply_profile_button.setEnabled(enabled)
+
+    def apply_selected_profile(self) -> None:
+        name = self.profile_combo.currentData()
+        if not isinstance(name, str):
+            return
+        try:
+            options = load_profile(name, self._profiles_dir)
+        except (OSError, ValueError) as error:
+            self.profile_status.setText(
+                _("Could not load the profile: {error}").format(error=error)
+            )
+            return
+        try:
+            self._state.apply_options(options)
+        except ValueError as error:
+            self.profile_status.setText(
+                _("Could not apply the profile: {error}").format(error=error)
+            )
+            return
+        self.profile_status.setText(_("Profile applied."))
+
+    def save_current_profile(self) -> None:
+        name, accepted = QInputDialog.getText(self, _("Save profile"), _("Profile name"))
+        if not accepted:
+            return
+        if not name.strip():
+            self.profile_status.setText(_("The profile name cannot be empty."))
+            return
+        try:
+            save_profile(name, self._state.options(), self._profiles_dir)
+        except (OSError, ValueError) as error:
+            self.profile_status.setText(
+                _("Could not save the profile: {error}").format(error=error)
+            )
+            return
+        self.reload_profiles()
+        index = self.profile_combo.findData(name)
+        if index >= 0:
+            self.profile_combo.setCurrentIndex(index)
+        self.profile_status.setText(_("Profile saved."))
 
     def _build_sample_result(self) -> QWidget:
         panel = QWidget(self)

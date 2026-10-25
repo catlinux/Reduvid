@@ -98,7 +98,7 @@ msgstr "&Mostra els detalls tècnics"
 msgid "&Start"
 msgstr "&Comença"
 
-#: gui/wizard/step_quality.py:140 gui/wizard/step_quality.py:142
+#: gui/wizard/step_quality.py:147 gui/wizard/step_quality.py:149
 msgid "&Try a 30-second sample"
 msgstr "&Prova amb una mostra de 30 s"
 
@@ -128,7 +128,7 @@ msgstr "Ja hi ha una conversió en marxa."
 msgid "A conversion is still running."
 msgstr "Encara hi ha una conversió en marxa."
 
-#: gui/wizard/step_quality.py:80
+#: gui/wizard/step_quality.py:84
 msgid ""
 "A video stores each frame of the picture. Reduvid decides how much detail to keep in each one, "
 "like when a phone saves a photo at a higher or lower quality. Internally this is called CRF: a "
@@ -170,7 +170,7 @@ msgstr "Avançat"
 msgid "Advanced options"
 msgstr "Opcions avançades"
 
-#: gui/wizard/step_quality.py:166
+#: gui/wizard/step_quality.py:260
 msgid "After"
 msgstr "Després"
 
@@ -182,7 +182,7 @@ msgstr "Tots els fitxers (*)"
 msgid "All options in one place. They are shared with the assistant."
 msgstr "Totes les opcions en un sol lloc. Es comparteixen amb l'assistent."
 
-#: gui/wizard/step_quality.py:39
+#: gui/wizard/step_quality.py:43
 msgid "Almost identical"
 msgstr "Gairebé idèntica"
 
@@ -193,6 +193,10 @@ msgstr "S'està analitzant…"
 #: gui/wizard/step_destination.py:61 gui/wizard/step_destination.py:62
 msgid "Another folder"
 msgstr "Una altra carpeta"
+
+#: gui/wizard/step_quality.py:166 gui/wizard/step_quality.py:168
+msgid "Apply profile"
+msgstr "Aplica el perfil"
 
 #: gui/wizard/step_keep.py:70
 msgid ""
@@ -223,11 +227,11 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr "Àudio {position}: {codec}, {channels} canals{language}"
 
-#: gui/advanced_page.py:92 gui/wizard/step_quality.py:44
+#: gui/advanced_page.py:92 gui/wizard/step_quality.py:48
 msgid "Balanced"
 msgstr "Equilibrada"
 
-#: gui/wizard/step_quality.py:165
+#: gui/wizard/step_quality.py:259
 msgid "Before"
 msgstr "Abans"
 
@@ -275,7 +279,7 @@ msgstr "Xinès"
 msgid "Choose a folder"
 msgstr "Tria una carpeta"
 
-#: gui/wizard/step_quality.py:120
+#: gui/wizard/step_quality.py:127
 msgid "Choose how much you want to shrink. You can change this later."
 msgstr "Tria quant vols reduir. Ho pots canviar més endavant."
 
@@ -344,7 +348,12 @@ msgstr "Convertint [{index}/{total}]: {path}"
 msgid "Converting…"
 msgstr "S'està convertint…"
 
-#: gui/wizard/step_quality.py:278
+#: gui/wizard/step_quality.py:224
+#, python-brace-format
+msgid "Could not apply the profile: {error}"
+msgstr "No s'ha pogut aplicar el perfil: {error}"
+
+#: gui/wizard/step_quality.py:372
 #, python-brace-format
 msgid "Could not generate the sample: {error}"
 msgstr "No s'ha pogut generar la mostra: {error}"
@@ -353,6 +362,16 @@ msgstr "No s'ha pogut generar la mostra: {error}"
 #, python-brace-format
 msgid "Could not inspect FFmpeg: {error}"
 msgstr "No s'ha pogut inspeccionar FFmpeg: {error}"
+
+#: gui/wizard/step_quality.py:217
+#, python-brace-format
+msgid "Could not load the profile: {error}"
+msgstr "No s'ha pogut carregar el perfil: {error}"
+
+#: gui/wizard/step_quality.py:240
+#, python-brace-format
+msgid "Could not save the profile: {error}"
+msgstr "No s'ha pogut desar el perfil: {error}"
 
 #: gui/preferences.py:71
 msgid "Dark"
@@ -385,11 +404,11 @@ msgstr "Simulació: {count} fitxer(s)"
 msgid "Duration: {duration}"
 msgstr "Durada: {duration}"
 
-#: gui/wizard/step_quality.py:166
+#: gui/wizard/step_quality.py:260
 msgid "Encoded frame"
 msgstr "Fotograma recodificat"
 
-#: gui/wizard/step_quality.py:234
+#: gui/wizard/step_quality.py:328
 msgid "Encoding a 30-second sample…"
 msgstr "S'està codificant una mostra de 30 s…"
 
@@ -441,12 +460,12 @@ msgstr "Error: l'entrada d'anàlisi no és un fitxer: {path}"
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
-#: gui/wizard/step_quality.py:306
+#: gui/wizard/step_quality.py:400
 #, python-brace-format
 msgid "Estimated savings: {percent:.0f}%"
 msgstr "Estalvi estimat: {percent:.0f}%"
 
-#: gui/wizard/step_quality.py:302
+#: gui/wizard/step_quality.py:396
 #, python-brace-format
 msgid "Estimated total size: {size}"
 msgstr "Mida total estimada: {size}"
@@ -510,7 +529,7 @@ msgstr "Acabat: {name}"
 msgid "Format: {format}"
 msgstr "Format: {format}"
 
-#: gui/wizard/step_quality.py:316
+#: gui/wizard/step_quality.py:410
 msgid "Frame unavailable"
 msgstr "Fotograma no disponible"
 
@@ -635,7 +654,7 @@ msgstr "Panells principals"
 msgid "Maximum height in pixels"
 msgstr "Altura màxima en píxels"
 
-#: gui/advanced_page.py:93 gui/wizard/step_quality.py:49
+#: gui/advanced_page.py:93 gui/wizard/step_quality.py:53
 msgid "Maximum savings"
 msgstr "Estalvi màxim"
 
@@ -647,7 +666,7 @@ msgstr "Dispositius moderns"
 msgid "More compatible"
 msgstr "Més compatible"
 
-#: gui/wizard/step_quality.py:117
+#: gui/wizard/step_quality.py:124
 msgid "More quality or more space?"
 msgstr "Més qualitat o més espai?"
 
@@ -675,7 +694,7 @@ msgstr "Encara no has afegit cap vídeo."
 msgid "Number of encoding threads"
 msgstr "Nombre de fils de codificació"
 
-#: gui/wizard/step_quality.py:165
+#: gui/wizard/step_quality.py:259
 msgid "Original frame"
 msgstr "Fotograma original"
 
@@ -713,6 +732,18 @@ msgstr "Portuguès"
 msgid "Preferences"
 msgstr "Preferències"
 
+#: gui/wizard/step_quality.py:227
+msgid "Profile applied."
+msgstr "Perfil aplicat."
+
+#: gui/wizard/step_quality.py:230
+msgid "Profile name"
+msgstr "Nom del perfil"
+
+#: gui/wizard/step_quality.py:247
+msgid "Profile saved."
+msgstr "Perfil desat."
+
 #: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
@@ -722,7 +753,7 @@ msgstr "Progrés: {percent:.0f}% ({state})"
 msgid "Quality"
 msgstr "Qualitat"
 
-#: gui/wizard/step_quality.py:208 gui/wizard/step_quality.py:268
+#: gui/wizard/step_quality.py:302 gui/wizard/step_quality.py:362
 msgid "Quality changed. Run the sample again."
 msgstr "Ha canviat la qualitat. Torna a provar la mostra."
 
@@ -744,7 +775,7 @@ msgstr "A punt"
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr "A punt i verificat: un {percent}% més petit. Els originals no s'han tocat."
 
-#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:199
+#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:293
 msgid "Recommended"
 msgstr "Recomanada"
 
@@ -788,13 +819,25 @@ msgstr "Rus"
 msgid "Same folder as each video"
 msgstr "La mateixa carpeta que cada vídeo"
 
-#: gui/wizard/step_quality.py:311
+#: gui/wizard/step_quality.py:405
 msgid "Sample ready."
 msgstr "Mostra a punt."
+
+#: gui/wizard/step_quality.py:174 gui/wizard/step_quality.py:176
+msgid "Save as profile…"
+msgstr "Desa com a perfil…"
 
 #: gui/advanced_page.py:84 gui/wizard/step_target.py:35
 msgid "Save for archive"
 msgstr "Desa per a l'arxiu"
+
+#: gui/wizard/step_quality.py:230
+msgid "Save profile"
+msgstr "Desa el perfil"
+
+#: gui/wizard/step_quality.py:163
+msgid "Saved profiles"
+msgstr "Perfils desats"
 
 #: cli.py:376
 msgid "Show media details"
@@ -887,6 +930,10 @@ msgstr "No es pot llegir o escriure el fitxer o la carpeta per un problema de pe
 msgid "The original is sent to the trash only if the copy is verified."
 msgstr "L'original només va a la paperera si la còpia es verifica."
 
+#: gui/wizard/step_quality.py:234
+msgid "The profile name cannot be empty."
+msgstr "El nom del perfil no pot estar buit."
+
 #: gui/preferences.py:61 gui/preferences.py:112
 msgid "Theme"
 msgstr "Tema"
@@ -899,7 +946,7 @@ msgstr "No hi ha prou espai lliure al disc de destinació."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
 
-#: gui/wizard/step_quality.py:228
+#: gui/wizard/step_quality.py:322
 msgid "This video is too short to try a sample."
 msgstr "Aquest vídeo és massa curt per provar una mostra."
 
@@ -1010,13 +1057,13 @@ msgstr "On veure'ls"
 msgid "Where will you watch them?"
 msgstr "On els veuràs?"
 
-#: gui/wizard/step_quality.py:69
+#: gui/wizard/step_quality.py:73
 msgid "Why Balanced? Modern devices play H.265: you save more space while keeping very good quality."
 msgstr ""
 "Per què Equilibrada? Els dispositius moderns reprodueixen H.265: estalvies més espai mantenint "
 "molt bona qualitat."
 
-#: gui/wizard/step_quality.py:73
+#: gui/wizard/step_quality.py:77
 msgid ""
 "Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
 "without the server converting anything."
@@ -1024,7 +1071,7 @@ msgstr ""
 "Per què Equilibrada? Els veuràs al Jellyfin: estalvia molt d'espai i es reprodueix directament, "
 "sense que el servidor hagi de convertir res."
 
-#: gui/wizard/step_quality.py:64
+#: gui/wizard/step_quality.py:68
 msgid ""
 "Why Maximum savings? When archiving, the priority is saving space and a slower encode does not "
 "matter."
@@ -1049,15 +1096,15 @@ msgstr "Passos de l'assistent"
 msgid "Would convert: {path}"
 msgstr "Es convertiria: {path}"
 
-#: gui/wizard/step_quality.py:45
+#: gui/wizard/step_quality.py:49
 msgid "You can only see the difference if you look closely. The best trade-off."
 msgstr "Només veuràs la diferència si mires de prop. La millor relació."
 
-#: gui/wizard/step_quality.py:51
+#: gui/wizard/step_quality.py:55
 msgid "You will notice it in dark scenes or with lots of movement. For phones or archiving."
 msgstr "Es notarà en escenes fosques o amb molt de moviment. Per al mòbil o per arxivar."
 
-#: gui/wizard/step_quality.py:40
+#: gui/wizard/step_quality.py:44
 msgid "You won't notice the difference, even on a big TV."
 msgstr "No notaràs la diferència ni en una televisió gran."
 

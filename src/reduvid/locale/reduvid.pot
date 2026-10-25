@@ -97,7 +97,7 @@ msgstr ""
 msgid "&Start"
 msgstr ""
 
-#: gui/wizard/step_quality.py:140 gui/wizard/step_quality.py:142
+#: gui/wizard/step_quality.py:147 gui/wizard/step_quality.py:149
 msgid "&Try a 30-second sample"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "A conversion is still running."
 msgstr ""
 
-#: gui/wizard/step_quality.py:80
+#: gui/wizard/step_quality.py:84
 msgid ""
 "A video stores each frame of the picture. Reduvid decides how much detail to keep in each one, "
 "like when a phone saves a photo at a higher or lower quality. Internally this is called CRF: a "
@@ -166,7 +166,7 @@ msgstr ""
 msgid "Advanced options"
 msgstr ""
 
-#: gui/wizard/step_quality.py:166
+#: gui/wizard/step_quality.py:260
 msgid "After"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "All options in one place. They are shared with the assistant."
 msgstr ""
 
-#: gui/wizard/step_quality.py:39
+#: gui/wizard/step_quality.py:43
 msgid "Almost identical"
 msgstr ""
 
@@ -188,6 +188,10 @@ msgstr ""
 
 #: gui/wizard/step_destination.py:61 gui/wizard/step_destination.py:62
 msgid "Another folder"
+msgstr ""
+
+#: gui/wizard/step_quality.py:166 gui/wizard/step_quality.py:168
+msgid "Apply profile"
 msgstr ""
 
 #: gui/wizard/step_keep.py:70
@@ -215,11 +219,11 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr ""
 
-#: gui/advanced_page.py:92 gui/wizard/step_quality.py:44
+#: gui/advanced_page.py:92 gui/wizard/step_quality.py:48
 msgid "Balanced"
 msgstr ""
 
-#: gui/wizard/step_quality.py:165
+#: gui/wizard/step_quality.py:259
 msgid "Before"
 msgstr ""
 
@@ -267,7 +271,7 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: gui/wizard/step_quality.py:120
+#: gui/wizard/step_quality.py:127
 msgid "Choose how much you want to shrink. You can change this later."
 msgstr ""
 
@@ -336,7 +340,12 @@ msgstr ""
 msgid "Converting…"
 msgstr ""
 
-#: gui/wizard/step_quality.py:278
+#: gui/wizard/step_quality.py:224
+#, python-brace-format
+msgid "Could not apply the profile: {error}"
+msgstr ""
+
+#: gui/wizard/step_quality.py:372
 #, python-brace-format
 msgid "Could not generate the sample: {error}"
 msgstr ""
@@ -344,6 +353,16 @@ msgstr ""
 #: gui/preferences.py:174
 #, python-brace-format
 msgid "Could not inspect FFmpeg: {error}"
+msgstr ""
+
+#: gui/wizard/step_quality.py:217
+#, python-brace-format
+msgid "Could not load the profile: {error}"
+msgstr ""
+
+#: gui/wizard/step_quality.py:240
+#, python-brace-format
+msgid "Could not save the profile: {error}"
 msgstr ""
 
 #: gui/preferences.py:71
@@ -377,11 +396,11 @@ msgstr ""
 msgid "Duration: {duration}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:166
+#: gui/wizard/step_quality.py:260
 msgid "Encoded frame"
 msgstr ""
 
-#: gui/wizard/step_quality.py:234
+#: gui/wizard/step_quality.py:328
 msgid "Encoding a 30-second sample…"
 msgstr ""
 
@@ -433,12 +452,12 @@ msgstr ""
 msgid "Error: {path}{details}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:306
+#: gui/wizard/step_quality.py:400
 #, python-brace-format
 msgid "Estimated savings: {percent:.0f}%"
 msgstr ""
 
-#: gui/wizard/step_quality.py:302
+#: gui/wizard/step_quality.py:396
 #, python-brace-format
 msgid "Estimated total size: {size}"
 msgstr ""
@@ -502,7 +521,7 @@ msgstr ""
 msgid "Format: {format}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:316
+#: gui/wizard/step_quality.py:410
 msgid "Frame unavailable"
 msgstr ""
 
@@ -625,7 +644,7 @@ msgstr ""
 msgid "Maximum height in pixels"
 msgstr ""
 
-#: gui/advanced_page.py:93 gui/wizard/step_quality.py:49
+#: gui/advanced_page.py:93 gui/wizard/step_quality.py:53
 msgid "Maximum savings"
 msgstr ""
 
@@ -637,7 +656,7 @@ msgstr ""
 msgid "More compatible"
 msgstr ""
 
-#: gui/wizard/step_quality.py:117
+#: gui/wizard/step_quality.py:124
 msgid "More quality or more space?"
 msgstr ""
 
@@ -665,7 +684,7 @@ msgstr ""
 msgid "Number of encoding threads"
 msgstr ""
 
-#: gui/wizard/step_quality.py:165
+#: gui/wizard/step_quality.py:259
 msgid "Original frame"
 msgstr ""
 
@@ -703,6 +722,18 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
+#: gui/wizard/step_quality.py:227
+msgid "Profile applied."
+msgstr ""
+
+#: gui/wizard/step_quality.py:230
+msgid "Profile name"
+msgstr ""
+
+#: gui/wizard/step_quality.py:247
+msgid "Profile saved."
+msgstr ""
+
 #: cli.py:260
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
@@ -712,7 +743,7 @@ msgstr ""
 msgid "Quality"
 msgstr ""
 
-#: gui/wizard/step_quality.py:208 gui/wizard/step_quality.py:268
+#: gui/wizard/step_quality.py:302 gui/wizard/step_quality.py:362
 msgid "Quality changed. Run the sample again."
 msgstr ""
 
@@ -734,7 +765,7 @@ msgstr ""
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr ""
 
-#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:199
+#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:293
 msgid "Recommended"
 msgstr ""
 
@@ -776,12 +807,24 @@ msgstr ""
 msgid "Same folder as each video"
 msgstr ""
 
-#: gui/wizard/step_quality.py:311
+#: gui/wizard/step_quality.py:405
 msgid "Sample ready."
+msgstr ""
+
+#: gui/wizard/step_quality.py:174 gui/wizard/step_quality.py:176
+msgid "Save as profile…"
 msgstr ""
 
 #: gui/advanced_page.py:84 gui/wizard/step_target.py:35
 msgid "Save for archive"
+msgstr ""
+
+#: gui/wizard/step_quality.py:230
+msgid "Save profile"
+msgstr ""
+
+#: gui/wizard/step_quality.py:163
+msgid "Saved profiles"
 msgstr ""
 
 #: cli.py:376
@@ -875,6 +918,10 @@ msgstr ""
 msgid "The original is sent to the trash only if the copy is verified."
 msgstr ""
 
+#: gui/wizard/step_quality.py:234
+msgid "The profile name cannot be empty."
+msgstr ""
+
 #: gui/preferences.py:61 gui/preferences.py:112
 msgid "Theme"
 msgstr ""
@@ -887,7 +934,7 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/wizard/step_quality.py:228
+#: gui/wizard/step_quality.py:322
 msgid "This video is too short to try a sample."
 msgstr ""
 
@@ -992,17 +1039,17 @@ msgstr ""
 msgid "Where will you watch them?"
 msgstr ""
 
-#: gui/wizard/step_quality.py:69
+#: gui/wizard/step_quality.py:73
 msgid "Why Balanced? Modern devices play H.265: you save more space while keeping very good quality."
 msgstr ""
 
-#: gui/wizard/step_quality.py:73
+#: gui/wizard/step_quality.py:77
 msgid ""
 "Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
 "without the server converting anything."
 msgstr ""
 
-#: gui/wizard/step_quality.py:64
+#: gui/wizard/step_quality.py:68
 msgid ""
 "Why Maximum savings? When archiving, the priority is saving space and a slower encode does not "
 "matter."
@@ -1025,15 +1072,15 @@ msgstr ""
 msgid "Would convert: {path}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:45
+#: gui/wizard/step_quality.py:49
 msgid "You can only see the difference if you look closely. The best trade-off."
 msgstr ""
 
-#: gui/wizard/step_quality.py:51
+#: gui/wizard/step_quality.py:55
 msgid "You will notice it in dark scenes or with lots of movement. For phones or archiving."
 msgstr ""
 
-#: gui/wizard/step_quality.py:40
+#: gui/wizard/step_quality.py:44
 msgid "You won't notice the difference, even on a big TV."
 msgstr ""
 

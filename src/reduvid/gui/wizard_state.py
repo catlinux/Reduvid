@@ -55,6 +55,7 @@ class WizardState(QObject):
         self._subtitle_selected: frozenset[str] | None = None
         self._sample_result: SampleResult | None = None
         self._sample_quality: str | None = None
+        self._applying_options = False
         self._videos: list[VideoEntry] = []
 
     @property
@@ -110,7 +111,7 @@ class WizardState(QObject):
             raise ValueError(f"Unknown destination: {destination}")
         if destination != self._destination:
             self._destination = destination
-            self.changed.emit()
+            self._notify_changed()
 
     def set_quality(self, quality: str) -> None:
         if quality not in QUALITIES:
@@ -119,6 +120,32 @@ class WizardState(QObject):
             self._quality = quality
             self._sample_result = None
             self._sample_quality = None
+            self._notify_changed()
+
+    def apply_options(self, options: PlanOptions) -> None:
+        """Apply a complete profile, emitting a single change at the end."""
+        self._applying_options = True
+        try:
+            self.set_destination(options.destination)
+            self.set_quality(options.quality)
+            self.set_container(options.container)
+            self.set_max_height(options.max_height)
+            self.set_audio_languages(
+                options.audio_languages
+                if options.audio_languages is not None
+                else self.available_audio_languages()
+            )
+            self.set_subtitle_languages(
+                options.subtitle_languages
+                if options.subtitle_languages is not None
+                else self.available_subtitle_languages()
+            )
+        finally:
+            self._applying_options = False
+        self.changed.emit()
+
+    def _notify_changed(self) -> None:
+        if not self._applying_options:
             self.changed.emit()
 
     def set_sample_result(self, result: SampleResult) -> None:
@@ -134,38 +161,38 @@ class WizardState(QObject):
             raise ValueError(f"Unknown container: {container}")
         if container != self._container:
             self._container = cast(Container, container)
-            self.changed.emit()
+            self._notify_changed()
 
     def set_output_dir(self, output_dir: Path | None) -> None:
         resolved = output_dir.expanduser() if output_dir is not None else None
         if resolved != self._output_dir:
             self._output_dir = resolved
-            self.changed.emit()
+            self._notify_changed()
 
     def set_replace_original(self, replace: bool) -> None:
         if replace != self._replace_original:
             self._replace_original = replace
-            self.changed.emit()
+            self._notify_changed()
 
     def set_reduce_4k(self, reduce: bool) -> None:
         if reduce != self._reduce_4k:
             self._reduce_4k = reduce
             self._max_height = None
-            self.changed.emit()
+            self._notify_changed()
 
     def set_max_height(self, max_height: int | None) -> None:
         if max_height is not None and max_height < 1:
             raise ValueError("max_height must be positive")
         if max_height != self._max_height:
             self._max_height = max_height
-            self.changed.emit()
+            self._notify_changed()
 
     def set_threads(self, threads: int | None) -> None:
         if threads is not None and threads < 1:
             raise ValueError("threads must be positive")
         if threads != self._threads:
             self._threads = threads
-            self.changed.emit()
+            self._notify_changed()
 
     def available_audio_languages(self) -> tuple[str, ...]:
         return _languages(self._videos, "audio")
@@ -234,7 +261,7 @@ class WizardState(QObject):
         new_value = None if normalized == available else normalized
         if new_value != current:
             setattr(self, attribute, new_value)
-            self.changed.emit()
+            self._notify_changed()
 
     def add_paths(self, paths: Iterable[Path], *, recursive: bool = False) -> list[Path]:
         """Add video files, expanding folders; return the new absolute paths."""
@@ -271,7 +298,7 @@ class WizardState(QObject):
                 existing.add(resolved)
                 added.append(resolved)
         if added:
-            self.changed.emit()
+            self._notify_changed()
         return added
 
     def remove_paths(self, paths: Iterable[Path]) -> None:
@@ -279,21 +306,21 @@ class WizardState(QObject):
         remaining = [entry for entry in self._videos if entry.path not in wanted]
         if len(remaining) != len(self._videos):
             self._videos = remaining
-            self.changed.emit()
+            self._notify_changed()
 
     def set_media(self, path: Path, media: MediaInfo) -> None:
         entry = self._entry(path)
         if entry is not None:
             entry.media = media
             entry.error = None
-            self.changed.emit()
+            self._notify_changed()
 
     def set_error(self, path: Path, reason: str) -> None:
         entry = self._entry(path)
         if entry is not None:
             entry.media = None
             entry.error = reason
-            self.changed.emit()
+            self._notify_changed()
 
     def _entry(self, path: Path) -> VideoEntry | None:
         try:
