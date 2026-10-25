@@ -23,6 +23,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Asistente, pasos 4-6: selección de idiomas de audio y subtítulos con nombres legibles, carpeta de salida, contenedor, reemplazo del original y reducción de 4K, resumen por vídeo con semáforo de compatibilidad, diálogo para los vídeos HDR bloqueantes, arranque de la conversión e informe final con errores y vídeos saltados.
 - Modo Avanzado: una sola página con todas las opciones de la CLI (vídeos, destino, calidad, contenedor, altura máxima, carpeta de salida, hilos, reemplazo, idiomas y resumen con arranque), compartiendo el estado del asistente; el conmutador conserva la selección, guarda `ui_mode` y se bloquea durante una conversión.
 - Accesibilidad: nombre accesible en todos los controles interactivos, orden de tabulación por página, atajos Alt+ coherentes en los botones principales (también en catalán y castellano), foco visible en todos los controles de los seis temas y textos largos con ajuste de línea al aumentar la fuente.
+- Motivos pintados propios de cada tema: esquina doblada, barra en acordeón y gato de origami en Plegat; sombra desplazada, pista tramada, gato y cifra con eje variable en Riso; franja de tres colores, bobinas y contador mecánico en Cinta. La barra de progreso de la cola se pinta a mano desde los tokens y no usa temporizadores, por lo que respeta «Reducir animaciones».
 
 ### Cambiado
 

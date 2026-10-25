@@ -5,15 +5,22 @@
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QRectF, Qt
+from PySide6.QtGui import QPainter, QPaintEvent
 from PySide6.QtWidgets import (
     QAbstractButton,
     QHBoxLayout,
     QLabel,
     QSizePolicy,
+    QStyle,
+    QStyleOptionButton,
+    QStylePainter,
     QVBoxLayout,
     QWidget,
 )
+
+from reduvid.gui.theme.active import active_tokens
+from reduvid.gui.widgets.motifs import draw_fold_corner, draw_offset_shadow
 
 
 class OptionCard(QAbstractButton):
@@ -64,6 +71,24 @@ class OptionCard(QAbstractButton):
         parts = [self.accessibleName(), label, self.description_label.text()]
         description = ". ".join(part for part in parts if part)
         self.setAccessibleDescription(description)
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QStylePainter(self)
+        option = QStyleOptionButton()
+        option.initFrom(self)
+        option.rect = self.rect()
+        if self.isChecked():
+            option.state |= QStyle.StateFlag.State_On
+        painter.drawControl(QStyle.ControlElement.CE_PushButton, option)
+        if self.isChecked():
+            tokens = active_tokens()
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            rect = QRectF(self.rect()).adjusted(0.0, 0.0, -1.0, -1.0)
+            if tokens.fold is not None:
+                draw_fold_corner(painter, rect, tokens)
+            elif tokens.accent3 is None:
+                draw_offset_shadow(painter, rect, tokens)
+        painter.end()
 
     def _on_toggled(self, _checked: bool) -> None:
         # Repolish so the QSS [checked="true"] rule takes effect immediately.

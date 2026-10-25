@@ -166,7 +166,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 - [x] 2.10 **Modo Avanzado.** *AgentRelay, esfuerzo alto.*
   - Una sola página con todas las opciones de la CLI (destino, calidad, contenedor, altura máxima, carpeta de salida, subcarpetas, hilos, reemplazar original e idiomas) y la misma cola y el mismo resumen con semáforo.
   - El cambio de modo conserva la selección y el modo elegido se guarda en `ui_mode`.
-- [ ] 2.11 **Motivos pintados de cada tema.** *AgentRelay, esfuerzo xhigh; revisión visual de Opus con capturas.* En `gui/widgets/motifs.py` y `gui/widgets/progress.py`:
+- [x] 2.11 **Motivos pintados de cada tema.** *AgentRelay, esfuerzo xhigh; revisión visual de Opus con capturas.* En `gui/widgets/motifs.py` y `gui/widgets/progress.py`: *(revisado con capturas reales de la ventana y renderizado aislado de los 6 juegos de tema; corregido el solape del texto de porcentaje con el gato en Riso, alineándolo a la derecha. Sombra de Riso en botones primarios queda pendiente: todavía no hay ningún botón con role=primary en el proyecto)*
   - **Plegat**: esquina doblada en la tarjeta elegida, barra en acordeón y gato de origami que se pliega con el progreso.
   - **Riso**: sombra desplazada en tarjetas y botones, pista tramada, gato que se acurruca y cifra que se estrecha con `QFont.setVariableAxis("wdth")` (si no funciona, cifra fija).
   - **Cinta**: franja de tres colores, bobinas que se vacían y se llenan, y contador mecánico de MB ahorrados.

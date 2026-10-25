@@ -9,6 +9,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication
 
+from reduvid.gui.theme.active import set_active_tokens
 from reduvid.gui.theme.fonts import register_fonts
 from reduvid.gui.theme.qss import build_qss
 from reduvid.gui.theme.tokens import THEMES, ThemeTokens
@@ -48,6 +49,7 @@ class ThemeManager:
         self._theme = theme
         self._mode = mode
         tokens = THEMES[(theme, self._resolved_mode())]
+        set_active_tokens(tokens)
         register_fonts()
         self._app.setFont(QFont(_first_family(tokens.body), -1, tokens.body_weight))
         self._app.setStyleSheet(build_qss(tokens))

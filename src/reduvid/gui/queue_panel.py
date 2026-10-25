@@ -12,7 +12,6 @@ from typing import Literal
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
-    QProgressBar,
     QPushButton,
     QVBoxLayout,
     QWidget,
@@ -22,6 +21,7 @@ from reduvid.core.plan import Warning
 from reduvid.core.queue import QueueProgressEvent
 from reduvid.core.report import FileReport, QueueReport
 from reduvid.core.runner import ProgressEvent
+from reduvid.gui.widgets.progress import ThemedProgressBar
 from reduvid.gui.workers import QueueWorker
 from reduvid.i18n import _
 from reduvid.messages import error_text, warning_text
@@ -112,11 +112,10 @@ class QueuePanel(QWidget):
         meta.addWidget(self.eta_label)
         layout.addLayout(meta)
 
-        self.progress_bar = QProgressBar(self)
+        self.progress_bar = ThemedProgressBar(self)
         self.progress_bar.setObjectName("queueProgress")
         self.progress_bar.setAccessibleName(_("Conversion progress"))
         self.progress_bar.setRange(0, 100)
-        self.progress_bar.setTextVisible(False)
         layout.addWidget(self.progress_bar)
 
         controls = QHBoxLayout()
