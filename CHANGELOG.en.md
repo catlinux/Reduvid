@@ -6,6 +6,8 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-25
+
 ### Fixed
 
 - When unchecking the 4K reduction on a video that is already at the requested height (e.g. `max_height=2160` on a 3840×2160 video), the engine no longer emits the resize-to-1080p warning or applies a redundant scale filter; the decision to reduce is based on height alone, not a fixed 1920 px width, so a wide but short-height video is no longer reduced needlessly either.
