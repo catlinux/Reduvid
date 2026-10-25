@@ -239,7 +239,7 @@ Objetivo: instalador de Windows funcional (probado en un Windows real) y paquete
 
 ### Pasos
 
-- [ ] 4.0 **Icono de la aplicación.** *Sesión (Opus), decisión de diseño visual.* Un icono simple basado en el gato de origami de Plegat (el motivo más reconocible de la app, ver `gui/widgets/motifs.py`), en `.ico` (Windows, varios tamaños) y `.png`/`.svg` (Linux). Se hace justo antes del 4.1, no antes, para no desviar el orden Fase 3 → Fase 4 ya acordado.
+- [x] 4.0 **Icono de la aplicación.** *(Sesión, Opus; aprobado por el usuario)* `src/reduvid/resources/icon/reduvid.{ico,png,svg}`: el gato de origami de Plegat (reusando `draw_origami_cat` de `gui/widgets/motifs.py` para el trazado, sin redibujarlo a mano) sobre fondo teal (`accent` de Plegat claro), cabeza en `accent2`. El `.ico` lleva 7 resoluciones (16 a 256 px); el `.svg` reproduce las mismas coordenadas, verificado renderizándolo y comparando píxel a píxel con el PNG.
 - [ ] 4.1 **Windows: PyInstaller en modo carpeta.** *AgentRelay, esfuerzo alto.*
   - `packaging/windows/reduvid.spec` (PyInstaller): usa el icono del paso 4.0, `reduvid` (gui) como ejecutable principal, excluye módulos de desarrollo (pytest, mypy, ruff) del bundle.
   - Script `scripts/build_windows.ps1` o `.py` que ejecuta PyInstaller y deja el resultado en `dist/windows/`.

@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0 -->
+<!-- Copyright (C) 2026 Catlinux -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="46.08" ry="46.08" fill="#0F5E63"/>
+  <polygon points="50.59,198.94 128.00,135.17 205.41,198.94" fill="#FFFFFF" stroke="#0A4245" stroke-width="1"/>
+  <polygon points="128.00,135.17 98.51,64.31 150.12,53.68 164.86,121.00" fill="#D39B14" stroke="#0A4245" stroke-width="1"/>
+  <polygon points="150.12,53.68 157.49,39.51 164.86,60.76" fill="#D39B14" stroke="#0A4245" stroke-width="1"/>
+  <polygon points="194.36,198.94 216.47,170.60 205.41,206.03" fill="#D39B14" stroke="#0A4245" stroke-width="1"/>
+  <line x1="128.00" y1="135.17" x2="116.94" y2="198.94" stroke="#0A4245" stroke-width="1"/>
+</svg>
