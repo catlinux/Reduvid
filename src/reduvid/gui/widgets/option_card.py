@@ -40,6 +40,7 @@ class OptionCard(QAbstractButton):
         self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         self.setAccessibleName(name)
+        self.setProperty("recommended", False)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(16, 14, 16, 14)
@@ -90,8 +91,17 @@ class OptionCard(QAbstractButton):
                 draw_offset_shadow(painter, rect, tokens)
         painter.end()
 
-    def _on_toggled(self, _checked: bool) -> None:
-        # Repolish so the QSS [checked="true"] rule takes effect immediately.
+    def set_recommended(self, recommended: bool) -> None:
+        """Paint the card with the lighter recommended background."""
+        if bool(self.property("recommended")) == recommended:
+            return
+        self.setProperty("recommended", recommended)
+        self._repolish()
+
+    def _repolish(self) -> None:
         self.style().unpolish(self)
         self.style().polish(self)
         self.update()
+
+    def _on_toggled(self, _checked: bool) -> None:
+        self._repolish()

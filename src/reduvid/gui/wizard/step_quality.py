@@ -115,7 +115,9 @@ class StepQuality(QWidget):
     def _sync(self) -> None:
         recommended = _RECOMMENDED.get(self._state.destination, "balanced")
         for quality, option_card in self.cards.items():
-            option_card.set_label(_("Recommended") if quality == recommended else "")
+            is_recommended = quality == recommended
+            option_card.set_label(_("Recommended") if is_recommended else "")
+            option_card.set_recommended(is_recommended)
         selected_card = self.cards.get(self._state.quality)
         if selected_card is not None:
             selected_card.setChecked(True)

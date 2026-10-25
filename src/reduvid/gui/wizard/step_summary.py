@@ -12,7 +12,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMessageBox,
-    QPushButton,
     QVBoxLayout,
     QWidget,
 )
@@ -20,6 +19,7 @@ from PySide6.QtWidgets import (
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.report import QueueReport
 from reduvid.gui.error_view import ErrorView
+from reduvid.gui.widgets.primary_button import PrimaryButton
 from reduvid.gui.wizard_logic import (
     VideoSummary,
     format_duration,
@@ -109,7 +109,7 @@ class StepSummary(QWidget):
         self.items_layout.setSpacing(8)
         layout.addWidget(self.items_container, 1)
 
-        self.start_button = QPushButton(_("&Start"), self)
+        self.start_button = PrimaryButton(_("&Start"), self)
         self.start_button.setObjectName("startButton")
         self.start_button.setAccessibleName(_("Start conversion"))
         self.start_button.clicked.connect(self._start)

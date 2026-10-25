@@ -119,6 +119,10 @@ QAbstractButton#card {
 QAbstractButton#card:hover {
     border-color: ${muted};
 }
+QAbstractButton#card[recommended="true"] {
+    background-color: ${recommended_bg};
+    border-color: ${accent2};
+}
 QAbstractButton#card[checked="true"], QAbstractButton#card:checked {
     background-color: ${soft};
     border-color: ${accent};
@@ -353,6 +357,7 @@ def build_qss(tokens: ThemeTokens) -> str:
         warn_bg=tokens.warn_bg,
         warn_fg=tokens.warn_fg,
         track=tokens.track,
+        recommended_bg=_mix(tokens.accent2, tokens.surface, 0.18),
         radius=tokens.radius,
         border_width=tokens.border_width,
         body=tokens.body,
@@ -361,6 +366,22 @@ def build_qss(tokens: ThemeTokens) -> str:
         display_weight=tokens.display_weight,
         progress_fill=_progress_fill(tokens),
     )
+
+
+def _mix(foreground: str, background: str, weight: float) -> str:
+    """Blend two token colours to obtain an intermediate tone."""
+
+    def channels(value: str) -> list[int]:
+        digits = value.lstrip("#")
+        return [int(digits[index : index + 2], 16) for index in (0, 2, 4)]
+
+    blended = [
+        round(foreground_channel * weight + background_channel * (1 - weight))
+        for foreground_channel, background_channel in zip(
+            channels(foreground), channels(background), strict=True
+        )
+    ]
+    return "#" + "".join(f"{channel:02X}" for channel in blended)
 
 
 def _progress_fill(tokens: ThemeTokens) -> str:
