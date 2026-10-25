@@ -36,7 +36,7 @@ msgstr "&Aceptar"
 msgid "&Advanced"
 msgstr "A&vanzado"
 
-#: gui/widgets/wizard_nav.py:27 gui/widgets/wizard_nav.py:29
+#: gui/widgets/wizard_nav.py:28 gui/widgets/wizard_nav.py:30
 msgid "&Back"
 msgstr "&Atrás"
 
@@ -44,11 +44,11 @@ msgstr "&Atrás"
 msgid "&Browse…"
 msgstr "&Examinar…"
 
-#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:127
+#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:126
 msgid "&Cancel"
 msgstr "&Cancelar"
 
-#: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
+#: gui/ffmpeg_missing.py:69 gui/ffmpeg_missing.py:71
 msgid "&Choose ffmpeg…"
 msgstr "&Elegir ffmpeg…"
 
@@ -64,17 +64,17 @@ msgstr "&Limitar los hilos de codificación"
 msgid "&Maximum height"
 msgstr "&Altura máxima"
 
-#: gui/widgets/wizard_nav.py:32 gui/widgets/wizard_nav.py:34 gui/widgets/wizard_nav.py:50
-#: gui/widgets/wizard_nav.py:51
+#: gui/widgets/wizard_nav.py:33 gui/widgets/wizard_nav.py:35 gui/widgets/wizard_nav.py:51
+#: gui/widgets/wizard_nav.py:52
 msgid "&Next"
 msgstr "&Siguiente"
 
-#: gui/widgets/wizard_nav.py:53 gui/widgets/wizard_nav.py:54
+#: gui/widgets/wizard_nav.py:54 gui/widgets/wizard_nav.py:55
 #, python-brace-format
 msgid "&Next: {step}"
 msgstr "&Siguiente: {step}"
 
-#: gui/queue_panel.py:123 gui/queue_panel.py:166 gui/queue_panel.py:240
+#: gui/queue_panel.py:122 gui/queue_panel.py:168 gui/queue_panel.py:242
 msgid "&Pause"
 msgstr "&Pausar"
 
@@ -82,11 +82,11 @@ msgstr "&Pausar"
 msgid "&Preferences"
 msgstr "&Preferencias"
 
-#: gui/queue_panel.py:172
+#: gui/queue_panel.py:174
 msgid "&Resume"
 msgstr "&Reanudar"
 
-#: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
+#: gui/ffmpeg_missing.py:73 gui/ffmpeg_missing.py:75
 msgid "&Search again"
 msgstr "&Volver a buscar"
 
@@ -94,9 +94,13 @@ msgstr "&Volver a buscar"
 msgid "&Show technical details"
 msgstr "&Mostrar los detalles técnicos"
 
-#: gui/wizard/step_summary.py:112 gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:114 gui/wizard/step_summary.py:171
 msgid "&Start"
 msgstr "&Comenzar"
+
+#: gui/wizard/step_quality.py:140 gui/wizard/step_quality.py:142
+msgid "&Try a 30-second sample"
+msgstr "&Probar con una muestra de 30 s"
 
 #: gui/widgets/what_is_this.py:26 gui/widgets/what_is_this.py:27
 msgid "&What is this?"
@@ -124,7 +128,7 @@ msgstr "Ya hay una conversión en marcha."
 msgid "A conversion is still running."
 msgstr "Todavía hay una conversión en marcha."
 
-#: gui/wizard/step_quality.py:61
+#: gui/wizard/step_quality.py:80
 msgid ""
 "A video stores each frame of the picture. Reduvid decides how much detail to keep in each one, "
 "like when a phone saves a photo at a higher or lower quality. Internally this is called CRF: a "
@@ -166,6 +170,10 @@ msgstr "Avanzado"
 msgid "Advanced options"
 msgstr "Opciones avanzadas"
 
+#: gui/wizard/step_quality.py:166
+msgid "After"
+msgstr "Después"
+
 #: gui/wizard/step_videos.py:147
 msgid "All files (*)"
 msgstr "Todos los archivos (*)"
@@ -174,7 +182,7 @@ msgstr "Todos los archivos (*)"
 msgid "All options in one place. They are shared with the assistant."
 msgstr "Todas las opciones en un solo lugar. Se comparten con el asistente."
 
-#: gui/wizard/step_quality.py:20
+#: gui/wizard/step_quality.py:39
 msgid "Almost identical"
 msgstr "Casi idéntica"
 
@@ -215,9 +223,13 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr "Audio {position}: {codec}, {channels} canales{language}"
 
-#: gui/advanced_page.py:92 gui/wizard/step_quality.py:25
+#: gui/advanced_page.py:92 gui/wizard/step_quality.py:44
 msgid "Balanced"
 msgstr "Equilibrada"
+
+#: gui/wizard/step_quality.py:165
+msgid "Before"
+msgstr "Antes"
 
 #: gui/preferences.py:94
 msgid "Browse for ffmpeg"
@@ -227,7 +239,7 @@ msgstr "Buscar el archivo de FFmpeg"
 msgid "Browse for the output folder"
 msgstr "Buscar la carpeta de salida"
 
-#: gui/queue_panel.py:129
+#: gui/queue_panel.py:128
 msgid "Cancel conversion"
 msgstr "Cancelar la conversión"
 
@@ -235,11 +247,11 @@ msgstr "Cancelar la conversión"
 msgid "Cancel conversion and quit"
 msgstr "Cancelar la conversión y salir"
 
-#: gui/queue_panel.py:248
+#: gui/queue_panel.py:250
 msgid "Cancelled. No files are left half-written."
 msgstr "Cancelado. No queda ningún archivo a medias."
 
-#: gui/queue_panel.py:180
+#: gui/queue_panel.py:182
 msgid "Cancelling…"
 msgstr "Cancelando…"
 
@@ -263,7 +275,7 @@ msgstr "Chino"
 msgid "Choose a folder"
 msgstr "Elige una carpeta"
 
-#: gui/wizard/step_quality.py:90
+#: gui/wizard/step_quality.py:120
 msgid "Choose how much you want to shrink. You can change this later."
 msgstr "Elige cuánto quieres reducir. Puedes cambiarlo más adelante."
 
@@ -275,7 +287,7 @@ msgstr "Elige los idiomas de audio y de subtítulos que entiendas."
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Elige el dispositivo que usarás más. Puedes cambiarlo más adelante."
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:165
+#: gui/ffmpeg_missing.py:108 gui/preferences.py:165
 msgid "Choose the ffmpeg executable"
 msgstr "Elige el ejecutable de ffmpeg"
 
@@ -311,11 +323,11 @@ msgstr "Progreso de la conversión"
 msgid "Conversion queue"
 msgstr "Cola de conversión"
 
-#: gui/wizard/step_summary.py:59
+#: gui/wizard/step_summary.py:60
 msgid "Convert anyway (colours will look washed out)"
 msgstr "Convertir igualmente (los colores se verán apagados)"
 
-#: gui/wizard/step_summary.py:56
+#: gui/wizard/step_summary.py:57
 msgid "Convert it anyway? Colours will look washed out."
 msgstr "¿Quieres convertirlo igualmente? Los colores se verán apagados."
 
@@ -328,9 +340,14 @@ msgstr "Convierte archivos multimedia"
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convirtiendo [{index}/{total}]: {path}"
 
-#: gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:171
 msgid "Converting…"
 msgstr "Convirtiendo…"
+
+#: gui/wizard/step_quality.py:278
+#, python-brace-format
+msgid "Could not generate the sample: {error}"
+msgstr "No se ha podido generar la muestra: {error}"
 
 #: gui/preferences.py:174
 #, python-brace-format
@@ -341,7 +358,7 @@ msgstr "No se ha podido inspeccionar FFmpeg: {error}"
 msgid "Dark"
 msgstr "Oscuro"
 
-#: gui/ffmpeg_missing.py:64
+#: gui/ffmpeg_missing.py:65
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
@@ -350,7 +367,7 @@ msgstr "Debian / Ubuntu"
 msgid "Destination"
 msgstr "Destino"
 
-#: gui/wizard/step_summary.py:36 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:37 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr "Reproducción directa"
 
@@ -367,6 +384,14 @@ msgstr "Simulación: {count} archivo(s)"
 #, python-brace-format
 msgid "Duration: {duration}"
 msgstr "Duración: {duration}"
+
+#: gui/wizard/step_quality.py:166
+msgid "Encoded frame"
+msgstr "Fotograma recodificado"
+
+#: gui/wizard/step_quality.py:234
+msgid "Encoding a 30-second sample…"
+msgstr "Codificando una muestra de 30 s…"
 
 #: gui/wizard_logic.py:49
 msgid "English"
@@ -416,11 +441,21 @@ msgstr "Error: la entrada de análisis no es un archivo: {path}"
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
+#: gui/wizard/step_quality.py:306
+#, python-brace-format
+msgid "Estimated savings: {percent:.0f}%"
+msgstr "Ahorro estimado: {percent:.0f}%"
+
+#: gui/wizard/step_quality.py:302
+#, python-brace-format
+msgid "Estimated total size: {size}"
+msgstr "Tamaño total estimado: {size}"
+
 #: gui/widgets/what_is_this.py:33
 msgid "Explanation"
 msgstr "Explicación"
 
-#: gui/ffmpeg_missing.py:47
+#: gui/ffmpeg_missing.py:48
 msgid "FFmpeg is required"
 msgstr "Se necesita FFmpeg"
 
@@ -432,7 +467,7 @@ msgstr "Ruta de FFmpeg"
 msgid "FFmpeg was not found at that path."
 msgstr "No se ha encontrado FFmpeg en esa ruta."
 
-#: gui/ffmpeg_missing.py:124
+#: gui/ffmpeg_missing.py:125
 msgid "FFmpeg was still not found."
 msgstr "Todavía no se ha encontrado FFmpeg."
 
@@ -441,7 +476,7 @@ msgstr "Todavía no se ha encontrado FFmpeg."
 msgid "FFmpeg {version} detected."
 msgstr "Se ha detectado FFmpeg {version}."
 
-#: gui/ffmpeg_missing.py:65
+#: gui/ffmpeg_missing.py:66
 msgid "Fedora"
 msgstr "Fedora"
 
@@ -455,7 +490,7 @@ msgstr "Archivo: {path}"
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr "Archivos: {succeeded} correctos, {failed} con error, {skipped} omitidos"
 
-#: gui/queue_panel.py:251
+#: gui/queue_panel.py:253
 #, python-brace-format
 msgid "Finished with {count} failed file(s)."
 msgstr "Terminado con {count} archivo(s) con error."
@@ -470,6 +505,10 @@ msgstr "Terminado: {name}"
 msgid "Format: {format}"
 msgstr "Formato: {format}"
 
+#: gui/wizard/step_quality.py:315
+msgid "Frame unavailable"
+msgstr "Fotograma no disponible"
+
 #: gui/wizard_logic.py:51
 msgid "French"
 msgstr "Francés"
@@ -482,7 +521,7 @@ msgstr "Alemán"
 msgid "H.265"
 msgstr "H.265"
 
-#: gui/wizard/step_summary.py:51
+#: gui/wizard/step_summary.py:52
 msgid "HDR video"
 msgstr "Vídeo HDR"
 
@@ -518,7 +557,7 @@ msgstr ""
 msgid "Include subfolders"
 msgstr "Incluir subcarpetas"
 
-#: gui/ffmpeg_missing.py:99
+#: gui/ffmpeg_missing.py:100
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Comando de instalación para {system}"
@@ -535,7 +574,7 @@ msgstr "Japonés"
 msgid "Jellyfin"
 msgstr "Jellyfin"
 
-#: gui/wizard/step_summary.py:38
+#: gui/wizard/step_summary.py:39
 msgid "Jellyfin will transcode"
 msgstr "Jellyfin transcodificará"
 
@@ -591,7 +630,7 @@ msgstr "Paneles principales"
 msgid "Maximum height in pixels"
 msgstr "Altura máxima en píxeles"
 
-#: gui/advanced_page.py:93 gui/wizard/step_quality.py:30
+#: gui/advanced_page.py:93 gui/wizard/step_quality.py:49
 msgid "Maximum savings"
 msgstr "Máximo ahorro"
 
@@ -603,11 +642,11 @@ msgstr "Dispositivos modernos"
 msgid "More compatible"
 msgstr "Más compatible"
 
-#: gui/wizard/step_quality.py:87
+#: gui/wizard/step_quality.py:117
 msgid "More quality or more space?"
 msgstr "¿Más calidad o más espacio?"
 
-#: gui/wizard/step_summary.py:39
+#: gui/wizard/step_summary.py:40
 msgid "Needs attention"
 msgstr "Necesita atención"
 
@@ -631,6 +670,10 @@ msgstr "Todavía no has añadido ningún vídeo."
 msgid "Number of encoding threads"
 msgstr "Número de hilos de codificación"
 
+#: gui/wizard/step_quality.py:165
+msgid "Original frame"
+msgstr "Fotograma original"
+
 #: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
 msgid "Output folder"
 msgstr "Carpeta de salida"
@@ -640,11 +683,11 @@ msgstr "Carpeta de salida"
 msgid "Output: {path}"
 msgstr "Salida: {path}"
 
-#: gui/queue_panel.py:125
+#: gui/queue_panel.py:124
 msgid "Pause conversion"
 msgstr "Pausar la conversión"
 
-#: gui/queue_panel.py:173
+#: gui/queue_panel.py:175
 msgid "Paused. You can keep using the computer as usual."
 msgstr "En pausa. Puedes seguir usando el equipo con normalidad."
 
@@ -674,11 +717,15 @@ msgstr "Progreso: {percent:.0f}% ({state})"
 msgid "Quality"
 msgstr "Calidad"
 
+#: gui/wizard/step_quality.py:208 gui/wizard/step_quality.py:268
+msgid "Quality changed. Run the sample again."
+msgstr "Ha cambiado la calidad. Vuelve a probar la muestra."
+
 #: gui/queue_panel.py:83 gui/queue_panel.py:92
 msgid "Queue"
 msgstr "Cola"
 
-#: gui/queue_panel.py:184
+#: gui/queue_panel.py:186
 #, python-brace-format
 msgid "Queue · {count} videos"
 msgstr "Cola · {count} vídeos"
@@ -687,12 +734,12 @@ msgstr "Cola · {count} vídeos"
 msgid "Ready"
 msgstr "Listo"
 
-#: gui/queue_panel.py:255
+#: gui/queue_panel.py:257
 #, python-brace-format, python-format
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr "Listo y verificado: un {percent}% más pequeño. Los originales siguen intactos."
 
-#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:118
+#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:199
 msgid "Recommended"
 msgstr "Recomendada"
 
@@ -704,11 +751,11 @@ msgstr "Reduce el vídeo 4K a 1080p"
 msgid "Reduce animations"
 msgstr "Reducir animaciones"
 
-#: gui/main_window.py:76 gui/main_window.py:326 gui/main_window.py:329
+#: gui/main_window.py:76 gui/main_window.py:340 gui/main_window.py:343
 msgid "Reduvid"
 msgstr "Reduvid"
 
-#: gui/ffmpeg_missing.py:55
+#: gui/ffmpeg_missing.py:56
 msgid ""
 "Reduvid uses FFmpeg to convert videos. Install it, or choose the ffmpeg executable if you already"
 " have it."
@@ -724,7 +771,7 @@ msgstr "Quitar los seleccionados"
 msgid "Replace the original"
 msgstr "Reemplazar el original"
 
-#: gui/wizard/step_summary.py:99
+#: gui/wizard/step_summary.py:100
 msgid "Review what Reduvid will do with each video before starting."
 msgstr "Revisa qué hará Reduvid con cada vídeo antes de empezar."
 
@@ -735,6 +782,10 @@ msgstr "Ruso"
 #: gui/wizard/step_destination.py:59 gui/wizard/step_destination.py:60
 msgid "Same folder as each video"
 msgstr "La misma carpeta que cada vídeo"
+
+#: gui/wizard/step_quality.py:310
+msgid "Sample ready."
+msgstr "Muestra lista."
 
 #: gui/advanced_page.py:84 gui/wizard/step_target.py:35
 msgid "Save for archive"
@@ -749,11 +800,11 @@ msgstr "Muestra los detalles del archivo multimedia"
 msgid "Size: {size:.2f} MB"
 msgstr "Tamaño: {size:.2f} MB"
 
-#: gui/wizard/step_summary.py:57
+#: gui/wizard/step_summary.py:58
 msgid "Skip this video"
 msgstr "Saltar este vídeo"
 
-#: gui/wizard/step_summary.py:250
+#: gui/wizard/step_summary.py:257
 msgid "Skipped"
 msgstr "Omitido"
 
@@ -765,11 +816,11 @@ msgstr "Ha ocurrido un problema al procesar el archivo."
 msgid "Spanish"
 msgstr "Español"
 
-#: gui/wizard/step_summary.py:114
+#: gui/wizard/step_summary.py:116
 msgid "Start conversion"
 msgstr "Empezar la conversión"
 
-#: gui/main_window.py:358
+#: gui/main_window.py:372
 msgid "Step content"
 msgstr "Contenido del paso"
 
@@ -787,7 +838,7 @@ msgstr "Pista de subtítulos {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítulo {position}: {codec}{language}, imagen: {image}"
 
-#: gui/main_window.py:60 gui/wizard/step_summary.py:96
+#: gui/main_window.py:60 gui/wizard/step_summary.py:97
 msgid "Summary"
 msgstr "Resumen"
 
@@ -843,11 +894,15 @@ msgstr "No hay suficiente espacio libre en el disco de destino."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
-#: gui/wizard/step_summary.py:55
+#: gui/wizard/step_quality.py:228
+msgid "This video is too short to try a sample."
+msgstr "Este vídeo es demasiado corto para probar una muestra."
+
+#: gui/wizard/step_summary.py:56
 msgid "This video needs your attention."
 msgstr "Este vídeo necesita tu atención."
 
-#: gui/wizard/step_summary.py:176
+#: gui/wizard/step_summary.py:178
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "
@@ -861,12 +916,12 @@ msgstr ""
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr "Ahorro total: {savings:.2f} MB ({percent:.1f}%)"
 
-#: gui/queue_panel.py:297
+#: gui/queue_panel.py:299
 #, python-brace-format
 msgid "Total: {original} → {estimated} estimated"
 msgstr "Total: {original} → {estimated} estimados"
 
-#: gui/queue_panel.py:242
+#: gui/queue_panel.py:244
 #, python-brace-format
 msgid "Total: {original} → {final}"
 msgstr "Total: {original} → {final}"
@@ -952,13 +1007,13 @@ msgstr "Dónde verlos"
 msgid "Where will you watch them?"
 msgstr "¿Dónde los vas a ver?"
 
-#: gui/wizard/step_quality.py:50
+#: gui/wizard/step_quality.py:69
 msgid "Why Balanced? Modern devices play H.265: you save more space while keeping very good quality."
 msgstr ""
 "¿Por qué Equilibrada? Los dispositivos modernos reproducen H.265: ahorras más espacio manteniendo"
 " muy buena calidad."
 
-#: gui/wizard/step_quality.py:54
+#: gui/wizard/step_quality.py:73
 msgid ""
 "Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
 "without the server converting anything."
@@ -966,7 +1021,7 @@ msgstr ""
 "¿Por qué Equilibrada? Los verás en Jellyfin: ahorra mucho espacio y se reproduce directamente, "
 "sin que el servidor tenga que convertir nada."
 
-#: gui/wizard/step_quality.py:45
+#: gui/wizard/step_quality.py:64
 msgid ""
 "Why Maximum savings? When archiving, the priority is saving space and a slower encode does not "
 "matter."
@@ -974,7 +1029,7 @@ msgstr ""
 "¿Por qué Máximo ahorro? Si archivas, la prioridad es ahorrar espacio y una codificación más lenta"
 " no importa."
 
-#: gui/ffmpeg_missing.py:63
+#: gui/ffmpeg_missing.py:64
 msgid "Windows"
 msgstr "Windows"
 
@@ -991,15 +1046,15 @@ msgstr "Pasos del asistente"
 msgid "Would convert: {path}"
 msgstr "Se convertiría: {path}"
 
-#: gui/wizard/step_quality.py:26
+#: gui/wizard/step_quality.py:45
 msgid "You can only see the difference if you look closely. The best trade-off."
 msgstr "Solo verás la diferencia si miras de cerca. La mejor relación."
 
-#: gui/wizard/step_quality.py:32
+#: gui/wizard/step_quality.py:51
 msgid "You will notice it in dark scenes or with lots of movement. For phones or archiving."
 msgstr "Se notará en escenas oscuras o con mucho movimiento. Para el móvil o para archivar."
 
-#: gui/wizard/step_quality.py:21
+#: gui/wizard/step_quality.py:40
 msgid "You won't notice the difference, even on a big TV."
 msgstr "No notarás la diferencia ni en una televisión grande."
 
@@ -1019,7 +1074,7 @@ msgstr "descartar"
 msgid "encode"
 msgstr "codificar"
 
-#: gui/queue_panel.py:212
+#: gui/queue_panel.py:214
 msgid "less than 1 min left"
 msgstr "queda menos de 1 min"
 
@@ -1039,7 +1094,7 @@ msgstr "no"
 msgid "unknown"
 msgstr "desconocido"
 
-#: gui/queue_panel.py:207 gui/queue_panel.py:222
+#: gui/queue_panel.py:209 gui/queue_panel.py:224
 msgid "verified"
 msgstr "verificado"
 
@@ -1064,7 +1119,7 @@ msgstr ""
 "La salida con el perfil {destination} no es la de Jellyfin, así que es posible que Jellyfin tenga"
 " que transcodificarla."
 
-#: gui/queue_panel.py:213
+#: gui/queue_panel.py:215
 #, python-brace-format
 msgid "{minutes} min left"
 msgstr "quedan {minutes} min"
@@ -1074,7 +1129,7 @@ msgstr "quedan {minutes} min"
 msgid "{name} · {duration} · {state}"
 msgstr "{name} · {duration} · {state}"
 
-#: gui/queue_panel.py:285
+#: gui/queue_panel.py:287
 #, python-brace-format
 msgid "{name} · {size}"
 msgstr "{name} · {size}"
@@ -1084,7 +1139,7 @@ msgstr "{name} · {size}"
 msgid "{name} · {state}"
 msgstr "{name} · {state}"
 
-#: gui/queue_panel.py:187 gui/queue_panel.py:198 gui/queue_panel.py:221
+#: gui/queue_panel.py:189 gui/queue_panel.py:200 gui/queue_panel.py:223
 #, python-brace-format
 msgid "{percent}%"
 msgstr "{percent}%"
@@ -1097,3 +1152,4 @@ msgstr "{percent}%"
 
 #~ msgid "This step is not available yet."
 #~ msgstr "Este paso aún no está disponible."
+

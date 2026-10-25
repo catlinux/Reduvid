@@ -172,7 +172,7 @@ QAbstractButton#card:focus {
     border-color: ${warn_fg};
 }
 
-#summaryCard {
+#summaryCard, #sampleResult {
     background-color: ${surface};
     border: ${border_width}px solid ${line};
     border-radius: ${radius}px;
