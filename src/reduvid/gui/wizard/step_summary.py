@@ -7,11 +7,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMessageBox,
+    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
@@ -107,7 +108,8 @@ class StepSummary(QWidget):
         self.items_layout = QVBoxLayout(self.items_container)
         self.items_layout.setContentsMargins(0, 0, 0, 0)
         self.items_layout.setSpacing(8)
-        layout.addWidget(self.items_container, 1)
+        layout.addWidget(self.items_container)
+        layout.addStretch(1)
 
         self.start_button = PrimaryButton(_("&Start"), self)
         self.start_button.setObjectName("startButton")
@@ -216,9 +218,14 @@ class StepSummary(QWidget):
 
     def _build_row(self, summary: VideoSummary) -> QWidget:
         row = QWidget(self.items_container)
-        row.setObjectName("summaryRow")
+        row.setObjectName("summaryCard")
+        row.setProperty("level", summary.status.level)
+        row.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        row.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        row.style().unpolish(row)
+        row.style().polish(row)
         column = QVBoxLayout(row)
-        column.setContentsMargins(0, 0, 0, 0)
+        column.setContentsMargins(12, 10, 12, 10)
         column.setSpacing(2)
 
         header = QHBoxLayout()

@@ -12,7 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QObject, Signal
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
@@ -211,6 +211,27 @@ def test_summary_traffic_lights_warnings_and_skip_decisions(tmp_path: Path, qapp
         "direct.mkv",
         "image-subs.mkv",
     ]
+
+
+def test_summary_rows_are_coloured_cards(tmp_path: Path, qapp) -> None:
+    state = summary_state(tmp_path)
+    summary = StepSummary(state, ffmpeg())
+    summary.blocking_prompt = FakePrompt(keep=False)
+
+    summary.refresh()
+
+    cards = [
+        summary.items_layout.itemAt(index).widget() for index in range(summary.items_layout.count())
+    ]
+    assert all(card is not None for card in cards)
+    cards = [card for card in cards if card is not None]
+    levels = {card.property("level") for card in cards}
+    assert len(cards) == 3
+    assert levels == {"direct", "partial", "blocked"}
+    assert all(card.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Preferred for card in cards)
+    layout = summary.layout()
+    assert layout is not None
+    assert layout.itemAt(3).spacerItem() is not None
 
 
 def test_summary_keeps_blocking_videos_when_converting_anyway(tmp_path: Path, qapp) -> None:

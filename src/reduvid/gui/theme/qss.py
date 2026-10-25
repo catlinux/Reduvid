@@ -157,19 +157,41 @@ QAbstractButton#card:focus {
     padding: 2px 8px;
 }
 #compatLight[level="direct"] {
-    background-color: ${soft};
+    background-color: ${surface};
     color: ${text};
     border-color: ${accent};
 }
 #compatLight[level="partial"] {
-    background-color: ${warn_bg};
+    background-color: ${surface};
     color: ${warn_fg};
     border-color: ${accent2};
 }
 #compatLight[level="blocked"] {
-    background-color: ${warn_bg};
+    background-color: ${surface};
     color: ${warn_fg};
     border-color: ${warn_fg};
+}
+
+#summaryCard {
+    background-color: ${surface};
+    border: ${border_width}px solid ${line};
+    border-radius: ${radius}px;
+}
+#summaryCard[level="direct"] {
+    background-color: ${soft};
+    border-color: ${line};
+}
+#summaryCard[level="partial"] {
+    background-color: ${warn_bg};
+    border-color: ${accent2};
+}
+#summaryCard[level="blocked"] {
+    background-color: ${warn_bg};
+    border-color: ${warn_fg};
+}
+#summaryCard[level="partial"] QLabel,
+#summaryCard[level="blocked"] QLabel {
+    color: ${warn_fg};
 }
 
 QLineEdit, QComboBox {
