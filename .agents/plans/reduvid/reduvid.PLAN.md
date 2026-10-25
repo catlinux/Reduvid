@@ -220,7 +220,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 - [x] 3.6 **Interfaz: avisos tempranos de HDR/10 bits/subtítulos de imagen.** *(AgentRelay, esfuerzo medio; revisado, 321/325 tests en verde)*
   - En el paso Calidad, mostrar los avisos relevantes del plan actual (ya calculados por el motor) antes de que el usuario llegue al Resumen, para que no se lleve la sorpresa solo al final.
   - Tests: aviso visible cuando aplica, ausente cuando no.
-- [ ] 3.7 **Docs y versión 0.3.0.** *Sesión (Opus).*
+- [x] 3.7 **Docs y versión 0.3.0.** *(Sesión, Opus; verificado con FFmpeg real: 325/325 tests en verde incluida la suite de integración, y la muestra de 30 s probada de extremo a extremo contra un vídeo generado con FFmpeg, con recorte y los dos fotogramas de comparación generados de verdad)*
   - README(.en) y `docs/{es,en}/gui.md`: cómo usar la muestra, la comparación y los perfiles guardados.
   - Versión 0.3.0 en `__init__.py` y CHANGELOG(.en): Sin publicar → `[0.3.0]`. Menor: añade funcionalidad compatible.
   - Terminado cuando pasan `pytest`, `ruff`, `mypy`, `pre-commit`, `check_doc_sync`, y una muestra real de 30 s con FFmpeg de verdad se ve y se guarda/carga un perfil real.
