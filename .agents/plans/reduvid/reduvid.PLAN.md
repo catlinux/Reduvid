@@ -217,7 +217,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
   - En el paso Calidad, desplegable para cargar un perfil y botón «Guardar como perfil…» con diálogo de nombre.
   - Aplicar un perfil rellena todo el estado del asistente (destino, calidad, contenedor, idiomas, etc.), igual que si el usuario lo hubiera elegido paso a paso.
   - Tests offscreen: guardar, listar, cargar, eliminar.
-- [ ] 3.6 **Interfaz: avisos tempranos de HDR/10 bits/subtítulos de imagen.** *AgentRelay, esfuerzo medio.*
+- [x] 3.6 **Interfaz: avisos tempranos de HDR/10 bits/subtítulos de imagen.** *(AgentRelay, esfuerzo medio; revisado, 321/325 tests en verde)*
   - En el paso Calidad, mostrar los avisos relevantes del plan actual (ya calculados por el motor) antes de que el usuario llegue al Resumen, para que no se lleve la sorpresa solo al final.
   - Tests: aviso visible cuando aplica, ausente cuando no.
 - [ ] 3.7 **Docs y versión 0.3.0.** *Sesión (Opus).*
