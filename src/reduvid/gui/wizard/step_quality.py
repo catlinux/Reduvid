@@ -24,16 +24,17 @@ from PySide6.QtWidgets import (
 
 from reduvid.core.estimate import estimate_from_sample
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import EncodePlan, build_plan
+from reduvid.core.plan import EncodePlan, Warning, build_plan
 from reduvid.core.probe import MediaInfo
 from reduvid.core.profile_store import list_profiles, load_profile, save_profile
 from reduvid.core.sample import sample_window
 from reduvid.gui.widgets.option_card import OptionCard
 from reduvid.gui.widgets.what_is_this import WhatIsThis
-from reduvid.gui.wizard_logic import format_size
+from reduvid.gui.wizard_logic import format_size, summarize
 from reduvid.gui.wizard_state import WizardState
 from reduvid.gui.workers import SampleResult, SampleWorker, start_worker_thread
 from reduvid.i18n import _
+from reduvid.messages import warning_text
 
 
 def _options() -> tuple[tuple[str, str, str], ...]:
@@ -143,6 +144,13 @@ class StepQuality(QWidget):
         self.recommendation_label.setWordWrap(True)
         layout.addWidget(self.recommendation_label)
         layout.addWidget(WhatIsThis(_crf_explanation(), self))
+
+        self.warnings_container = QWidget(self)
+        self.warnings_container.setObjectName("qualityWarnings")
+        self.warnings_layout = QVBoxLayout(self.warnings_container)
+        self.warnings_layout.setContentsMargins(0, 0, 0, 0)
+        self.warnings_layout.setSpacing(4)
+        layout.addWidget(self.warnings_container)
 
         self.sample_button = QPushButton(_("&Try a 30-second sample"), self)
         self.sample_button.setObjectName("trySampleButton")
@@ -296,10 +304,35 @@ class StepQuality(QWidget):
         if selected_card is not None:
             selected_card.setChecked(True)
         self.recommendation_label.setText(_recommendation(self._state.destination))
+        self._show_quality_warnings()
         self._update_sample_button()
         if self._result_quality is not None and self._state.quality != self._result_quality:
             self._clear_sample_result()
             self.sample_status.setText(_("Quality changed. Run the sample again."))
+
+    def _show_quality_warnings(self) -> None:
+        while self.warnings_layout.count():
+            entry = self.warnings_layout.takeAt(0)
+            if entry is None:
+                continue
+            widget = entry.widget()
+            if widget is not None:
+                widget.deleteLater()
+        video_entry = next(
+            (item for item in self._state.videos if item.media is not None),
+            None,
+        )
+        warnings: tuple[Warning, ...] = ()
+        if video_entry is not None:
+            summary = summarize(video_entry, self._ffmpeg_info, self._state.options())
+            if summary is not None:
+                warnings = summary.warnings
+        for warning in warnings:
+            label = QLabel(warning_text(warning), self.warnings_container)
+            label.setObjectName("compatWarning")
+            label.setWordWrap(True)
+            self.warnings_layout.addWidget(label)
+        self.warnings_container.setVisible(bool(warnings))
 
     def _first_media(self) -> MediaInfo | None:
         return next(

@@ -8,6 +8,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Añadido
 
+- Avisos tempranos en el paso Calidad: el primer vídeo disponible muestra los avisos del plan (HDR, 10 bits, subtítulos de imagen, etc.) antes de llegar al Resumen, recalculados al cambiar las opciones o los vídeos.
 - Perfiles guardados desde el paso Calidad: desplegable para aplicar un perfil completo y diálogo para guardar la combinación actual con nombre, con errores visibles y sin crear nada si el nombre está vacío.
 - Estimación en el paso Resumen: si hay una muestra vigente para la calidad elegida, cada tarjeta muestra tamaño y tiempo estimados extrapolados a su duración; sin muestra no se muestra ningún dato.
 - Muestra y comparación en el paso Calidad: botón para probar 30 s en segundo plano, fotogramas antes/después, tamaño total estimado, porcentaje de ahorro e invalidación al cambiar la calidad; los temporales usan nombres fijos en la caché.
