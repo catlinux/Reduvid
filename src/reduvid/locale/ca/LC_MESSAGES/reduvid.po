@@ -1095,4 +1095,3 @@ msgstr "{percent}%"
 
 #~ msgid "This step is not available yet."
 #~ msgstr "Aquest pas encara no està disponible."
-

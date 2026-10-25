@@ -1,3 +1,4 @@
+exclude: ^src/reduvid/resources/fonts/
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.0
