@@ -36,6 +36,7 @@ reduvid = "reduvid.gui.app:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pre-commit>=3.8", "babel>=2.16"]
+build = ["pyinstaller>=6"]
 
 [tool.hatch.version]
 path = "src/reduvid/__init__.py"

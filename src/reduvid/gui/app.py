@@ -8,7 +8,9 @@ from __future__ import annotations
 import sys
 import tomllib
 from collections.abc import Sequence
+from pathlib import Path
 
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget
 
 from reduvid.core.config import Config, load_config
@@ -17,6 +19,12 @@ from reduvid.gui.ffmpeg_missing import FFmpegMissingWidget
 from reduvid.gui.main_window import MainWindow
 from reduvid.gui.theme.manager import ThemeManager
 from reduvid.i18n import setup_language
+
+
+def application_icon() -> QIcon:
+    suffix = "ico" if sys.platform == "win32" else "png"
+    path = Path(__file__).resolve().parents[1] / "resources" / "icon" / f"reduvid.{suffix}"
+    return QIcon(str(path))
 
 
 def create_application(argv: Sequence[str] | None = None) -> QApplication:
@@ -68,6 +76,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     setup_language(config.language)
     app = create_application(argv)
     app.setApplicationName("Reduvid")
+    app.setWindowIcon(application_icon())
     theme_manager = ThemeManager(app)
     theme_manager.apply(config.theme, config.color_mode)
     screen = create_screen(config, theme_manager)

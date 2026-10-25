@@ -15,6 +15,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Sample and comparison in the Quality step: a button to try 30 s in the background, before/after frames, estimated total size, savings percentage and invalidation when the quality changes; temporary files use fixed names in the cache.
 - Estimates in the Summary step: when a valid sample exists for the chosen quality, each card shows its duration-proportional estimated size and time; without a sample nothing is shown.
 - Saved profiles from the Quality step: a dropdown to apply a complete profile and a dialog to save the current combination under a name, with visible errors and nothing created when the name is empty.
+- Windows packaging with PyInstaller in folder mode (`--onedir`) through `packaging/windows/reduvid.spec` and `scripts/build_windows.py`, including fonts and translations, the icon in the executable and windows, and FFmpeg always external.
 - Early warnings in the Quality step: the first available video shows the plan warnings (HDR, 10-bit, image subtitles, etc.) before reaching the Summary, recalculated when options or videos change.
 
 ## [0.2.1] - 2026-10-25
