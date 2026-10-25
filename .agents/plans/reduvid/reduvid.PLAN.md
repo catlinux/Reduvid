@@ -205,7 +205,7 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 - [x] 3.2 **Motor: perfiles guardados.** *(AgentRelay, esfuerzo medio; revisado, 302/306 tests en verde)*
   - `core/profile_store.py`: `list_profiles()`, `load_profile(name)`, `save_profile(name, options)`, `delete_profile(name)`, mismo escritor TOML atómico que `core/config.py` (puede reusar su función interna si ya está extraída, o duplicarla mínimamente si no merece la pena abstraer).
   - Tests: ida y vuelta de un `PlanOptions` completo (incluye `audio_languages`/`subtitle_languages` como `frozenset`), nombres con espacios/tildes, perfil inexistente.
-- [ ] 3.3 **Interfaz: muestra y comparación en el paso Calidad.** *AgentRelay, esfuerzo xhigh; maquetas en references si hay algo relevante, si no, seguir el estilo ya establecido de `OptionCard`/`#card`.*
+- [x] 3.3 **Interfaz: muestra y comparación en el paso Calidad.** *(AgentRelay, esfuerzo xhigh; revisado con auditoría de diseño aparte sobre hilos/temporales/invalidación, sin bloqueantes; 308/312 tests en verde)*
   - Botón «Probar con una muestra de 30 s» en el paso 3 (Calidad), que lanza `QueueWorker`-like en segundo plano (reusar el patrón de hilos de `gui/workers.py`, nunca tocar widgets desde otro hilo).
   - Panel de resultado: dos imágenes (antes/después) con `QLabel`+`QPixmap`, tamaño estimado y porcentaje de ahorro, con los tokens de tema (tarjeta `#card`, colores habituales).
   - Si cambia la calidad elegida, la muestra anterior se invalida y hay que volver a pedirla (no se recalcula sola).
