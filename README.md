@@ -66,7 +66,9 @@ Maquetas de diseño originales en [docs/design/mockups.html](docs/design/mockups
    python -m pip install -e .
    ```
 
-Habrá paquetes con `pipx`, un instalador para Windows y una AppImage para Linux a partir de la versión 0.4.0.
+Para generar un instalador de Windows en lugar de ejecutar desde el código fuente, consulta la [guía del instalador](docs/es/instalacion.md).
+
+El instalador para Windows ya puede generarse desde el código fuente (ver arriba); el paquete `pipx` y la AppImage para Linux llegan antes de la versión 1.0.0.
 
 ## Uso rápido
 
