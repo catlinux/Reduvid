@@ -31,6 +31,12 @@ from reduvid.core.report import QueueReport
 from reduvid.gui.preferences import PreferencesDialog
 from reduvid.gui.queue_panel import QueuePanel
 from reduvid.gui.theme.manager import ThemeManager
+from reduvid.gui.widgets.step_list import StepList
+from reduvid.gui.widgets.wizard_nav import WizardNav
+from reduvid.gui.wizard.step_quality import StepQuality
+from reduvid.gui.wizard.step_target import StepTarget
+from reduvid.gui.wizard.step_videos import StepVideos
+from reduvid.gui.wizard_state import WizardState
 from reduvid.gui.workers import QueueWorker, start_worker_thread
 from reduvid.i18n import _
 
@@ -78,8 +84,15 @@ class MainWindow(QMainWindow):
         self.preferences_button.setAccessibleName(_("Preferences"))
         self.preferences_button.clicked.connect(self.open_preferences)
 
-        self.step_list = self._build_step_list()
+        self.step_list = StepList(_step_titles(), self)
+        self.step_list.setMinimumWidth(STEP_LIST_WIDTH)
+        self.step_list.selected.connect(self.set_current_step)
+        self.wizard_state = WizardState(config, self)
         self.content = self._build_content()
+        self.wizard_nav = WizardNav(self)
+        self.wizard_nav.back_clicked.connect(self._go_back)
+        self.wizard_nav.next_clicked.connect(self._go_next)
+        self._current_step = 0
         self.queue_panel = QueuePanel(self)
         self.queue_panel.setMinimumWidth(QUEUE_PANEL_WIDTH)
         self.queue_worker: QueueWorker | None = None
@@ -88,7 +101,7 @@ class MainWindow(QMainWindow):
         self.splitter.setObjectName("bodySplitter")
         self.splitter.setAccessibleName(_("Main panels"))
         self.splitter.addWidget(self.step_list)
-        self.splitter.addWidget(self.content)
+        self.splitter.addWidget(self._build_content_panel())
         self.splitter.addWidget(self.queue_panel)
         self.splitter.setSizes([STEP_LIST_WIDTH, 640, QUEUE_PANEL_WIDTH])
 
@@ -101,6 +114,39 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central)
         self.resize(1100, 720)
         self.set_ui_mode(config.ui_mode)
+        self.wizard_state.changed.connect(self._update_navigation)
+        self.set_current_step(0)
+
+    @property
+    def current_step(self) -> int:
+        return self._current_step
+
+    def set_current_step(self, index: int) -> None:
+        if not 0 <= index < self.content.count():
+            raise IndexError(index)
+        self._current_step = index
+        self.step_list.set_current(index)
+        self.content.setCurrentIndex(index)
+        self._update_navigation()
+
+    def _go_back(self) -> None:
+        if self._current_step > 0:
+            self.set_current_step(self._current_step - 1)
+
+    def _go_next(self) -> None:
+        if self._current_step < self.content.count() - 1:
+            self.set_current_step(self._current_step + 1)
+
+    def _update_navigation(self) -> None:
+        titles = _step_titles()
+        index = self._current_step
+        self.wizard_nav.set_back_enabled(index > 0)
+        if index >= len(titles) - 1:
+            self.wizard_nav.set_next_text(None)
+            self.wizard_nav.set_next_enabled(False)
+            return
+        self.wizard_nav.set_next_text(titles[index + 1])
+        self.wizard_nav.set_next_enabled(index != 0 or self.wizard_state.ready)
 
     @property
     def ui_mode(self) -> str:
@@ -223,30 +269,24 @@ class MainWindow(QMainWindow):
     def _on_mode_clicked(self, button_id: int) -> None:
         self.set_ui_mode("advanced" if button_id == 1 else "wizard")
 
-    def _build_step_list(self) -> QWidget:
+    def _build_content_panel(self) -> QWidget:
         panel = QWidget(self)
-        panel.setObjectName("stepList")
-        panel.setAccessibleName(_("Wizard steps"))
-        panel.setMinimumWidth(STEP_LIST_WIDTH)
+        panel.setObjectName("contentPanel")
         layout = QVBoxLayout(panel)
-        layout.setContentsMargins(14, 20, 14, 20)
-        layout.setSpacing(6)
-
-        title = QLabel(_("Steps"), panel)
-        title.setProperty("role", "kicker")
-        layout.addWidget(title)
-        for number, step_title in enumerate(_step_titles(), start=1):
-            label = QLabel(f"{number}. {step_title}", panel)
-            label.setWordWrap(True)
-            layout.addWidget(label)
-        layout.addStretch(1)
+        layout.setContentsMargins(16, 20, 16, 12)
+        layout.setSpacing(12)
+        layout.addWidget(self.content, 1)
+        layout.addWidget(self.wizard_nav)
         return panel
 
     def _build_content(self) -> QStackedWidget:
         stack = QStackedWidget(self)
         stack.setObjectName("content")
         stack.setAccessibleName(_("Step content"))
-        for step_title in _step_titles():
+        stack.addWidget(StepVideos(self.wizard_state, self._ffmpeg_info.ffprobe_path, parent=stack))
+        stack.addWidget(StepTarget(self.wizard_state, stack))
+        stack.addWidget(StepQuality(self.wizard_state, stack))
+        for step_title in _step_titles()[3:]:
             page = QWidget(stack)
             layout = QVBoxLayout(page)
             heading = QLabel(step_title, page)

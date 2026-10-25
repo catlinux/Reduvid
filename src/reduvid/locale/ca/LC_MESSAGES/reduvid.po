@@ -38,21 +38,59 @@ msgstr ", escalar a {height}p"
 msgid ", {language}"
 msgstr ", {language}"
 
-#: gui/main_window.py:130
+#: gui/main_window.py:177
 msgid "A conversion is already running."
 msgstr "Ja hi ha una conversió en marxa."
 
-#: gui/main_window.py:168
+#: gui/main_window.py:221
 msgid "A conversion is still running."
 msgstr "Encara hi ha una conversió en marxa."
+
+#: gui/wizard/step_quality.py:61
+msgid ""
+"A video stores each frame of the picture. Reduvid decides how much detail to keep in each one, "
+"like when a phone saves a photo at a higher or lower quality. Internally this is called CRF: a "
+"lower number keeps more detail and takes more space."
+msgstr ""
+"Un vídeo desa cada fotograma de la imatge. El Reduvid decideix quant detall conserva de cadascun,"
+" com quan el mòbil desa una foto amb més o menys qualitat. Per dins això es diu CRF: un número "
+"més baix conserva més detall i ocupa més."
 
 #: gui/preferences.py:125 gui/preferences.py:126
 msgid "Accept"
 msgstr "Accepta"
 
-#: gui/main_window.py:74
+#: gui/wizard/step_videos.py:78 gui/wizard/step_videos.py:81
+msgid "Add folder…"
+msgstr "Afegeix una carpeta…"
+
+#: gui/wizard/step_videos.py:64
+msgid "Add the videos you want to shrink. You can also drop files or folders here."
+msgstr "Afegeix els vídeos que vols reduir. També pots arrossegar-hi fitxers o carpetes."
+
+#: gui/wizard/step_videos.py:73 gui/wizard/step_videos.py:76
+msgid "Add videos…"
+msgstr "Afegeix vídeos…"
+
+#: gui/wizard/step_videos.py:94
+msgid "Added videos"
+msgstr "Vídeos afegits"
+
+#: gui/main_window.py:81
 msgid "Advanced"
 msgstr "Avançat"
+
+#: gui/wizard/step_videos.py:143
+msgid "All files (*)"
+msgstr "Tots els fitxers (*)"
+
+#: gui/wizard/step_quality.py:20
+msgid "Almost identical"
+msgstr "Gairebé idèntica"
+
+#: gui/wizard/step_videos.py:192
+msgid "Analysing…"
+msgstr "S'està analitzant…"
 
 #: cli.py:216
 #, python-brace-format
@@ -71,6 +109,14 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}"
 msgstr "Àudio {position}: {codec}, {channels} canals{language}"
 
+#: gui/widgets/wizard_nav.py:27 gui/widgets/wizard_nav.py:29
+msgid "Back"
+msgstr "Enrere"
+
+#: gui/wizard/step_quality.py:25
+msgid "Balanced"
+msgstr "Equilibrada"
+
 #: gui/preferences.py:94
 msgid "Browse for ffmpeg"
 msgstr "Cerca el fitxer de FFmpeg"
@@ -87,7 +133,7 @@ msgstr "Cancel·la"
 msgid "Cancel conversion"
 msgstr "Cancel·la la conversió"
 
-#: gui/main_window.py:171
+#: gui/main_window.py:224
 msgid "Cancel conversion and quit"
 msgstr "Cancel·la la conversió i surt"
 
@@ -107,19 +153,35 @@ msgstr "Comprova"
 msgid "Check FFmpeg"
 msgstr "Comprova el FFmpeg"
 
+#: gui/wizard/step_videos.py:149
+msgid "Choose a folder"
+msgstr "Tria una carpeta"
+
 #: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
 msgid "Choose ffmpeg…"
 msgstr "Tria el ffmpeg…"
+
+#: gui/wizard/step_quality.py:90
+msgid "Choose how much you want to shrink. You can change this later."
+msgstr "Tria quant vols reduir. Ho pots canviar més endavant."
+
+#: gui/wizard/step_target.py:73
+msgid "Choose the device you will use the most. You can change this later."
+msgstr "Tria el dispositiu que faràs servir més. Ho pots canviar més endavant."
 
 #: gui/ffmpeg_missing.py:106 gui/preferences.py:153
 msgid "Choose the ffmpeg executable"
 msgstr "Tria l'executable de ffmpeg"
 
+#: gui/wizard/step_videos.py:144
+msgid "Choose videos"
+msgstr "Tria vídeos"
+
 #: gui/preferences.py:67 gui/preferences.py:113
 msgid "Colour mode"
 msgstr "Mode de color"
 
-#: gui/main_window.py:167
+#: gui/main_window.py:220
 msgid "Conversion in progress"
 msgstr "Conversió en marxa"
 
@@ -153,9 +215,13 @@ msgstr "Fosc"
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
-#: gui/main_window.py:47
+#: gui/main_window.py:54
 msgid "Destination"
 msgstr "Destinació"
+
+#: gui/wizard/step_target.py:22
+msgid "Direct play"
+msgstr "Reproducció directa"
 
 #: cli.py:354
 msgid "Dry run complete."
@@ -215,6 +281,10 @@ msgstr "Error: l'entrada d'anàlisi no és un fitxer: {path}"
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
+#: gui/widgets/what_is_this.py:33
+msgid "Explanation"
+msgstr "Explicació"
+
 #: gui/ffmpeg_missing.py:47
 msgid "FFmpeg is required"
 msgstr "Cal FFmpeg"
@@ -265,11 +335,19 @@ msgstr "Acabat: {name}"
 msgid "Format: {format}"
 msgstr "Format: {format}"
 
+#: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
+msgid "H.265"
+msgstr "H.265"
+
 #: gui/error_view.py:65
 msgid "Hide technical details"
 msgstr "Amaga els detalls tècnics"
 
-#: gui/main_window.py:169
+#: gui/wizard/step_target.py:42
+msgid "I don't know"
+msgstr "No ho sé"
+
+#: gui/main_window.py:222
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si surts ara, es cancel·larà la conversió."
 
@@ -285,12 +363,20 @@ msgstr ""
 "La pista de subtítols d'imatge {stream_index} s'haurà de convertir durant la reproducció, cosa "
 "que consumeix més CPU."
 
+#: gui/wizard/step_videos.py:83 gui/wizard/step_videos.py:85
+msgid "Include subfolders"
+msgstr "Inclou les subcarpetes"
+
 #: gui/ffmpeg_missing.py:98
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Ordre d'instal·lació per a {system}"
 
-#: gui/main_window.py:173
+#: gui/wizard/step_target.py:21
+msgid "Jellyfin"
+msgstr "Jellyfin"
+
+#: gui/main_window.py:226
 msgid "Keep converting"
 msgstr "Continua convertint"
 
@@ -318,13 +404,43 @@ msgstr "Idioma dels missatges"
 msgid "Light"
 msgstr "Clar"
 
-#: gui/main_window.py:88
+#: gui/main_window.py:102
 msgid "Main panels"
 msgstr "Panells principals"
+
+#: gui/wizard/step_quality.py:30
+msgid "Maximum savings"
+msgstr "Estalvi màxim"
+
+#: gui/wizard/step_target.py:28
+msgid "Modern devices"
+msgstr "Dispositius moderns"
+
+#: gui/wizard/step_quality.py:87
+msgid "More quality or more space?"
+msgstr "Més qualitat o més espai?"
+
+#: gui/wizard/step_target.py:30
+msgid "Newer phones, tablets and TVs that play H.265."
+msgstr "Mòbils, tauletes i televisors nous que reprodueixen H.265."
+
+#: gui/widgets/wizard_nav.py:32 gui/widgets/wizard_nav.py:34 gui/widgets/wizard_nav.py:49
+#: gui/widgets/wizard_nav.py:50
+msgid "Next"
+msgstr "Següent"
+
+#: gui/widgets/wizard_nav.py:52 gui/widgets/wizard_nav.py:53
+#, python-brace-format
+msgid "Next: {step}"
+msgstr "Següent: {step}"
 
 #: messages.py:39
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr "Cap pista d'àudio no coincideix amb els idiomes seleccionats, així que es conservaran totes."
+
+#: gui/wizard/step_videos.py:98
+msgid "No videos added yet."
+msgstr "Encara no has afegit cap vídeo."
 
 #: cli.py:308 cli.py:334
 #, python-brace-format
@@ -348,7 +464,7 @@ msgstr "En pausa. Pots seguir fent servir l'ordinador amb normalitat."
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Pla: {destination}, {quality}, {container}"
 
-#: gui/main_window.py:75 gui/main_window.py:77 gui/preferences.py:51
+#: gui/main_window.py:82 gui/main_window.py:84 gui/preferences.py:51
 msgid "Preferences"
 msgstr "Preferències"
 
@@ -357,7 +473,7 @@ msgstr "Preferències"
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progrés: {percent:.0f}% ({state})"
 
-#: gui/main_window.py:45
+#: gui/main_window.py:52
 msgid "Quality"
 msgstr "Qualitat"
 
@@ -370,16 +486,24 @@ msgstr "Cua"
 msgid "Queue · {count} videos"
 msgstr "Cua · {count} vídeos"
 
+#: gui/wizard/step_videos.py:180
+msgid "Ready"
+msgstr "A punt"
+
 #: gui/queue_panel.py:254
 #, python-brace-format, python-format
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr "A punt i verificat: un {percent}% més petit. Els originals no s'han tocat."
 
+#: gui/wizard/step_quality.py:118
+msgid "Recommended"
+msgstr "Recomanada"
+
 #: gui/preferences.py:85 gui/preferences.py:87
 msgid "Reduce animations"
 msgstr "Redueix les animacions"
 
-#: gui/main_window.py:64 gui/main_window.py:204 gui/main_window.py:207
+#: gui/main_window.py:71 gui/main_window.py:257 gui/main_window.py:260
 msgid "Reduvid"
 msgstr "Reduvid"
 
@@ -391,9 +515,17 @@ msgstr ""
 "El Reduvid fa servir FFmpeg per convertir vídeos. Instal·la'l o tria l'executable de ffmpeg si ja"
 " el tens."
 
+#: gui/wizard/step_videos.py:104 gui/wizard/step_videos.py:107
+msgid "Remove selected"
+msgstr "Treu els seleccionats"
+
 #: gui/queue_panel.py:171
 msgid "Resume"
 msgstr "Reprèn"
+
+#: gui/wizard/step_target.py:35
+msgid "Save for archive"
+msgstr "Guardar per a l'arxiu"
 
 #: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
 msgid "Search again"
@@ -416,13 +548,9 @@ msgstr "Mida: {size:.2f} MB"
 msgid "Something went wrong while processing the file."
 msgstr "Hi ha hagut un problema en processar el fitxer."
 
-#: gui/main_window.py:241
+#: gui/main_window.py:285
 msgid "Step content"
 msgstr "Contingut del pas"
-
-#: gui/main_window.py:228
-msgid "Steps"
-msgstr "Passos"
 
 #: cli.py:226
 #, python-brace-format
@@ -434,7 +562,7 @@ msgstr "Pista de subtítols {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítol {position}: {codec}{language}, imatge: {image}"
 
-#: gui/main_window.py:48
+#: gui/main_window.py:55
 msgid "Summary"
 msgstr "Resum"
 
@@ -445,6 +573,10 @@ msgstr "Sistema"
 #: gui/preferences.py:36
 msgid "System language"
 msgstr "Idioma del sistema"
+
+#: gui/wizard/step_target.py:23
+msgid "TV, phone or browser through your Jellyfin server."
+msgstr "Televisió, mòbil o navegador a través del teu servidor Jellyfin."
 
 #: gui/error_view.py:40
 msgid "Technical details"
@@ -482,7 +614,7 @@ msgstr "No hi ha prou espai lliure al disc de destinació."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
 
-#: gui/main_window.py:248
+#: gui/main_window.py:295
 msgid "This step is not available yet."
 msgstr "Aquest pas encara no està disponible."
 
@@ -505,6 +637,14 @@ msgstr "Total: {original} → {final}"
 #, python-brace-format
 msgid "Unknown warning: {code}"
 msgstr "Avís desconegut: {code}"
+
+#: gui/wizard/step_target.py:44
+msgid "Use the Jellyfin profile, which works on almost everything."
+msgstr "Fes servir el perfil Jellyfin, que funciona a gairebé tot."
+
+#: gui/wizard/step_videos.py:143
+msgid "Video files"
+msgstr "Fitxers de vídeo"
 
 #: cli.py:202
 #, python-brace-format
@@ -542,9 +682,13 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
-#: gui/main_window.py:43
+#: gui/main_window.py:50 gui/wizard/step_videos.py:60
 msgid "Videos"
 msgstr "Vídeos"
+
+#: gui/wizard/step_target.py:37
+msgid "Videos you keep for later; saving space matters more than speed."
+msgstr "Vídeos que guardes per més endavant; estalviar espai importa més que la velocitat."
 
 #: cli.py:50
 #, python-brace-format
@@ -556,23 +700,53 @@ msgstr "Avís: no s'ha pogut llegir el fitxer de configuració: {error}"
 msgid "Warning: {text}"
 msgstr "Avís: {text}"
 
-#: gui/main_window.py:46
+#: gui/widgets/what_is_this.py:26 gui/widgets/what_is_this.py:27
+msgid "What is this?"
+msgstr "Què és això?"
+
+#: gui/main_window.py:53
 msgid "What to keep"
 msgstr "Què conservar"
 
-#: gui/main_window.py:44
+#: gui/main_window.py:51
 msgid "Where to watch"
 msgstr "On veure'ls"
+
+#: gui/wizard/step_target.py:69
+msgid "Where will you watch them?"
+msgstr "On els veuràs?"
+
+#: gui/wizard/step_quality.py:50
+msgid "Why Balanced? Modern devices play H.265: you save more space while keeping very good quality."
+msgstr ""
+"Per què Equilibrada? Els dispositius moderns reprodueixen H.265: estalvies més espai mantenint "
+"molt bona qualitat."
+
+#: gui/wizard/step_quality.py:54
+msgid ""
+"Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
+"without the server converting anything."
+msgstr ""
+"Per què Equilibrada? Els veuràs al Jellyfin: estalvia molt d'espai i es reprodueix directament, "
+"sense que el servidor hagi de convertir res."
+
+#: gui/wizard/step_quality.py:45
+msgid ""
+"Why Maximum savings? When archiving, the priority is saving space and a slower encode does not "
+"matter."
+msgstr ""
+"Per què Estalvi màxim? Si arxives, la prioritat és estalviar espai i una codificació més lenta no"
+" importa."
 
 #: gui/ffmpeg_missing.py:63
 msgid "Windows"
 msgstr "Windows"
 
-#: gui/main_window.py:73
+#: gui/main_window.py:80
 msgid "Wizard"
 msgstr "Assistent"
 
-#: gui/main_window.py:222
+#: gui/widgets/step_list.py:24
 msgid "Wizard steps"
 msgstr "Passos de l'assistent"
 
@@ -580,6 +754,18 @@ msgstr "Passos de l'assistent"
 #, python-brace-format
 msgid "Would convert: {path}"
 msgstr "Es convertiria: {path}"
+
+#: gui/wizard/step_quality.py:26
+msgid "You can only see the difference if you look closely. The best trade-off."
+msgstr "Només veuràs la diferència si mires de prop. La millor relació."
+
+#: gui/wizard/step_quality.py:32
+msgid "You will notice it in dark scenes or with lots of movement. For phones or archiving."
+msgstr "Es notarà en escenes fosques o amb molt de moviment. Per al mòbil o per arxivar."
+
+#: gui/wizard/step_quality.py:21
+msgid "You won't notice the difference, even on a big TV."
+msgstr "No notaràs la diferència ni en una televisió gran."
 
 #: cli.py:126
 msgid "convert"
@@ -647,15 +833,28 @@ msgstr ""
 msgid "{minutes} min left"
 msgstr "queden {minutes} min"
 
+#: gui/wizard/step_videos.py:179
+#, python-brace-format
+msgid "{name} · {duration} · {state}"
+msgstr "{name} · {duration} · {state}"
+
 #: gui/queue_panel.py:284
 #, python-brace-format
 msgid "{name} · {size}"
 msgstr "{name} · {size}"
 
+#: gui/wizard/step_videos.py:185 gui/wizard/step_videos.py:192
+#, python-brace-format
+msgid "{name} · {state}"
+msgstr "{name} · {state}"
+
 #: gui/queue_panel.py:186 gui/queue_panel.py:197 gui/queue_panel.py:220
 #, python-brace-format
 msgid "{percent}%"
 msgstr "{percent}%"
+
+#~ msgid "Steps"
+#~ msgstr "Passos"
 
 #~ msgid "The conversion queue will appear here."
 #~ msgstr "La cua de conversió apareixerà aquí."

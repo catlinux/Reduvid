@@ -110,6 +110,43 @@ QFrame#card[checked="true"] {
     border-color: ${accent};
 }
 
+QAbstractButton#card {
+    background-color: ${surface};
+    border: ${border_width}px solid ${line};
+    border-radius: ${radius}px;
+    text-align: left;
+}
+QAbstractButton#card:hover {
+    border-color: ${muted};
+}
+QAbstractButton#card[checked="true"], QAbstractButton#card:checked {
+    background-color: ${soft};
+    border-color: ${accent};
+}
+QAbstractButton#card:focus {
+    border-color: ${accent};
+    border-width: 2px;
+}
+
+#stepList QPushButton {
+    background-color: transparent;
+    border: 0;
+    color: ${muted};
+    padding: 6px 8px;
+    text-align: left;
+}
+#stepList QPushButton[state="done"] {
+    color: ${text};
+}
+#stepList QPushButton[state="current"] {
+    background-color: ${soft};
+    color: ${text};
+    font-weight: 700;
+}
+#stepList QPushButton:focus {
+    border: 1px solid ${accent};
+}
+
 QLineEdit, QComboBox {
     background-color: ${surface};
     color: ${text};

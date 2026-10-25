@@ -145,7 +145,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - `gui/error_view.py`: muestra el error traducido con `error_text(error_code)` y un desplegable «Ver detalles técnicos» con `reason`, que se puede copiar.
   - Al cerrar con una conversión en marcha, se pregunta y se cancela limpiamente.
   - Tests offscreen con un `FileProcessor` falso: progreso, pausa, cancelación y error.
-- [ ] 2.8 **Asistente, pasos 1-3 y componentes.** *AgentRelay, esfuerzo alto; maquetas en references.*
+- [x] 2.8 **Asistente, pasos 1-3 y componentes.** *AgentRelay, esfuerzo alto; maquetas en references.*
   - Componentes en `gui/widgets/`:
     - `OptionCard`: tarjeta seleccionable con nombre, etiqueta y descripción; accesible como botón de opción.
     - `WhatIsThis`: desplegable «¿Qué es esto?».
