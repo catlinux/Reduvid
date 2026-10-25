@@ -19,6 +19,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Temas de la interfaz: tokens exactos de Plegat, Riso y Cinta en claro y oscuro (`gui/theme/tokens.py`), hoja de estilos generada desde ellos (`qss.py`), registro de las fuentes incluidas (`fonts.py`) y `ThemeManager` para aplicar tema y modo, incluido el del sistema.
 - Trabajo en segundo plano y panel de cola: sondeo y conversión en hilos propios con señales Qt, progreso con tiempo restante, pausa y reanudación, cancelación sin archivos a medias, fichas de aviso por vídeo, total estimado, vista de error con detalles técnicos y confirmación al cerrar con una conversión en marcha.
 - Asistente, pasos 1-3: estado compartido del asistente, tarjetas de opción accesibles, lista de pasos hechos/actual/pendiente, navegación Atrás/Siguiente, alta de vídeos con arrastrar y soltar y sondeo en segundo plano, selección de destino (con «No lo sé») y de calidad con recomendación según el destino y explicación del CRF.
+- Asistente, pasos 4-6: selección de idiomas de audio y subtítulos con nombres legibles, carpeta de salida, contenedor, reemplazo del original y reducción de 4K, resumen por vídeo con semáforo de compatibilidad, diálogo para los vídeos HDR bloqueantes, arranque de la conversión e informe final con errores y vídeos saltados.
 
 ### Cambiado
 

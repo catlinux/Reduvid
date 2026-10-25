@@ -155,7 +155,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
   - Paso 2, ¿Dónde los vas a ver?: Jellyfin (tele, móvil, navegador), Aparatos modernos (`modern`), Guardar para archivo (`archive`) y «No lo sé», que usa `jellyfin`. Cada opción lleva su explicación.
   - Paso 3, Calidad: las tres tarjetas con los textos de la maqueta, la recomendación según el destino y «¿Qué es esto?» con la explicación del CRF.
   - Tests offscreen: navegación, y el botón Siguiente desactivado sin vídeos.
-- [ ] 2.9 **Asistente, pasos 4-6 y arranque.** *AgentRelay, esfuerzo alto.*
+- [x] 2.9 **Asistente, pasos 4-6 y arranque.** *AgentRelay, esfuerzo alto.*
   - Paso 4, Qué conservar: casillas de idiomas de audio y de subtítulos encontrados en la cola, con su nombre legible; `und` se muestra como «Sin idioma indicado». Por defecto, todo marcado.
   - Paso 5, Destino:
     - Misma carpeta u otra, y MKV/MP4 con explicación.
@@ -203,4 +203,4 @@ Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotogr
 
 ## Dudas abiertas
 
-- (ninguna)
+- **Reducción 4K desmarcada (2.9):** con `max_height=2160` el motor sigue emitiendo el aviso `resolution_reduced_4k_to_1080p` y `scale=-2:2160` (no-op), aunque el vídeo no se reduzca a 1080p. Decidir si el motor debe distinguir el caso (aviso y filtro) o se deja así.

@@ -33,7 +33,10 @@ from reduvid.gui.queue_panel import QueuePanel
 from reduvid.gui.theme.manager import ThemeManager
 from reduvid.gui.widgets.step_list import StepList
 from reduvid.gui.widgets.wizard_nav import WizardNav
+from reduvid.gui.wizard.step_destination import StepDestination
+from reduvid.gui.wizard.step_keep import StepKeep
 from reduvid.gui.wizard.step_quality import StepQuality
+from reduvid.gui.wizard.step_summary import StepSummary
 from reduvid.gui.wizard.step_target import StepTarget
 from reduvid.gui.wizard.step_videos import StepVideos
 from reduvid.gui.wizard_state import WizardState
@@ -89,6 +92,7 @@ class MainWindow(QMainWindow):
         self.step_list.selected.connect(self.set_current_step)
         self.wizard_state = WizardState(config, self)
         self.content = self._build_content()
+        self.step_summary.start_requested.connect(self._start_from_summary)
         self.wizard_nav = WizardNav(self)
         self.wizard_nav.back_clicked.connect(self._go_back)
         self.wizard_nav.next_clicked.connect(self._go_next)
@@ -127,6 +131,9 @@ class MainWindow(QMainWindow):
         self._current_step = index
         self.step_list.set_current(index)
         self.content.setCurrentIndex(index)
+        refresh = getattr(self.content.widget(index), "refresh", None)
+        if callable(refresh):
+            refresh()
         self._update_navigation()
 
     def _go_back(self) -> None:
@@ -189,6 +196,24 @@ class MainWindow(QMainWindow):
         self.queue_worker = worker
         self.queue_thread = start_worker_thread(worker)
         return worker
+
+    def _start_from_summary(self) -> None:
+        paths = self.step_summary.remaining_paths()
+        if not paths or self.has_running_queue():
+            return
+        worker = self.start_queue(
+            paths,
+            self.wizard_state.options(),
+            output_dir=self.wizard_state.output_dir,
+            threads=None,
+            replace_original=self.wizard_state.replace_original,
+        )
+        worker.finished.connect(self._on_queue_report)
+        self.step_summary.set_running(True)
+
+    def _on_queue_report(self, report: QueueReport) -> None:
+        self.step_summary.set_running(False)
+        self.step_summary.show_report(report)
 
     def _on_queue_finished(self, _report: QueueReport) -> None:
         # The worker and thread schedule their own deletion after finishing.
@@ -286,17 +311,10 @@ class MainWindow(QMainWindow):
         stack.addWidget(StepVideos(self.wizard_state, self._ffmpeg_info.ffprobe_path, parent=stack))
         stack.addWidget(StepTarget(self.wizard_state, stack))
         stack.addWidget(StepQuality(self.wizard_state, stack))
-        for step_title in _step_titles()[3:]:
-            page = QWidget(stack)
-            layout = QVBoxLayout(page)
-            heading = QLabel(step_title, page)
-            heading.setProperty("role", "heading")
-            heading.setWordWrap(True)
-            placeholder = QLabel(_("This step is not available yet."), page)
-            placeholder.setProperty("role", "muted")
-            placeholder.setWordWrap(True)
-            layout.addWidget(heading)
-            layout.addWidget(placeholder)
-            layout.addStretch(1)
-            stack.addWidget(page)
+        self.step_keep = StepKeep(self.wizard_state, stack)
+        stack.addWidget(self.step_keep)
+        self.step_destination = StepDestination(self.wizard_state, stack)
+        stack.addWidget(self.step_destination)
+        self.step_summary = StepSummary(self.wizard_state, self._ffmpeg_info, stack)
+        stack.addWidget(self.step_summary)
         return stack

@@ -37,11 +37,11 @@ msgstr ""
 msgid ", {language}"
 msgstr ""
 
-#: gui/main_window.py:177
+#: gui/main_window.py:184
 msgid "A conversion is already running."
 msgstr ""
 
-#: gui/main_window.py:221
+#: gui/main_window.py:246
 msgid "A conversion is still running."
 msgstr ""
 
@@ -64,6 +64,14 @@ msgstr ""
 msgid "Add the videos you want to shrink. You can also drop files or folders here."
 msgstr ""
 
+#: gui/wizard/step_keep.py:102
+msgid "Add videos to see their audio languages."
+msgstr ""
+
+#: gui/wizard/step_keep.py:122
+msgid "Add videos to see their subtitle languages."
+msgstr ""
+
 #: gui/wizard/step_videos.py:73 gui/wizard/step_videos.py:76
 msgid "Add videos…"
 msgstr ""
@@ -72,7 +80,7 @@ msgstr ""
 msgid "Added videos"
 msgstr ""
 
-#: gui/main_window.py:81
+#: gui/main_window.py:84
 msgid "Advanced"
 msgstr ""
 
@@ -84,8 +92,22 @@ msgstr ""
 msgid "Almost identical"
 msgstr ""
 
-#: gui/wizard/step_videos.py:192
+#: gui/wizard/step_videos.py:194
 msgid "Analysing…"
+msgstr ""
+
+#: gui/wizard/step_destination.py:61 gui/wizard/step_destination.py:62
+msgid "Another folder"
+msgstr ""
+
+#: gui/wizard/step_keep.py:70
+msgid ""
+"Audio and subtitle tracks carry a language tag. Keep the ones you understand; a track without a "
+"tag is shown as no language indicated."
+msgstr ""
+
+#: gui/wizard/step_keep.py:50
+msgid "Audio languages"
 msgstr ""
 
 #: cli.py:216
@@ -115,7 +137,11 @@ msgstr ""
 msgid "Browse for ffmpeg"
 msgstr ""
 
-#: gui/preferences.py:92
+#: gui/wizard/step_destination.py:75
+msgid "Browse for the output folder"
+msgstr ""
+
+#: gui/preferences.py:92 gui/wizard/step_destination.py:73
 msgid "Browse…"
 msgstr ""
 
@@ -127,7 +153,7 @@ msgstr ""
 msgid "Cancel conversion"
 msgstr ""
 
-#: gui/main_window.py:224
+#: gui/main_window.py:249
 msgid "Cancel conversion and quit"
 msgstr ""
 
@@ -139,12 +165,20 @@ msgstr ""
 msgid "Cancelling…"
 msgstr ""
 
+#: gui/wizard_logic.py:45
+msgid "Catalan"
+msgstr ""
+
 #: gui/preferences.py:96
 msgid "Check"
 msgstr ""
 
 #: gui/preferences.py:98
 msgid "Check FFmpeg"
+msgstr ""
+
+#: gui/wizard_logic.py:63
+msgid "Chinese"
 msgstr ""
 
 #: gui/wizard/step_videos.py:149
@@ -159,6 +193,10 @@ msgstr ""
 msgid "Choose how much you want to shrink. You can change this later."
 msgstr ""
 
+#: gui/wizard/step_keep.py:44
+msgid "Choose the audio and subtitle languages you understand."
+msgstr ""
+
 #: gui/wizard/step_target.py:73
 msgid "Choose the device you will use the most. You can change this later."
 msgstr ""
@@ -167,15 +205,27 @@ msgstr ""
 msgid "Choose the ffmpeg executable"
 msgstr ""
 
+#: gui/wizard/step_destination.py:177
+msgid "Choose the output folder"
+msgstr ""
+
 #: gui/wizard/step_videos.py:144
 msgid "Choose videos"
+msgstr ""
+
+#: gui/wizard/step_destination.py:51
+msgid "Choose where the converted files go and how they are stored."
 msgstr ""
 
 #: gui/preferences.py:67 gui/preferences.py:113
 msgid "Colour mode"
 msgstr ""
 
-#: gui/main_window.py:220
+#: gui/wizard/step_destination.py:82
+msgid "Container"
+msgstr ""
+
+#: gui/main_window.py:245
 msgid "Conversion in progress"
 msgstr ""
 
@@ -187,6 +237,14 @@ msgstr ""
 msgid "Conversion queue"
 msgstr ""
 
+#: gui/wizard/step_summary.py:59
+msgid "Convert anyway (colours will look washed out)"
+msgstr ""
+
+#: gui/wizard/step_summary.py:56
+msgid "Convert it anyway? Colours will look washed out."
+msgstr ""
+
 #: cli.py:378
 msgid "Convert media files"
 msgstr ""
@@ -194,6 +252,10 @@ msgstr ""
 #: cli.py:251
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
+msgstr ""
+
+#: gui/wizard/step_summary.py:156
+msgid "Converting…"
 msgstr ""
 
 #: gui/preferences.py:162
@@ -209,11 +271,11 @@ msgstr ""
 msgid "Debian / Ubuntu"
 msgstr ""
 
-#: gui/main_window.py:54
+#: gui/main_window.py:57 gui/wizard/step_destination.py:48
 msgid "Destination"
 msgstr ""
 
-#: gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:36 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr ""
 
@@ -229,6 +291,10 @@ msgstr ""
 #: cli.py:135
 #, python-brace-format
 msgid "Duration: {duration}"
+msgstr ""
+
+#: gui/wizard_logic.py:49
+msgid "English"
 msgstr ""
 
 #: cli.py:106
@@ -329,8 +395,20 @@ msgstr ""
 msgid "Format: {format}"
 msgstr ""
 
+#: gui/wizard_logic.py:51
+msgid "French"
+msgstr ""
+
+#: gui/wizard_logic.py:53
+msgid "German"
+msgstr ""
+
 #: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
 msgid "H.265"
+msgstr ""
+
+#: gui/wizard/step_summary.py:51
+msgid "HDR video"
 msgstr ""
 
 #: gui/error_view.py:65
@@ -341,7 +419,11 @@ msgstr ""
 msgid "I don't know"
 msgstr ""
 
-#: gui/main_window.py:222
+#: gui/wizard/step_destination.py:125
+msgid "If you keep 4K, Jellyfin will have to transcode it."
+msgstr ""
+
+#: gui/main_window.py:247
 msgid "If you quit now, the conversion will be cancelled."
 msgstr ""
 
@@ -364,11 +446,23 @@ msgstr ""
 msgid "Install command for {system}"
 msgstr ""
 
+#: gui/wizard_logic.py:55
+msgid "Italian"
+msgstr ""
+
+#: gui/wizard_logic.py:59
+msgid "Japanese"
+msgstr ""
+
 #: gui/wizard/step_target.py:21
 msgid "Jellyfin"
 msgstr ""
 
-#: gui/main_window.py:226
+#: gui/wizard/step_summary.py:38
+msgid "Jellyfin will transcode"
+msgstr ""
+
+#: gui/main_window.py:251
 msgid "Keep converting"
 msgstr ""
 
@@ -378,6 +472,14 @@ msgstr ""
 
 #: cli.py:397
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
+msgstr ""
+
+#: gui/wizard/step_destination.py:90
+msgid "Keeps every track and subtitle format."
+msgstr ""
+
+#: gui/wizard_logic.py:61
+msgid "Korean"
 msgstr ""
 
 #: gui/preferences.py:77 gui/preferences.py:114
@@ -396,7 +498,15 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: gui/main_window.py:102
+#: gui/wizard/step_destination.py:88
+msgid "MKV"
+msgstr ""
+
+#: gui/wizard/step_destination.py:94
+msgid "MP4"
+msgstr ""
+
+#: gui/main_window.py:106
 msgid "Main panels"
 msgstr ""
 
@@ -408,8 +518,16 @@ msgstr ""
 msgid "Modern devices"
 msgstr ""
 
+#: gui/wizard/step_destination.py:95
+msgid "More compatible"
+msgstr ""
+
 #: gui/wizard/step_quality.py:87
 msgid "More quality or more space?"
+msgstr ""
+
+#: gui/wizard/step_summary.py:39
+msgid "Needs attention"
 msgstr ""
 
 #: gui/wizard/step_target.py:30
@@ -430,8 +548,16 @@ msgstr ""
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr ""
 
+#: gui/wizard_logic.py:42
+msgid "No language indicated"
+msgstr ""
+
 #: gui/wizard/step_videos.py:98
 msgid "No videos added yet."
+msgstr ""
+
+#: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
+msgid "Output folder"
 msgstr ""
 
 #: cli.py:308 cli.py:334
@@ -456,7 +582,15 @@ msgstr ""
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr ""
 
-#: gui/main_window.py:82 gui/main_window.py:84 gui/preferences.py:51
+#: gui/wizard/step_destination.py:96
+msgid "Plays on more devices, but image subtitles are dropped."
+msgstr ""
+
+#: gui/wizard_logic.py:57
+msgid "Portuguese"
+msgstr ""
+
+#: gui/main_window.py:85 gui/main_window.py:87 gui/preferences.py:51
 msgid "Preferences"
 msgstr ""
 
@@ -465,7 +599,7 @@ msgstr ""
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr ""
 
-#: gui/main_window.py:52
+#: gui/main_window.py:55
 msgid "Quality"
 msgstr ""
 
@@ -478,7 +612,7 @@ msgstr ""
 msgid "Queue · {count} videos"
 msgstr ""
 
-#: gui/wizard/step_videos.py:180
+#: gui/wizard/step_videos.py:182
 msgid "Ready"
 msgstr ""
 
@@ -487,15 +621,19 @@ msgstr ""
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr ""
 
-#: gui/wizard/step_quality.py:118
+#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:118
 msgid "Recommended"
+msgstr ""
+
+#: gui/wizard/step_destination.py:120 gui/wizard/step_destination.py:122
+msgid "Reduce 4K video to 1080p"
 msgstr ""
 
 #: gui/preferences.py:85 gui/preferences.py:87
 msgid "Reduce animations"
 msgstr ""
 
-#: gui/main_window.py:71 gui/main_window.py:257 gui/main_window.py:260
+#: gui/main_window.py:74 gui/main_window.py:282 gui/main_window.py:285
 msgid "Reduvid"
 msgstr ""
 
@@ -509,8 +647,24 @@ msgstr ""
 msgid "Remove selected"
 msgstr ""
 
+#: gui/wizard/step_destination.py:108 gui/wizard/step_destination.py:110
+msgid "Replace the original"
+msgstr ""
+
 #: gui/queue_panel.py:171
 msgid "Resume"
+msgstr ""
+
+#: gui/wizard/step_summary.py:98
+msgid "Review what Reduvid will do with each video before starting."
+msgstr ""
+
+#: gui/wizard_logic.py:65
+msgid "Russian"
+msgstr ""
+
+#: gui/wizard/step_destination.py:59 gui/wizard/step_destination.py:60
+msgid "Same folder as each video"
 msgstr ""
 
 #: gui/wizard/step_target.py:35
@@ -534,12 +688,36 @@ msgstr ""
 msgid "Size: {size:.2f} MB"
 msgstr ""
 
+#: gui/wizard/step_summary.py:57
+msgid "Skip this video"
+msgstr ""
+
+#: gui/wizard/step_summary.py:237
+msgid "Skipped"
+msgstr ""
+
 #: messages.py:77
 msgid "Something went wrong while processing the file."
 msgstr ""
 
-#: gui/main_window.py:285
+#: gui/wizard_logic.py:47
+msgid "Spanish"
+msgstr ""
+
+#: gui/wizard/step_summary.py:111 gui/wizard/step_summary.py:156
+msgid "Start"
+msgstr ""
+
+#: gui/wizard/step_summary.py:113
+msgid "Start conversion"
+msgstr ""
+
+#: gui/main_window.py:310
 msgid "Step content"
+msgstr ""
+
+#: gui/wizard/step_keep.py:63
+msgid "Subtitle languages"
 msgstr ""
 
 #: cli.py:226
@@ -552,7 +730,7 @@ msgstr ""
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
 
-#: gui/main_window.py:55
+#: gui/main_window.py:58 gui/wizard/step_summary.py:95
 msgid "Summary"
 msgstr ""
 
@@ -592,6 +770,10 @@ msgstr ""
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr ""
 
+#: gui/wizard/step_destination.py:114
+msgid "The original is sent to the trash only if the copy is verified."
+msgstr ""
+
 #: gui/preferences.py:61 gui/preferences.py:112
 msgid "Theme"
 msgstr ""
@@ -604,8 +786,15 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/main_window.py:295
-msgid "This step is not available yet."
+#: gui/wizard/step_summary.py:55
+msgid "This video needs your attention."
+msgstr ""
+
+#: gui/wizard/step_summary.py:163
+#, python-brace-format
+msgid ""
+"Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "
+"{skipped} skipped."
 msgstr ""
 
 #: cli.py:282
@@ -668,7 +857,7 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
 
-#: gui/main_window.py:50 gui/wizard/step_videos.py:60
+#: gui/main_window.py:53 gui/wizard/step_videos.py:60
 msgid "Videos"
 msgstr ""
 
@@ -690,11 +879,11 @@ msgstr ""
 msgid "What is this?"
 msgstr ""
 
-#: gui/main_window.py:53
+#: gui/main_window.py:56 gui/wizard/step_keep.py:41
 msgid "What to keep"
 msgstr ""
 
-#: gui/main_window.py:51
+#: gui/main_window.py:54
 msgid "Where to watch"
 msgstr ""
 
@@ -722,7 +911,11 @@ msgstr ""
 msgid "Windows"
 msgstr ""
 
-#: gui/main_window.py:80
+#: gui/wizard/step_keep.py:53
+msgid "With no audio language selected, every video keeps all its audio tracks."
+msgstr ""
+
+#: gui/main_window.py:83
 msgid "Wizard"
 msgstr ""
 
@@ -811,7 +1004,7 @@ msgstr ""
 msgid "{minutes} min left"
 msgstr ""
 
-#: gui/wizard/step_videos.py:179
+#: gui/wizard/step_videos.py:181
 #, python-brace-format
 msgid "{name} · {duration} · {state}"
 msgstr ""
@@ -821,7 +1014,7 @@ msgstr ""
 msgid "{name} · {size}"
 msgstr ""
 
-#: gui/wizard/step_videos.py:185 gui/wizard/step_videos.py:192
+#: gui/wizard/step_videos.py:187 gui/wizard/step_videos.py:194
 #, python-brace-format
 msgid "{name} · {state}"
 msgstr ""

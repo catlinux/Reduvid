@@ -19,6 +19,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Interface themes: exact Plegat, Riso and Cinta tokens for light and dark (`gui/theme/tokens.py`), the stylesheet generated from them (`qss.py`), registration of the bundled fonts (`fonts.py`) and a `ThemeManager` that applies theme and mode, including the system one.
 - Background work and queue panel: probing and conversion in their own threads with Qt signals, progress with remaining time, pause and resume, cancellation without half-written files, per-video warning chips, estimated total, an error view with technical details and a confirmation when closing with a conversion in progress.
 - Assistant steps 1-3: shared wizard state, accessible option cards, done/current/pending step list, Back/Next navigation, adding videos with drag and drop and background probing, destination selection (including "I don't know") and quality selection with a recommendation for the destination and a plain-language CRF explanation.
+- Assistant steps 4-6: audio and subtitle language selection with readable names, output folder, container, replacing the original and 4K reduction, per-video summary with a compatibility traffic light, a dialog for blocking HDR videos, starting the conversion and a final report with errors and skipped videos.
 
 ### Changed
 

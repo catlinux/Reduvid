@@ -147,6 +147,27 @@ QAbstractButton#card:focus {
     border: 1px solid ${accent};
 }
 
+#compatLight {
+    border: ${border_width}px solid ${line};
+    border-radius: ${radius}px;
+    padding: 2px 8px;
+}
+#compatLight[level="direct"] {
+    background-color: ${soft};
+    color: ${text};
+    border-color: ${accent};
+}
+#compatLight[level="partial"] {
+    background-color: ${warn_bg};
+    color: ${warn_fg};
+    border-color: ${accent2};
+}
+#compatLight[level="blocked"] {
+    background-color: ${warn_bg};
+    color: ${warn_fg};
+    border-color: ${warn_fg};
+}
+
 QLineEdit, QComboBox {
     background-color: ${surface};
     color: ${text};
