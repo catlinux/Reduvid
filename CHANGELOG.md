@@ -6,6 +6,10 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+### Añadido
+
+- Motor de muestra y estimación: recorte rápido de un fragmento de 30 s reutilizando el plan de codificación (`-ss` antes de `-i`), extracción de un fotograma PNG y extrapolación lineal de tamaño y tiempo de conversión desde la muestra.
+
 ## [0.2.1] - 2026-10-25
 
 ### Cambiado

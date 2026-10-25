@@ -6,6 +6,10 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Added
+
+- Sample and estimation engine: fast 30-second clip reusing the encoding plan (`-ss` before `-i`), single PNG frame extraction and linear extrapolation of final size and encoding time from the sample.
+
 ## [0.2.1] - 2026-10-25
 
 ### Changed
