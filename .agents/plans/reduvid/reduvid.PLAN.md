@@ -76,7 +76,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 - **Textos**: los `msgid` van en inglés y hay catálogos `ca` y `es`; `en` usa el `msgid` tal cual. Los `.mo` no se suben (ya están en `.gitignore`): los compila un hook de hatch al construir o instalar (también en `pip install -e`), con Babel como dependencia del hook.
 - **Idioma de la interfaz**: el de la configuración; si no hay, el del sistema (`LANGUAGE`, `LC_ALL`, `LC_MESSAGES`, `LANG` y `locale.getlocale()`); si no es ca/es/en, inglés.
 - **Modo de color**: Sistema (por defecto, `QStyleHints.colorScheme()`), Claro u Oscuro. Hay una preferencia «Reducir animaciones», porque Qt no lee la del sistema.
-- **Paso «Calidad» sin tamaños**: los tamaños de la maqueta salen de la muestra de 30 s, que es de la Fase 3. En la 0.2.0 las tarjetas no muestran tamaño.
+- **Paso «Calidad» sin tamaños**: los tamaños de la maqueta salen de la muestra de 1 minuto, que es de la Fase 3. En la 0.2.0 las tarjetas no muestran tamaño.
 - **HDR sin `tonemap`** (aviso bloqueante): en el Resumen, un diálogo por vídeo con «Saltar este vídeo» (por defecto) o «Convertir igualmente (los colores se verán apagados)». Los vídeos saltados no entran en la cola. La CLI no cambia.
 - **Semáforo Jellyfin**: se calcula en el motor (`core/compat.py`), no en la interfaz. Verde: se reproduce directo. Ámbar: algo hará que Jellyfin convierta (subtítulos de imagen que quemará, HDR o 10 bits conservados, perfil `modern`/`archive`). Rojo: hay un aviso bloqueante.
 - **Tests de interfaz**: sin `pytest-qt` (no se añaden dependencias). Se usa `QT_QPA_PLATFORM=offscreen` y una `QApplication` de sesión en `tests/gui/conftest.py`. Si el CI de Ubuntu falla por librerías de Qt, se añaden con apt en `ci.yml` (`libegl1`, `libxkbcommon0`, `libfontconfig1`; compruébalo antes).
@@ -186,7 +186,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 
 ## Fase 3: ayudas (0.3.0)
 
-Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotograma antes/después, estimación de tamaño y tiempo, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz.
+Muestra de 1 minuto en total (decisión del usuario), repartida en 3 trozos de 20 s hacia el 20 %, 50 % y 80 % del vídeo (más representativa que un solo trozo seguido; el usuario puede cambiarlo) con estimación y comparación de fotograma antes/después, estimación de tamaño y tiempo, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz.
 
 ## Fase 4: empaquetado y publicación (0.4.0 → 1.0.0)
 
