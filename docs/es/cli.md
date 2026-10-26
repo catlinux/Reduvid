@@ -2,7 +2,7 @@
 
 **Castellano** · [English](../en/cli.md)
 
-`reduvid-cli` tiene dos órdenes: `probe` (ver qué contiene un vídeo) y `convert` (reducirlo). La interfaz gráfica se abre con `reduvid`. Necesitas [FFmpeg](https://ffmpeg.org/) instalado y accesible, como se explica en el [README](../../README.md#instalación).
+`reduvid-cli` tiene tres órdenes: `probe` (ver qué contiene un vídeo), `convert` (reducirlo) y `estimate` (calcular cuánto pesará y cuánto tardará antes de convertirlo). La interfaz gráfica se abre con `reduvid`. Necesitas [FFmpeg](https://ffmpeg.org/) instalado y accesible, como se explica en el [README](../../README.md#instalación).
 
 ## `reduvid-cli probe`
 
@@ -89,6 +89,30 @@ Files: 3 succeeded, 0 failed, 1 skipped
 Total savings: 812.40 MB (41.2%)
 ```
 
+## `reduvid-cli estimate`
+
+Calcula el tamaño final y el tiempo de conversión aproximados de uno o más archivos a partir de una muestra de un minuto, sin convertirlos. Acepta las mismas opciones de codificación que `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs` y `--threads`), pero solo archivos, no carpetas.
+
+La muestra es de un minuto repartido en tres trozos de 20 segundos hacia el 20 %, el 50 % y el 80 % del vídeo; los vídeos de menos de 90 segundos usan un único trozo desde el principio. Solo se codifica el vídeo con los ajustes del plan, así que el resultado es una estimación: el tamaño y el tiempo reales pueden variar según el contenido. No hace falta `--dry-run`: esta orden nunca convierte el archivo.
+
+```bash
+reduvid-cli estimate pelicula.mkv --target modern --quality high
+reduvid-cli estimate primera.mkv segunda.mkv
+```
+
+```
+Estimating [1/1]: /ruta/a/pelicula.mkv
+Estimate from a 60-second sample; sizes and time are approximate.
+  Video: ~1.2 GB
+  Audio: ~492 MB
+  Estimated size: ~1.7 GB
+  Original size: 4.4 GB
+  Savings: 61% (2.7 GB smaller)
+  Approximate conversion time: 38:20
+```
+
+Si el archivo no indica el bitrate del audio, el total no se puede calcular y solo se muestra la estimación del vídeo. El progreso se dibuja en una sola línea cuando la salida es una terminal; si no, no se muestra. Al pulsar Ctrl+C se cancela la muestra, se borran sus archivos temporales y la orden termina con el código `130`.
+
 ## Configuración
 
 Si FFmpeg no está en el `PATH` del sistema, puedes indicar su ruta en un archivo de configuración TOML en el directorio de configuración del usuario (por ejemplo `~/.config/reduvid/config.toml` en Linux, o `%LOCALAPPDATA%\reduvid\config.toml` en Windows):
@@ -103,4 +127,5 @@ ffmpeg_path = "/ruta/completa/a/ffmpeg"
 | --- | --- |
 | `0` | Todo correcto. |
 | `1` | No se encontró FFmpeg o ffprobe. |
-| `2` | Algún archivo de entrada no existe, no se pudo analizar, o falló al convertirse. |
+| `2` | Algún archivo de entrada no existe, no se pudo analizar, falló al convertirse o no se pudo muestrear. |
+| `130` | Se interrumpió con Ctrl+C; los archivos temporales se borran. |

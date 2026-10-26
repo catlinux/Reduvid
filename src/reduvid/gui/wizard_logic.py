@@ -12,8 +12,10 @@ from typing import Literal
 
 from reduvid.core.compat import CompatStatus, jellyfin_status
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, Warning, build_plan
-from reduvid.core.probe import MediaInfo, estimate_stream_bytes, parse_bitrate
+from reduvid.core.plan import EncodePlan, PlanOptions, Warning, build_plan
+from reduvid.core.probe import MediaInfo, estimate_stream_bytes
+from reduvid.core.probe import format_duration as format_duration
+from reduvid.core.sample import audio_bytes_for_plan
 from reduvid.gui.wizard_state import VideoEntry
 from reduvid.i18n import _
 
@@ -159,17 +161,10 @@ def audio_size_summary(
         media = entry.media
         if media is None:
             continue
-        streams = {stream.index: stream for stream in media.audio_streams}
         plan = build_plan(media, ffmpeg_info, options)
-        for decision in plan.audios:
-            stream = streams.get(decision.stream_index)
-            if stream is None:
-                current_parts.append(None)
-                final_parts.append(None)
-                continue
-            current = estimate_stream_bytes(stream.bitrate, media.duration)
-            current_parts.append(current)
-            final_parts.append(_decision_bytes(decision, current, media.duration))
+        current, final = audio_bytes_for_plan(media, plan)
+        current_parts.append(current)
+        final_parts.append(final)
     return AudioSizeSummary(_sum_or_none(current_parts), _sum_or_none(final_parts))
 
 
@@ -183,15 +178,6 @@ def subtitle_container_note(
     if not has_image:
         return "none"
     return "image_dropped_mp4" if container == "mp4" else "image_kept_mkv"
-
-
-def _decision_bytes(
-    decision: AudioDecision, copied_bytes: int | None, duration: float
-) -> int | None:
-    if decision.action == "copy":
-        return copied_bytes
-    bitrate = parse_bitrate(decision.bitrate)
-    return estimate_stream_bytes(bitrate, duration)
 
 
 def _sum_or_none(parts: Iterable[int | None]) -> int | None:
@@ -219,12 +205,3 @@ def summarize(
         warnings=plan.warnings,
         blocking=blocking,
     )
-
-
-def format_duration(duration: float) -> str:
-    seconds = int(duration) if duration > 0 else 0
-    hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    if hours:
-        return f"{hours}:{minutes:02}:{seconds:02}"
-    return f"{minutes}:{seconds:02}"

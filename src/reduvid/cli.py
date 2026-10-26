@@ -6,11 +6,12 @@
 from __future__ import annotations
 
 import argparse
-import math
 import sys
+import threading
 import tomllib
 from collections.abc import Sequence
 from pathlib import Path
+from typing import TextIO
 
 from reduvid import __version__
 from reduvid.core.config import Config, load_config
@@ -22,12 +23,21 @@ from reduvid.core.probe import (
     MediaInfo,
     ProbeError,
     estimate_stream_bytes,
+    format_duration,
     format_size,
     parse_bitrate,
     probe_media,
 )
 from reduvid.core.queue import ConversionQueue, QueueProgressEvent
 from reduvid.core.report import FileReport, QueueReport
+from reduvid.core.runner import EncodeError
+from reduvid.core.sample import (
+    SampleEstimate,
+    SampleRunner,
+    TotalEstimate,
+    audio_bytes_for_plan,
+    estimate_total,
+)
 from reduvid.i18n import _, setup_language
 from reduvid.messages import error_text, warning_text
 
@@ -99,7 +109,12 @@ def _language_option(arguments: Sequence[str]) -> str | None:
     return None
 
 
-def _resolve_inputs(raw_paths: Sequence[Path], *, allow_directories: bool) -> list[Path] | None:
+def _resolve_inputs(
+    raw_paths: Sequence[Path],
+    *,
+    allow_directories: bool,
+    directory_message: str | None = None,
+) -> list[Path] | None:
     paths: list[Path] = []
     valid = True
     for raw_path in raw_paths:
@@ -120,10 +135,12 @@ def _resolve_inputs(raw_paths: Sequence[Path], *, allow_directories: bool) -> li
         elif path.is_file() or (allow_directories and path.is_dir()):
             paths.append(path)
         else:
-            print(
-                _("Error: Input is not a supported file or folder: {path}").format(path=path),
-                file=sys.stderr,
+            message = (
+                directory_message
+                if path.is_dir() and directory_message is not None
+                else _("Error: Input is not a supported file or folder: {path}")
             )
+            print(message.format(path=path), file=sys.stderr)
             valid = False
     return paths if valid else None
 
@@ -139,15 +156,6 @@ def _find_ffmpeg(config: Config) -> FFmpegInfo | None:
     return info
 
 
-def _format_duration(duration: float) -> str:
-    seconds = int(duration) if math.isfinite(duration) and duration > 0 else 0
-    hours, remainder = divmod(seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    if hours:
-        return f"{hours}:{minutes:02}:{seconds:02}"
-    return f"{minutes}:{seconds:02}"
-
-
 def _action_text(action: str) -> str:
     texts = {
         "encode": _("encode"),
@@ -161,7 +169,7 @@ def _action_text(action: str) -> str:
 def _show_media(media: MediaInfo) -> None:
     print(_("File: {path}").format(path=media.path))
     print(_("Format: {format}").format(format=media.format))
-    print(_("Duration: {duration}").format(duration=_format_duration(media.duration)))
+    print(_("Duration: {duration}").format(duration=format_duration(media.duration)))
     print(_("Size: {size:.2f} MB").format(size=media.size / 1_000_000))
     for position, video_stream in enumerate(media.video_streams, start=1):
         if video_stream.hdr:
@@ -414,6 +422,236 @@ def _convert(
     return 2 if report.failed else 0
 
 
+class _TextProgress:
+    """Rewrite one progress line, but only when stdout is a terminal."""
+
+    def __init__(self, stream: TextIO) -> None:
+        self._stream = stream
+        self._interactive = stream.isatty()
+        self._last_percent: int | None = None
+
+    def __call__(self, fraction: float) -> None:
+        if not self._interactive:
+            return
+        percent = min(max(round(fraction * 100), 0), 100)
+        if percent == self._last_percent:
+            return
+        self._last_percent = percent
+        print(
+            "\r" + _("Estimating: {percent}%").format(percent=percent),
+            end="",
+            file=self._stream,
+            flush=True,
+        )
+
+    def finish(self) -> None:
+        if self._interactive and self._last_percent is not None:
+            print(file=self._stream)
+
+
+def _wait_for_sample(done: threading.Event) -> None:
+    """Block until the sampling thread ends; Ctrl+C interrupts this wait."""
+    done.wait()
+
+
+def _run_interruptible_sample(runner: SampleRunner) -> SampleEstimate:
+    """Run *runner* in a worker thread so Ctrl+C can cancel it and clean up.
+
+    Cancelling from the main thread lets ``SampleRunner`` terminate FFmpeg and
+    remove its temporaries before the interpreter unwinds.
+    """
+    results: list[SampleEstimate] = []
+    errors: list[Exception] = []
+    done = threading.Event()
+
+    def run() -> None:
+        try:
+            results.append(runner.run())
+        except Exception as error:
+            errors.append(error)
+        finally:
+            done.set()
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+    try:
+        _wait_for_sample(done)
+    except KeyboardInterrupt:
+        runner.cancel()
+        thread.join()
+        raise
+    if errors:
+        raise errors[0]
+    return results[0]
+
+
+def _show_estimate(media: MediaInfo, sample: SampleEstimate, total: TotalEstimate) -> None:
+    print(
+        _("Estimate from a {seconds}-second sample; sizes and time are approximate.").format(
+            seconds=f"{sample.sampled_seconds:.0f}"
+        )
+    )
+    print("  " + _("Video: ~{size}").format(size=format_size(total.video_bytes)))
+    if total.audio_bytes is None:
+        print("  " + _("Audio: unknown (the file does not report its bitrate)"))
+        print(
+            "  "
+            + _(
+                "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
+            ).format(size=format_size(total.video_bytes))
+        )
+    else:
+        print("  " + _("Audio: ~{size}").format(size=format_size(total.audio_bytes)))
+        total_bytes = total.total_bytes if total.total_bytes is not None else 0
+        print("  " + _("Estimated size: ~{size}").format(size=format_size(total_bytes)))
+    print("  " + _("Original size: {size}").format(size=format_size(media.size)))
+    ratio = total.ratio_vs_original
+    if ratio is not None and total.total_bytes is not None:
+        if total.total_bytes <= media.size:
+            print(
+                "  "
+                + _("Savings: {percent}% ({size} smaller)").format(
+                    percent=f"{(1 - ratio) * 100:.0f}",
+                    size=format_size(media.size - total.total_bytes),
+                )
+            )
+        else:
+            print(
+                "  "
+                + _("Increase: {percent}% ({size} larger)").format(
+                    percent=f"{(ratio - 1) * 100:.0f}",
+                    size=format_size(total.total_bytes - media.size),
+                )
+            )
+    print(
+        "  "
+        + _("Approximate conversion time: {duration}").format(
+            duration=format_duration(total.encode_seconds)
+        )
+    )
+
+
+def _estimate(
+    paths: list[Path],
+    ffmpeg_info: FFmpegInfo,
+    options: PlanOptions,
+    *,
+    threads: int | None,
+) -> int:
+    failed = False
+    for index, path in enumerate(paths, start=1):
+        if index > 1:
+            print()
+        print(
+            _("Estimating [{index}/{total}]: {path}").format(
+                index=index, total=len(paths), path=path
+            )
+        )
+        try:
+            media = probe_media(ffmpeg_info.ffprobe_path, path)
+        except ProbeError as error:
+            print(
+                _("Error: Could not probe {path}: {error}").format(path=path, error=error),
+                file=sys.stderr,
+            )
+            failed = True
+            continue
+        plan = build_plan(media, ffmpeg_info, options)
+        if not plan.videos:
+            print(
+                _("Error: {path} has no video streams to estimate.").format(path=path),
+                file=sys.stderr,
+            )
+            failed = True
+            continue
+        progress = _TextProgress(sys.stdout)
+        runner = SampleRunner(
+            ffmpeg_info.ffmpeg_path,
+            media,
+            plan,
+            path,
+            on_progress=progress,
+            threads=threads,
+        )
+        try:
+            sample = _run_interruptible_sample(runner)
+        except EncodeError as error:
+            print(
+                _("Error: Could not estimate {path}: {error}").format(
+                    path=path, error=error_text(error.code)
+                ),
+                file=sys.stderr,
+            )
+            failed = True
+            continue
+        except ValueError as error:
+            print(
+                _("Error: Could not estimate {path}: {error}").format(path=path, error=error),
+                file=sys.stderr,
+            )
+            failed = True
+            continue
+        finally:
+            progress.finish()
+        final_audio = audio_bytes_for_plan(media, plan)[1]
+        total = estimate_total(sample, media, audio_bytes=final_audio)
+        _show_estimate(media, sample, total)
+    return 2 if failed else 0
+
+
+def _add_plan_arguments(parser: argparse.ArgumentParser) -> None:
+    """Add the encoding options shared by ``convert`` and ``estimate``."""
+    parser.add_argument("--target", choices=("jellyfin", "modern", "archive"), default="jellyfin")
+    parser.add_argument(
+        "--quality", choices=("high", "balanced", "max_savings"), default="balanced"
+    )
+    parser.add_argument("--container", choices=("mkv", "mp4"), default="mkv")
+    parser.add_argument(
+        "--keep-audio",
+        type=_language_set,
+        metavar="LANGS",
+        help=_("Keep only these audio languages (comma-separated, 'und' for no language)"),
+    )
+    parser.add_argument(
+        "--audio-tracks",
+        type=_track_set,
+        metavar="TRACKS",
+        help=_("Keep only these audio track indices (comma-separated, overrides --keep-audio)"),
+    )
+    parser.add_argument(
+        "--one-audio-per-language",
+        action="store_true",
+        help=_("Keep only the highest-quality audio track for each language"),
+    )
+    parser.add_argument(
+        "--reduce-audio",
+        action="store_true",
+        help=_("Re-encode audio tracks to AAC to save space"),
+    )
+    parser.add_argument(
+        "--keep-subs",
+        type=_language_set,
+        metavar="LANGS",
+        help=_("Keep only these subtitle languages (comma-separated, 'und' for no language)"),
+    )
+    parser.add_argument("--max-height", type=_positive_int)
+    parser.add_argument("--threads", type=_positive_int)
+
+
+def _plan_options(parsed: argparse.Namespace) -> PlanOptions:
+    return PlanOptions(
+        destination=parsed.target,
+        quality=parsed.quality,
+        container=parsed.container,
+        max_height=parsed.max_height,
+        audio_languages=parsed.keep_audio,
+        subtitle_languages=parsed.keep_subs,
+        audio_tracks=parsed.audio_tracks,
+        one_audio_per_language=parsed.one_audio_per_language,
+        reduce_audio=parsed.reduce_audio,
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Return 0 on success, 1 if FFmpeg is unavailable, or 2 on file errors."""
     arguments = list(argv) if argv is not None else sys.argv[1:]
@@ -432,47 +670,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     probe_parser.add_argument("files", nargs="+", type=Path)
     convert_parser = subparsers.add_parser("convert", help=_("Convert media files"))
     convert_parser.add_argument("paths", nargs="+", type=Path)
-    convert_parser.add_argument(
-        "--target", choices=("jellyfin", "modern", "archive"), default="jellyfin"
-    )
-    convert_parser.add_argument(
-        "--quality", choices=("high", "balanced", "max_savings"), default="balanced"
-    )
-    convert_parser.add_argument("--container", choices=("mkv", "mp4"), default="mkv")
-    convert_parser.add_argument(
-        "--keep-audio",
-        type=_language_set,
-        metavar="LANGS",
-        help=_("Keep only these audio languages (comma-separated, 'und' for no language)"),
-    )
-    convert_parser.add_argument(
-        "--audio-tracks",
-        type=_track_set,
-        metavar="TRACKS",
-        help=_("Keep only these audio track indices (comma-separated, overrides --keep-audio)"),
-    )
-    convert_parser.add_argument(
-        "--one-audio-per-language",
-        action="store_true",
-        help=_("Keep only the highest-quality audio track for each language"),
-    )
-    convert_parser.add_argument(
-        "--reduce-audio",
-        action="store_true",
-        help=_("Re-encode audio tracks to AAC to save space"),
-    )
-    convert_parser.add_argument(
-        "--keep-subs",
-        type=_language_set,
-        metavar="LANGS",
-        help=_("Keep only these subtitle languages (comma-separated, 'und' for no language)"),
-    )
-    convert_parser.add_argument("--max-height", type=_positive_int)
+    _add_plan_arguments(convert_parser)
     convert_parser.add_argument("--output-dir", type=Path)
     convert_parser.add_argument("--recursive", action="store_true")
-    convert_parser.add_argument("--threads", type=_positive_int)
     convert_parser.add_argument("--replace-original", action="store_true")
     convert_parser.add_argument("--dry-run", action="store_true")
+    estimate_parser = subparsers.add_parser(
+        "estimate", help=_("Estimate the final size and time from a short sample")
+    )
+    estimate_parser.add_argument("files", nargs="+", type=Path)
+    _add_plan_arguments(estimate_parser)
 
     if not arguments:
         parser.print_help()
@@ -482,13 +689,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.print_help()
         return 0
 
+    is_probe = parsed.command == "probe"
     is_convert = parsed.command == "convert"
+    raw_paths = parsed.files if parsed.command in ("probe", "estimate") else parsed.paths
     paths = _resolve_inputs(
-        parsed.paths if is_convert else parsed.files, allow_directories=is_convert
+        raw_paths,
+        allow_directories=is_convert,
+        directory_message=(
+            _("Error: Input is a folder; estimate works on files only: {path}")
+            if parsed.command == "estimate"
+            else None
+        ),
     )
     if paths is None:
         return 2
-    if not is_convert and any(not path.is_file() for path in paths):
+    if is_probe and any(not path.is_file() for path in paths):
         for path in paths:
             if not path.is_file():
                 print(
@@ -510,20 +725,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     ffmpeg_info = _find_ffmpeg(config)
     if ffmpeg_info is None:
         return 1
-    if not is_convert:
+    if is_probe:
         return _show_probe(paths, ffmpeg_info)
 
-    options = PlanOptions(
-        destination=parsed.target,
-        quality=parsed.quality,
-        container=parsed.container,
-        max_height=parsed.max_height,
-        audio_languages=parsed.keep_audio,
-        subtitle_languages=parsed.keep_subs,
-        audio_tracks=parsed.audio_tracks,
-        one_audio_per_language=parsed.one_audio_per_language,
-        reduce_audio=parsed.reduce_audio,
-    )
+    options = _plan_options(parsed)
+    if not is_convert:
+        try:
+            return _estimate(paths, ffmpeg_info, options, threads=parsed.threads)
+        except KeyboardInterrupt:
+            print(_("Estimate cancelled."), file=sys.stderr)
+            return 130
+
     return _convert(
         paths,
         ffmpeg_info,

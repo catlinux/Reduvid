@@ -15,12 +15,13 @@ import pytest
 
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import PipelineError
-from reduvid.core.plan import EncodePlan, PlanOptions, VideoDecision, build_plan
-from reduvid.core.probe import MediaInfo, probe_media
+from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, VideoDecision, build_plan
+from reduvid.core.probe import AudioStream, MediaInfo, probe_media
 from reduvid.core.sample import (
     SampleEstimate,
     SampleRunner,
     SampleSegment,
+    audio_bytes_for_plan,
     build_sample_command,
     estimate_total,
     run_sample,
@@ -261,6 +262,61 @@ def test_video_bytes_per_second_divides_the_measured_output() -> None:
     sample = SampleEstimate(video_bytes=1_500_000, sampled_seconds=60.0, elapsed_seconds=30.0)
 
     assert sample.video_bytes_per_second == pytest.approx(25_000.0)
+
+
+def _audio_media(*bitrates: int | None) -> MediaInfo:
+    return MediaInfo(
+        Path("/media/movie.mkv"),
+        "matroska",
+        100.0,
+        1_000_000,
+        [],
+        [
+            AudioStream(index + 1, "eac3", 6, "eng", index == 0, bitrate=bitrate)
+            for index, bitrate in enumerate(bitrates)
+        ],
+        [],
+        [],
+    )
+
+
+def test_audio_bytes_for_plan_sums_current_and_final_tracks() -> None:
+    media = _audio_media(640_000, 500_000)
+    plan = EncodePlan(
+        "jellyfin",
+        "balanced",
+        "mkv",
+        (),
+        (AudioDecision(1, "copy"), AudioDecision(2, "encode", "aac", "128k")),
+        (),
+        (),
+    )
+
+    current, final = audio_bytes_for_plan(media, plan)
+
+    assert current == 8_000_000 + 6_250_000
+    assert final == 8_000_000 + 1_600_000
+
+
+def test_audio_bytes_for_plan_is_unknown_when_a_bitrate_is_missing() -> None:
+    media = _audio_media(640_000, None)
+    plan = EncodePlan(
+        "jellyfin",
+        "balanced",
+        "mkv",
+        (),
+        (AudioDecision(1, "copy"), AudioDecision(2, "copy")),
+        (),
+        (),
+    )
+
+    assert audio_bytes_for_plan(media, plan) == (None, None)
+
+
+def test_audio_bytes_for_plan_without_audio_tracks_is_zero() -> None:
+    plan = EncodePlan("jellyfin", "balanced", "mkv", (), (), (), ())
+
+    assert audio_bytes_for_plan(_audio_media(), plan) == (0, 0)
 
 
 def _sample_destination(ffmpeg_info: FFmpegInfo) -> str:

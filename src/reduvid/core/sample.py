@@ -15,8 +15,8 @@ from pathlib import Path
 
 from reduvid.core.command import build_video_arguments
 from reduvid.core.pipeline import PipelineError
-from reduvid.core.plan import EncodePlan
-from reduvid.core.probe import MediaInfo
+from reduvid.core.plan import AudioDecision, EncodePlan
+from reduvid.core.probe import MediaInfo, estimate_stream_bytes, parse_bitrate
 from reduvid.core.runner import EncodeHandle, ProgressEvent
 
 _TEMP_PREFIX = "reduvid-sample-"
@@ -286,6 +286,27 @@ def estimate_total(
     )
 
 
+def audio_bytes_for_plan(media: MediaInfo, plan: EncodePlan) -> tuple[int | None, int | None]:
+    """Estimate the audio bytes kept now and after applying *plan*.
+
+    Both values are ``None`` when any kept track has no known bitrate, because a
+    partial audio total would make the final estimate look smaller than it is.
+    """
+    streams = {stream.index: stream for stream in media.audio_streams}
+    current_parts: list[int | None] = []
+    final_parts: list[int | None] = []
+    for decision in plan.audios:
+        stream = streams.get(decision.stream_index)
+        if stream is None:
+            current_parts.append(None)
+            final_parts.append(None)
+            continue
+        current = estimate_stream_bytes(stream.bitrate, media.duration)
+        current_parts.append(current)
+        final_parts.append(_decision_bytes(decision, current, media.duration))
+    return _sum_or_none(current_parts), _sum_or_none(final_parts)
+
+
 def _seconds(value: float) -> str:
     """Format a decimal number of seconds for FFmpeg without exponent notation."""
     return f"{value:.3f}".rstrip("0").rstrip(".")
@@ -300,3 +321,21 @@ def _sampled_length(progress: ProgressEvent | None, fallback: float) -> float:
     if progress is None or progress.tiempo_procesado_segundos <= 0:
         return fallback
     return progress.tiempo_procesado_segundos
+
+
+def _decision_bytes(
+    decision: AudioDecision, copied_bytes: int | None, duration: float
+) -> int | None:
+    if decision.action == "copy":
+        return copied_bytes
+    bitrate = parse_bitrate(decision.bitrate)
+    return estimate_stream_bytes(bitrate, duration)
+
+
+def _sum_or_none(parts: list[int | None]) -> int | None:
+    total = 0
+    for part in parts:
+        if part is None:
+            return None
+        total += part
+    return total

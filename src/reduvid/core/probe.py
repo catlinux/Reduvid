@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path, PureWindowsPath
@@ -84,6 +85,16 @@ def format_size(size: int) -> str:
     if size >= 1_000_000_000:
         return f"{size / 1_000_000_000:.1f} GB"
     return f"{size / 1_000_000:.0f} MB"
+
+
+def format_duration(duration: float) -> str:
+    """Human-readable hours:minutes:seconds, or minutes:seconds below an hour."""
+    seconds = int(duration) if math.isfinite(duration) and duration > 0 else 0
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    if hours:
+        return f"{hours}:{minutes:02}:{seconds:02}"
+    return f"{minutes}:{seconds:02}"
 
 
 def parse_bitrate(value: str | None) -> int | None:

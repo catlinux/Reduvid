@@ -18,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: cli.py:251 cli.py:278
+#: cli.py:259 cli.py:286
 #, python-brace-format
 msgid " as {codec}"
 msgstr " como {codec}"
 
-#: cli.py:253
+#: cli.py:261
 #, python-brace-format
 msgid " at {bitrate}"
 msgstr " a {bitrate}"
@@ -106,12 +106,12 @@ msgstr "¿&Qué es esto?"
 msgid "&Wizard"
 msgstr "&Asistente"
 
-#: cli.py:238
+#: cli.py:246
 #, python-brace-format
 msgid ", scale to {height}p"
 msgstr ", escalar a {height}p"
 
-#: cli.py:186 cli.py:210
+#: cli.py:194 cli.py:218
 #, python-brace-format
 msgid ", {language}"
 msgstr ", {language}"
@@ -198,6 +198,11 @@ msgstr "Analizando…"
 msgid "Another folder"
 msgstr "Otra carpeta"
 
+#: cli.py:528
+#, python-brace-format
+msgid "Approximate conversion time: {duration}"
+msgstr "Tiempo aproximado de conversión: {duration}"
+
 #: gui/wizard/step_keep.py:202
 msgid "Audio"
 msgstr "Audio"
@@ -210,7 +215,7 @@ msgstr "Idiomas de audio"
 msgid "Audio size"
 msgstr "Peso del audio"
 
-#: cli.py:271
+#: cli.py:279
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
 msgstr "Pista de audio {index}: {details}"
@@ -227,10 +232,19 @@ msgstr ""
 msgid "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
 msgstr "La pista de audio {stream_index} se reducirá a AAC a {bitrate} para ahorrar espacio."
 
-#: cli.py:200
+#: cli.py:208
 #, python-brace-format
 msgid "Audio {position}: {codec}, {channels} channels{language}, {size}"
 msgstr "Audio {position}: {codec}, {channels} canales{language}, {size}"
+
+#: cli.py:496
+msgid "Audio: unknown (the file does not report its bitrate)"
+msgstr "Audio: desconocido (el archivo no indica su bitrate)"
+
+#: cli.py:504
+#, python-brace-format
+msgid "Audio: ~{size}"
+msgstr "Audio: ~{size}"
 
 #: gui/advanced_page.py:92 gui/wizard/step_quality.py:25
 msgid "Balanced"
@@ -260,7 +274,7 @@ msgstr "Cancelado. No queda ningún archivo a medias."
 msgid "Cancelling…"
 msgstr "Cancelando…"
 
-#: gui/wizard_logic.py:45
+#: gui/wizard_logic.py:47
 msgid "Catalan"
 msgstr "Catalán"
 
@@ -272,7 +286,7 @@ msgstr "Comprobar"
 msgid "Check FFmpeg"
 msgstr "Comprobar FFmpeg"
 
-#: gui/wizard_logic.py:63
+#: gui/wizard_logic.py:65
 msgid "Chinese"
 msgstr "Chino"
 
@@ -336,11 +350,11 @@ msgstr "Convertir igualmente (los colores se verán apagados)"
 msgid "Convert it anyway? Colours will look washed out."
 msgstr "¿Quieres convertirlo igualmente? Los colores se verán apagados."
 
-#: cli.py:433
+#: cli.py:671
 msgid "Convert media files"
 msgstr "Convierte archivos multimedia"
 
-#: cli.py:306
+#: cli.py:314
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convirtiendo [{index}/{total}]: {path}"
@@ -375,67 +389,115 @@ msgstr "Destino"
 msgid "Direct play"
 msgstr "Reproducción directa"
 
-#: cli.py:409
+#: cli.py:417
 msgid "Dry run complete."
 msgstr "Simulación completada."
 
-#: cli.py:349
+#: cli.py:357
 #, python-brace-format
 msgid "Dry run: {count} file(s)"
 msgstr "Simulación: {count} archivo(s)"
 
-#: cli.py:164
+#: cli.py:172
 #, python-brace-format
 msgid "Duration: {duration}"
 msgstr "Duración: {duration}"
 
-#: gui/wizard_logic.py:49
+#: gui/wizard_logic.py:51
 msgid "English"
 msgstr "Inglés"
 
-#: cli.py:135
+#: cli.py:580 cli.py:589
+#, python-brace-format
+msgid "Error: Could not estimate {path}: {error}"
+msgstr "Error: No se ha podido estimar {path}: {error}"
+
+#: cli.py:152
 #, python-brace-format
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr "Error: no se ha podido inspeccionar FFmpeg: {error}"
 
-#: cli.py:296 cli.py:355
+#: cli.py:304 cli.py:363 cli.py:554
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr "Error: no se ha podido analizar {path}: {error}"
 
-#: cli.py:110
+#: cli.py:125
 #, python-brace-format
 msgid "Error: Could not resolve input {path}: {error}"
 msgstr "Error: no se ha podido resolver la entrada {path}: {error}"
 
-#: cli.py:138
+#: cli.py:155
 msgid "Error: FFmpeg and ffprobe were not found."
 msgstr "Error: no se han encontrado FFmpeg ni ffprobe."
 
-#: cli.py:118
+#: cli.py:133
 #, python-brace-format
 msgid "Error: Input does not exist: {path}"
 msgstr "Error: la entrada no existe: {path}"
 
-#: cli.py:124
+#: cli.py:699
+#, python-brace-format
+msgid "Error: Input is a folder; estimate works on files only: {path}"
+msgstr "Error: La entrada es una carpeta; la estimación solo funciona con archivos: {path}"
+
+#: cli.py:141
 #, python-brace-format
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr "Error: la entrada no es un archivo ni una carpeta compatible: {path}"
 
-#: cli.py:505
+#: cli.py:720
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr "Error: la ruta de salida no es una carpeta: {path}"
 
-#: cli.py:495
+#: cli.py:710
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr "Error: la entrada de análisis no es un archivo: {path}"
 
-#: cli.py:326
+#: cli.py:562
+#, python-brace-format
+msgid "Error: {path} has no video streams to estimate."
+msgstr "Error: {path} no tiene ninguna pista de vídeo que estimar."
+
+#: cli.py:334
 #, python-brace-format
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
+
+#: cli.py:736
+msgid "Estimate cancelled."
+msgstr "Estimación cancelada."
+
+#: cli.py:490
+#, python-brace-format
+msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
+msgstr "Estimación a partir de una muestra de {seconds} segundos; los tamaños y el tiempo son aproximados."
+
+#: cli.py:679
+msgid "Estimate the final size and time from a short sample"
+msgstr "Estima el tamaño final y el tiempo a partir de una muestra corta"
+
+#: cli.py:500
+#, python-brace-format
+msgid "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
+msgstr "Tamaño estimado: no se puede calcular sin el tamaño del audio; solo el vídeo: ~{size}"
+
+#: cli.py:506
+#, python-brace-format
+msgid "Estimated size: ~{size}"
+msgstr "Tamaño estimado: ~{size}"
+
+#: cli.py:546
+#, python-brace-format
+msgid "Estimating [{index}/{total}]: {path}"
+msgstr "Estimando [{index}/{total}]: {path}"
+
+#: cli.py:441
+#, python-brace-format
+msgid "Estimating: {percent}%"
+msgstr "Estimando: {percent}%"
 
 #: gui/widgets/what_is_this.py:33
 msgid "Explanation"
@@ -466,12 +528,12 @@ msgstr "Se ha detectado FFmpeg {version}."
 msgid "Fedora"
 msgstr "Fedora"
 
-#: cli.py:162
+#: cli.py:170
 #, python-brace-format
 msgid "File: {path}"
 msgstr "Archivo: {path}"
 
-#: cli.py:331
+#: cli.py:339
 #, python-brace-format
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr "Archivos: {succeeded} correctos, {failed} con error, {skipped} omitidos"
@@ -481,21 +543,21 @@ msgstr "Archivos: {succeeded} correctos, {failed} con error, {skipped} omitidos"
 msgid "Finished with {count} failed file(s)."
 msgstr "Terminado con {count} archivo(s) con error."
 
-#: cli.py:320
+#: cli.py:328
 #, python-brace-format
 msgid "Finished: {name}"
 msgstr "Terminado: {name}"
 
-#: cli.py:163
+#: cli.py:171
 #, python-brace-format
 msgid "Format: {format}"
 msgstr "Formato: {format}"
 
-#: gui/wizard_logic.py:51
+#: gui/wizard_logic.py:53
 msgid "French"
 msgstr "Francés"
 
-#: gui/wizard_logic.py:53
+#: gui/wizard_logic.py:55
 msgid "German"
 msgstr "Alemán"
 
@@ -553,16 +615,21 @@ msgstr "Los subtítulos de imagen no caben en MP4 y se descartarán. Los de text
 msgid "Include subfolders"
 msgstr "Incluir subcarpetas"
 
+#: cli.py:521
+#, python-brace-format
+msgid "Increase: {percent}% ({size} larger)"
+msgstr "Aumento: {percent}% ({size} más)"
+
 #: gui/ffmpeg_missing.py:99
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Comando de instalación para {system}"
 
-#: gui/wizard_logic.py:55
+#: gui/wizard_logic.py:57
 msgid "Italian"
 msgstr "Italiano"
 
-#: gui/wizard_logic.py:59
+#: gui/wizard_logic.py:61
 msgid "Japanese"
 msgstr "Japonés"
 
@@ -578,19 +645,19 @@ msgstr "Jellyfin transcodificará"
 msgid "Keep converting"
 msgstr "Seguir convirtiendo"
 
-#: cli.py:457
+#: cli.py:624
 msgid "Keep only the highest-quality audio track for each language"
 msgstr "Conserva solo la pista de audio de mayor calidad para cada idioma"
 
-#: cli.py:446
+#: cli.py:613
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr "Conserva solo estos idiomas de audio (separados por comas; 'und' significa sin idioma)"
 
-#: cli.py:452
+#: cli.py:619
 msgid "Keep only these audio track indices (comma-separated, overrides --keep-audio)"
 msgstr "Conserva solo las pistas de audio con estos índices (separados por comas, anula --keep-audio)"
 
-#: cli.py:468
+#: cli.py:635
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr "Conserva solo estos idiomas de subtítulos (separados por comas; 'und' significa sin idioma)"
 
@@ -598,7 +665,7 @@ msgstr "Conserva solo estos idiomas de subtítulos (separados por comas; 'und' s
 msgid "Keeps every track and subtitle format."
 msgstr "Conserva todas las pistas y formatos de subtítulos."
 
-#: gui/wizard_logic.py:61
+#: gui/wizard_logic.py:63
 msgid "Korean"
 msgstr "Coreano"
 
@@ -610,7 +677,7 @@ msgstr "Idioma"
 msgid "Language changes take effect when Reduvid is restarted."
 msgstr "Los cambios de idioma se aplican al reiniciar Reduvid."
 
-#: cli.py:428
+#: cli.py:666
 msgid "Language for messages"
 msgstr "Idioma de los mensajes"
 
@@ -666,7 +733,7 @@ msgstr "Móviles, tabletas y televisores nuevos que reproducen H.265."
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que se conservarán todas."
 
-#: gui/wizard_logic.py:42
+#: gui/wizard_logic.py:44
 msgid "No language indicated"
 msgstr "Sin idioma indicado"
 
@@ -682,11 +749,16 @@ msgstr "Número de hilos de codificación"
 msgid "One audio track per language (the best one is kept)"
 msgstr "Una sola pista de audio por idioma (se conserva la mejor)"
 
+#: cli.py:507
+#, python-brace-format
+msgid "Original size: {size}"
+msgstr "Tamaño original: {size}"
+
 #: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
 msgid "Output folder"
 msgstr "Carpeta de salida"
 
-#: cli.py:363 cli.py:389
+#: cli.py:371 cli.py:397
 #, python-brace-format
 msgid "Output: {path}"
 msgstr "Salida: {path}"
@@ -699,7 +771,7 @@ msgstr "Pausar la conversión"
 msgid "Paused. You can keep using the computer as usual."
 msgstr "En pausa. Puedes seguir usando el equipo con normalidad."
 
-#: cli.py:227
+#: cli.py:235
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Plan: {destination}, {quality}, {container}"
@@ -708,7 +780,7 @@ msgstr "Plan: {destination}, {quality}, {container}"
 msgid "Plays on more devices, but image subtitles are dropped."
 msgstr "Se reproduce en más dispositivos, pero los subtítulos de imagen se descartan."
 
-#: gui/wizard_logic.py:57
+#: gui/wizard_logic.py:59
 msgid "Portuguese"
 msgstr "Portugués"
 
@@ -716,7 +788,7 @@ msgstr "Portugués"
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: cli.py:315
+#: cli.py:323
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progreso: {percent:.0f}% ({state})"
@@ -734,7 +806,7 @@ msgstr "Cola"
 msgid "Queue · {count} videos"
 msgstr "Cola · {count} vídeos"
 
-#: cli.py:462
+#: cli.py:629
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr "Recodifica las pistas de audio a AAC para ahorrar espacio"
 
@@ -787,7 +859,7 @@ msgstr "Reemplazar el original"
 msgid "Review what Reduvid will do with each video before starting."
 msgstr "Revisa qué hará Reduvid con cada vídeo antes de empezar."
 
-#: gui/wizard_logic.py:65
+#: gui/wizard_logic.py:67
 msgid "Russian"
 msgstr "Ruso"
 
@@ -799,11 +871,16 @@ msgstr "La misma carpeta que cada vídeo"
 msgid "Save for archive"
 msgstr "Guardar para archivo"
 
-#: cli.py:431
+#: cli.py:513
+#, python-brace-format
+msgid "Savings: {percent}% ({size} smaller)"
+msgstr "Ahorro: {percent}% ({size} menos)"
+
+#: cli.py:669
 msgid "Show media details"
 msgstr "Muestra los detalles del archivo multimedia"
 
-#: cli.py:165
+#: cli.py:173
 #, python-brace-format
 msgid "Size: {size:.2f} MB"
 msgstr "Tamaño: {size:.2f} MB"
@@ -820,7 +897,7 @@ msgstr "Omitido"
 msgid "Something went wrong while processing the file."
 msgstr "Ha ocurrido un problema al procesar el archivo."
 
-#: gui/wizard_logic.py:47
+#: gui/wizard_logic.py:49
 msgid "Spanish"
 msgstr "Español"
 
@@ -840,12 +917,12 @@ msgstr "Estéreo"
 msgid "Subtitle languages"
 msgstr "Idiomas de subtítulos"
 
-#: cli.py:281
+#: cli.py:289
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
 msgstr "Pista de subtítulos {index}: {details}"
 
-#: cli.py:216
+#: cli.py:224
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítulo {position}: {codec}{language}, imagen: {image}"
@@ -928,7 +1005,7 @@ msgstr ""
 "Ahorro total: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} correctos, {failed} con error, "
 "{skipped} omitidos."
 
-#: cli.py:337
+#: cli.py:345
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr "Ahorro total: {savings:.2f} MB ({percent:.1f}%)"
@@ -956,7 +1033,7 @@ msgstr "Usa el perfil Jellyfin, que funciona en casi todo."
 msgid "Video files"
 msgstr "Archivos de vídeo"
 
-#: cli.py:241
+#: cli.py:249
 #, python-brace-format
 msgid "Video stream {index}: {action}, {details}"
 msgstr "Pista de vídeo {index}: {action}, {details}"
@@ -989,10 +1066,15 @@ msgstr ""
 "La pista de vídeo {stream_index} se reducirá a 1080p para que Jellyfin la pueda reproducir "
 "directamente."
 
-#: cli.py:173
+#: cli.py:181
 #, python-brace-format
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
+
+#: cli.py:494
+#, python-brace-format
+msgid "Video: ~{size}"
+msgstr "Vídeo: ~{size}"
 
 #: gui/main_window.py:55 gui/wizard/step_videos.py:60
 msgid "Videos"
@@ -1002,12 +1084,12 @@ msgstr "Vídeos"
 msgid "Videos you keep for later; saving space matters more than speed."
 msgstr "Vídeos que guardas para más adelante; ahorrar espacio importa más que la velocidad."
 
-#: cli.py:79
+#: cli.py:89
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
 msgstr "Aviso: no se ha podido leer el archivo de configuración: {error}"
 
-#: cli.py:286
+#: cli.py:294
 #, python-brace-format
 msgid "Warning: {text}"
 msgstr "Aviso: {text}"
@@ -1058,7 +1140,7 @@ msgstr "Sin ningún idioma de audio seleccionado, cada vídeo conserva todas sus
 msgid "Wizard steps"
 msgstr "Pasos del asistente"
 
-#: cli.py:362
+#: cli.py:370
 #, python-brace-format
 msgid "Would convert: {path}"
 msgstr "Se convertiría: {path}"
@@ -1075,19 +1157,19 @@ msgstr "Se notará en escenas oscuras o con mucho movimiento. Para el móvil o p
 msgid "You won't notice the difference, even on a big TV."
 msgstr "No notarás la diferencia ni en una televisión grande."
 
-#: cli.py:155
+#: cli.py:163
 msgid "convert"
 msgstr "convertir"
 
-#: cli.py:154
+#: cli.py:162
 msgid "copy"
 msgstr "copiar"
 
-#: cli.py:156
+#: cli.py:164
 msgid "drop"
 msgstr "descartar"
 
-#: cli.py:153
+#: cli.py:161
 msgid "encode"
 msgstr "codificar"
 
@@ -1099,19 +1181,19 @@ msgstr "imagen"
 msgid "less than 1 min left"
 msgstr "queda menos de 1 min"
 
-#: cli.py:48
+#: cli.py:58
 msgid "must be a comma-separated list of language codes"
 msgstr "debe ser una lista de códigos de idioma separados por comas"
 
-#: cli.py:56 cli.py:64 cli.py:68
+#: cli.py:66 cli.py:74 cli.py:78
 msgid "must be a comma-separated list of non-negative integers"
 msgstr "debe ser una lista de enteros no negativos separados por comas"
 
-#: cli.py:39 cli.py:41
+#: cli.py:49 cli.py:51
 msgid "must be a positive integer"
 msgstr "debe ser un número entero positivo"
 
-#: cli.py:170 cli.py:214
+#: cli.py:178 cli.py:222
 msgid "no"
 msgstr "no"
 
@@ -1119,7 +1201,7 @@ msgstr "no"
 msgid "text"
 msgstr "texto"
 
-#: cli.py:168
+#: cli.py:176
 msgid "unknown"
 msgstr "desconocido"
 
@@ -1127,11 +1209,11 @@ msgstr "desconocido"
 msgid "verified"
 msgstr "verificado"
 
-#: cli.py:214
+#: cli.py:222
 msgid "yes"
 msgstr "sí"
 
-#: cli.py:168
+#: cli.py:176
 #, python-brace-format
 msgid "yes ({variant})"
 msgstr "sí ({variant})"
@@ -1141,7 +1223,7 @@ msgstr "sí ({variant})"
 msgid "{codec} ({kind})"
 msgstr "{codec} ({kind})"
 
-#: cli.py:232
+#: cli.py:240
 #, python-brace-format
 msgid "{codec}, CRF {crf}, {preset} preset"
 msgstr "{codec}, CRF {crf}, preajuste {preset}"
@@ -1198,7 +1280,7 @@ msgstr "{percent}%"
 msgid "~{size}"
 msgstr "~{size}"
 
-#: cli.py:198 cli.py:265
+#: cli.py:206 cli.py:273
 #, python-brace-format
 msgid "~{size} estimated"
 msgstr "~{size} estimados"

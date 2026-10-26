@@ -2,7 +2,7 @@
 
 [Castellano](../es/cli.md) · **English**
 
-`reduvid-cli` has two commands: `probe` (see what's in a video) and `convert` (shrink it). The graphical interface opens with `reduvid`. You need [FFmpeg](https://ffmpeg.org/) installed and accessible, as explained in the [README](../../README.en.md#installation).
+`reduvid-cli` has three commands: `probe` (see what's in a video), `convert` (shrink it) and `estimate` (work out how big and how slow it will be before converting). The graphical interface opens with `reduvid`. You need [FFmpeg](https://ffmpeg.org/) installed and accessible, as explained in the [README](../../README.en.md#installation).
 
 ## `reduvid-cli probe`
 
@@ -89,6 +89,30 @@ Files: 3 succeeded, 0 failed, 1 skipped
 Total savings: 812.40 MB (41.2%)
 ```
 
+## `reduvid-cli estimate`
+
+Estimates the final size and conversion time of one or more files from a one-minute sample, without converting them. It accepts the same encoding options as `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs` and `--threads`), but only files, not folders.
+
+The sample is one minute split into three 20-second chunks at 20%, 50% and 80% of the video; videos shorter than 90 seconds use a single chunk from the start. Only the video is encoded with the plan's settings, so the result is an estimate: the actual size and time may vary depending on the content. There is no need for `--dry-run`: this command never converts the file.
+
+```bash
+reduvid-cli estimate movie.mkv --target modern --quality high
+reduvid-cli estimate first.mkv second.mkv
+```
+
+```
+Estimating [1/1]: /path/to/movie.mkv
+Estimate from a 60-second sample; sizes and time are approximate.
+  Video: ~1.2 GB
+  Audio: ~492 MB
+  Estimated size: ~1.7 GB
+  Original size: 4.4 GB
+  Savings: 61% (2.7 GB smaller)
+  Approximate conversion time: 38:20
+```
+
+If the file does not report an audio bitrate, the total cannot be calculated and only the video estimate is shown. Progress is drawn on a single line when the output is a terminal; otherwise nothing is shown. Ctrl+C cancels the sample, deletes its temporary files and exits with code `130`.
+
 ## Configuration
 
 If FFmpeg is not on the system `PATH`, you can set its path in a TOML configuration file under the user's config directory (for example `~/.config/reduvid/config.toml` on Linux, or `%LOCALAPPDATA%\reduvid\config.toml` on Windows):
@@ -103,4 +127,5 @@ ffmpeg_path = "/full/path/to/ffmpeg"
 | --- | --- |
 | `0` | Everything succeeded. |
 | `1` | FFmpeg or ffprobe were not found. |
-| `2` | Some input file does not exist, could not be probed, or failed to convert. |
+| `2` | Some input file does not exist, could not be probed, failed to convert, or could not be sampled. |
+| `130` | The command was interrupted with Ctrl+C; temporary files are deleted. |
