@@ -93,7 +93,7 @@ msgstr ""
 msgid "&Show technical details"
 msgstr ""
 
-#: gui/wizard/step_summary.py:112 gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:151 gui/wizard/step_summary.py:225
 msgid "&Start"
 msgstr ""
 
@@ -115,11 +115,15 @@ msgstr ""
 msgid ", {language}"
 msgstr ""
 
+#: gui/wizard/step_summary.py:359
+msgid "A 1-minute test of this video, scaled to the whole file. The real size and time may differ."
+msgstr ""
+
 #: gui/main_window.py:221
 msgid "A conversion is already running."
 msgstr ""
 
-#: gui/main_window.py:290
+#: gui/main_window.py:296
 msgid "A conversion is still running."
 msgstr ""
 
@@ -248,12 +252,20 @@ msgstr ""
 msgid "Browse for the output folder"
 msgstr ""
 
+#: gui/wizard/step_summary.py:342
+msgid "Cancel"
+msgstr ""
+
 #: gui/queue_panel.py:128
 msgid "Cancel conversion"
 msgstr ""
 
-#: gui/main_window.py:293
+#: gui/main_window.py:299
 msgid "Cancel conversion and quit"
+msgstr ""
+
+#: gui/wizard/step_summary.py:344
+msgid "Cancel the estimate"
 msgstr ""
 
 #: gui/queue_panel.py:247
@@ -320,7 +332,7 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-#: gui/main_window.py:289
+#: gui/main_window.py:295
 msgid "Conversion in progress"
 msgstr ""
 
@@ -332,11 +344,11 @@ msgstr ""
 msgid "Conversion queue"
 msgstr ""
 
-#: gui/wizard/step_summary.py:59
+#: gui/wizard/step_summary.py:87
 msgid "Convert anyway (colours will look washed out)"
 msgstr ""
 
-#: gui/wizard/step_summary.py:56
+#: gui/wizard/step_summary.py:84
 msgid "Convert it anyway? Colours will look washed out."
 msgstr ""
 
@@ -349,8 +361,13 @@ msgstr ""
 msgid "Converting [{index}/{total}]: {path}"
 msgstr ""
 
-#: gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:225
 msgid "Converting…"
+msgstr ""
+
+#: gui/wizard/step_summary.py:442
+#, python-brace-format
+msgid "Could not estimate the size: {message}"
 msgstr ""
 
 #: gui/preferences.py:174
@@ -375,7 +392,7 @@ msgstr ""
 msgid "Destination"
 msgstr ""
 
-#: gui/wizard/step_summary.py:36 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:64 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr ""
 
@@ -465,8 +482,24 @@ msgstr ""
 msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
 msgstr ""
 
+#: gui/wizard/step_summary.py:337
+msgid "Estimate progress"
+msgstr ""
+
+#: gui/wizard/step_summary.py:325
+msgid "Estimate the final size (1-minute test)"
+msgstr ""
+
 #: cli.py:679
 msgid "Estimate the final size and time from a short sample"
+msgstr ""
+
+#: gui/wizard/step_summary.py:327
+msgid "Estimate the final size from a 1-minute test of this video"
+msgstr ""
+
+#: gui/wizard/step_summary.py:356
+msgid "Estimated size and time"
 msgstr ""
 
 #: cli.py:500
@@ -474,9 +507,31 @@ msgstr ""
 msgid "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
 msgstr ""
 
+#: gui/wizard/step_summary.py:45
+#, python-brace-format
+msgid ""
+"Estimated size: cannot be calculated without the audio size; video only: ~{size} · Approx. time: "
+"{time}"
+msgstr ""
+
 #: cli.py:506
 #, python-brace-format
 msgid "Estimated size: ~{size}"
+msgstr ""
+
+#: gui/wizard/step_summary.py:52
+#, python-brace-format
+msgid "Estimated size: ~{size} (bigger than the original {original}) · Approx. time: {time}"
+msgstr ""
+
+#: gui/wizard/step_summary.py:58
+#, python-brace-format
+msgid "Estimated size: ~{size} (from {original}: −{percent:.0f} %) · Approx. time: {time}"
+msgstr ""
+
+#: gui/wizard/step_summary.py:56
+#, python-brace-format
+msgid "Estimated size: ~{size} · Approx. time: {time}"
 msgstr ""
 
 #: cli.py:546
@@ -555,7 +610,7 @@ msgstr ""
 msgid "H.265"
 msgstr ""
 
-#: gui/wizard/step_summary.py:51
+#: gui/wizard/step_summary.py:79
 msgid "HDR video"
 msgstr ""
 
@@ -575,7 +630,7 @@ msgstr ""
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr ""
 
-#: gui/main_window.py:291
+#: gui/main_window.py:297
 msgid "If you quit now, the conversion will be cancelled."
 msgstr ""
 
@@ -623,11 +678,11 @@ msgstr ""
 msgid "Jellyfin"
 msgstr ""
 
-#: gui/wizard/step_summary.py:38
+#: gui/wizard/step_summary.py:66
 msgid "Jellyfin will transcode"
 msgstr ""
 
-#: gui/main_window.py:295
+#: gui/main_window.py:301
 msgid "Keep converting"
 msgstr ""
 
@@ -707,7 +762,7 @@ msgstr ""
 msgid "More quality or more space?"
 msgstr ""
 
-#: gui/wizard/step_summary.py:39
+#: gui/wizard/step_summary.py:67
 msgid "Needs attention"
 msgstr ""
 
@@ -821,7 +876,7 @@ msgstr ""
 msgid "Reduce the audio size"
 msgstr ""
 
-#: gui/main_window.py:76 gui/main_window.py:340 gui/main_window.py:343
+#: gui/main_window.py:76 gui/main_window.py:346 gui/main_window.py:349
 msgid "Reduvid"
 msgstr ""
 
@@ -839,7 +894,7 @@ msgstr ""
 msgid "Replace the original"
 msgstr ""
 
-#: gui/wizard/step_summary.py:99
+#: gui/wizard/step_summary.py:138
 msgid "Review what Reduvid will do with each video before starting."
 msgstr ""
 
@@ -869,11 +924,11 @@ msgstr ""
 msgid "Size: {size:.2f} MB"
 msgstr ""
 
-#: gui/wizard/step_summary.py:57
+#: gui/wizard/step_summary.py:85
 msgid "Skip this video"
 msgstr ""
 
-#: gui/wizard/step_summary.py:250
+#: gui/wizard/step_summary.py:314
 msgid "Skipped"
 msgstr ""
 
@@ -885,11 +940,11 @@ msgstr ""
 msgid "Spanish"
 msgstr ""
 
-#: gui/wizard/step_summary.py:114
+#: gui/wizard/step_summary.py:153
 msgid "Start conversion"
 msgstr ""
 
-#: gui/main_window.py:372
+#: gui/main_window.py:378
 msgid "Step content"
 msgstr ""
 
@@ -911,7 +966,7 @@ msgstr ""
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
 
-#: gui/main_window.py:60 gui/wizard/step_summary.py:96
+#: gui/main_window.py:60 gui/wizard/step_summary.py:135
 msgid "Summary"
 msgstr ""
 
@@ -976,11 +1031,15 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/wizard/step_summary.py:55
+#: gui/workers.py:162
+msgid "This video has no video streams to estimate."
+msgstr ""
+
+#: gui/wizard/step_summary.py:83
 msgid "This video needs your attention."
 msgstr ""
 
-#: gui/wizard/step_summary.py:176
+#: gui/wizard/step_summary.py:233
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "

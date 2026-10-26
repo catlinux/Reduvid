@@ -94,7 +94,7 @@ msgstr "Torna a &buscar"
 msgid "&Show technical details"
 msgstr "&Mostra els detalls tècnics"
 
-#: gui/wizard/step_summary.py:112 gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:151 gui/wizard/step_summary.py:225
 msgid "&Start"
 msgstr "&Comença"
 
@@ -116,11 +116,17 @@ msgstr ", escalar a {height}p"
 msgid ", {language}"
 msgstr ", {language}"
 
+#: gui/wizard/step_summary.py:359
+msgid "A 1-minute test of this video, scaled to the whole file. The real size and time may differ."
+msgstr ""
+"Una prova d'1 minut d'aquest vídeo, escalada a tot el fitxer. La mida i el temps reals poden "
+"variar."
+
 #: gui/main_window.py:221
 msgid "A conversion is already running."
 msgstr "Ja hi ha una conversió en marxa."
 
-#: gui/main_window.py:290
+#: gui/main_window.py:296
 msgid "A conversion is still running."
 msgstr "Encara hi ha una conversió en marxa."
 
@@ -258,13 +264,21 @@ msgstr "Cerca el fitxer de FFmpeg"
 msgid "Browse for the output folder"
 msgstr "Cerca la carpeta de sortida"
 
+#: gui/wizard/step_summary.py:342
+msgid "Cancel"
+msgstr "Cancel·la"
+
 #: gui/queue_panel.py:128
 msgid "Cancel conversion"
 msgstr "Cancel·la la conversió"
 
-#: gui/main_window.py:293
+#: gui/main_window.py:299
 msgid "Cancel conversion and quit"
 msgstr "Cancel·la la conversió i surt"
+
+#: gui/wizard/step_summary.py:344
+msgid "Cancel the estimate"
+msgstr "Cancel·la l'estimació"
 
 #: gui/queue_panel.py:247
 msgid "Cancelled. No files are left half-written."
@@ -330,7 +344,7 @@ msgstr "Mode de color"
 msgid "Container"
 msgstr "Contenidor"
 
-#: gui/main_window.py:289
+#: gui/main_window.py:295
 msgid "Conversion in progress"
 msgstr "Conversió en marxa"
 
@@ -342,11 +356,11 @@ msgstr "Progrés de la conversió"
 msgid "Conversion queue"
 msgstr "Cua de conversió"
 
-#: gui/wizard/step_summary.py:59
+#: gui/wizard/step_summary.py:87
 msgid "Convert anyway (colours will look washed out)"
 msgstr "Converteix igualment (els colors es veuran apagats)"
 
-#: gui/wizard/step_summary.py:56
+#: gui/wizard/step_summary.py:84
 msgid "Convert it anyway? Colours will look washed out."
 msgstr "Vols convertir-lo igualment? Els colors es veuran apagats."
 
@@ -359,9 +373,14 @@ msgstr "Converteix fitxers multimèdia"
 msgid "Converting [{index}/{total}]: {path}"
 msgstr "Convertint [{index}/{total}]: {path}"
 
-#: gui/wizard/step_summary.py:169
+#: gui/wizard/step_summary.py:225
 msgid "Converting…"
 msgstr "S'està convertint…"
+
+#: gui/wizard/step_summary.py:442
+#, python-brace-format
+msgid "Could not estimate the size: {message}"
+msgstr "No s'ha pogut estimar la mida: {message}"
 
 #: gui/preferences.py:174
 #, python-brace-format
@@ -385,7 +404,7 @@ msgstr "Predeterminada"
 msgid "Destination"
 msgstr "Destinació"
 
-#: gui/wizard/step_summary.py:36 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:64 gui/wizard/step_target.py:22
 msgid "Direct play"
 msgstr "Reproducció directa"
 
@@ -475,19 +494,59 @@ msgstr "Estimació cancel·lada."
 msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
 msgstr "Estimació a partir d'una mostra de {seconds} segons; les mides i el temps són aproximats."
 
+#: gui/wizard/step_summary.py:337
+msgid "Estimate progress"
+msgstr "Progrés de l'estimació"
+
+#: gui/wizard/step_summary.py:325
+msgid "Estimate the final size (1-minute test)"
+msgstr "Estimar la mida final (prova d'1 minut)"
+
 #: cli.py:679
 msgid "Estimate the final size and time from a short sample"
 msgstr "Estima la mida final i el temps a partir d'una mostra curta"
+
+#: gui/wizard/step_summary.py:327
+msgid "Estimate the final size from a 1-minute test of this video"
+msgstr "Estimar la mida final a partir d'una prova d'1 minut d'aquest vídeo"
+
+#: gui/wizard/step_summary.py:356
+msgid "Estimated size and time"
+msgstr "Mida i temps estimats"
 
 #: cli.py:500
 #, python-brace-format
 msgid "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
 msgstr "Mida estimada: no es pot calcular sense la mida de l'àudio; només el vídeo: ~{size}"
 
+#: gui/wizard/step_summary.py:45
+#, python-brace-format
+msgid ""
+"Estimated size: cannot be calculated without the audio size; video only: ~{size} · Approx. time: "
+"{time}"
+msgstr ""
+"Mida estimada: no es pot calcular sense la mida de l'àudio; només el vídeo: ~{size} · Temps "
+"aprox.: {time}"
+
 #: cli.py:506
 #, python-brace-format
 msgid "Estimated size: ~{size}"
 msgstr "Mida estimada: ~{size}"
+
+#: gui/wizard/step_summary.py:52
+#, python-brace-format
+msgid "Estimated size: ~{size} (bigger than the original {original}) · Approx. time: {time}"
+msgstr "Mida estimada: ~{size} (més gran que l'original {original}) · Temps aprox.: {time}"
+
+#: gui/wizard/step_summary.py:58
+#, python-brace-format
+msgid "Estimated size: ~{size} (from {original}: −{percent:.0f} %) · Approx. time: {time}"
+msgstr "Mida estimada: ~{size} (de {original}: −{percent:.0f} %) · Temps aprox.: {time}"
+
+#: gui/wizard/step_summary.py:56
+#, python-brace-format
+msgid "Estimated size: ~{size} · Approx. time: {time}"
+msgstr "Mida estimada: ~{size} · Temps aprox.: {time}"
 
 #: cli.py:546
 #, python-brace-format
@@ -565,7 +624,7 @@ msgstr "Alemany"
 msgid "H.265"
 msgstr "H.265"
 
-#: gui/wizard/step_summary.py:51
+#: gui/wizard/step_summary.py:79
 msgid "HDR video"
 msgstr "Vídeo HDR"
 
@@ -585,7 +644,7 @@ msgstr "Si no marques cap pista d'àudio, es conserven totes."
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr "Si conserves el 4K, el Jellyfin l'haurà de transcodificar."
 
-#: gui/main_window.py:291
+#: gui/main_window.py:297
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si surts ara, es cancel·larà la conversió."
 
@@ -637,11 +696,11 @@ msgstr "Japonès"
 msgid "Jellyfin"
 msgstr "Jellyfin"
 
-#: gui/wizard/step_summary.py:38
+#: gui/wizard/step_summary.py:66
 msgid "Jellyfin will transcode"
 msgstr "El Jellyfin transcodificarà"
 
-#: gui/main_window.py:295
+#: gui/main_window.py:301
 msgid "Keep converting"
 msgstr "Continua convertint"
 
@@ -721,7 +780,7 @@ msgstr "Més compatible"
 msgid "More quality or more space?"
 msgstr "Més qualitat o més espai?"
 
-#: gui/wizard/step_summary.py:39
+#: gui/wizard/step_summary.py:67
 msgid "Needs attention"
 msgstr "Necessita atenció"
 
@@ -835,7 +894,7 @@ msgstr "Redueix les animacions"
 msgid "Reduce the audio size"
 msgstr "Reduir el pes de l'àudio"
 
-#: gui/main_window.py:76 gui/main_window.py:340 gui/main_window.py:343
+#: gui/main_window.py:76 gui/main_window.py:346 gui/main_window.py:349
 msgid "Reduvid"
 msgstr "Reduvid"
 
@@ -855,7 +914,7 @@ msgstr "Treu els seleccionats"
 msgid "Replace the original"
 msgstr "Reemplaça l'original"
 
-#: gui/wizard/step_summary.py:99
+#: gui/wizard/step_summary.py:138
 msgid "Review what Reduvid will do with each video before starting."
 msgstr "Revisa què farà el Reduvid amb cada vídeo abans de començar."
 
@@ -885,11 +944,11 @@ msgstr "Mostra els detalls del multimèdia"
 msgid "Size: {size:.2f} MB"
 msgstr "Mida: {size:.2f} MB"
 
-#: gui/wizard/step_summary.py:57
+#: gui/wizard/step_summary.py:85
 msgid "Skip this video"
 msgstr "Salta aquest vídeo"
 
-#: gui/wizard/step_summary.py:250
+#: gui/wizard/step_summary.py:314
 msgid "Skipped"
 msgstr "Saltat"
 
@@ -901,11 +960,11 @@ msgstr "Hi ha hagut un problema en processar el fitxer."
 msgid "Spanish"
 msgstr "Castellà"
 
-#: gui/wizard/step_summary.py:114
+#: gui/wizard/step_summary.py:153
 msgid "Start conversion"
 msgstr "Comença la conversió"
 
-#: gui/main_window.py:372
+#: gui/main_window.py:378
 msgid "Step content"
 msgstr "Contingut del pas"
 
@@ -927,7 +986,7 @@ msgstr "Pista de subtítols {index}: {details}"
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr "Subtítol {position}: {codec}{language}, imatge: {image}"
 
-#: gui/main_window.py:60 gui/wizard/step_summary.py:96
+#: gui/main_window.py:60 gui/wizard/step_summary.py:135
 msgid "Summary"
 msgstr "Resum"
 
@@ -992,11 +1051,15 @@ msgstr "No hi ha prou espai lliure al disc de destinació."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
 
-#: gui/wizard/step_summary.py:55
+#: gui/workers.py:162
+msgid "This video has no video streams to estimate."
+msgstr "Aquest vídeo no té cap pista de vídeo per estimar."
+
+#: gui/wizard/step_summary.py:83
 msgid "This video needs your attention."
 msgstr "Aquest vídeo necessita la teva atenció."
 
-#: gui/wizard/step_summary.py:176
+#: gui/wizard/step_summary.py:233
 #, python-brace-format
 msgid ""
 "Total savings: {megabytes:.2f} MB ({percent:.1f}%). {succeeded} succeeded, {failed} failed, "

@@ -5,13 +5,20 @@
 
 from __future__ import annotations
 
+import threading
 from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QThread, Signal, Slot
 
+from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.pipeline import PipelineError
+from reduvid.core.plan import PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, probe_media
 from reduvid.core.queue import ConversionQueue, ProcessorProtocol, QueueProgressEvent
+from reduvid.core.runner import EncodeError
+from reduvid.core.sample import SampleRunner, audio_bytes_for_plan, estimate_total
+from reduvid.i18n import _
 
 
 class ProbeWorker(QObject):
@@ -117,7 +124,81 @@ class QueueWorker(QObject):
         self.progress.emit(event)
 
 
-def start_worker_thread(worker: ProbeWorker | QueueWorker) -> QThread:
+class SampleWorker(QObject):
+    """Estimate one video's final size from a short sample, emitting only signals."""
+
+    progress = Signal(float)
+    done = Signal(object)
+    failed = Signal(str, str)
+    finished = Signal()
+
+    def __init__(
+        self,
+        ffmpeg_info: FFmpegInfo,
+        media: MediaInfo,
+        options: PlanOptions,
+        input_path: Path,
+        *,
+        threads: int | None = None,
+        runner_factory: Callable[..., SampleRunner] | None = None,
+        parent: QObject | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._ffmpeg_info = ffmpeg_info
+        self._media = media
+        self._options = options
+        self._input_path = input_path
+        self._threads = threads
+        self._runner_factory = runner_factory
+        self._lock = threading.Lock()
+        self._runner: SampleRunner | None = None
+        self._cancelled = False
+
+    @Slot()
+    def run(self) -> None:
+        try:
+            plan = build_plan(self._media, self._ffmpeg_info, self._options)
+            if not plan.videos:
+                self.failed.emit("unknown", _("This video has no video streams to estimate."))
+                return
+            factory = self._runner_factory or SampleRunner
+            runner = factory(
+                self._ffmpeg_info.ffmpeg_path,
+                self._media,
+                plan,
+                self._input_path,
+                on_progress=self.progress.emit,
+                threads=self._threads,
+            )
+            with self._lock:
+                cancelled_early = self._cancelled
+                self._runner = runner
+            if cancelled_early:
+                runner.cancel()
+            sample = runner.run()
+            audio_bytes = audio_bytes_for_plan(self._media, plan)[1]
+            total = estimate_total(sample, self._media, audio_bytes)
+        except (EncodeError, PipelineError) as error:
+            self.failed.emit(error.code, error.detail)
+        except ValueError as error:
+            self.failed.emit("unknown", str(error))
+        else:
+            self.done.emit(total)
+        finally:
+            with self._lock:
+                self._runner = None
+            self.finished.emit()
+
+    def cancel(self) -> None:
+        """Stop the running sample and prevent the rest from starting."""
+        with self._lock:
+            self._cancelled = True
+            runner = self._runner
+        if runner is not None:
+            runner.cancel()
+
+
+def start_worker_thread(worker: ProbeWorker | QueueWorker | SampleWorker) -> QThread:
     """Move *worker* to a new thread, start it and return the thread.
 
     ``finished`` quits the thread; both objects are scheduled for deletion once
