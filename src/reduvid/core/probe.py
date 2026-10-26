@@ -86,6 +86,21 @@ def format_size(size: int) -> str:
     return f"{size / 1_000_000:.0f} MB"
 
 
+def parse_bitrate(value: str | None) -> int | None:
+    """Parse an FFmpeg bitrate such as '256k' or '1m' into bits per second."""
+    if not value:
+        return None
+    text = value.strip().lower()
+    multiplier = 1
+    if text.endswith(("k", "m")):
+        multiplier = 1_000 if text.endswith("k") else 1_000_000
+        text = text[:-1]
+    try:
+        return int(text) * multiplier
+    except ValueError:
+        return None
+
+
 def estimate_stream_bytes(bitrate: int | None, duration: float | None) -> int | None:
     """Estimate stream size in bytes from its bitrate (bps) and duration (seconds)."""
     if bitrate is None or duration is None:

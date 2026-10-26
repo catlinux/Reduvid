@@ -13,6 +13,7 @@ pytest.importorskip("PySide6")
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import (
     AudioStream,
     MediaInfo,
@@ -21,12 +22,15 @@ from reduvid.core.probe import (
     format_size,
 )
 from reduvid.gui.wizard_logic import (
+    audio_size_summary,
     collect_languages,
     format_duration,
     language_name,
+    subtitle_container_note,
     summarize,
+    track_rows,
 )
-from reduvid.gui.wizard_state import WizardState
+from reduvid.gui.wizard_state import VideoEntry, WizardState
 
 
 def media(
@@ -197,3 +201,91 @@ def test_size_and_duration_formatting() -> None:
     assert format_size(250_000_000) == "250 MB"
     assert format_duration(3725) == "1:02:05"
     assert format_duration(65) == "1:05"
+
+
+def test_track_rows_list_audio_and_subtitles_with_estimates(tmp_path: Path) -> None:
+    info = media(
+        tmp_path / "video.mkv",
+        duration=100.0,
+        audios=[
+            AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+            AudioStream(2, "ac3", 2, "eng", False),
+        ],
+        subtitles=[
+            SubtitleStream(3, "hdmv_pgs_subtitle", "spa", True, False, False),
+            SubtitleStream(4, "subrip", "eng", False, True, False),
+        ],
+    )
+
+    rows = track_rows(info)
+
+    assert [row.index for row in rows] == [1, 2, 3, 4]
+    assert [row.kind for row in rows] == ["audio", "audio", "subtitle", "subtitle"]
+    assert rows[0].channels == 6
+    assert rows[0].bitrate == 640_000
+    assert rows[0].estimated_bytes == 8_000_000
+    assert rows[0].is_default is True
+    assert rows[1].estimated_bytes is None
+    assert rows[2].is_image is True
+    assert rows[2].estimated_bytes is None
+    assert rows[3].is_default is True
+
+
+def test_audio_size_summary_with_two_audio_tracks(tmp_path: Path) -> None:
+    info = media(
+        tmp_path / "video.mkv",
+        duration=100.0,
+        audios=[
+            AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+            AudioStream(2, "ac3", 6, "spa", False, bitrate=640_000),
+        ],
+    )
+    entries = [VideoEntry(tmp_path / "video.mkv", info)]
+
+    everything = audio_size_summary(entries, PlanOptions(), ffmpeg())
+
+    assert everything.current_bytes == 16_000_000
+    assert everything.final_bytes == 16_000_000
+
+    one_track = audio_size_summary(entries, PlanOptions(audio_tracks=frozenset({1})), ffmpeg())
+
+    assert one_track.current_bytes == 8_000_000
+    assert one_track.final_bytes == 8_000_000
+
+    reduced = audio_size_summary(
+        entries,
+        PlanOptions(audio_tracks=frozenset({1}), reduce_audio=True),
+        ffmpeg(),
+    )
+
+    assert reduced.current_bytes == 8_000_000
+    assert reduced.final_bytes == 3_200_000
+
+
+def test_audio_size_summary_is_none_when_a_bitrate_is_missing(tmp_path: Path) -> None:
+    info = media(
+        tmp_path / "video.mkv",
+        duration=100.0,
+        audios=[AudioStream(1, "ac3", 6, "spa", True)],
+    )
+    entries = [VideoEntry(tmp_path / "video.mkv", info)]
+
+    summary = audio_size_summary(entries, PlanOptions(), ffmpeg())
+
+    assert summary.current_bytes is None
+    assert summary.final_bytes is None
+
+
+def test_subtitle_container_note_for_each_case(tmp_path: Path) -> None:
+    text = media(
+        tmp_path / "text.mkv",
+        subtitles=[SubtitleStream(1, "subrip", "spa", False, True, False)],
+    )
+    image = media(
+        tmp_path / "image.mkv",
+        subtitles=[SubtitleStream(1, "hdmv_pgs_subtitle", "spa", True, True, False)],
+    )
+
+    assert subtitle_container_note([text], "mp4") == "none"
+    assert subtitle_container_note([image], "mp4") == "image_dropped_mp4"
+    assert subtitle_container_note([image], "mkv") == "image_kept_mkv"

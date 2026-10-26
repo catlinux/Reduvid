@@ -23,6 +23,7 @@ from reduvid.core.probe import (
     ProbeError,
     estimate_stream_bytes,
     format_size,
+    parse_bitrate,
     probe_media,
 )
 from reduvid.core.queue import ConversionQueue, QueueProgressEvent
@@ -68,24 +69,6 @@ def _track_set(value: str) -> frozenset[int]:
             )
         tracks.add(track)
     return frozenset(tracks)
-
-
-def _parse_bitrate(value: str) -> int | None:
-    normalized = value.strip().lower()
-    if normalized.endswith("k"):
-        try:
-            return int(normalized[:-1]) * 1_000
-        except ValueError:
-            return None
-    if normalized.endswith("m"):
-        try:
-            return int(normalized[:-1]) * 1_000_000
-        except ValueError:
-            return None
-    try:
-        return int(normalized)
-    except ValueError:
-        return None
 
 
 def _load_config() -> Config:
@@ -272,7 +255,7 @@ def _show_plan(plan: EncodePlan, media: MediaInfo | None = None) -> None:
             stream = audio_by_index.get(audio_decision.stream_index)
             bitrate: int | None = None
             if audio_decision.bitrate is not None:
-                bitrate = _parse_bitrate(audio_decision.bitrate)
+                bitrate = parse_bitrate(audio_decision.bitrate)
             elif stream is not None:
                 bitrate = stream.bitrate
             bytes_est = (

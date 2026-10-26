@@ -53,6 +53,9 @@ class WizardState(QObject):
         self._audio_selected: frozenset[str] | None = None
         self._subtitle_selected: frozenset[str] | None = None
         self._videos: list[VideoEntry] = []
+        self._audio_tracks: frozenset[int] | None = None
+        self._one_audio_per_language = False
+        self._reduce_audio = False
 
     @property
     def videos(self) -> tuple[VideoEntry, ...]:
@@ -70,6 +73,13 @@ class WizardState(QObject):
     def ready(self) -> bool:
         """Whether at least one video has been probed successfully."""
         return any(entry.ready for entry in self._videos)
+
+    @property
+    def single_video(self) -> VideoEntry | None:
+        """The single probed video when exactly one video is in the wizard."""
+        if len(self._videos) == 1 and self._videos[0].ready:
+            return self._videos[0]
+        return None
 
     @property
     def container(self) -> str:
@@ -94,6 +104,18 @@ class WizardState(QObject):
     @property
     def threads(self) -> int | None:
         return self._threads
+
+    @property
+    def audio_tracks(self) -> frozenset[int] | None:
+        return self._audio_tracks
+
+    @property
+    def one_audio_per_language(self) -> bool:
+        return self._one_audio_per_language
+
+    @property
+    def reduce_audio(self) -> bool:
+        return self._reduce_audio
 
     def set_destination(self, destination: str) -> None:
         if destination not in DESTINATIONS:
@@ -147,6 +169,22 @@ class WizardState(QObject):
             self._threads = threads
             self.changed.emit()
 
+    def set_one_audio_per_language(self, enabled: bool) -> None:
+        if enabled != self._one_audio_per_language:
+            self._one_audio_per_language = enabled
+            self.changed.emit()
+
+    def set_reduce_audio(self, enabled: bool) -> None:
+        if enabled != self._reduce_audio:
+            self._reduce_audio = enabled
+            self.changed.emit()
+
+    def set_audio_tracks(self, tracks: Iterable[int] | None) -> None:
+        normalized = frozenset(tracks) if tracks is not None else None
+        if normalized != self._audio_tracks:
+            self._audio_tracks = normalized
+            self.changed.emit()
+
     def available_audio_languages(self) -> tuple[str, ...]:
         return _languages(self._videos, "audio")
 
@@ -164,6 +202,15 @@ class WizardState(QObject):
         if self._subtitle_selected is None:
             return available
         return frozenset(code for code in self._subtitle_selected if code in available)
+
+    def selected_audio_tracks(self) -> frozenset[int]:
+        video = self.single_video
+        if video is None or video.media is None:
+            return frozenset()
+        available = frozenset(stream.index for stream in video.media.audio_streams)
+        if self._audio_tracks is None:
+            return available
+        return frozenset(index for index in self._audio_tracks if index in available)
 
     def set_audio_languages(self, codes: Iterable[str]) -> None:
         self._set_languages("_audio_selected", codes, "audio")
@@ -194,6 +241,13 @@ class WizardState(QObject):
             max_height = self._max_height
         else:
             max_height = 2160 if self._keep_4k() else None
+        tracks: frozenset[int] | None = None
+        single = self.single_video
+        if single is not None and single.media is not None and self._audio_tracks is not None:
+            available_tracks = frozenset(stream.index for stream in single.media.audio_streams)
+            selected = self.selected_audio_tracks()
+            if selected != available_tracks:
+                tracks = selected
         return PlanOptions(
             destination=self._destination,
             quality=self._quality,
@@ -201,6 +255,9 @@ class WizardState(QObject):
             max_height=max_height,
             audio_languages=audio,
             subtitle_languages=subtitles,
+            audio_tracks=tracks,
+            one_audio_per_language=self._one_audio_per_language,
+            reduce_audio=self._reduce_audio,
         )
 
     def _keep_4k(self) -> bool:
@@ -251,6 +308,7 @@ class WizardState(QObject):
                 existing.add(resolved)
                 added.append(resolved)
         if added:
+            self._audio_tracks = None
             self.changed.emit()
         return added
 
@@ -259,6 +317,7 @@ class WizardState(QObject):
         remaining = [entry for entry in self._videos if entry.path not in wanted]
         if len(remaining) != len(self._videos):
             self._videos = remaining
+            self._audio_tracks = None
             self.changed.emit()
 
     def set_media(self, path: Path, media: MediaInfo) -> None:

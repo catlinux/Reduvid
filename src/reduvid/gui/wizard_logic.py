@@ -12,8 +12,8 @@ from typing import Literal
 
 from reduvid.core.compat import CompatStatus, jellyfin_status
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import EncodePlan, PlanOptions, Warning, build_plan
-from reduvid.core.probe import MediaInfo
+from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, Warning, build_plan
+from reduvid.core.probe import MediaInfo, estimate_stream_bytes, parse_bitrate
 from reduvid.gui.wizard_state import VideoEntry
 from reduvid.i18n import _
 
@@ -91,6 +91,116 @@ class VideoSummary:
     status: CompatStatus
     warnings: tuple[Warning, ...]
     blocking: tuple[Warning, ...]
+
+
+@dataclass(frozen=True)
+class TrackRow:
+    """One audio or subtitle track shown in the assistant, with its estimate."""
+
+    index: int
+    kind: Literal["audio", "subtitle"]
+    language: str | None
+    codec: str
+    channels: int | None
+    bitrate: int | None
+    estimated_bytes: int | None
+    is_image: bool
+    is_default: bool
+
+
+@dataclass(frozen=True)
+class AudioSizeSummary:
+    """Estimated audio size before and after applying the current plan."""
+
+    current_bytes: int | None
+    final_bytes: int | None
+
+
+def track_rows(media: MediaInfo) -> tuple[TrackRow, ...]:
+    """Return the audio and subtitle tracks of one media, in stream order."""
+    audio = (
+        TrackRow(
+            index=stream.index,
+            kind="audio",
+            language=stream.language,
+            codec=stream.codec,
+            channels=stream.channels,
+            bitrate=stream.bitrate,
+            estimated_bytes=estimate_stream_bytes(stream.bitrate, media.duration),
+            is_image=False,
+            is_default=stream.is_default,
+        )
+        for stream in media.audio_streams
+    )
+    subtitles = (
+        TrackRow(
+            index=stream.index,
+            kind="subtitle",
+            language=stream.language,
+            codec=stream.codec,
+            channels=None,
+            bitrate=None,
+            estimated_bytes=None,
+            is_image=stream.is_image,
+            is_default=stream.is_default,
+        )
+        for stream in media.subtitle_streams
+    )
+    return tuple(sorted((*audio, *subtitles), key=lambda row: row.index))
+
+
+def audio_size_summary(
+    entries: Iterable[VideoEntry], options: PlanOptions, ffmpeg_info: FFmpegInfo
+) -> AudioSizeSummary:
+    """Estimate the audio size kept now and after the plan, over the ready videos."""
+    current_parts: list[int | None] = []
+    final_parts: list[int | None] = []
+    for entry in entries:
+        media = entry.media
+        if media is None:
+            continue
+        streams = {stream.index: stream for stream in media.audio_streams}
+        plan = build_plan(media, ffmpeg_info, options)
+        for decision in plan.audios:
+            stream = streams.get(decision.stream_index)
+            if stream is None:
+                current_parts.append(None)
+                final_parts.append(None)
+                continue
+            current = estimate_stream_bytes(stream.bitrate, media.duration)
+            current_parts.append(current)
+            final_parts.append(_decision_bytes(decision, current, media.duration))
+    return AudioSizeSummary(_sum_or_none(current_parts), _sum_or_none(final_parts))
+
+
+def subtitle_container_note(
+    media_list: Iterable[MediaInfo], container: str
+) -> Literal["none", "image_dropped_mp4", "image_kept_mkv"]:
+    """Describe what happens to image subtitles with the chosen container."""
+    has_image = any(
+        subtitle.is_image for media in media_list for subtitle in media.subtitle_streams
+    )
+    if not has_image:
+        return "none"
+    return "image_dropped_mp4" if container == "mp4" else "image_kept_mkv"
+
+
+def _decision_bytes(
+    decision: AudioDecision, copied_bytes: int | None, duration: float
+) -> int | None:
+    if decision.action == "copy":
+        return copied_bytes
+    bitrate = parse_bitrate(decision.bitrate)
+    return estimate_stream_bytes(bitrate, duration)
+
+
+def _sum_or_none(parts: Iterable[int | None]) -> int | None:
+    total = 0
+    for part in parts:
+        if part is None:
+            return None
+        total += part
+    return total
 
 
 def summarize(
