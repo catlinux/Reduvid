@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import subprocess
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any
 
 
@@ -38,6 +38,7 @@ class AudioStream:
     language: str | None
     is_default: bool
     sample_rate: int | None = None
+    bitrate: int | None = None
 
 
 @dataclass(frozen=True)
@@ -76,6 +77,13 @@ class MediaInfo:
     subtitle_streams: list[SubtitleStream]
     chapters: list[Chapter]
     attachments: list[AttachmentStream] = field(default_factory=list)
+
+
+def estimate_stream_bytes(bitrate: int | None, duration: float | None) -> int | None:
+    """Estimate stream size in bytes from its bitrate (bps) and duration (seconds)."""
+    if bitrate is None or duration is None:
+        return None
+    return round(bitrate * duration / 8)
 
 
 def _mapping(value: object) -> dict[str, Any]:
@@ -118,6 +126,28 @@ def _disposition(stream: dict[str, Any]) -> dict[str, Any]:
 def _language(stream: dict[str, Any]) -> str | None:
     language = _tags(stream).get("language")
     return language if isinstance(language, str) else None
+
+
+def _positive_int(value: object) -> int | None:
+    try:
+        number = int(str(value).strip())
+    except ValueError:
+        return None
+    return number if number > 0 else None
+
+
+def _bitrate(stream: dict[str, Any]) -> int | None:
+    # MKV usually has no per-stream bit_rate; mkvmerge/ffmpeg store it in the BPS tags.
+    direct = _positive_int(stream.get("bit_rate"))
+    if direct is not None:
+        return direct
+    tags = _tags(stream)
+    for key, value in tags.items():
+        if key.upper() == "BPS" or key.upper().startswith("BPS-"):
+            number = _positive_int(value)
+            if number is not None:
+                return number
+    return None
 
 
 def _video(stream: dict[str, Any]) -> VideoStream:
@@ -181,6 +211,7 @@ def _parse(payload: object, path: Path) -> MediaInfo:
                         if stream.get("sample_rate") is not None
                         else None
                     ),
+                    bitrate=_bitrate(stream),
                 )
             )
         elif codec_type == "subtitle":
@@ -233,9 +264,13 @@ def _parse(payload: object, path: Path) -> MediaInfo:
     )
 
 
+def _is_absolute(path: Path) -> bool:
+    return path.is_absolute() or PureWindowsPath(path).is_absolute()
+
+
 def probe_media(ffprobe_path: Path, media_path: Path) -> MediaInfo:
     """Probe an absolute media path; failures raise :class:`ProbeError`."""
-    if not media_path.is_absolute():
+    if not _is_absolute(media_path):
         raise ValueError("media_path must be absolute")
     result = subprocess.run(  # noqa: S603
         [

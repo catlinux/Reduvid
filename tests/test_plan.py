@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import PlanOptions, build_plan
+from reduvid.core.plan import PlanOptions, build_plan, estimate_stream_bytes, rank_audio
 from reduvid.core.probe import AudioStream, MediaInfo, SubtitleStream, VideoStream
 
 
@@ -207,3 +207,144 @@ def test_subtitle_filter_can_remove_every_subtitle() -> None:
 
     assert plan.subtitles == ()
     assert not plan.warnings
+
+
+def test_estimate_stream_bytes() -> None:
+    # Con datos: 640 kbps durante 8700 s (~696 MB)
+    assert estimate_stream_bytes(640_000, 8700.0) == 696_000_000
+    assert estimate_stream_bytes(128_000, 60.0) == 960_000
+    # Sin datos: o falta bitrate, o falta duration, o ambos
+    assert estimate_stream_bytes(None, 60.0) is None
+    assert estimate_stream_bytes(128_000, None) is None
+    assert estimate_stream_bytes(None, None) is None
+
+
+def test_audio_tracks_selection() -> None:
+    audios = [
+        AudioStream(1, "aac", 2, "eng", False),
+        AudioStream(2, "ac3", 6, "spa", False),
+        AudioStream(3, "dts", 6, "spa", False),
+    ]
+    # audio_tracks selecciona las pistas exactas por índice ffprobe
+    plan = build_plan(media(audios=audios), ffmpeg(), PlanOptions(audio_tracks=frozenset({2, 3})))
+    assert [item.stream_index for item in plan.audios] == [2, 3]
+
+    # audio_tracks prevalece sobre audio_languages
+    plan_override = build_plan(
+        media(audios=audios),
+        ffmpeg(),
+        PlanOptions(audio_tracks=frozenset({1}), audio_languages=frozenset({"spa"})),
+    )
+    assert [item.stream_index for item in plan_override.audios] == [1]
+
+
+def test_audio_tracks_empty_or_nonmatching_keeps_all_and_warns() -> None:
+    audios = [
+        AudioStream(1, "aac", 2, "eng", False),
+        AudioStream(2, "ac3", 6, "spa", False),
+    ]
+    # Ninguna pista coincide con los índices dados
+    plan_no_match = build_plan(
+        media(audios=audios), ffmpeg(), PlanOptions(audio_tracks=frozenset({99}))
+    )
+    assert [item.stream_index for item in plan_no_match.audios] == [1, 2]
+    assert any(warning.code == "audio_filter_kept_all" for warning in plan_no_match.warnings)
+
+    # Conjunto vacío
+    plan_empty = build_plan(media(audios=audios), ffmpeg(), PlanOptions(audio_tracks=frozenset()))
+    assert [item.stream_index for item in plan_empty.audios] == [1, 2]
+    assert any(warning.code == "audio_filter_kept_all" for warning in plan_empty.warnings)
+
+
+def test_one_audio_per_language_chooses_best_track() -> None:
+    # Caso real: MKV con 2 pistas en español + 1 en inglés
+    # Pista 1: español estéreo 2.0 E-AC3 224k
+    # Pista 2: español 5.1 AC3 640k (más canales y mayor bitrate)
+    # Pista 3: inglés estéreo 2.0 AAC 128k
+    audios = [
+        AudioStream(1, "eac3", 2, "spa", False, bitrate=224_000),
+        AudioStream(2, "ac3", 6, "spa", False, bitrate=640_000),
+        AudioStream(3, "aac", 2, "eng", True, bitrate=128_000),
+    ]
+    plan = build_plan(media(audios=audios), ffmpeg(), PlanOptions(one_audio_per_language=True))
+    # Se queda la pista 2 (mejor en spa) y la pista 3 (única en eng)
+    assert [item.stream_index for item in plan.audios] == [2, 3]
+
+
+def test_one_audio_per_language_tie_breaking_order() -> None:
+    # Mismos canales: mayor bitrate gana
+    spa_low = AudioStream(1, "ac3", 6, "spa", False, bitrate=448_000)
+    spa_high = AudioStream(2, "ac3", 6, "spa", False, bitrate=640_000)
+    plan_bitrate = build_plan(
+        media(audios=[spa_low, spa_high]), ffmpeg(), PlanOptions(one_audio_per_language=True)
+    )
+    assert [item.stream_index for item in plan_bitrate.audios] == [2]
+
+    # Mismos canales y bitrate: is_default gana
+    spa_nodef = AudioStream(1, "ac3", 6, "spa", False, bitrate=640_000)
+    spa_def = AudioStream(2, "ac3", 6, "spa", True, bitrate=640_000)
+    plan_default = build_plan(
+        media(audios=[spa_nodef, spa_def]), ffmpeg(), PlanOptions(one_audio_per_language=True)
+    )
+    assert [item.stream_index for item in plan_default.audios] == [2]
+
+    # Mismos canales, bitrate e is_default: menor índice gana
+    spa_first = AudioStream(1, "ac3", 6, "spa", False, bitrate=640_000)
+    spa_second = AudioStream(3, "ac3", 6, "spa", False, bitrate=640_000)
+    plan_index = build_plan(
+        media(audios=[spa_first, spa_second]), ffmpeg(), PlanOptions(one_audio_per_language=True)
+    )
+    assert [item.stream_index for item in plan_index.audios] == [1]
+
+    # Preserva el orden original de las pistas en el contenedor
+    spa_worse = AudioStream(0, "ac3", 2, "spa", False, bitrate=192_000)
+    eng = AudioStream(1, "aac", 2, "eng", False, bitrate=128_000)
+    spa_better = AudioStream(2, "ac3", 6, "spa", False, bitrate=640_000)
+    plan_order = build_plan(
+        media(audios=[spa_worse, eng, spa_better]),
+        ffmpeg(),
+        PlanOptions(one_audio_per_language=True),
+    )
+    assert [item.stream_index for item in plan_order.audios] == [1, 2]
+
+    # Sin idioma (None y "") agrupan bajo "und"
+    und_stereo = AudioStream(0, "aac", 2, None, False, bitrate=128_000)
+    und_surround = AudioStream(1, "ac3", 6, "", False, bitrate=640_000)
+    plan_und = build_plan(
+        media(audios=[und_stereo, und_surround]), ffmpeg(), PlanOptions(one_audio_per_language=True)
+    )
+    assert [item.stream_index for item in plan_und.audios] == [1]
+
+
+def test_reduce_audio() -> None:
+    audios = [
+        # 5.1 no-aac -> aac 256k con aviso
+        AudioStream(1, "ac3", 6, "spa", False, bitrate=640_000),
+        # Estéreo no-aac -> aac 128k con aviso
+        AudioStream(2, "ac3", 2, "spa", False, bitrate=192_000),
+        # AAC estéreo ya bajo (128k) -> se copia, sin aviso
+        AudioStream(3, "aac", 2, "eng", False, bitrate=128_000),
+        # AAC 5.1 ya bajo (256k) -> se copia, sin aviso
+        AudioStream(4, "aac", 6, "eng", False, bitrate=256_000),
+        # AAC estéreo con bitrate superior al objetivo (320k) -> se recodifica a 128k con aviso
+        AudioStream(5, "aac", 2, "fra", False, bitrate=320_000),
+    ]
+    plan = build_plan(media(audios=audios), ffmpeg(), PlanOptions(reduce_audio=True))
+    assert [(item.action, item.codec, item.bitrate) for item in plan.audios] == [
+        ("encode", "aac", "256k"),
+        ("encode", "aac", "128k"),
+        ("copy", None, None),
+        ("copy", None, None),
+        ("encode", "aac", "128k"),
+    ]
+    warnings = [w for w in plan.warnings if w.code == "audio_reduced"]
+    assert len(warnings) == 3
+    assert warnings[0].params == {"stream_index": 1, "bitrate": "256k"}
+    assert warnings[1].params == {"stream_index": 2, "bitrate": "128k"}
+    assert warnings[2].params == {"stream_index": 5, "bitrate": "128k"}
+
+
+def test_rank_audio_utility() -> None:
+    s1 = AudioStream(1, "aac", 2, "spa", False, bitrate=128_000)
+    s2 = AudioStream(2, "ac3", 6, "spa", False, bitrate=640_000)
+    assert rank_audio([s1, s2]) == [s2, s1]

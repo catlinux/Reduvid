@@ -5,11 +5,20 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Literal
 
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.probe import AudioStream, MediaInfo, SubtitleStream, VideoStream
+from reduvid.core.probe import (
+    AudioStream,
+    MediaInfo,
+    SubtitleStream,
+    VideoStream,
+)
+from reduvid.core.probe import (
+    estimate_stream_bytes as estimate_stream_bytes,
+)
 from reduvid.core.profiles import PROFILES, QUALITY_CRFS, Profile
 
 
@@ -21,6 +30,9 @@ class PlanOptions:
     max_height: int | None = None
     audio_languages: frozenset[str] | None = None
     subtitle_languages: frozenset[str] | None = None
+    audio_tracks: frozenset[int] | None = None
+    one_audio_per_language: bool = False
+    reduce_audio: bool = False
 
 
 @dataclass(frozen=True)
@@ -126,7 +138,38 @@ def _video_decision(
     )
 
 
-def _audio_decision(stream: AudioStream, warnings: list[Warning]) -> AudioDecision:
+def rank_audio_key(stream: AudioStream) -> tuple[int, int, int, int]:
+    """Sort key for audio stream quality: channels, bitrate, is_default, -index."""
+    return (
+        stream.channels,
+        stream.bitrate or 0,
+        1 if stream.is_default else 0,
+        -stream.index,
+    )
+
+
+def rank_audio(streams: Sequence[AudioStream]) -> list[AudioStream]:
+    """Return audio streams ranked from best to worst quality."""
+    return sorted(streams, key=rank_audio_key, reverse=True)
+
+
+def _audio_decision(
+    stream: AudioStream, warnings: list[Warning], reduce_audio: bool = False
+) -> AudioDecision:
+    if reduce_audio:
+        target_bitrate = "256k" if stream.channels > 2 else "128k"
+        target_bps = 256_000 if stream.channels > 2 else 128_000
+        if (
+            stream.codec.lower() == "aac"
+            and stream.bitrate is not None
+            and stream.bitrate <= target_bps
+        ):
+            return AudioDecision(stream.index, "copy")
+        warnings.append(
+            Warning("audio_reduced", {"stream_index": stream.index, "bitrate": target_bitrate})
+        )
+        return AudioDecision(stream.index, "encode", "aac", target_bitrate)
+
     # Jellyfin clients generally direct-play these codecs.
     if stream.codec.lower() in {"aac", "ac3", "eac3"}:
         return AudioDecision(stream.index, "copy")
@@ -167,17 +210,40 @@ def build_plan(
         for stream in media.video_streams
     )
 
-    audio_languages = _language_filter(options.audio_languages)
-    selected_audio = [
-        stream
-        for stream in media.audio_streams
-        if _language_allowed(stream.language, audio_languages)
-    ]
-    if options.audio_languages is not None and media.audio_streams and not selected_audio:
-        # Keeping some audio beats producing a silent video, even if none matches.
+    selected_audio: list[AudioStream]
+    if options.audio_tracks is not None:
+        selected_audio = [
+            stream for stream in media.audio_streams if stream.index in options.audio_tracks
+        ]
+        if media.audio_streams and not selected_audio:
+            # Keeping some audio beats producing a silent video, even if none matches.
+            selected_audio = list(media.audio_streams)
+            warnings.append(Warning("audio_filter_kept_all"))
+    elif options.audio_languages is not None:
+        audio_languages = _language_filter(options.audio_languages)
+        selected_audio = [
+            stream
+            for stream in media.audio_streams
+            if _language_allowed(stream.language, audio_languages)
+        ]
+        if media.audio_streams and not selected_audio:
+            # Keeping some audio beats producing a silent video, even if none matches.
+            selected_audio = list(media.audio_streams)
+            warnings.append(Warning("audio_filter_kept_all"))
+    else:
         selected_audio = list(media.audio_streams)
-        warnings.append(Warning("audio_filter_kept_all"))
-    audios = tuple(_audio_decision(stream, warnings) for stream in selected_audio)
+
+    if options.one_audio_per_language and selected_audio:
+        groups: dict[str, list[AudioStream]] = {}
+        for stream in selected_audio:
+            lang = _normalized_language(stream.language)
+            groups.setdefault(lang, []).append(stream)
+        chosen_indices = {rank_audio(group)[0].index for group in groups.values()}
+        selected_audio = [stream for stream in selected_audio if stream.index in chosen_indices]
+
+    audios = tuple(
+        _audio_decision(stream, warnings, options.reduce_audio) for stream in selected_audio
+    )
 
     subtitle_languages = _language_filter(options.subtitle_languages)
     selected_subtitles = [

@@ -6,6 +6,10 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+### Añadido
+
+- Motor: selección de audio por pista (`audio_tracks`), «una pista por idioma» (`one_audio_per_language`), reducción del audio a AAC (`reduce_audio`), bitrate por pista en el sondeo y estimación de su tamaño. Aún sin interfaz ni CLI.
+
 ## [0.2.1] - 2026-10-26
 
 ### Corregido

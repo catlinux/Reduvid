@@ -15,7 +15,7 @@ El paso «Qué conservar» elige solo por idioma para toda la cola. Un vídeo co
 
 ## Pasos
 
-- [ ] 1 **Motor.** *AgentRelay, esfuerzo alto.* Archivos: `core/plan.py`, `core/probe.py` (bitrate por pista si falta, `tags BPS`), tests de plan.
+- [x] 1 **Motor.** *AgentRelay, esfuerzo alto.* Archivos: `core/plan.py`, `core/probe.py` (bitrate por pista si falta, `tags BPS`), tests de plan.
   - `PlanOptions`: `audio_tracks: frozenset[int] | None` (índices de ffprobe; `None` = filtro por idioma como hasta ahora), `one_audio_per_language: bool = False`, `reduce_audio: bool = False`.
   - Función pura `estimate_stream_bytes(stream, duration)` en el motor y `rank_audio(streams)` para elegir «la mejor».
   - `reduce_audio` → decisión `encode` a `aac` con el bitrate indicado, aviso `audio_reduced`; sin él, la política actual.

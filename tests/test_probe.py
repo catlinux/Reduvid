@@ -95,3 +95,85 @@ def test_invalid_json_is_probe_error(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     with pytest.raises(probe.ProbeError, match="invalid JSON"):
         probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv"))
+
+
+def test_probe_reads_audio_bitrate_from_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {
+        "format": {"format_name": "matroska", "duration": "10.0", "size": "1000"},
+        "streams": [
+            {
+                "index": 0,
+                "codec_name": "aac",
+                "codec_type": "audio",
+                "channels": 2,
+                "bit_rate": "320000",
+            }
+        ],
+    }
+    monkeypatch.setattr(
+        probe.subprocess,
+        "run",
+        lambda args, **kwargs: CompletedProcess(args, 0, stdout=json.dumps(payload), stderr=""),
+    )
+    info = probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv"))
+    assert info.audio_streams[0].bitrate == 320000
+
+
+def test_probe_audio_without_bitrate(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {
+        "format": {"format_name": "matroska", "duration": "10.0", "size": "1000"},
+        "streams": [
+            {
+                "index": 0,
+                "codec_name": "aac",
+                "codec_type": "audio",
+                "channels": 2,
+            }
+        ],
+    }
+    monkeypatch.setattr(
+        probe.subprocess,
+        "run",
+        lambda args, **kwargs: CompletedProcess(args, 0, stdout=json.dumps(payload), stderr=""),
+    )
+    info = probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv"))
+    assert info.audio_streams[0].bitrate is None
+
+
+def test_probe_reads_audio_bitrate_from_bps_tags(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {
+        "format": {"format_name": "matroska", "duration": "10.0", "size": "1000"},
+        "streams": [
+            {
+                "index": 0,
+                "codec_name": "eac3",
+                "codec_type": "audio",
+                "channels": 6,
+                "bit_rate": "N/A",
+                "tags": {"BPS": "640000"},
+            },
+            {
+                "index": 1,
+                "codec_name": "ac3",
+                "codec_type": "audio",
+                "channels": 6,
+                "tags": {"BPS-eng": "448000"},
+            },
+            {
+                "index": 2,
+                "codec_name": "aac",
+                "codec_type": "audio",
+                "channels": 2,
+                "tags": {"bps": "128000"},
+            },
+        ],
+    }
+    monkeypatch.setattr(
+        probe.subprocess,
+        "run",
+        lambda args, **kwargs: CompletedProcess(args, 0, stdout=json.dumps(payload), stderr=""),
+    )
+    info = probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv"))
+    assert info.audio_streams[0].bitrate == 640000
+    assert info.audio_streams[1].bitrate == 448000
+    assert info.audio_streams[2].bitrate == 128000
