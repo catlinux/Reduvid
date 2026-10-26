@@ -15,15 +15,16 @@ Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for
 
 ## Project status
 
-In development. The current version (0.3.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
+In development. The current version (0.4.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
 
 | Version | Contents |
 |---|---|
 | 0.1.0 | Conversion engine and command line |
 | 0.2.0 | Graphical interface, wizard and languages (Català, Castellano, English) |
 | 0.3.0 | Choose audio tracks one by one, reduce the audio size and see how much each part weighs |
-| 0.4.0 | Sample test, estimates, final report and saved profiles |
-| 0.5.0 → 1.0.0 | Linux and Windows installers and first stable release |
+| 0.4.0 | Sample test: estimated size and time before converting |
+| 0.5.0 | Final report, saved profiles and warnings for HDR, 10-bit video and image subtitles |
+| 0.6.0 → 1.0.0 | Linux and Windows installers and first stable release |
 
 Details in [TODO.en.md](TODO.en.md) and the [CHANGELOG](CHANGELOG.en.md).
 
@@ -68,7 +69,7 @@ Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
    python -m pip install -e .
    ```
 
-Packages for `pipx`, a Windows installer and a Linux AppImage are planned from version 0.5.0.
+Packages for `pipx`, a Windows installer and a Linux AppImage are planned from version 0.6.0.
 
 ## Quick start
 

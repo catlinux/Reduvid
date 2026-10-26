@@ -6,6 +6,14 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.4.0] - 2026-10-26
+
+### Añadido
+
+- Prueba de muestra: el motor convierte 3 trozos de 20 s (hacia el 20 %, 50 % y 80 % del vídeo) con los ajustes del plan, mide el vídeo y estima el tamaño final y el tiempo de conversión (`core/sample.py`).
+- CLI: nueva orden `reduvid-cli estimate` con las mismas opciones de plan que `convert`.
+- Asistente, paso «Resumen»: botón «Estimar el tamaño final (prueba de 1 minuto)» por vídeo, con progreso, cancelación y resultado; se descarta si cambian los ajustes.
+
 ## [0.3.0] - 2026-10-26
 
 ### Añadido

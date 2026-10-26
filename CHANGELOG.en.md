@@ -6,6 +6,14 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-26
+
+### Added
+
+- Sample test: the engine converts 3 chunks of 20 s (around 20 %, 50 % and 80 % of the video) with the plan's settings, measures the video and estimates the final size and conversion time (`core/sample.py`).
+- CLI: new `reduvid-cli estimate` command with the same plan options as `convert`.
+- Wizard, "Summary" step: per-video "Estimate the final size (1-minute test)" button with progress, cancel and result; it is discarded when the settings change.
+
 ## [0.3.0] - 2026-10-26
 
 ### Added

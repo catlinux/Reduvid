@@ -17,7 +17,7 @@ This folder will grow with each version.
 | --- | --- | --- |
 | Jargon-free glossary | People who don't know what a codec is | 0.2.0 |
 | Jellyfin guide | People who want everything to play without transcoding | 0.2.0 |
-| FAQ | Everyone | 0.4.0 |
+| FAQ | Everyone | 0.5.0 |
 | Architecture and development | People who want to understand or improve the code | 0.2.0 |
 
 ## Design
