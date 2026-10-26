@@ -12,7 +12,7 @@ Estado: `[x]` hecho · `[ ]` pendiente. Ante un imprevisto de diseño, **para** 
 
 ## Pasos
 
-- [ ] 1 **Motor.** *AgentRelay, esfuerzo alto.* `core/sample.py` + tests (puros y uno de integración con marcador `ffmpeg`).
+- [x] 1 **Motor.** *AgentRelay, esfuerzo alto.* `core/sample.py` + tests (puros y uno de integración con marcador `ffmpeg`).
   - `sample_segments(duration, count=3, length=20.0, fractions=(0.2, 0.5, 0.8)) -> tuple[SampleSegment, ...]` (start, length).
   - `build_sample_command(plan, input_path, output_path, segment) -> list[str]`: `-ss` antes de `-i`, `-t`, solo el primer vídeo del plan con sus ajustes (reutiliza la lógica de `command.build_command`, extrayendo lo común en vez de copiar), `-an -sn`, sin metadatos ni capítulos.
   - `run_sample(...)`: ejecuta los trozos en serie con `EncodeHandle` (prioridad baja, cancelable, progreso agregado 0-1), calcula `SampleEstimate(video_bytes, seconds_per_second, sampled_seconds)` y borra los temporales. Errores como `EncodeError`.
