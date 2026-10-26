@@ -325,7 +325,7 @@ msgstr ""
 msgid "Choose the audio and subtitle languages you understand."
 msgstr ""
 
-#: gui/wizard/step_target.py:73
+#: gui/wizard/step_target.py:82
 msgid "Choose the device you will use the most. You can change this later."
 msgstr ""
 
@@ -422,7 +422,7 @@ msgstr ""
 msgid "Destination"
 msgstr ""
 
-#: gui/wizard/step_summary.py:64 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:64
 msgid "Direct play"
 msgstr ""
 
@@ -644,7 +644,11 @@ msgstr ""
 msgid "German"
 msgstr ""
 
-#: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
+#: gui/wizard/step_target.py:22
+msgid "H.264"
+msgstr ""
+
+#: gui/wizard/step_target.py:32 gui/wizard/step_target.py:42
 msgid "H.265"
 msgstr ""
 
@@ -664,7 +668,7 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: gui/wizard/step_target.py:42
+#: gui/wizard/step_target.py:51
 msgid "I don't know"
 msgstr ""
 
@@ -801,7 +805,7 @@ msgstr ""
 msgid "Maximum savings"
 msgstr ""
 
-#: gui/advanced_page.py:83 gui/wizard/step_target.py:28
+#: gui/advanced_page.py:83 gui/wizard/step_target.py:31
 msgid "Modern devices"
 msgstr ""
 
@@ -819,10 +823,6 @@ msgstr ""
 
 #: gui/wizard/step_summary.py:67
 msgid "Needs attention"
-msgstr ""
-
-#: gui/wizard/step_target.py:30
-msgid "Newer phones, tablets and TVs that play H.265."
 msgstr ""
 
 #: messages.py:41
@@ -875,6 +875,12 @@ msgstr ""
 #: cli.py:235
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
+msgstr ""
+
+#: gui/wizard/step_target.py:24
+msgid ""
+"Plays directly on almost any TV, phone or browser through your Jellyfin server. Files are larger "
+"and 4K is scaled down to 1080p."
 msgstr ""
 
 #: gui/wizard/step_destination.py:96
@@ -980,7 +986,7 @@ msgstr ""
 msgid "Same folder as each video"
 msgstr ""
 
-#: gui/advanced_page.py:84 gui/wizard/step_target.py:35
+#: gui/advanced_page.py:84 gui/wizard/step_target.py:41
 msgid "Save for archive"
 msgstr ""
 
@@ -1004,6 +1010,12 @@ msgstr ""
 
 #: gui/wizard/step_summary.py:314
 msgid "Skipped"
+msgstr ""
+
+#: gui/wizard/step_target.py:34
+msgid ""
+"Smaller files than H.264. Newer phones, tablets and TVs play it; older ones and some browsers may"
+" not."
 msgstr ""
 
 #: messages.py:79
@@ -1050,10 +1062,6 @@ msgstr ""
 
 #: gui/preferences.py:36
 msgid "System language"
-msgstr ""
-
-#: gui/wizard/step_target.py:23
-msgid "TV, phone or browser through your Jellyfin server."
 msgstr ""
 
 #: gui/error_view.py:40 gui/wizard/step_quality.py:231
@@ -1110,6 +1118,10 @@ msgstr ""
 
 #: gui/wizard_logic.py:241
 msgid "The slower encoding setting saves a bit more space but takes longer."
+msgstr ""
+
+#: gui/wizard/step_target.py:44
+msgid "The smallest files: H.265 with the slowest, most careful encoding. Conversion takes longer."
 msgstr ""
 
 #: gui/wizard_logic.py:235
@@ -1175,7 +1187,7 @@ msgstr ""
 msgid "Unknown warning: {code}"
 msgstr ""
 
-#: gui/wizard/step_target.py:44
+#: gui/wizard/step_target.py:53
 msgid "Use the Jellyfin profile, which works on almost everything."
 msgstr ""
 
@@ -1237,10 +1249,6 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: gui/wizard/step_target.py:37
-msgid "Videos you keep for later; saving space matters more than speed."
-msgstr ""
-
 #: cli.py:89
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
@@ -1259,7 +1267,7 @@ msgstr ""
 msgid "Where to watch"
 msgstr ""
 
-#: gui/wizard/step_target.py:69
+#: gui/wizard/step_target.py:78
 msgid "Where will you watch them?"
 msgstr ""
 

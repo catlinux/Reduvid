@@ -339,7 +339,7 @@ msgstr ""
 msgid "Choose the audio and subtitle languages you understand."
 msgstr "Tria els idiomes d'àudio i de subtítols que entenguis."
 
-#: gui/wizard/step_target.py:73
+#: gui/wizard/step_target.py:82
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Tria el dispositiu que faràs servir més. Ho pots canviar més endavant."
 
@@ -438,7 +438,7 @@ msgstr "Predeterminada"
 msgid "Destination"
 msgstr "Destinació"
 
-#: gui/wizard/step_summary.py:64 gui/wizard/step_target.py:22
+#: gui/wizard/step_summary.py:64
 msgid "Direct play"
 msgstr "Reproducció directa"
 
@@ -662,7 +662,11 @@ msgstr "Francès"
 msgid "German"
 msgstr "Alemany"
 
-#: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
+#: gui/wizard/step_target.py:22
+msgid "H.264"
+msgstr "H.264"
+
+#: gui/wizard/step_target.py:32 gui/wizard/step_target.py:42
 msgid "H.265"
 msgstr "H.265"
 
@@ -682,7 +686,7 @@ msgstr "Vídeo HDR"
 msgid "High"
 msgstr "Alta"
 
-#: gui/wizard/step_target.py:42
+#: gui/wizard/step_target.py:51
 msgid "I don't know"
 msgstr "No ho sé"
 
@@ -823,7 +827,7 @@ msgstr "Altura màxima en píxels"
 msgid "Maximum savings"
 msgstr "Estalvi màxim"
 
-#: gui/advanced_page.py:83 gui/wizard/step_target.py:28
+#: gui/advanced_page.py:83 gui/wizard/step_target.py:31
 msgid "Modern devices"
 msgstr "Dispositius moderns"
 
@@ -842,10 +846,6 @@ msgstr "Més qualitat o més espai?"
 #: gui/wizard/step_summary.py:67
 msgid "Needs attention"
 msgstr "Necessita atenció"
-
-#: gui/wizard/step_target.py:30
-msgid "Newer phones, tablets and TVs that play H.265."
-msgstr "Mòbils, tauletes i televisors nous que reprodueixen H.265."
 
 #: messages.py:41
 msgid "No audio track matches the selected languages, so all of them will be kept."
@@ -898,6 +898,14 @@ msgstr "Format de píxel: {pixel_format}"
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Pla: {destination}, {quality}, {container}"
+
+#: gui/wizard/step_target.py:24
+msgid ""
+"Plays directly on almost any TV, phone or browser through your Jellyfin server. Files are larger "
+"and 4K is scaled down to 1080p."
+msgstr ""
+"Es reprodueix directament en gairebé qualsevol televisor, mòbil o navegador a través del teu "
+"servidor Jellyfin. Els fitxers són més grans i el 4K es redueix a 1080p."
 
 #: gui/wizard/step_destination.py:96
 msgid "Plays on more devices, but image subtitles are dropped."
@@ -1004,7 +1012,7 @@ msgstr "Rus"
 msgid "Same folder as each video"
 msgstr "La mateixa carpeta que cada vídeo"
 
-#: gui/advanced_page.py:84 gui/wizard/step_target.py:35
+#: gui/advanced_page.py:84 gui/wizard/step_target.py:41
 msgid "Save for archive"
 msgstr "Desa per a l'arxiu"
 
@@ -1029,6 +1037,14 @@ msgstr "Salta aquest vídeo"
 #: gui/wizard/step_summary.py:314
 msgid "Skipped"
 msgstr "Saltat"
+
+#: gui/wizard/step_target.py:34
+msgid ""
+"Smaller files than H.264. Newer phones, tablets and TVs play it; older ones and some browsers may"
+" not."
+msgstr ""
+"Fitxers més petits que amb H.264. Els mòbils, tauletes i televisors nous el reprodueixen; els "
+"antics i alguns navegadors potser no."
 
 #: messages.py:79
 msgid "Something went wrong while processing the file."
@@ -1075,10 +1091,6 @@ msgstr "Sistema"
 #: gui/preferences.py:36
 msgid "System language"
 msgstr "Idioma del sistema"
-
-#: gui/wizard/step_target.py:23
-msgid "TV, phone or browser through your Jellyfin server."
-msgstr "Televisió, mòbil o navegador a través del teu servidor Jellyfin."
 
 #: gui/error_view.py:40 gui/wizard/step_quality.py:231
 msgid "Technical details"
@@ -1135,6 +1147,10 @@ msgstr "La resolució es manté en {width}x{height}."
 #: gui/wizard_logic.py:241
 msgid "The slower encoding setting saves a bit more space but takes longer."
 msgstr "L'ajust de codificació més lent estalvia una mica més d'espai, però triga més."
+
+#: gui/wizard/step_target.py:44
+msgid "The smallest files: H.265 with the slowest, most careful encoding. Conversion takes longer."
+msgstr "Els fitxers més petits: H.265 amb la codificació més lenta i acurada. La conversió triga més."
 
 #: gui/wizard_logic.py:235
 msgid "The video goes from 10 to 8 bits per colour; smooth gradients may show faint bands."
@@ -1205,7 +1221,7 @@ msgstr "Total: {original} → {final}"
 msgid "Unknown warning: {code}"
 msgstr "Avís desconegut: {code}"
 
-#: gui/wizard/step_target.py:44
+#: gui/wizard/step_target.py:53
 msgid "Use the Jellyfin profile, which works on almost everything."
 msgstr "Fes servir el perfil Jellyfin, que funciona a gairebé tot."
 
@@ -1271,10 +1287,6 @@ msgstr "Vídeo: ~{size}"
 msgid "Videos"
 msgstr "Vídeos"
 
-#: gui/wizard/step_target.py:37
-msgid "Videos you keep for later; saving space matters more than speed."
-msgstr "Vídeos que guardes per més endavant; estalviar espai importa més que la velocitat."
-
 #: cli.py:89
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
@@ -1293,7 +1305,7 @@ msgstr "Què conservar"
 msgid "Where to watch"
 msgstr "On veure'ls"
 
-#: gui/wizard/step_target.py:69
+#: gui/wizard/step_target.py:78
 msgid "Where will you watch them?"
 msgstr "On els veuràs?"
 
@@ -1489,8 +1501,14 @@ msgstr "~{size} estimats"
 #~ "pista sense etiqueta es mostra com a sense "
 #~ "idioma indicat."
 
+#~ msgid "Newer phones, tablets and TVs that play H.265."
+#~ msgstr "Mòbils, tauletes i televisors nous que reprodueixen H.265."
+
 #~ msgid "Steps"
 #~ msgstr "Passos"
+
+#~ msgid "TV, phone or browser through your Jellyfin server."
+#~ msgstr "Televisió, mòbil o navegador a través del teu servidor Jellyfin."
 
 #~ msgid "The conversion queue will appear here."
 #~ msgstr "La cua de conversió apareixerà aquí."
@@ -1503,4 +1521,7 @@ msgstr "~{size} estimats"
 #~ "La pista de vídeo {stream_index} es reduirà a "
 #~ "1080p perquè el Jellyfin la pugui reproduir "
 #~ "directament."
+
+#~ msgid "Videos you keep for later; saving space matters more than speed."
+#~ msgstr "Vídeos que guardes per més endavant; estalviar espai importa més que la velocitat."
 
