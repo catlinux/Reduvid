@@ -15,7 +15,7 @@ Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for
 
 ## Project status
 
-In development. The current version (0.4.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
+In development. The current version (0.5.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
 
 | Version | Contents |
 |---|---|
@@ -23,8 +23,9 @@ In development. The current version (0.4.0) already has a graphical interface, a
 | 0.2.0 | Graphical interface, wizard and languages (Català, Castellano, English) |
 | 0.3.0 | Choose audio tracks one by one, reduce the audio size and see how much each part weighs |
 | 0.4.0 | Sample test: estimated size and time before converting |
-| 0.5.0 | Final report, saved profiles and warnings for HDR, 10-bit video and image subtitles |
-| 0.6.0 → 1.0.0 | Linux and Windows installers and first stable release |
+| 0.5.0 | Clear video options: what changes, estimated size per quality level and resolution |
+| 0.6.0 | Final report, saved profiles and warnings for HDR, 10-bit video and image subtitles |
+| 0.7.0 → 1.0.0 | Linux and Windows installers and first stable release |
 
 Details in [TODO.en.md](TODO.en.md) and the [CHANGELOG](CHANGELOG.en.md).
 
@@ -69,7 +70,7 @@ Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
    python -m pip install -e .
    ```
 
-Packages for `pipx`, a Windows installer and a Linux AppImage are planned from version 0.6.0.
+Packages for `pipx`, a Windows installer and a Linux AppImage are planned from version 0.7.0.
 
 ## Quick start
 
@@ -91,7 +92,7 @@ Interface guide (wizard and Advanced mode) in [docs/en/gui.md](docs/en/gui.md). 
 | Plays directly on | Almost everything: TVs, phones, browsers | Modern devices; elsewhere Jellyfin converts it on the server or fails |
 | Choose it if | You watch on several devices, or you're not sure | Your devices are modern, or you only want to archive |
 
-These figures are rough and depend on each video; Reduvid's sample test (version 0.4.0) gives the real number. Even with a compatible codec, Jellyfin also transcodes 10-bit video, HDR, some image subtitles (PGS, VobSub) and DTS or TrueHD audio. Reduvid warns about each case and suggests a fix.
+These figures are rough and depend on each video; Reduvid's sample test (since 0.4.0) gives the real number. Even with a compatible codec, Jellyfin also transcodes 10-bit video, HDR, some image subtitles (PGS, VobSub) and DTS or TrueHD audio. Reduvid warns about each case and suggests a fix.
 
 ## Privacy
 

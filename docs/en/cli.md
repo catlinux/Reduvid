@@ -51,7 +51,7 @@ By default, the converted file is written next to the original with the `_reduvi
 | `--reduce-audio` | — | off | Re-encodes audio tracks to AAC (256 kbps multichannel, 128 kbps stereo) to save space. |
 | `--keep-audio` | comma-separated languages | all | Keeps only the audio tracks in those languages; `und` means "no language". If none match, all are kept and a warning is shown. |
 | `--keep-subs` | comma-separated languages | all | Keeps only the subtitles in those languages (`und` means "no language"). There may be none left. |
-| `--max-height` | integer | `1080` (on `jellyfin`) | Forces a maximum height other than 1080p. Only has an effect on the `jellyfin` profile. |
+| `--max-height` | integer | `1080` (on `jellyfin`) | Maximum video height: if the source is taller it is scaled down to this value; it never scales up. Without it, `jellyfin` scales down to 1080p and the other profiles keep the resolution. |
 | `--output-dir` | folder | the original's folder | Where converted files are written. |
 | `--recursive` | — | off | If the argument is a folder, also look for videos in its subfolders. |
 | `--threads` | integer | FFmpeg's own choice | Number of encoding threads (`-threads`). |

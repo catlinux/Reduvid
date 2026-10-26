@@ -6,6 +6,19 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-26
+
+### Added
+
+- Wizard, "Quality" step: each card explains what changes (codec, resolution, HDR or 10-bit) and what detail is lost; a button estimates the size of the three levels with one short 20 s sample per level, in the background and cancellable; a resolution selector (Automatic, 1080p, 720p, 480p) and collapsible "Technical details" (codec, preset, CRF, profile and pixel format).
+- Engine: `estimate_levels` and `SampleLevelsRunner` (`core/sample.py`) estimate several quality levels; `SampleRunner` accepts the number and length of chunks.
+
+### Changed
+
+- The maximum height (`--max-height` and the resolution selector) now applies to every profile; before, only to `jellyfin`. Without it, `jellyfin` still scales down to 1080p and the other profiles keep the resolution. It never scales up.
+- The resolution warning is generic ("from 2160p to 1080p") instead of always mentioning 1080p.
+- Wizard, "Destination" step: each option states its codec and its trade-off between size and compatibility.
+
 ## [0.4.0] - 2026-10-26
 
 ### Added

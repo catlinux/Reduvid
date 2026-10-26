@@ -51,7 +51,7 @@ Por defecto, el archivo convertido se escribe junto al original con el sufijo `_
 | `--reduce-audio` | — | desactivado | Recodifica las pistas de audio a AAC (256 kbps multicanal, 128 kbps estéreo) para ahorrar espacio. |
 | `--keep-audio` | idiomas separados por comas | todas | Conserva solo las pistas de audio de esos idiomas; `und` es «sin idioma». Si ninguna coincide, se conservan todas y se avisa. |
 | `--keep-subs` | idiomas separados por comas | todos | Conserva solo los subtítulos de esos idiomas (`und` es «sin idioma»). Puede no quedar ninguno. |
-| `--max-height` | número entero | `1080` (en `jellyfin`) | Fuerza una altura máxima distinta de 1080p. Solo tiene efecto en el perfil `jellyfin`. |
+| `--max-height` | número entero | `1080` (en `jellyfin`) | Altura máxima del vídeo: si el original es más alto se reduce a ese valor; nunca se amplía. Sin esta opción, `jellyfin` baja a 1080p y los demás perfiles conservan la resolución. |
 | `--output-dir` | carpeta | la del original | Dónde se escriben los archivos convertidos. |
 | `--recursive` | — | desactivado | Si el argumento es una carpeta, busca vídeos también en sus subcarpetas. |
 | `--threads` | número entero | el que decida FFmpeg | Número de hilos de codificación (`-threads`). |

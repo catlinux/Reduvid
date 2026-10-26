@@ -6,6 +6,19 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.5.0] - 2026-10-26
+
+### Añadido
+
+- Asistente, paso «Calidad»: cada tarjeta explica qué cambia (códec, resolución, HDR o 10 bits) y qué detalle se pierde; un botón estima el tamaño de los tres niveles con una muestra corta de 20 s por nivel, en segundo plano y cancelable; un selector de resolución (Automática, 1080p, 720p, 480p) y los «Detalles técnicos» plegados (códec, preajuste, CRF, perfil y formato de píxel).
+- Motor: `estimate_levels` y `SampleLevelsRunner` (`core/sample.py`) estiman varios niveles de calidad; `SampleRunner` admite número y duración de trozos.
+
+### Cambiado
+
+- La altura máxima (`--max-height` y selector de resolución) se aplica en todos los perfiles; antes solo en `jellyfin`. Sin ella, `jellyfin` sigue bajando a 1080p y los demás perfiles conservan la resolución. Nunca se escala hacia arriba.
+- El aviso de reducción de resolución es genérico («de 2160p a 1080p») en lugar de mencionar siempre 1080p.
+- Asistente, paso «Destino»: cada opción indica su códec y su compromiso entre tamaño y compatibilidad.
+
 ## [0.4.0] - 2026-10-26
 
 ### Añadido

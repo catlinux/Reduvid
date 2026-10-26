@@ -7,17 +7,16 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 ## High priority
 
 - Decide how external code contributions are licensed before accepting the first one: the license only covers material owned by Catlinux.
-- 0.5.0, helpers: final report, saved profiles and warnings for HDR, 10-bit video and image subtitles in the interface.
+- 0.6.0, helpers: final report, saved profiles and warnings for HDR, 10-bit video and image subtitles in the interface.
 
 ## Medium priority
 
-- 0.6.0 → 1.0.0: pipx, Windows installer, AppImage, screenshots and first release.
+- 0.7.0 → 1.0.0: pipx, Windows installer, AppImage, screenshots and first release.
 - When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.
 
 ## Low priority / later
 
 - Before/after frame comparison in the sample test.
-- Show the estimated size on the "Quality" step cards (would need one sample per level).
 - Measure the real error margin of the estimate (compare with the full conversion) before stating a figure in the docs.
 - AV1 (libsvtav1): the profile architecture already allows it; the profile, tests and explanation are missing.
 - Polished hardware acceleration (NVENC, QSV, VAAPI): in 0.1.0 it is only detected and reported.
