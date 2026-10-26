@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-26
+
+### Fixed
+
+- Install steps in README and CONTRIBUTING: use `python3` (Debian has no `python`) and activate the virtual environment before `pip install`, which failed with `externally-managed-environment`.
+
 ## [0.2.0] - 2026-10-25
 
 ### Added

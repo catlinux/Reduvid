@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.2.1] - 2026-10-26
+
+### Corregido
+
+- Instalación del README y de CONTRIBUTING: usa `python3` (en Debian no existe `python`) y activa el entorno virtual antes de `pip install`, que fallaba con `externally-managed-environment`.
+
 ## [0.2.0] - 2026-10-25
 
 ### Añadido

@@ -13,8 +13,9 @@ Reduvid usa la licencia [WNCL-CU-1.0](LICENSE), que cubre el material de Catlinu
 ```bash
 git clone https://github.com/catlinux/Reduvid.git
 cd Reduvid
-python -m venv .venv
-# Linux: source .venv/bin/activate    Windows: .venv\Scripts\activate
+# En Debian/Ubuntu el comando es python3 (si falla: sudo apt install python3-venv)
+python3 -m venv .venv          # Windows: py -m venv .venv
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
 python -m pip install -e ".[dev]"
 pre-commit install
 ```

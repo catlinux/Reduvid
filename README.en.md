@@ -61,8 +61,9 @@ Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
    ```bash
    git clone https://github.com/catlinux/Reduvid.git
    cd Reduvid
-   python -m venv .venv
-   # Linux: source .venv/bin/activate    Windows: .venv\Scripts\activate
+   # On Debian/Ubuntu the command is python3 (if it fails: sudo apt install python3-venv)
+   python3 -m venv .venv          # Windows: py -m venv .venv
+   source .venv/bin/activate    # Windows: .venv\Scripts\activate
    python -m pip install -e .
    ```
 
