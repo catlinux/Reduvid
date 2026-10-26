@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-10-27
+
+### Fixed
+
+- The interface closed with "Bus error" or "Segmentation fault" when estimating sizes (per quality level or in the summary), mostly with several videos. Worker threads were scheduled for deletion (`deleteLater`) while the step was still waiting on them; the `workers` module now keeps them until Qt confirms they have finished.
+
 ## [0.5.1] - 2026-10-26
 
 ### Added

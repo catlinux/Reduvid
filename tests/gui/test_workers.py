@@ -438,3 +438,52 @@ def test_levels_worker_cancel_before_start_stops_the_runner(tmp_path: Path, qapp
     assert runners
     assert runners[0].cancelled
     assert failures == [("cancelled", "Sampling was cancelled.")]
+
+
+class _InstantRunner:
+    def __init__(self, *_args: object, **_kwargs: object) -> None:
+        pass
+
+    def run(self) -> dict[str, TotalEstimate]:
+        return {}
+
+    def cancel(self) -> None:
+        pass
+
+
+def test_waiting_on_a_finished_worker_thread_from_its_slot_is_safe(tmp_path: Path, qapp) -> None:
+    # Owners quit and wait on the thread from the worker's finished slot. A queued
+    # deleteLater of the same QThread used to hang or crash that call.
+    path = (tmp_path / "movie.mkv").resolve()
+    remaining = 200
+    kept: list[QThread | None] = [None]
+
+    class Owner(QObject):
+        @Slot()
+        def finished(self) -> None:
+            nonlocal remaining
+            thread = kept[0]
+            if thread is not None:
+                thread.quit()
+                thread.wait(5000)
+            kept[0] = None
+            remaining -= 1
+            if remaining:
+                QTimer.singleShot(0, begin)
+
+    owner = Owner()
+
+    def begin() -> None:
+        worker = LevelsWorker(
+            ffmpeg_info(), sample_media(path), PlanOptions(), path, runner_factory=_InstantRunner
+        )
+        worker.finished.connect(owner.finished)
+        kept[0] = start_worker_thread(worker)
+
+    begin()
+    deadline = time.monotonic() + 30
+    while remaining and time.monotonic() < deadline:
+        QCoreApplication.processEvents()
+        time.sleep(0.001)
+
+    assert remaining == 0

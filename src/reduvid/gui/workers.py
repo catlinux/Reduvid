@@ -276,19 +276,43 @@ class LevelsWorker(QObject):
             runner.cancel()
 
 
+class _ThreadReaper(QObject):
+    """Release a finished worker thread from the GUI thread.
+
+    The thread is never scheduled with ``deleteLater``: Python owns the ``QThread``, so
+    a second, queued deletion would race with the steps that still wait on it and
+    crash. It is dropped here only once Qt reports that it has really finished.
+    """
+
+    @Slot()
+    def reap(self) -> None:
+        thread = self.sender()
+        if isinstance(thread, QThread):
+            thread.wait()
+            _RUNNING.pop(thread, None)
+
+
+_RUNNING: dict[QThread, QObject] = {}
+_reaper: _ThreadReaper | None = None
+
+
 def start_worker_thread(
     worker: ProbeWorker | QueueWorker | SampleWorker | LevelsWorker,
 ) -> QThread:
     """Move *worker* to a new thread, start it and return the thread.
 
-    ``finished`` quits the thread; both objects are scheduled for deletion once
-    the thread stops.
+    ``finished`` quits the thread. This module keeps the thread and the worker alive
+    until the thread has finished, so callers may drop their own references or wait
+    on the thread at any moment without it being destroyed underneath them.
     """
+    global _reaper
+    if _reaper is None:
+        _reaper = _ThreadReaper()
     thread = QThread()
+    _RUNNING[thread] = worker
     worker.moveToThread(thread)
     thread.started.connect(worker.run)
     worker.finished.connect(thread.quit)
-    worker.finished.connect(worker.deleteLater)
-    thread.finished.connect(thread.deleteLater)
+    thread.finished.connect(_reaper.reap)
     thread.start()
     return thread

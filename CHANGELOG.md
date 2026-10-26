@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.5.2] - 2026-10-27
+
+### Corregido
+
+- La interfaz se cerraba con «Error del bus» o «Violación de segmento» al estimar tamaños (por niveles de calidad o en el resumen), sobre todo con varios vídeos. Los hilos de trabajo se programaban para borrarse (`deleteLater`) mientras el paso aún esperaba por ellos; ahora los conserva el módulo `workers` hasta que Qt confirma que han terminado.
+
 ## [0.5.1] - 2026-10-26
 
 ### Añadido
