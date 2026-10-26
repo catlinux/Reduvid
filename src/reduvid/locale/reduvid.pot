@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: cli.py:263 cli.py:290
+#: cli.py:251 cli.py:278
 #, python-brace-format
 msgid " as {codec}"
 msgstr ""
 
-#: cli.py:265
+#: cli.py:253
 #, python-brace-format
 msgid " at {bitrate}"
 msgstr ""
@@ -105,12 +105,12 @@ msgstr ""
 msgid "&Wizard"
 msgstr ""
 
-#: cli.py:250
+#: cli.py:238
 #, python-brace-format
 msgid ", scale to {height}p"
 msgstr ""
 
-#: cli.py:198 cli.py:222
+#: cli.py:186 cli.py:210
 #, python-brace-format
 msgid ", {language}"
 msgstr ""
@@ -138,11 +138,11 @@ msgstr ""
 msgid "Add the videos you want to shrink. You can also drop files or folders here."
 msgstr ""
 
-#: gui/wizard/step_keep.py:102
+#: gui/wizard/step_keep.py:274
 msgid "Add videos to see their audio languages."
 msgstr ""
 
-#: gui/wizard/step_keep.py:122
+#: gui/wizard/step_keep.py:312
 msgid "Add videos to see their subtitle languages."
 msgstr ""
 
@@ -174,6 +174,14 @@ msgstr ""
 msgid "Almost identical"
 msgstr ""
 
+#: gui/wizard/step_keep.py:181
+msgid ""
+"An audio track is the sound of the video, and its format (such as AC3, E-AC3 or AAC) is how that "
+"sound is stored. MP4 accepts text subtitles but not image ones, which only fit in MKV. Reducing "
+"the audio re-encodes it to AAC: on a normal TV the quality is almost the same, but the original "
+"format is lost."
+msgstr ""
+
 #: gui/wizard/step_videos.py:198
 msgid "Analysing…"
 msgstr ""
@@ -182,17 +190,19 @@ msgstr ""
 msgid "Another folder"
 msgstr ""
 
-#: gui/wizard/step_keep.py:70
-msgid ""
-"Audio and subtitle tracks carry a language tag. Keep the ones you understand; a track without a "
-"tag is shown as no language indicated."
+#: gui/wizard/step_keep.py:202
+msgid "Audio"
 msgstr ""
 
-#: gui/wizard/step_keep.py:50
+#: gui/wizard/step_keep.py:121 gui/wizard/step_keep.py:202
 msgid "Audio languages"
 msgstr ""
 
-#: cli.py:283
+#: gui/wizard/step_keep.py:153
+msgid "Audio size"
+msgstr ""
+
+#: cli.py:271
 #, python-brace-format
 msgid "Audio stream {index}: {details}"
 msgstr ""
@@ -207,7 +217,7 @@ msgstr ""
 msgid "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
 msgstr ""
 
-#: cli.py:212
+#: cli.py:200
 #, python-brace-format
 msgid "Audio {position}: {codec}, {channels} channels{language}, {size}"
 msgstr ""
@@ -264,7 +274,7 @@ msgstr ""
 msgid "Choose how much you want to shrink. You can change this later."
 msgstr ""
 
-#: gui/wizard/step_keep.py:44
+#: gui/wizard/step_keep.py:115
 msgid "Choose the audio and subtitle languages you understand."
 msgstr ""
 
@@ -316,11 +326,11 @@ msgstr ""
 msgid "Convert it anyway? Colours will look washed out."
 msgstr ""
 
-#: cli.py:445
+#: cli.py:433
 msgid "Convert media files"
 msgstr ""
 
-#: cli.py:318
+#: cli.py:306
 #, python-brace-format
 msgid "Converting [{index}/{total}]: {path}"
 msgstr ""
@@ -342,6 +352,10 @@ msgstr ""
 msgid "Debian / Ubuntu"
 msgstr ""
 
+#: gui/wizard/step_keep.py:250
+msgid "Default"
+msgstr ""
+
 #: gui/advanced_page.py:80 gui/advanced_page.py:124 gui/main_window.py:59
 #: gui/wizard/step_destination.py:48
 msgid "Destination"
@@ -351,16 +365,16 @@ msgstr ""
 msgid "Direct play"
 msgstr ""
 
-#: cli.py:421
+#: cli.py:409
 msgid "Dry run complete."
 msgstr ""
 
-#: cli.py:361
+#: cli.py:349
 #, python-brace-format
 msgid "Dry run: {count} file(s)"
 msgstr ""
 
-#: cli.py:176
+#: cli.py:164
 #, python-brace-format
 msgid "Duration: {duration}"
 msgstr ""
@@ -369,46 +383,46 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: cli.py:147
+#: cli.py:135
 #, python-brace-format
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr ""
 
-#: cli.py:308 cli.py:367
+#: cli.py:296 cli.py:355
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr ""
 
-#: cli.py:122
+#: cli.py:110
 #, python-brace-format
 msgid "Error: Could not resolve input {path}: {error}"
 msgstr ""
 
-#: cli.py:150
+#: cli.py:138
 msgid "Error: FFmpeg and ffprobe were not found."
 msgstr ""
 
-#: cli.py:130
+#: cli.py:118
 #, python-brace-format
 msgid "Error: Input does not exist: {path}"
 msgstr ""
 
-#: cli.py:136
+#: cli.py:124
 #, python-brace-format
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr ""
 
-#: cli.py:517
+#: cli.py:505
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr ""
 
-#: cli.py:507
+#: cli.py:495
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr ""
 
-#: cli.py:338
+#: cli.py:326
 #, python-brace-format
 msgid "Error: {path}{details}"
 msgstr ""
@@ -442,12 +456,12 @@ msgstr ""
 msgid "Fedora"
 msgstr ""
 
-#: cli.py:174
+#: cli.py:162
 #, python-brace-format
 msgid "File: {path}"
 msgstr ""
 
-#: cli.py:343
+#: cli.py:331
 #, python-brace-format
 msgid "Files: {succeeded} succeeded, {failed} failed, {skipped} skipped"
 msgstr ""
@@ -457,12 +471,12 @@ msgstr ""
 msgid "Finished with {count} failed file(s)."
 msgstr ""
 
-#: cli.py:332
+#: cli.py:320
 #, python-brace-format
 msgid "Finished: {name}"
 msgstr ""
 
-#: cli.py:175
+#: cli.py:163
 #, python-brace-format
 msgid "Format: {format}"
 msgstr ""
@@ -491,6 +505,10 @@ msgstr ""
 msgid "I don't know"
 msgstr ""
 
+#: gui/wizard/step_keep.py:214
+msgid "If you do not tick any audio track, all of them are kept."
+msgstr ""
+
 #: gui/wizard/step_destination.py:125
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr ""
@@ -507,6 +525,14 @@ msgstr ""
 #: messages.py:35
 #, python-brace-format
 msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
+msgstr ""
+
+#: gui/wizard/step_keep.py:354
+msgid "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
+msgstr ""
+
+#: gui/wizard/step_keep.py:351
+msgid "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
 msgstr ""
 
 #: gui/wizard/step_videos.py:83 gui/wizard/step_videos.py:85
@@ -538,19 +564,19 @@ msgstr ""
 msgid "Keep converting"
 msgstr ""
 
-#: cli.py:469
+#: cli.py:457
 msgid "Keep only the highest-quality audio track for each language"
 msgstr ""
 
-#: cli.py:458
+#: cli.py:446
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr ""
 
-#: cli.py:464
+#: cli.py:452
 msgid "Keep only these audio track indices (comma-separated, overrides --keep-audio)"
 msgstr ""
 
-#: cli.py:480
+#: cli.py:468
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr ""
 
@@ -570,7 +596,7 @@ msgstr ""
 msgid "Language changes take effect when Reduvid is restarted."
 msgstr ""
 
-#: cli.py:440
+#: cli.py:428
 msgid "Language for messages"
 msgstr ""
 
@@ -600,6 +626,10 @@ msgstr ""
 
 #: gui/advanced_page.py:83 gui/wizard/step_target.py:28
 msgid "Modern devices"
+msgstr ""
+
+#: gui/wizard/step_keep.py:41
+msgid "Mono"
 msgstr ""
 
 #: gui/wizard/step_destination.py:95
@@ -634,11 +664,15 @@ msgstr ""
 msgid "Number of encoding threads"
 msgstr ""
 
+#: gui/wizard/step_keep.py:136 gui/wizard/step_keep.py:140
+msgid "One audio track per language (the best one is kept)"
+msgstr ""
+
 #: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
 msgid "Output folder"
 msgstr ""
 
-#: cli.py:375 cli.py:401
+#: cli.py:363 cli.py:389
 #, python-brace-format
 msgid "Output: {path}"
 msgstr ""
@@ -651,7 +685,7 @@ msgstr ""
 msgid "Paused. You can keep using the computer as usual."
 msgstr ""
 
-#: cli.py:239
+#: cli.py:227
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr ""
@@ -668,7 +702,7 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: cli.py:327
+#: cli.py:315
 #, python-brace-format
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr ""
@@ -686,7 +720,7 @@ msgstr ""
 msgid "Queue · {count} videos"
 msgstr ""
 
-#: cli.py:474
+#: cli.py:462
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr ""
 
@@ -709,6 +743,10 @@ msgstr ""
 
 #: gui/preferences.py:85 gui/preferences.py:87
 msgid "Reduce animations"
+msgstr ""
+
+#: gui/wizard/step_keep.py:155 gui/wizard/step_keep.py:157
+msgid "Reduce the audio size"
 msgstr ""
 
 #: gui/main_window.py:76 gui/main_window.py:340 gui/main_window.py:343
@@ -745,11 +783,11 @@ msgstr ""
 msgid "Save for archive"
 msgstr ""
 
-#: cli.py:443
+#: cli.py:431
 msgid "Show media details"
 msgstr ""
 
-#: cli.py:177
+#: cli.py:165
 #, python-brace-format
 msgid "Size: {size:.2f} MB"
 msgstr ""
@@ -778,16 +816,20 @@ msgstr ""
 msgid "Step content"
 msgstr ""
 
-#: gui/wizard/step_keep.py:63
+#: gui/wizard/step_keep.py:43
+msgid "Stereo"
+msgstr ""
+
+#: gui/wizard/step_keep.py:167
 msgid "Subtitle languages"
 msgstr ""
 
-#: cli.py:293
+#: cli.py:281
 #, python-brace-format
 msgid "Subtitle stream {index}: {details}"
 msgstr ""
 
-#: cli.py:228
+#: cli.py:216
 #, python-brace-format
 msgid "Subtitle {position}: {codec}{language}, image: {image}"
 msgstr ""
@@ -810,6 +852,15 @@ msgstr ""
 
 #: gui/error_view.py:40
 msgid "Technical details"
+msgstr ""
+
+#: gui/wizard/step_keep.py:341
+#, python-brace-format
+msgid "The audio goes from ~{current} to ~{final}"
+msgstr ""
+
+#: gui/wizard/step_keep.py:339
+msgid "The audio size of this video cannot be estimated."
 msgstr ""
 
 #: messages.py:73
@@ -859,7 +910,7 @@ msgid ""
 "{skipped} skipped."
 msgstr ""
 
-#: cli.py:349
+#: cli.py:337
 #, python-brace-format
 msgid "Total savings: {savings:.2f} MB ({percent:.1f}%)"
 msgstr ""
@@ -887,7 +938,7 @@ msgstr ""
 msgid "Video files"
 msgstr ""
 
-#: cli.py:253
+#: cli.py:241
 #, python-brace-format
 msgid "Video stream {index}: {action}, {details}"
 msgstr ""
@@ -914,7 +965,7 @@ msgstr ""
 msgid "Video track {stream_index} will be scaled down to 1080p so that Jellyfin can play it directly."
 msgstr ""
 
-#: cli.py:185
+#: cli.py:173
 #, python-brace-format
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
@@ -927,17 +978,17 @@ msgstr ""
 msgid "Videos you keep for later; saving space matters more than speed."
 msgstr ""
 
-#: cli.py:91
+#: cli.py:79
 #, python-brace-format
 msgid "Warning: Could not read config file: {error}"
 msgstr ""
 
-#: cli.py:298
+#: cli.py:286
 #, python-brace-format
 msgid "Warning: {text}"
 msgstr ""
 
-#: gui/main_window.py:58 gui/wizard/step_keep.py:41
+#: gui/main_window.py:58 gui/wizard/step_keep.py:112
 msgid "What to keep"
 msgstr ""
 
@@ -969,7 +1020,7 @@ msgstr ""
 msgid "Windows"
 msgstr ""
 
-#: gui/wizard/step_keep.py:53
+#: gui/wizard/step_keep.py:228
 msgid "With no audio language selected, every video keeps all its audio tracks."
 msgstr ""
 
@@ -977,7 +1028,7 @@ msgstr ""
 msgid "Wizard steps"
 msgstr ""
 
-#: cli.py:374
+#: cli.py:362
 #, python-brace-format
 msgid "Would convert: {path}"
 msgstr ""
@@ -994,43 +1045,51 @@ msgstr ""
 msgid "You won't notice the difference, even on a big TV."
 msgstr ""
 
-#: cli.py:167
+#: cli.py:155
 msgid "convert"
 msgstr ""
 
-#: cli.py:166
+#: cli.py:154
 msgid "copy"
 msgstr ""
 
-#: cli.py:168
+#: cli.py:156
 msgid "drop"
 msgstr ""
 
-#: cli.py:165
+#: cli.py:153
 msgid "encode"
+msgstr ""
+
+#: gui/wizard/step_keep.py:68
+msgid "image"
 msgstr ""
 
 #: gui/queue_panel.py:211
 msgid "less than 1 min left"
 msgstr ""
 
-#: cli.py:42
+#: cli.py:48
 msgid "must be a comma-separated list of language codes"
 msgstr ""
 
-#: cli.py:50 cli.py:58 cli.py:62
+#: cli.py:56 cli.py:64 cli.py:68
 msgid "must be a comma-separated list of non-negative integers"
 msgstr ""
 
-#: cli.py:33 cli.py:35
+#: cli.py:39 cli.py:41
 msgid "must be a positive integer"
 msgstr ""
 
-#: cli.py:182 cli.py:226
+#: cli.py:170 cli.py:214
 msgid "no"
 msgstr ""
 
-#: cli.py:180
+#: gui/wizard/step_keep.py:68
+msgid "text"
+msgstr ""
+
+#: cli.py:168
 msgid "unknown"
 msgstr ""
 
@@ -1038,23 +1097,43 @@ msgstr ""
 msgid "verified"
 msgstr ""
 
-#: cli.py:226
+#: cli.py:214
 msgid "yes"
 msgstr ""
 
-#: cli.py:180
+#: cli.py:168
 #, python-brace-format
 msgid "yes ({variant})"
 msgstr ""
 
-#: cli.py:244
+#: gui/wizard/step_keep.py:69
+#, python-brace-format
+msgid "{codec} ({kind})"
+msgstr ""
+
+#: cli.py:232
 #, python-brace-format
 msgid "{codec}, CRF {crf}, {preset} preset"
+msgstr ""
+
+#: gui/wizard/step_keep.py:49
+#, python-brace-format
+msgid "{count} channels"
 msgstr ""
 
 #: messages.py:45
 #, python-brace-format
 msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
+msgstr ""
+
+#: gui/wizard/step_keep.py:59
+#, python-brace-format
+msgid "{language} · {codec} · {channels} · {size}"
+msgstr ""
+
+#: gui/wizard/step_keep.py:298
+#, python-brace-format
+msgid "{language} · {formats}"
 msgstr ""
 
 #: gui/queue_panel.py:212
@@ -1082,7 +1161,12 @@ msgstr ""
 msgid "{percent}%"
 msgstr ""
 
-#: cli.py:210 cli.py:277
+#: gui/wizard/step_keep.py:57
+#, python-brace-format
+msgid "~{size}"
+msgstr ""
+
+#: cli.py:198 cli.py:265
 #, python-brace-format
 msgid "~{size} estimated"
 msgstr ""

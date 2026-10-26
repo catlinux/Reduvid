@@ -63,28 +63,6 @@ def add_video(state: WizardState, tmp_path: Path, name: str, info: MediaInfo) ->
     return path.resolve()
 
 
-def languages_state(tmp_path: Path) -> WizardState:
-    state = WizardState(Config())
-    add_video(
-        state,
-        tmp_path,
-        "video.mkv",
-        media(
-            tmp_path / "video.mkv",
-            video=VideoStream(0, "h264", 1920, 1080, 24),
-            audios=[
-                AudioStream(1, "aac", 2, "eng", True),
-                AudioStream(2, "aac", 2, "spa", False),
-            ],
-            subtitles=[
-                SubtitleStream(3, "subrip", "eng", False, False, False),
-                SubtitleStream(4, "subrip", "", False, False, False),
-            ],
-        ),
-    )
-    return state
-
-
 class FakePrompt:
     def __init__(self, keep: bool) -> None:
         self.keep = keep
@@ -127,15 +105,90 @@ def summary_state(tmp_path: Path) -> WizardState:
     return state
 
 
-def test_step_keep_checks_every_language_and_reports_subsets(tmp_path: Path, qapp) -> None:
-    state = languages_state(tmp_path)
-    step = StepKeep(state)
+def three_audio_state(tmp_path: Path) -> WizardState:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+                AudioStream(2, "ac3", 6, "spa", False),
+                AudioStream(3, "aac", 2, "eng", False, bitrate=128_000),
+            ],
+            subtitles=[SubtitleStream(4, "subrip", "eng", False, False, False)],
+            duration=100.0,
+        ),
+    )
+    return state
 
+
+def test_step_keep_lists_every_track_of_a_single_video(tmp_path: Path, qapp) -> None:
+    state = three_audio_state(tmp_path)
+    step = StepKeep(state, ffmpeg())
+
+    assert step.audio_group.title() == "Audio"
+    assert list(step.audio_track_checks) == [1, 2, 3]
+    assert all(checkbox.isChecked() for checkbox in step.audio_track_checks.values())
+    assert step.audio_track_checks[1].text() == "Spanish · eac3 · 5.1 · ~8 MB"
+    assert step.audio_track_checks[2].text() == "Spanish · ac3 · 5.1 · —"
+    assert step.audio_track_checks[3].text() == "English · aac · Stereo · ~2 MB"
+    assert [index for index in step.audio_default_tags] == [1]
+    assert step.subtitle_checks["eng"].text() == "English · subrip (text)"
+    assert not step.one_audio_per_language.isHidden()
+    assert state.options().audio_tracks is None
+
+    step.audio_track_checks[2].setChecked(False)
+
+    assert state.options().audio_tracks == frozenset({1, 3})
+    assert step.audio_warning.isHidden()
+
+    step.audio_track_checks[1].setChecked(False)
+    step.audio_track_checks[3].setChecked(False)
+
+    assert state.options().audio_tracks == frozenset()
+    assert not step.audio_warning.isHidden()
+    assert step.audio_warning.text() == (
+        "If you do not tick any audio track, all of them are kept."
+    )
+
+    step.audio_track_checks[1].setChecked(True)
+    step.audio_track_checks[2].setChecked(True)
+    step.audio_track_checks[3].setChecked(True)
+
+    assert state.options().audio_tracks is None
+    assert step.audio_warning.isHidden()
+
+
+def test_step_keep_goes_back_to_languages_with_two_videos(tmp_path: Path, qapp) -> None:
+    state = three_audio_state(tmp_path)
+    step = StepKeep(state, ffmpeg())
+
+    assert set(step.audio_track_checks) == {1, 2, 3}
+
+    add_video(
+        state,
+        tmp_path,
+        "second.mkv",
+        media(
+            tmp_path / "second.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "aac", 2, "eng", True),
+                AudioStream(2, "aac", 2, "spa", False),
+            ],
+            subtitles=[SubtitleStream(3, "subrip", "eng", False, False, False)],
+        ),
+    )
+
+    assert step.audio_group.title() == "Audio languages"
+    assert step.audio_track_checks == {}
     assert set(step.audio_checks) == {"eng", "spa"}
-    assert set(step.subtitle_checks) == {"eng", "und"}
-    assert all(checkbox.isChecked() for checkbox in step.audio_checks.values())
+    assert state.options().audio_tracks is None
     assert state.options().audio_languages is None
-    assert state.options().subtitle_languages is None
 
     step.audio_checks["spa"].setChecked(False)
 
@@ -146,12 +199,128 @@ def test_step_keep_checks_every_language_and_reports_subsets(tmp_path: Path, qap
 
     assert state.options().audio_languages == frozenset()
     assert not step.audio_warning.isHidden()
-    assert state.selected_audio_languages() == frozenset()
 
-    step.audio_checks["eng"].setChecked(True)
-    step.audio_checks["spa"].setChecked(True)
+    step.one_audio_per_language.click()
 
-    assert state.options().audio_languages is None
+    assert state.one_audio_per_language is True
+    assert state.options().one_audio_per_language is True
+
+
+def test_step_keep_reduces_the_audio_and_shows_both_sizes(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+                AudioStream(2, "ac3", 6, "eng", False, bitrate=640_000),
+            ],
+            duration=100.0,
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert not step.audio_weight_group.isHidden()
+    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~16 MB"
+    assert not step.reduce_audio.isChecked()
+
+    step.reduce_audio.click()
+
+    assert state.reduce_audio is True
+    assert state.options().reduce_audio is True
+    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~6 MB"
+
+
+def test_step_keep_explains_when_the_audio_size_is_unknown(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[AudioStream(1, "ac3", 6, "spa", True)],
+            duration=100.0,
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert step.audio_size_summary.text() == ("The audio size of this video cannot be estimated.")
+
+
+def test_step_keep_explains_the_container_and_groups_subtitles(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            subtitles=[
+                SubtitleStream(4, "subrip", "spa", False, False, False),
+                SubtitleStream(5, "hdmv_pgs_subtitle", "spa", True, False, False),
+            ],
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert step.subtitle_checks["spa"].text() == (
+        "Spanish · subrip (text), hdmv_pgs_subtitle (image)"
+    )
+    assert not step.subtitle_container_note.isHidden()
+    assert step.subtitle_container_note.text() == (
+        "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
+    )
+
+    state.set_container("mp4")
+
+    assert step.subtitle_container_note.text() == (
+        "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
+    )
+
+    text_only = WizardState(Config())
+    add_video(
+        text_only,
+        tmp_path,
+        "text.mkv",
+        media(
+            tmp_path / "text.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            subtitles=[SubtitleStream(4, "subrip", "eng", False, False, False)],
+        ),
+    )
+    text_step = StepKeep(text_only, ffmpeg())
+
+    assert text_step.subtitle_container_note.isHidden()
+
+
+def test_step_keep_without_videos_keeps_the_empty_texts(tmp_path: Path, qapp) -> None:
+    step = StepKeep(WizardState(Config()), ffmpeg())
+
+    texts = [label.text() for label in step.findChildren(QLabel)]
+    assert "Add videos to see their audio languages." in texts
+    assert "Add videos to see their subtitle languages." in texts
+    assert step.audio_track_checks == {}
+    assert step.subtitle_checks == {}
+    assert step.audio_weight_group.isHidden()
+    assert step.subtitle_container_note.isHidden()
+
+
+@pytest.mark.parametrize(("theme", "mode"), sorted(THEMES))
+def test_step_keep_builds_with_every_theme(theme: str, mode: str, tmp_path: Path, qapp) -> None:
+    ThemeManager(qapp).apply(theme, mode)
+    state = three_audio_state(tmp_path)
+
+    step = StepKeep(state, ffmpeg())
+
+    assert step.findChild(QLabel, "audioSizeSummary") is not None
+    assert step.findChild(QLabel, "subtitleContainerNote") is not None
 
 
 def test_step_destination_controls_container_folder_and_4k(tmp_path: Path, qapp) -> None:

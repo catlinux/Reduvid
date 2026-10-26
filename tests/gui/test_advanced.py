@@ -132,14 +132,14 @@ def test_advanced_page_builds_cli_equivalent_options(tmp_path: Path, qapp) -> No
     page.threads_check.setChecked(True)
     page.threads_spin.setValue(4)
     page.destination.container_cards["mp4"].click()
-    page.keep.audio_checks["spa"].setChecked(False)
+    page.keep.audio_track_checks[2].setChecked(False)
 
     assert state.options() == PlanOptions(
         destination="modern",
         quality="high",
         container="mp4",
         max_height=720,
-        audio_languages=frozenset({"eng"}),
+        audio_tracks=frozenset({1}),
         subtitle_languages=None,
     )
     assert state.threads == 4

@@ -373,7 +373,7 @@ class MainWindow(QMainWindow):
         stack.addWidget(StepVideos(self.wizard_state, self._ffmpeg_info.ffprobe_path, parent=stack))
         stack.addWidget(StepTarget(self.wizard_state, stack))
         stack.addWidget(StepQuality(self.wizard_state, stack))
-        self.step_keep = StepKeep(self.wizard_state, stack)
+        self.step_keep = StepKeep(self.wizard_state, self._ffmpeg_info, stack)
         stack.addWidget(self.step_keep)
         self.step_destination = StepDestination(self.wizard_state, stack)
         stack.addWidget(self.step_destination)
