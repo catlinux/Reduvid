@@ -181,10 +181,10 @@ def subtitle_container_note(
 
 
 def change_notes(media: MediaInfo, plan: EncodePlan) -> tuple[str, ...]:
-    """Plain sentences saying what the video conversion changes and what it can cost.
+    """Plain sentences saying what the video conversion changes.
 
-    Only facts taken from the plan and the source file are stated; how much detail
-    each quality level loses is described qualitatively, never with invented figures.
+    They are the same for every quality level, so the step shows them once; the
+    quality-specific sentence lives in :func:`quality_note`.
     """
     if not plan.videos:
         return ()
@@ -237,7 +237,6 @@ def change_notes(media: MediaInfo, plan: EncodePlan) -> tuple[str, ...]:
                 )
             )
 
-    notes.append(_QUALITY_NOTES[plan.quality]())
     if decision.preset == "slow":
         notes.append(_("The slower encoding setting saves a bit more space but takes longer."))
     return tuple(notes)
@@ -252,6 +251,12 @@ _QUALITY_NOTES = {
         "Dark scenes, film grain and fast movement look softer and may show blocks."
     ),
 }
+
+
+def quality_note(quality: str) -> str:
+    """Sentence saying what each quality level can cost, or "" for an unknown one."""
+    note = _QUALITY_NOTES.get(quality)
+    return note() if note is not None else ""
 
 
 def _sum_or_none(parts: Iterable[int | None]) -> int | None:

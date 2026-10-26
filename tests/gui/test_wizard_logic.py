@@ -27,6 +27,7 @@ from reduvid.gui.wizard_logic import (
     collect_languages,
     format_duration,
     language_name,
+    quality_note,
     subtitle_container_note,
     summarize,
     track_rows,
@@ -326,12 +327,18 @@ def test_change_notes_for_jellyfin_4k_hdr_mentions_scaling_and_sdr() -> None:
     assert any("SDR" in note for note in notes)
 
 
-def test_change_notes_for_max_savings_warn_about_softer_dark_scenes() -> None:
-    high = _notes(VideoStream(0, "h264", 1280, 720, 24.0), quality="high")
-    saving = _notes(VideoStream(0, "h264", 1280, 720, 24.0), quality="max_savings")
+def test_quality_note_describes_each_level() -> None:
+    assert "stays large" in quality_note("high")
+    assert "slightly smoothed" in quality_note("balanced")
+    assert "softer" in quality_note("max_savings")
+    assert quality_note("unknown") == ""
 
-    assert any("stays large" in note for note in high)
-    assert any("softer" in note for note in saving)
+
+def test_change_notes_leave_the_quality_sentence_out() -> None:
+    notes = _notes(VideoStream(0, "h264", 1280, 720, 24.0), quality="max_savings")
+
+    assert not any("softer" in note for note in notes)
+    assert not any("stays large" in note for note in notes)
 
 
 def test_change_notes_say_when_ten_bit_becomes_eight_bit() -> None:

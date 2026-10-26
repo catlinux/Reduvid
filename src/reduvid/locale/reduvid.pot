@@ -97,7 +97,7 @@ msgstr ""
 msgid "&Start"
 msgstr ""
 
-#: gui/widgets/what_is_this.py:26 gui/widgets/what_is_this.py:27
+#: gui/widgets/what_is_this.py:29
 msgid "&What is this?"
 msgstr ""
 
@@ -123,15 +123,25 @@ msgstr ""
 msgid "A conversion is already running."
 msgstr ""
 
-#: gui/main_window.py:296
+#: gui/main_window.py:297
 msgid "A conversion is still running."
 msgstr ""
 
-#: gui/wizard/step_quality.py:61
+#: gui/wizard/step_quality.py:86
 msgid ""
 "A video stores each frame of the picture. Reduvid decides how much detail to keep in each one, "
 "like when a phone saves a photo at a higher or lower quality. Internally this is called CRF: a "
 "lower number keeps more detail and takes more space."
+msgstr ""
+
+#: gui/wizard/step_quality.py:101
+#, python-brace-format
+msgid "About {size} (not smaller than the original)"
+msgstr ""
+
+#: gui/wizard/step_quality.py:100
+#, python-brace-format
+msgid "About {size} ({percent} smaller)"
 msgstr ""
 
 #: gui/wizard/step_videos.py:78 gui/wizard/step_videos.py:81
@@ -174,7 +184,7 @@ msgstr ""
 msgid "All options in one place. They are shared with the assistant."
 msgstr ""
 
-#: gui/wizard/step_quality.py:20
+#: gui/wizard/step_quality.py:45
 msgid "Almost identical"
 msgstr ""
 
@@ -240,7 +250,11 @@ msgstr ""
 msgid "Audio: ~{size}"
 msgstr ""
 
-#: gui/advanced_page.py:92 gui/wizard/step_quality.py:25
+#: gui/wizard/step_quality.py:330
+msgid "Automatic"
+msgstr ""
+
+#: gui/advanced_page.py:92 gui/wizard/step_quality.py:50
 msgid "Balanced"
 msgstr ""
 
@@ -252,7 +266,12 @@ msgstr ""
 msgid "Browse for the output folder"
 msgstr ""
 
-#: gui/wizard/step_summary.py:342
+#: gui/wizard/step_quality.py:268
+#, python-brace-format
+msgid "CRF: {crf}"
+msgstr ""
+
+#: gui/wizard/step_quality.py:195 gui/wizard/step_summary.py:342
 msgid "Cancel"
 msgstr ""
 
@@ -260,11 +279,11 @@ msgstr ""
 msgid "Cancel conversion"
 msgstr ""
 
-#: gui/main_window.py:299
+#: gui/main_window.py:300
 msgid "Cancel conversion and quit"
 msgstr ""
 
-#: gui/wizard/step_summary.py:344
+#: gui/wizard/step_quality.py:197 gui/wizard/step_summary.py:344
 msgid "Cancel the estimate"
 msgstr ""
 
@@ -296,8 +315,10 @@ msgstr ""
 msgid "Choose a folder"
 msgstr ""
 
-#: gui/wizard/step_quality.py:90
-msgid "Choose how much you want to shrink. You can change this later."
+#: gui/wizard/step_quality.py:142
+msgid ""
+"Choose how much you want to shrink. Sizes are only known after estimating; you can change this "
+"later."
 msgstr ""
 
 #: gui/wizard/step_keep.py:115
@@ -324,6 +345,11 @@ msgstr ""
 msgid "Choose where the converted files go and how they are stored."
 msgstr ""
 
+#: gui/wizard/step_quality.py:266
+#, python-brace-format
+msgid "Codec: {codec}"
+msgstr ""
+
 #: gui/preferences.py:67 gui/preferences.py:113
 msgid "Colour mode"
 msgstr ""
@@ -332,7 +358,7 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-#: gui/main_window.py:295
+#: gui/main_window.py:296
 msgid "Conversion in progress"
 msgstr ""
 
@@ -379,7 +405,7 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
-#: gui/wizard_logic.py:252
+#: gui/wizard_logic.py:251
 msgid "Dark scenes, film grain and fast movement look softer and may show blocks."
 msgstr ""
 
@@ -486,7 +512,7 @@ msgstr ""
 msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
 msgstr ""
 
-#: gui/wizard/step_summary.py:337
+#: gui/wizard/step_quality.py:193 gui/wizard/step_summary.py:337
 msgid "Estimate progress"
 msgstr ""
 
@@ -500,6 +526,14 @@ msgstr ""
 
 #: gui/wizard/step_summary.py:327
 msgid "Estimate the final size from a 1-minute test of this video"
+msgstr ""
+
+#: gui/wizard/step_quality.py:184
+msgid "Estimate the size of each level"
+msgstr ""
+
+#: gui/wizard/step_quality.py:186
+msgid "Estimate the size of each quality level"
 msgstr ""
 
 #: gui/wizard/step_summary.py:356
@@ -548,7 +582,7 @@ msgstr ""
 msgid "Estimating: {percent}%"
 msgstr ""
 
-#: gui/widgets/what_is_this.py:33
+#: gui/widgets/what_is_this.py:40
 msgid "Explanation"
 msgstr ""
 
@@ -642,7 +676,7 @@ msgstr ""
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr ""
 
-#: gui/main_window.py:297
+#: gui/main_window.py:298
 msgid "If you quit now, the conversion will be cancelled."
 msgstr ""
 
@@ -678,6 +712,10 @@ msgstr ""
 msgid "Install command for {system}"
 msgstr ""
 
+#: gui/wizard/step_quality.py:209
+msgid "It can take a couple of minutes, depending on the video and your computer."
+msgstr ""
+
 #: gui/wizard_logic.py:57
 msgid "Italian"
 msgstr ""
@@ -694,7 +732,7 @@ msgstr ""
 msgid "Jellyfin will transcode"
 msgstr ""
 
-#: gui/main_window.py:301
+#: gui/main_window.py:302
 msgid "Keep converting"
 msgstr ""
 
@@ -734,6 +772,11 @@ msgstr ""
 msgid "Language for messages"
 msgstr ""
 
+#: gui/wizard/step_quality.py:272
+#, python-brace-format
+msgid "Level: {level}"
+msgstr ""
+
 #: gui/preferences.py:70
 msgid "Light"
 msgstr ""
@@ -754,7 +797,7 @@ msgstr ""
 msgid "Maximum height in pixels"
 msgstr ""
 
-#: gui/advanced_page.py:93 gui/wizard/step_quality.py:30
+#: gui/advanced_page.py:93 gui/wizard/step_quality.py:55
 msgid "Maximum savings"
 msgstr ""
 
@@ -770,7 +813,7 @@ msgstr ""
 msgid "More compatible"
 msgstr ""
 
-#: gui/wizard/step_quality.py:87
+#: gui/wizard/step_quality.py:137
 msgid "More quality or more space?"
 msgstr ""
 
@@ -824,6 +867,11 @@ msgstr ""
 msgid "Paused. You can keep using the computer as usual."
 msgstr ""
 
+#: gui/wizard/step_quality.py:275
+#, python-brace-format
+msgid "Pixel format: {pixel_format}"
+msgstr ""
+
 #: cli.py:235
 #, python-brace-format
 msgid "Plan: {destination}, {quality}, {container}"
@@ -839,6 +887,16 @@ msgstr ""
 
 #: gui/preferences.py:51
 msgid "Preferences"
+msgstr ""
+
+#: gui/wizard/step_quality.py:267
+#, python-brace-format
+msgid "Preset: {preset}"
+msgstr ""
+
+#: gui/wizard/step_quality.py:270
+#, python-brace-format
+msgid "Profile: {profile}"
 msgstr ""
 
 #: cli.py:323
@@ -872,7 +930,7 @@ msgstr ""
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr ""
 
-#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:118
+#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:305
 msgid "Recommended"
 msgstr ""
 
@@ -888,7 +946,7 @@ msgstr ""
 msgid "Reduce the audio size"
 msgstr ""
 
-#: gui/main_window.py:76 gui/main_window.py:346 gui/main_window.py:349
+#: gui/main_window.py:76 gui/main_window.py:347 gui/main_window.py:350
 msgid "Reduvid"
 msgstr ""
 
@@ -904,6 +962,10 @@ msgstr ""
 
 #: gui/wizard/step_destination.py:108 gui/wizard/step_destination.py:110
 msgid "Replace the original"
+msgstr ""
+
+#: gui/wizard/step_quality.py:172 gui/wizard/step_quality.py:175
+msgid "Resolution"
 msgstr ""
 
 #: gui/wizard/step_summary.py:138
@@ -956,7 +1018,7 @@ msgstr ""
 msgid "Start conversion"
 msgstr ""
 
-#: gui/main_window.py:378
+#: gui/main_window.py:379
 msgid "Step content"
 msgstr ""
 
@@ -994,7 +1056,7 @@ msgstr ""
 msgid "TV, phone or browser through your Jellyfin server."
 msgstr ""
 
-#: gui/error_view.py:40
+#: gui/error_view.py:40 gui/wizard/step_quality.py:231
 msgid "Technical details"
 msgstr ""
 
@@ -1013,6 +1075,11 @@ msgstr ""
 
 #: messages.py:74
 msgid "The converted file did not pass the safety checks and was discarded."
+msgstr ""
+
+#: gui/wizard/step_quality.py:315
+#, python-brace-format
+msgid "The estimate is for the reference video: {name}."
 msgstr ""
 
 #: messages.py:65
@@ -1041,7 +1108,7 @@ msgstr ""
 msgid "The resolution stays at {width}x{height}."
 msgstr ""
 
-#: gui/wizard_logic.py:242
+#: gui/wizard_logic.py:241
 msgid "The slower encoding setting saves a bit more space but takes longer."
 msgstr ""
 
@@ -1112,16 +1179,21 @@ msgstr ""
 msgid "Use the Jellyfin profile, which works on almost everything."
 msgstr ""
 
-#: gui/wizard_logic.py:249
+#: gui/wizard_logic.py:248
 msgid "Very fine detail, such as film grain or textures in dark scenes, is slightly smoothed."
 msgstr ""
 
-#: gui/wizard_logic.py:247
+#: gui/wizard_logic.py:246
 msgid "Very little detail is lost, so the file stays large."
 msgstr ""
 
 #: gui/wizard/step_videos.py:147
 msgid "Video files"
+msgstr ""
+
+#: gui/wizard/step_quality.py:96
+#, python-brace-format
+msgid "Video only: about {size}"
 msgstr ""
 
 #: cli.py:249
@@ -1191,17 +1263,17 @@ msgstr ""
 msgid "Where will you watch them?"
 msgstr ""
 
-#: gui/wizard/step_quality.py:50
+#: gui/wizard/step_quality.py:75
 msgid "Why Balanced? Modern devices play H.265: you save more space while keeping very good quality."
 msgstr ""
 
-#: gui/wizard/step_quality.py:54
+#: gui/wizard/step_quality.py:79
 msgid ""
 "Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
 "without the server converting anything."
 msgstr ""
 
-#: gui/wizard/step_quality.py:45
+#: gui/wizard/step_quality.py:70
 msgid ""
 "Why Maximum savings? When archiving, the priority is saving space and a slower encode does not "
 "matter."
@@ -1224,15 +1296,15 @@ msgstr ""
 msgid "Would convert: {path}"
 msgstr ""
 
-#: gui/wizard/step_quality.py:26
+#: gui/wizard/step_quality.py:51
 msgid "You can only see the difference if you look closely. The best trade-off."
 msgstr ""
 
-#: gui/wizard/step_quality.py:32
+#: gui/wizard/step_quality.py:57
 msgid "You will notice it in dark scenes or with lots of movement. For phones or archiving."
 msgstr ""
 
-#: gui/wizard/step_quality.py:21
+#: gui/wizard/step_quality.py:46
 msgid "You won't notice the difference, even on a big TV."
 msgstr ""
 
