@@ -18,12 +18,12 @@ from PySide6.QtWidgets import (
 )
 
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.probe import format_size
 from reduvid.core.report import QueueReport
 from reduvid.gui.error_view import ErrorView
 from reduvid.gui.wizard_logic import (
     VideoSummary,
     format_duration,
-    format_size,
     summarize,
 )
 from reduvid.gui.wizard_state import WizardState

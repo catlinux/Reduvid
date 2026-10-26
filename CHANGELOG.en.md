@@ -8,7 +8,8 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
-- Engine: per-track audio selection (`audio_tracks`), one audio track per language (`one_audio_per_language`), audio reduction to AAC (`reduce_audio`), per-stream bitrate in probing and size estimation. No interface or CLI yet.
+- Engine: per-track audio selection (`audio_tracks`), one audio track per language (`one_audio_per_language`), audio reduction to AAC (`reduce_audio`), per-stream bitrate in probing and size estimation. No interface yet.
+- CLI: `--audio-tracks`, `--one-audio-per-language` and `--reduce-audio` options in `convert`, and estimated size of each audio track in `probe` and `--dry-run`.
 
 ## [0.2.1] - 2026-10-26
 

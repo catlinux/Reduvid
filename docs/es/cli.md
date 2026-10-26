@@ -18,8 +18,8 @@ Format: matroska,webm
 Duration: 1:42:30
 Size: 4521.30 MB
 Video 1: hevc, 3840x2160, 24 fps, 10-bit, HDR yes (hdr10)
-Audio 1: eac3, 6 channels, eng
-Audio 2: aac, 2 channels, spa
+Audio 1: eac3, 6 channels, eng, ~492 MB estimated
+Audio 2: aac, 2 channels, spa, ~98 MB estimated
 Subtitle 1: subrip, eng, image: no
 ```
 
@@ -34,6 +34,7 @@ reduvid-cli convert pelicula.mkv
 reduvid-cli convert carpeta/ --recursive
 reduvid-cli convert *.mkv --target modern --quality max_savings
 reduvid-cli convert pelicula.mkv --keep-audio ca,es --keep-subs ca,und
+reduvid-cli convert pelicula.mkv --audio-tracks 1,3 --reduce-audio
 ```
 
 Por defecto, el archivo convertido se escribe junto al original con el sufijo `_reduvid` (por ejemplo `pelicula_reduvid.mkv`), sin tocar el archivo de partida. El original solo se envía a la papelera si pasas `--replace-original`, y solo después de comprobar que la conversión es correcta.
@@ -45,6 +46,9 @@ Por defecto, el archivo convertido se escribe junto al original con el sufijo `_
 | `--target` | `jellyfin`, `modern`, `archive` | `jellyfin` | Perfil de destino. `jellyfin` prioriza que se reproduzca directo en Jellyfin (H.264); `modern` usa H.265 para más ahorro; `archive` es H.265 con compresión máxima y más lento. |
 | `--quality` | `high`, `balanced`, `max_savings` | `balanced` | Nivel de calidad/tamaño. Ver la tabla de CRF en el [README](../../README.md). |
 | `--container` | `mkv`, `mp4` | `mkv` | Formato del archivo de salida. |
+| `--audio-tracks` | índices separados por comas | todas | Conserva solo las pistas de audio con esos índices de ffprobe (`0`, `1`...). Tiene prioridad sobre `--keep-audio`. |
+| `--one-audio-per-language` | — | desactivado | Conserva solo la pista de audio de mejor calidad para cada idioma (canales, bitrate y marca por defecto). |
+| `--reduce-audio` | — | desactivado | Recodifica las pistas de audio a AAC (256 kbps multicanal, 128 kbps estéreo) para ahorrar espacio. |
 | `--keep-audio` | idiomas separados por comas | todas | Conserva solo las pistas de audio de esos idiomas; `und` es «sin idioma». Si ninguna coincide, se conservan todas y se avisa. |
 | `--keep-subs` | idiomas separados por comas | todos | Conserva solo los subtítulos de esos idiomas (`und` es «sin idioma»). Puede no quedar ninguno. |
 | `--max-height` | número entero | `1080` (en `jellyfin`) | Fuerza una altura máxima distinta de 1080p. Solo tiene efecto en el perfil `jellyfin`. |
@@ -68,13 +72,13 @@ Would convert: /ruta/a/pelicula.mkv
 Output: /ruta/a/pelicula_reduvid.mkv
 Plan: modern, high, mkv
   Video stream 0: encode, libx265, CRF 21, medium preset
-  Audio stream 0: copy
+  Audio stream 0: copy, ~492 MB estimated
 Dry run complete.
 ```
 
 ### Avisos
 
-Durante la conversión pueden aparecer avisos sobre decisiones del plan: reducción de resolución a 1080p, conversión de HDR a SDR (o aviso si FFmpeg no tiene los filtros necesarios), subtítulos de imagen conservados con aviso de que Jellyfin los «quemará», subtítulos de imagen descartados en MP4, o pistas de audio recodificadas. Se muestran tal cual en la salida de la orden.
+Durante la conversión pueden aparecer avisos sobre decisiones del plan: reducción de resolución a 1080p, conversión de HDR a SDR (o aviso si FFmpeg no tiene los filtros necesarios), subtítulos de imagen conservados con aviso de que Jellyfin los «quemará», subtítulos de imagen descartados en MP4, o pistas de audio recodificadas o reducidas a AAC para ahorrar espacio. Se muestran tal cual en la salida de la orden.
 
 ### Al terminar
 

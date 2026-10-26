@@ -28,6 +28,9 @@ def warning_text(warning: Warning) -> str:
             "Audio track {stream_index} will be converted to {codec} so that "
             "Jellyfin can play it directly."
         ),
+        "audio_reduced": _(
+            "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
+        ),
         "image_subtitle_burn_in": _(
             "Image subtitle track {stream_index} will have to be converted "
             "while playing, which uses more CPU."

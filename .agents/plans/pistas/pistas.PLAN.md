@@ -20,7 +20,7 @@ El paso «Qué conservar» elige solo por idioma para toda la cola. Un vídeo co
   - Función pura `estimate_stream_bytes(stream, duration)` en el motor y `rank_audio(streams)` para elegir «la mejor».
   - `reduce_audio` → decisión `encode` a `aac` con el bitrate indicado, aviso `audio_reduced`; sin él, la política actual.
   - Terminado: tests con un vídeo de 2 audios es + 1 en, los tres modos y el caso «ninguna pista seleccionada» (conserva todas y avisa, como ahora).
-- [ ] 2 **CLI.** *AgentRelay, esfuerzo medio.* `reduvid-cli`: `--audio-tracks 1,3`, `--one-audio-per-language`, `--reduce-audio`; `probe` muestra el tamaño estimado por pista. Documentado en `docs/{es,en}/cli.md`.
+- [x] 2 **CLI.** *AgentRelay, esfuerzo medio.* `reduvid-cli`: `--audio-tracks 1,3`, `--one-audio-per-language`, `--reduce-audio`; `probe` muestra el tamaño estimado por pista. Documentado en `docs/{es,en}/cli.md`.
 - [ ] 3 **Estado del asistente.** *AgentRelay, esfuerzo alto.* `gui/wizard_state.py` y `wizard_logic.py`: selección por pista (solo con 1 vídeo), las dos casillas nuevas, estimación del peso final por partes (vídeo según calidad no, solo pistas). Sin Qt en la lógica nueva y con tests.
 - [ ] 4 **Interfaz del paso.** *Sesión Sonnet/Opus, esfuerzo medio (diseño visual), con `docs/design/mockups.html` y los tres temas.* `gui/wizard/step_keep.py`: tabla/lista de pistas con tamaño, casillas, aviso de contenedor, `WhatIsThis` actualizado. Capturas nuevas en `docs/screenshots/` y `docs/{es,en}/gui.md`.
 - [ ] 5 **Traducciones y cierre.** *AgentRelay, esfuerzo medio.* `.pot`, ca/es, `messages.py` para `audio_reduced`; versión **0.3.0** (funcionalidad nueva compatible), CHANGELOG es/en, README/TODO (la antigua «0.3.0, ayudas» pasa a 0.4.0).

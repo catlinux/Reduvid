@@ -13,11 +13,16 @@ pytest.importorskip("PySide6")
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.probe import AudioStream, MediaInfo, SubtitleStream, VideoStream
+from reduvid.core.probe import (
+    AudioStream,
+    MediaInfo,
+    SubtitleStream,
+    VideoStream,
+    format_size,
+)
 from reduvid.gui.wizard_logic import (
     collect_languages,
     format_duration,
-    format_size,
     language_name,
     summarize,
 )

@@ -12,7 +12,7 @@ from reduvid.core import pipeline
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.plan import PlanOptions
-from reduvid.core.probe import MediaInfo, VideoStream
+from reduvid.core.probe import AudioStream, MediaInfo, VideoStream
 from reduvid.core.runner import EncodeResult
 from reduvid.core.verify import VerificationResult
 
@@ -272,3 +272,123 @@ def test_help_uses_the_reduvid_cli_program_name(capsys) -> None:
 
     assert raised.value.code == 0
     assert "usage: reduvid-cli" in capsys.readouterr().out
+
+
+def test_audio_tracks_and_flags_reach_the_plan(monkeypatch: pytest.MonkeyPatch) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, path: media_info(path))
+    captured: list[PlanOptions] = []
+    original = cli.build_plan
+
+    def spy(media: MediaInfo, ffmpeg: FFmpegInfo, options: PlanOptions | None = None):
+        assert options is not None
+        captured.append(options)
+        return original(media, ffmpeg, options)
+
+    monkeypatch.setattr(cli, "build_plan", spy)
+
+    result = cli.main(
+        [
+            "convert",
+            str(source),
+            "--dry-run",
+            "--audio-tracks",
+            " 1, 3 ",
+            "--one-audio-per-language",
+            "--reduce-audio",
+        ]
+    )
+
+    assert result == 0
+    assert captured[0].audio_tracks == frozenset({1, 3})
+    assert captured[0].one_audio_per_language is True
+    assert captured[0].reduce_audio is True
+
+
+def test_audio_tracks_valid_parses_set() -> None:
+    assert cli._track_set("0, 2, 5") == frozenset({0, 2, 5})
+    assert cli._track_set("1") == frozenset({1})
+
+
+@pytest.mark.parametrize("invalid", ["", "  ", "1,", ",1", "-1", "abc", "1.5", "1,-2"])
+def test_audio_tracks_invalid_raises_argument_type_error(invalid: str) -> None:
+    with pytest.raises(argparse.ArgumentTypeError, match="non-negative"):
+        cli._track_set(invalid)
+
+
+def test_convert_fails_on_invalid_audio_tracks(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    with pytest.raises(SystemExit) as raised:
+        cli.main(["convert", str(source), "--audio-tracks", "invalid"])
+    assert raised.value.code == 2
+    captured = capsys.readouterr()
+    assert "non-negative" in captured.err
+
+
+def test_probe_audio_estimated_size(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    media = MediaInfo(
+        source,
+        "matroska",
+        100.0,
+        50_000_000,
+        [VideoStream(0, "hevc", 1920, 1080, 24.0)],
+        [
+            AudioStream(1, "eac3", 6, "eng", True, bitrate=640_000),
+            AudioStream(2, "flac", 2, "spa", False, bitrate=None),
+        ],
+        [],
+        [],
+    )
+    monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, _path: media)
+
+    result = cli.main(["probe", str(source)])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    # 640_000 * 100 / 8 = 8_000_000 bytes -> 8 MB
+    assert "Audio 1: eac3, 6 channels, eng, ~8 MB estimated" in captured.out
+    assert "Audio 2: flac, 2 channels, spa, —" in captured.out
+
+
+def test_convert_dry_run_shows_audio_estimated_size(
+    monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    media = MediaInfo(
+        source,
+        "matroska",
+        100.0,
+        50_000_000,
+        [VideoStream(0, "hevc", 1920, 1080, 24.0)],
+        [
+            AudioStream(1, "eac3", 6, "eng", True, bitrate=640_000),
+            AudioStream(2, "aac", 2, "spa", False, bitrate=None),
+        ],
+        [],
+        [],
+    )
+    monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, _path: media)
+
+    # Dry-run without --reduce-audio: Stream 1 (eac3 6ch) is copied,
+    # Stream 2 (aac 2ch, no bitrate) is copied
+    result = cli.main(["convert", str(source), "--dry-run"])
+    captured = capsys.readouterr()
+    assert result == 0
+    # 640_000 * 100 / 8 = 8_000_000 bytes -> 8 MB
+    assert "Audio stream 1: copy, ~8 MB estimated" in captured.out
+    # Stream 2 has no bitrate -> "—"
+    assert "Audio stream 2: copy, —" in captured.out
+
+    # Dry-run with --reduce-audio: Stream 1 encoded to 256k, Stream 2 encoded to 128k
+    result = cli.main(["convert", str(source), "--dry-run", "--reduce-audio"])
+    captured = capsys.readouterr()
+    assert result == 0
+    # 256_000 * 100 / 8 = 3_200_000 -> 3 MB
+    assert "Audio stream 1: encode as aac at 256k, ~3 MB estimated" in captured.out
+    # 128_000 * 100 / 8 = 1_600_000 -> 2 MB
+    assert "Audio stream 2: encode as aac at 128k, ~2 MB estimated" in captured.out

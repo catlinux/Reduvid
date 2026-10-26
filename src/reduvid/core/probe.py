@@ -79,6 +79,13 @@ class MediaInfo:
     attachments: list[AttachmentStream] = field(default_factory=list)
 
 
+def format_size(size: int) -> str:
+    """Human-readable decimal size (MB or GB)."""
+    if size >= 1_000_000_000:
+        return f"{size / 1_000_000_000:.1f} GB"
+    return f"{size / 1_000_000:.0f} MB"
+
+
 def estimate_stream_bytes(bitrate: int | None, duration: float | None) -> int | None:
     """Estimate stream size in bytes from its bitrate (bps) and duration (seconds)."""
     if bitrate is None or duration is None:

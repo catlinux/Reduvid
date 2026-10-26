@@ -18,7 +18,13 @@ from reduvid.core.ffmpeg import FFmpegInfo, detect_ffmpeg
 from reduvid.core.naming import build_output_path
 from reduvid.core.pipeline import FileProcessor
 from reduvid.core.plan import EncodePlan, PlanOptions, build_plan
-from reduvid.core.probe import MediaInfo, ProbeError, probe_media
+from reduvid.core.probe import (
+    MediaInfo,
+    ProbeError,
+    estimate_stream_bytes,
+    format_size,
+    probe_media,
+)
 from reduvid.core.queue import ConversionQueue, QueueProgressEvent
 from reduvid.core.report import FileReport, QueueReport
 from reduvid.i18n import _, setup_language
@@ -40,6 +46,46 @@ def _language_set(value: str) -> frozenset[str]:
     if not languages:
         raise argparse.ArgumentTypeError(_("must be a comma-separated list of language codes"))
     return languages
+
+
+def _track_set(value: str) -> frozenset[int]:
+    raw_tokens = [token.strip() for token in value.split(",")]
+    if not raw_tokens or any(not token for token in raw_tokens):
+        raise argparse.ArgumentTypeError(
+            _("must be a comma-separated list of non-negative integers")
+        )
+    tracks: set[int] = set()
+    for token in raw_tokens:
+        try:
+            track = int(token)
+        except ValueError as error:
+            raise argparse.ArgumentTypeError(
+                _("must be a comma-separated list of non-negative integers")
+            ) from error
+        if track < 0:
+            raise argparse.ArgumentTypeError(
+                _("must be a comma-separated list of non-negative integers")
+            )
+        tracks.add(track)
+    return frozenset(tracks)
+
+
+def _parse_bitrate(value: str) -> int | None:
+    normalized = value.strip().lower()
+    if normalized.endswith("k"):
+        try:
+            return int(normalized[:-1]) * 1_000
+        except ValueError:
+            return None
+    if normalized.endswith("m"):
+        try:
+            return int(normalized[:-1]) * 1_000_000
+        except ValueError:
+            return None
+    try:
+        return int(normalized)
+    except ValueError:
+        return None
 
 
 def _load_config() -> Config:
@@ -158,12 +204,22 @@ def _show_media(media: MediaInfo) -> None:
             if audio_stream.language
             else ""
         )
+        bytes_est = (
+            estimate_stream_bytes(audio_stream.bitrate, media.duration)
+            if media.duration > 0
+            else None
+        )
+        if bytes_est is None:
+            size_str = "—"
+        else:
+            size_str = _("~{size} estimated").format(size=format_size(bytes_est))
         print(
-            _("Audio {position}: {codec}, {channels} channels{language}").format(
+            _("Audio {position}: {codec}, {channels} channels{language}, {size}").format(
                 position=position,
                 codec=audio_stream.codec,
                 channels=audio_stream.channels,
                 language=language,
+                size=size_str,
             )
         )
     for position, subtitle_stream in enumerate(media.subtitle_streams, start=1):
@@ -183,7 +239,7 @@ def _show_media(media: MediaInfo) -> None:
         )
 
 
-def _show_plan(plan: EncodePlan) -> None:
+def _show_plan(plan: EncodePlan, media: MediaInfo | None = None) -> None:
     print(
         _("Plan: {destination}, {quality}, {container}").format(
             destination=plan.destination, quality=plan.quality, container=plan.container
@@ -205,12 +261,28 @@ def _show_plan(plan: EncodePlan) -> None:
                 details=details,
             )
         )
+    audio_by_index = {stream.index: stream for stream in media.audio_streams} if media else {}
     for audio_decision in plan.audios:
         details = _action_text(audio_decision.action)
         if audio_decision.codec is not None:
             details += _(" as {codec}").format(codec=audio_decision.codec)
         if audio_decision.bitrate is not None:
             details += _(" at {bitrate}").format(bitrate=audio_decision.bitrate)
+        if media is not None:
+            stream = audio_by_index.get(audio_decision.stream_index)
+            bitrate: int | None = None
+            if audio_decision.bitrate is not None:
+                bitrate = _parse_bitrate(audio_decision.bitrate)
+            elif stream is not None:
+                bitrate = stream.bitrate
+            bytes_est = (
+                estimate_stream_bytes(bitrate, media.duration) if media.duration > 0 else None
+            )
+            if bytes_est is not None:
+                size_str = _("~{size} estimated").format(size=format_size(bytes_est))
+                details += f", {size_str}"
+            else:
+                details += ", —"
         print(
             "  "
             + _("Audio stream {index}: {details}").format(
@@ -306,7 +378,7 @@ def _dry_run(
         output_path = build_output_path(media.path, destination_dir, options.container)
         print(_("Would convert: {path}").format(path=path))
         print(_("Output: {path}").format(path=output_path))
-        _show_plan(plan)
+        _show_plan(plan, media)
 
 
 def _convert(
@@ -391,6 +463,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         help=_("Keep only these audio languages (comma-separated, 'und' for no language)"),
     )
     convert_parser.add_argument(
+        "--audio-tracks",
+        type=_track_set,
+        metavar="TRACKS",
+        help=_("Keep only these audio track indices (comma-separated, overrides --keep-audio)"),
+    )
+    convert_parser.add_argument(
+        "--one-audio-per-language",
+        action="store_true",
+        help=_("Keep only the highest-quality audio track for each language"),
+    )
+    convert_parser.add_argument(
+        "--reduce-audio",
+        action="store_true",
+        help=_("Re-encode audio tracks to AAC to save space"),
+    )
+    convert_parser.add_argument(
         "--keep-subs",
         type=_language_set,
         metavar="LANGS",
@@ -443,12 +531,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _show_probe(paths, ffmpeg_info)
 
     options = PlanOptions(
-        parsed.target,
-        parsed.quality,
-        parsed.container,
-        parsed.max_height,
-        parsed.keep_audio,
-        parsed.keep_subs,
+        destination=parsed.target,
+        quality=parsed.quality,
+        container=parsed.container,
+        max_height=parsed.max_height,
+        audio_languages=parsed.keep_audio,
+        subtitle_languages=parsed.keep_subs,
+        audio_tracks=parsed.audio_tracks,
+        one_audio_per_language=parsed.one_audio_per_language,
+        reduce_audio=parsed.reduce_audio,
     )
     return _convert(
         paths,

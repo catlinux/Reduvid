@@ -111,12 +111,6 @@ def summarize(
     )
 
 
-def format_size(size: int) -> str:
-    if size >= 1_000_000_000:
-        return f"{size / 1_000_000_000:.1f} GB"
-    return f"{size / 1_000_000:.0f} MB"
-
-
 def format_duration(duration: float) -> str:
     seconds = int(duration) if duration > 0 else 0
     hours, remainder = divmod(seconds, 3600)
