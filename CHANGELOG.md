@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.5.1] - 2026-10-26
+
+### Añadido
+
+- La interfaz activa `faulthandler`: si hay un fallo nativo (por ejemplo «Error del bus»), imprime en la terminal en qué línea estaba cada hilo de Python, para poder localizarlo.
+
 ## [0.5.0] - 2026-10-26
 
 ### Añadido

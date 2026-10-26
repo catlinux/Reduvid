@@ -15,7 +15,7 @@ Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for
 
 ## Project status
 
-In development. The current version (0.5.0) already has a graphical interface, a step-by-step wizard and a command line. Plan:
+In development. The current version (0.5.1) already has a graphical interface, a step-by-step wizard and a command line. Plan:
 
 | Version | Contents |
 |---|---|

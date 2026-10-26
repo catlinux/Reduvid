@@ -15,7 +15,7 @@ Reduvid (de *reducir vídeo*) es una aplicación de escritorio para Linux y Wind
 
 ## Estado del proyecto
 
-En desarrollo. La versión actual (0.5.0) ya tiene interfaz gráfica, asistente paso a paso y línea de órdenes. Plan:
+En desarrollo. La versión actual (0.5.1) ya tiene interfaz gráfica, asistente paso a paso y línea de órdenes. Plan:
 
 | Versión | Contenido |
 |---|---|

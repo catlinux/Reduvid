@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-10-26
+
+### Added
+
+- The interface enables `faulthandler`: on a native crash (for example "Bus error") it prints in the terminal where each Python thread was, so the crash can be located.
+
 ## [0.5.0] - 2026-10-26
 
 ### Added

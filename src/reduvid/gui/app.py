@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import faulthandler
 import sys
 import tomllib
 from collections.abc import Sequence
@@ -64,6 +65,10 @@ def run_application(app: QApplication, screen: QWidget) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Start Reduvid's graphical interface."""
+    # A native crash would otherwise end with a bare "Bus error"; this prints where
+    # each Python thread was. There is no stderr when running without a console.
+    if sys.stderr is not None:
+        faulthandler.enable()
     config = load_user_config()
     setup_language(config.language)
     app = create_application(argv)
