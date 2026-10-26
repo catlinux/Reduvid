@@ -95,6 +95,18 @@ def _crf(quality: str, codec: str) -> int:
         raise ValueError(f"Unknown quality level: {quality}") from error
 
 
+def _target_height(stream: VideoStream, profile: Profile, max_height: int | None) -> int | None:
+    if max_height is None:
+        # Jellyfin's level 4.1 profile tops out at 1080p; other profiles keep the source size.
+        limit = 1080 if profile.name == "jellyfin" else None
+    else:
+        # Even heights keep yuv420p encoders happy, so round the limit down.
+        limit = max_height - max_height % 2
+    if limit is None or limit < 2 or stream.height <= limit:
+        return None
+    return limit
+
+
 def _video_decision(
     stream: VideoStream,
     profile: Profile,
@@ -104,12 +116,18 @@ def _video_decision(
     max_height: int | None,
 ) -> VideoDecision:
     jellyfin = profile.name == "jellyfin"
-    # Level 4.1 tops out at 1080p by default; max_height can override that limit.
-    height_limit = max_height if max_height is not None else 1080
-    should_reduce = jellyfin and (stream.width > 1920 or stream.height > height_limit)
-    target_height = height_limit if should_reduce else None
+    target_height = _target_height(stream, profile, max_height)
     if target_height is not None:
-        warnings.append(Warning("resolution_reduced_4k_to_1080p", {"stream_index": stream.index}))
+        warnings.append(
+            Warning(
+                "resolution_reduced",
+                {
+                    "stream_index": stream.index,
+                    "from_height": stream.height,
+                    "to_height": target_height,
+                },
+            )
+        )
 
     filters: tuple[str, ...] = ()
     if stream.hdr and jellyfin:

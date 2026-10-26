@@ -17,7 +17,7 @@ from reduvid.messages import error_text, warning_text
 ROOT = Path(__file__).resolve().parent.parent
 LOCALE_DIR = ROOT / "src" / "reduvid" / "locale"
 WARNING_PARAMS: dict[str, dict[str, object]] = {
-    "resolution_reduced_4k_to_1080p": {"stream_index": 0},
+    "resolution_reduced": {"stream_index": 0, "from_height": 2160, "to_height": 1080},
     "hdr_converted_to_sdr": {"stream_index": 0},
     "hdr_tonemap_unavailable": {"stream_index": 0, "blocking": True},
     "audio_recoded": {"stream_index": 1, "codec": "aac"},

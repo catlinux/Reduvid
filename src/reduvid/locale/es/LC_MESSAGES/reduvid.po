@@ -226,14 +226,14 @@ msgstr "Peso del audio"
 msgid "Audio stream {index}: {details}"
 msgstr "Pista de audio {index}: {details}"
 
-#: messages.py:28
+#: messages.py:27
 #, python-brace-format
 msgid "Audio track {stream_index} will be converted to {codec} so that Jellyfin can play it directly."
 msgstr ""
 "La pista de audio {stream_index} se convertirá a {codec} para que Jellyfin la pueda reproducir "
 "directamente."
 
-#: messages.py:32
+#: messages.py:31
 #, python-brace-format
 msgid "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
 msgstr "La pista de audio {stream_index} se reducirá a AAC a {bitrate} para ahorrar espacio."
@@ -648,12 +648,12 @@ msgstr "Si conservas el 4K, Jellyfin tendrá que transcodificarlo."
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si sales ahora, se cancelará la conversión."
 
-#: messages.py:39
+#: messages.py:38
 #, python-brace-format
 msgid "Image subtitle track {stream_index} cannot be stored in MP4 and will be removed."
 msgstr "La pista de subtítulos de imagen {stream_index} no se puede guardar en MP4 y se eliminará."
 
-#: messages.py:35
+#: messages.py:34
 #, python-brace-format
 msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
 msgstr ""
@@ -788,7 +788,7 @@ msgstr "Necesita atención"
 msgid "Newer phones, tablets and TVs that play H.265."
 msgstr "Móviles, tabletas y televisores nuevos que reproducen H.265."
 
-#: messages.py:42
+#: messages.py:41
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que se conservarán todas."
 
@@ -952,7 +952,7 @@ msgstr "Saltar este vídeo"
 msgid "Skipped"
 msgstr "Omitido"
 
-#: messages.py:80
+#: messages.py:79
 msgid "Something went wrong while processing the file."
 msgstr "Ha ocurrido un problema al procesar el archivo."
 
@@ -1015,23 +1015,23 @@ msgstr "El audio pasa de ~{current} a ~{final}"
 msgid "The audio size of this video cannot be estimated."
 msgstr "No se puede estimar el peso del audio de este vídeo."
 
-#: messages.py:73
+#: messages.py:72
 msgid "The conversion was cancelled."
 msgstr "Se ha cancelado la conversión."
 
-#: messages.py:75
+#: messages.py:74
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr "El archivo convertido no ha superado las comprobaciones de seguridad y se ha descartado."
 
-#: messages.py:66
+#: messages.py:65
 msgid "The file appears to be damaged and could not be read."
 msgstr "El archivo parece dañado y no se ha podido leer."
 
-#: messages.py:78
+#: messages.py:77
 msgid "The file could not be analysed. It may be damaged or in an unsupported format."
 msgstr "No se ha podido analizar el archivo. Puede estar dañado o en un formato no compatible."
 
-#: messages.py:71
+#: messages.py:70
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr "No se puede leer o escribir el archivo o la carpeta por un problema de permisos."
 
@@ -1043,11 +1043,11 @@ msgstr "El original solo va a la papelera si la copia se verifica."
 msgid "Theme"
 msgstr "Tema"
 
-#: messages.py:65
+#: messages.py:64
 msgid "There is not enough free space on the destination drive."
 msgstr "No hay suficiente espacio libre en el disco de destino."
 
-#: messages.py:68
+#: messages.py:67
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
@@ -1083,7 +1083,7 @@ msgstr "Total: {original} → {estimated} estimados"
 msgid "Total: {original} → {final}"
 msgstr "Total: {original} → {final}"
 
-#: messages.py:55 messages.py:59
+#: messages.py:54 messages.py:58
 #, python-brace-format
 msgid "Unknown warning: {code}"
 msgstr "Aviso desconocido: {code}"
@@ -1101,19 +1101,19 @@ msgstr "Archivos de vídeo"
 msgid "Video stream {index}: {action}, {details}"
 msgstr "Pista de vídeo {index}: {action}, {details}"
 
-#: messages.py:49
+#: messages.py:48
 #, python-brace-format
 msgid "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot play directly."
 msgstr ""
 "La pista de vídeo {stream_index} es de 10 bits y algunos clientes de Jellyfin no pueden "
 "reproducirla directamente."
 
-#: messages.py:24
+#: messages.py:23
 #, python-brace-format
 msgid "Video track {stream_index} is HDR and this FFmpeg installation cannot convert it to SDR."
 msgstr "La pista de vídeo {stream_index} es HDR y esta instalación de FFmpeg no puede convertirla a SDR."
 
-#: messages.py:20
+#: messages.py:19
 #, python-brace-format
 msgid ""
 "Video track {stream_index} is HDR and will be converted to SDR; colours may look slightly "
@@ -1124,10 +1124,8 @@ msgstr ""
 
 #: messages.py:16
 #, python-brace-format
-msgid "Video track {stream_index} will be scaled down to 1080p so that Jellyfin can play it directly."
-msgstr ""
-"La pista de vídeo {stream_index} se reducirá a 1080p para que Jellyfin la pueda reproducir "
-"directamente."
+msgid "Video track {stream_index} will be scaled down from {from_height}p to {to_height}p."
+msgstr "La pista de vídeo {stream_index} se reducirá de {from_height}p a {to_height}p."
 
 #: cli.py:181
 #, python-brace-format
@@ -1296,7 +1294,7 @@ msgstr "{codec}, CRF {crf}, preajuste {preset}"
 msgid "{count} channels"
 msgstr "{count} canales"
 
-#: messages.py:45
+#: messages.py:44
 #, python-brace-format
 msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
 msgstr ""
@@ -1366,4 +1364,10 @@ msgstr "~{size} estimados"
 
 #~ msgid "This step is not available yet."
 #~ msgstr "Este paso aún no está disponible."
+
+#~ msgid "Video track {stream_index} will be scaled down to 1080p so that Jellyfin can play it directly."
+#~ msgstr ""
+#~ "La pista de vídeo {stream_index} se reducirá a "
+#~ "1080p para que Jellyfin la pueda reproducir "
+#~ "directamente."
 

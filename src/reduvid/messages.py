@@ -12,9 +12,8 @@ from reduvid.i18n import _
 def warning_text(warning: Warning) -> str:
     """Return a clear sentence describing *warning*."""
     templates = {
-        "resolution_reduced_4k_to_1080p": _(
-            "Video track {stream_index} will be scaled down to 1080p so that "
-            "Jellyfin can play it directly."
+        "resolution_reduced": _(
+            "Video track {stream_index} will be scaled down from {from_height}p to {to_height}p."
         ),
         "hdr_converted_to_sdr": _(
             "Video track {stream_index} is HDR and will be converted to SDR; "
