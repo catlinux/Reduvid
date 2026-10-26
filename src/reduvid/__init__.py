@@ -1,4 +1,4 @@
 # SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
 # Copyright (C) 2026 Catlinux
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"

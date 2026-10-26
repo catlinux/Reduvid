@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -44,7 +45,40 @@ def _find_executable(name: str, configured_path: Path | None) -> Path | None:
     if configured_path is not None and configured_path.is_file():
         return configured_path
     executable = shutil.which(name)
-    return Path(executable) if executable is not None else None
+    if executable is not None:
+        return Path(executable)
+    if sys.platform == "win32":
+        executable = shutil.which(name, path=_registry_path())
+        if executable is not None:
+            return Path(executable)
+    return None
+
+
+def _registry_path() -> str:
+    """Return the user and machine PATH values straight from the Windows registry.
+
+    A tool installed by winget (or any installer) writes its PATH entry there
+    immediately, but `os.environ["PATH"]` only reflects it in processes started
+    after a fresh logon — so a just-installed FFmpeg would otherwise go
+    undetected until the user signs out and back in.
+    """
+    import winreg
+
+    values = []
+    for hive, subkey in (
+        (winreg.HKEY_CURRENT_USER, "Environment"),
+        (
+            winreg.HKEY_LOCAL_MACHINE,
+            r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
+        ),
+    ):
+        try:
+            with winreg.OpenKey(hive, subkey) as key:
+                value, _kind = winreg.QueryValueEx(key, "Path")
+                values.append(value)
+        except OSError:
+            continue
+    return ";".join(values)
 
 
 def _listed_names(output: str) -> set[str]:

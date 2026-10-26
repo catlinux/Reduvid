@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-26
+
+### Fixed
+
+- On Windows, Reduvid now detects a freshly installed FFmpeg (e.g. via `winget install Gyan.FFmpeg`) without needing to sign out or restart: besides the process-inherited `PATH`, it also reads the user and machine `PATH` straight from the Windows registry, which does reflect what the installer just wrote.
+
 ## [0.3.1] - 2026-10-25
 
 ### Fixed

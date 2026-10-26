@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.3.2] - 2026-10-26
+
+### Corregido
+
+- En Windows, Reduvid detecta ahora FFmpeg recién instalado (por ejemplo con `winget install Gyan.FFmpeg`) sin necesidad de cerrar sesión ni reiniciar: además del `PATH` heredado del proceso, se consulta el `PATH` de usuario y de sistema directamente del registro de Windows, que sí refleja lo que acaba de escribir el instalador.
+
 ## [0.3.1] - 2026-10-25
 
 ### Corregido

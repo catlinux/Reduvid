@@ -24,7 +24,7 @@ def test_detects_selected_capabilities(monkeypatch) -> None:
     binary = Path("/mock/bin/ffmpeg")
     probe = Path("/mock/bin/ffprobe")
     monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
-    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name: None)
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
     _run_mock(
         monkeypatch,
         "Encoders:\n V..... libx264 H.264\n V..... libx265 H.265\n V..... h264_nvenc NVENC\n",
@@ -44,7 +44,7 @@ def test_missing_capabilities_are_false(monkeypatch) -> None:
     binary = Path("/mock/bin/ffmpeg")
     probe = Path("/mock/bin/ffprobe")
     monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
-    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name: None)
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
     _run_mock(monkeypatch, "Encoders:\n V..... mpeg4 MPEG-4\n", "Filters:\n ... scale V->V\n")
 
     info = ffmpeg.detect_ffmpeg(binary)
@@ -55,7 +55,7 @@ def test_missing_capabilities_are_false(monkeypatch) -> None:
 
 
 def test_missing_ffmpeg_returns_none(monkeypatch) -> None:
-    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name: None)
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
 
     assert ffmpeg.detect_ffmpeg(Path("missing-ffmpeg")) is None
 
@@ -67,7 +67,7 @@ def test_invalid_configured_path_falls_back_to_path(monkeypatch) -> None:
     monkeypatch.setattr(
         ffmpeg.shutil,
         "which",
-        lambda name: str(binary if name == "ffmpeg" else probe),
+        lambda name, path=None: str(binary if name == "ffmpeg" else probe),
     )
     _run_mock(monkeypatch, "Encoders:\n", "Filters:\n")
 
@@ -76,3 +76,38 @@ def test_invalid_configured_path_falls_back_to_path(monkeypatch) -> None:
     assert info is not None
     assert info.ffmpeg_path == binary
     assert info.ffprobe_path == probe
+
+
+def test_falls_back_to_registry_path_on_windows(monkeypatch) -> None:
+    binary = Path("/mock/bin/ffmpeg")
+    probe = Path("/mock/bin/ffprobe")
+    monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
+    monkeypatch.setattr(ffmpeg, "sys", type("S", (), {"platform": "win32"}))
+    monkeypatch.setattr(ffmpeg, "_registry_path", lambda: "C:\\registry\\bin")
+
+    def which(name: str, path: str | None = None) -> str | None:
+        if path is None:
+            return None
+        assert path == "C:\\registry\\bin"
+        return str(binary if name == "ffmpeg" else probe)
+
+    monkeypatch.setattr(ffmpeg.shutil, "which", which)
+    _run_mock(monkeypatch, "Encoders:\n", "Filters:\n")
+
+    info = ffmpeg.detect_ffmpeg()
+
+    assert info is not None
+    assert info.ffmpeg_path == binary
+    assert info.ffprobe_path == probe
+
+
+def test_registry_fallback_is_skipped_outside_windows(monkeypatch) -> None:
+    monkeypatch.setattr(ffmpeg, "sys", type("S", (), {"platform": "linux"}))
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
+
+    def fail_registry_path() -> str:
+        raise AssertionError("_registry_path must not be called outside Windows")
+
+    monkeypatch.setattr(ffmpeg, "_registry_path", fail_registry_path)
+
+    assert ffmpeg.detect_ffmpeg() is None
