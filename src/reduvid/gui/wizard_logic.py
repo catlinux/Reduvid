@@ -180,6 +180,80 @@ def subtitle_container_note(
     return "image_dropped_mp4" if container == "mp4" else "image_kept_mkv"
 
 
+def change_notes(media: MediaInfo, plan: EncodePlan) -> tuple[str, ...]:
+    """Plain sentences saying what the video conversion changes and what it can cost.
+
+    Only facts taken from the plan and the source file are stated; how much detail
+    each quality level loses is described qualitatively, never with invented figures.
+    """
+    if not plan.videos:
+        return ()
+    decision = plan.videos[0]
+    source = next(
+        (stream for stream in media.video_streams if stream.index == decision.stream_index),
+        None,
+    )
+    notes: list[str] = []
+
+    if decision.codec == "libx265":
+        notes.append(
+            _(
+                "The video is re-encoded to H.265. It takes less space than H.264 at the "
+                "same look, but some older TVs and browsers cannot play it."
+            )
+        )
+    else:
+        notes.append(
+            _(
+                "The video is re-encoded to H.264, which plays on almost any device but "
+                "takes more space than H.265."
+            )
+        )
+
+    if source is not None:
+        if decision.target_height is not None:
+            notes.append(
+                _("The picture is scaled down from {from_height}p to {to_height}p.").format(
+                    from_height=source.height, to_height=decision.target_height
+                )
+            )
+        else:
+            notes.append(
+                _("The resolution stays at {width}x{height}.").format(
+                    width=source.width, height=source.height
+                )
+            )
+        if decision.filters:
+            notes.append(
+                _("HDR becomes standard colour (SDR); colours may look slightly different.")
+            )
+        elif source.hdr:
+            notes.append(_("HDR is kept."))
+        elif source.bit_depth > 8 and decision.pixel_format == "yuv420p":
+            notes.append(
+                _(
+                    "The video goes from 10 to 8 bits per colour; smooth gradients may "
+                    "show faint bands."
+                )
+            )
+
+    notes.append(_QUALITY_NOTES[plan.quality]())
+    if decision.preset == "slow":
+        notes.append(_("The slower encoding setting saves a bit more space but takes longer."))
+    return tuple(notes)
+
+
+_QUALITY_NOTES = {
+    "high": lambda: _("Very little detail is lost, so the file stays large."),
+    "balanced": lambda: _(
+        "Very fine detail, such as film grain or textures in dark scenes, is slightly smoothed."
+    ),
+    "max_savings": lambda: _(
+        "Dark scenes, film grain and fast movement look softer and may show blocks."
+    ),
+}
+
+
 def _sum_or_none(parts: Iterable[int | None]) -> int | None:
     total = 0
     for part in parts:

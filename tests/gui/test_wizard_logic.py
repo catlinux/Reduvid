@@ -13,7 +13,7 @@ pytest.importorskip("PySide6")
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import PlanOptions
+from reduvid.core.plan import PlanOptions, build_plan
 from reduvid.core.probe import (
     AudioStream,
     MediaInfo,
@@ -23,6 +23,7 @@ from reduvid.core.probe import (
 )
 from reduvid.gui.wizard_logic import (
     audio_size_summary,
+    change_notes,
     collect_languages,
     format_duration,
     language_name,
@@ -289,3 +290,58 @@ def test_subtitle_container_note_for_each_case(tmp_path: Path) -> None:
     assert subtitle_container_note([text], "mp4") == "none"
     assert subtitle_container_note([image], "mp4") == "image_dropped_mp4"
     assert subtitle_container_note([image], "mkv") == "image_kept_mkv"
+
+
+def _notes(
+    video: VideoStream, destination: str = "modern", quality: str = "balanced", **options: object
+) -> tuple[str, ...]:
+    info = media(Path("/media/a.mkv"), video=video)
+    plan = build_plan(
+        info,
+        ffmpeg("zscale", "tonemap"),
+        PlanOptions(
+            destination=destination,
+            quality=quality,
+            **options,  # type: ignore[arg-type]
+        ),
+    )
+    return change_notes(info, plan)
+
+
+def test_change_notes_for_modern_keeps_resolution_and_names_h265() -> None:
+    notes = _notes(VideoStream(0, "h264", 1920, 1080, 24.0))
+
+    assert any("H.265" in note for note in notes)
+    assert any("stays at 1920x1080" in note for note in notes)
+    assert not any("scaled down" in note for note in notes)
+
+
+def test_change_notes_for_jellyfin_4k_hdr_mentions_scaling_and_sdr() -> None:
+    notes = _notes(
+        VideoStream(0, "hevc", 3840, 2160, 24.0, bit_depth=10, hdr=True), destination="jellyfin"
+    )
+
+    assert any("H.264" in note for note in notes)
+    assert any("from 2160p to 1080p" in note for note in notes)
+    assert any("SDR" in note for note in notes)
+
+
+def test_change_notes_for_max_savings_warn_about_softer_dark_scenes() -> None:
+    high = _notes(VideoStream(0, "h264", 1280, 720, 24.0), quality="high")
+    saving = _notes(VideoStream(0, "h264", 1280, 720, 24.0), quality="max_savings")
+
+    assert any("stays large" in note for note in high)
+    assert any("softer" in note for note in saving)
+
+
+def test_change_notes_say_when_ten_bit_becomes_eight_bit() -> None:
+    notes = _notes(VideoStream(0, "hevc", 1920, 1080, 24.0, bit_depth=10), destination="jellyfin")
+
+    assert any("10 to 8 bits" in note for note in notes)
+
+
+def test_change_notes_are_empty_without_video() -> None:
+    info = media(Path("/media/a.mkv"))
+    plan = build_plan(info, ffmpeg(), PlanOptions())
+
+    assert change_notes(info, plan) == ()
