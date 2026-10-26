@@ -23,7 +23,7 @@ El paso «Qué conservar» elige solo por idioma para toda la cola. Un vídeo co
 - [x] 2 **CLI.** *AgentRelay, esfuerzo medio.* `reduvid-cli`: `--audio-tracks 1,3`, `--one-audio-per-language`, `--reduce-audio`; `probe` muestra el tamaño estimado por pista. Documentado en `docs/{es,en}/cli.md`.
 - [x] 3 **Estado del asistente.** *AgentRelay, esfuerzo alto.* `gui/wizard_state.py` y `wizard_logic.py`: selección por pista (solo con 1 vídeo), las dos casillas nuevas, estimación del peso final por partes (vídeo según calidad no, solo pistas). Sin Qt en la lógica nueva y con tests.
 - [x] 4 **Interfaz del paso.** *Sesión Sonnet/Opus, esfuerzo medio (diseño visual), con `docs/design/mockups.html` y los tres temas.* `gui/wizard/step_keep.py`: tabla/lista de pistas con tamaño, casillas, aviso de contenedor, `WhatIsThis` actualizado. Capturas nuevas en `docs/screenshots/` y `docs/{es,en}/gui.md`.
-- [ ] 5 **Traducciones y cierre.** *AgentRelay, esfuerzo medio.* `.pot`, ca/es, `messages.py` para `audio_reduced`; versión **0.3.0** (funcionalidad nueva compatible), CHANGELOG es/en, README/TODO (la antigua «0.3.0, ayudas» pasa a 0.4.0).
+- [x] 5 **Traducciones y cierre.** *AgentRelay, esfuerzo medio.* `.pot`, ca/es, `messages.py` para `audio_reduced`; versión **0.3.0** (funcionalidad nueva compatible), CHANGELOG es/en, README/TODO (la antigua «0.3.0, ayudas» pasa a 0.4.0).
 
 ## Dudas abiertas
 

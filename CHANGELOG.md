@@ -6,9 +6,11 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.3.0] - 2026-10-26
+
 ### Añadido
 
-- Motor: selección de audio por pista (`audio_tracks`), «una pista por idioma» (`one_audio_per_language`), reducción del audio a AAC (`reduce_audio`), bitrate por pista en el sondeo y estimación de su tamaño. Aún sin interfaz.
+- Motor: selección de audio por pista (`audio_tracks`), «una pista por idioma» (`one_audio_per_language`), reducción del audio a AAC (`reduce_audio`), bitrate por pista en el sondeo y estimación de su tamaño.
 - CLI: opciones `--audio-tracks`, `--one-audio-per-language` y `--reduce-audio` en `convert`, y tamaño estimado de cada pista de audio en `probe` y `--dry-run`.
 - Asistente, paso «Qué conservar»: con un solo vídeo se elige el audio pista a pista (idioma, formato, canales y peso estimado), casilla «Una sola pista de audio por idioma», casilla «Reducir el peso del audio» con el resumen «el audio pasa de X a Y» y aviso de qué subtítulos admite cada contenedor.
 

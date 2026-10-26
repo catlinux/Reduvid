@@ -7,11 +7,11 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 ## High priority
 
 - Decide how external code contributions are licensed before accepting the first one: the license only covers material owned by Catlinux.
-- 0.3.0, helpers: sample test, estimates, final report, saved profiles and warnings for HDR, 10-bit video and image subtitles.
+- 0.4.0, helpers: sample test, estimates, final report, saved profiles and warnings for HDR, 10-bit video and image subtitles.
 
 ## Medium priority
 
-- 0.4.0 → 1.0.0: pipx, Windows installer, AppImage, screenshots and first release.
+- 0.5.0 → 1.0.0: pipx, Windows installer, AppImage, screenshots and first release.
 - When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.
 
 ## Low priority / later
