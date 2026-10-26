@@ -379,6 +379,10 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
+#: gui/wizard_logic.py:252
+msgid "Dark scenes, film grain and fast movement look softer and may show blocks."
+msgstr ""
+
 #: gui/ffmpeg_missing.py:64
 msgid "Debian / Ubuntu"
 msgstr ""
@@ -608,6 +612,14 @@ msgstr ""
 
 #: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
 msgid "H.265"
+msgstr ""
+
+#: gui/wizard_logic.py:228
+msgid "HDR becomes standard colour (SDR); colours may look slightly different."
+msgstr ""
+
+#: gui/wizard_logic.py:231
+msgid "HDR is kept."
 msgstr ""
 
 #: gui/wizard/step_summary.py:79
@@ -1019,6 +1031,36 @@ msgstr ""
 msgid "The original is sent to the trash only if the copy is verified."
 msgstr ""
 
+#: gui/wizard_logic.py:216
+#, python-brace-format
+msgid "The picture is scaled down from {from_height}p to {to_height}p."
+msgstr ""
+
+#: gui/wizard_logic.py:222
+#, python-brace-format
+msgid "The resolution stays at {width}x{height}."
+msgstr ""
+
+#: gui/wizard_logic.py:242
+msgid "The slower encoding setting saves a bit more space but takes longer."
+msgstr ""
+
+#: gui/wizard_logic.py:235
+msgid "The video goes from 10 to 8 bits per colour; smooth gradients may show faint bands."
+msgstr ""
+
+#: gui/wizard_logic.py:208
+msgid ""
+"The video is re-encoded to H.264, which plays on almost any device but takes more space than "
+"H.265."
+msgstr ""
+
+#: gui/wizard_logic.py:201
+msgid ""
+"The video is re-encoded to H.265. It takes less space than H.264 at the same look, but some older"
+" TVs and browsers cannot play it."
+msgstr ""
+
 #: gui/preferences.py:61 gui/preferences.py:112
 msgid "Theme"
 msgstr ""
@@ -1031,7 +1073,7 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/workers.py:162
+#: gui/workers.py:168
 msgid "This video has no video streams to estimate."
 msgstr ""
 
@@ -1068,6 +1110,14 @@ msgstr ""
 
 #: gui/wizard/step_target.py:44
 msgid "Use the Jellyfin profile, which works on almost everything."
+msgstr ""
+
+#: gui/wizard_logic.py:249
+msgid "Very fine detail, such as film grain or textures in dark scenes, is slightly smoothed."
+msgstr ""
+
+#: gui/wizard_logic.py:247
+msgid "Very little detail is lost, so the file stays large."
 msgstr ""
 
 #: gui/wizard/step_videos.py:147

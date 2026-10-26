@@ -391,6 +391,12 @@ msgstr "No se ha podido inspeccionar FFmpeg: {error}"
 msgid "Dark"
 msgstr "Oscuro"
 
+#: gui/wizard_logic.py:252
+msgid "Dark scenes, film grain and fast movement look softer and may show blocks."
+msgstr ""
+"Las escenas oscuras, el grano de la película y el movimiento rápido se ven más suaves y pueden "
+"mostrar bloques."
+
 #: gui/ffmpeg_missing.py:64
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
@@ -623,6 +629,14 @@ msgstr "Alemán"
 #: gui/wizard/step_target.py:29 gui/wizard/step_target.py:36
 msgid "H.265"
 msgstr "H.265"
+
+#: gui/wizard_logic.py:228
+msgid "HDR becomes standard colour (SDR); colours may look slightly different."
+msgstr "El HDR pasa a color estándar (SDR); los colores pueden verse algo distintos."
+
+#: gui/wizard_logic.py:231
+msgid "HDR is kept."
+msgstr "Se mantiene el HDR."
 
 #: gui/wizard/step_summary.py:79
 msgid "HDR video"
@@ -1039,6 +1053,40 @@ msgstr "No se puede leer o escribir el archivo o la carpeta por un problema de p
 msgid "The original is sent to the trash only if the copy is verified."
 msgstr "El original solo va a la papelera si la copia se verifica."
 
+#: gui/wizard_logic.py:216
+#, python-brace-format
+msgid "The picture is scaled down from {from_height}p to {to_height}p."
+msgstr "La imagen se reduce de {from_height}p a {to_height}p."
+
+#: gui/wizard_logic.py:222
+#, python-brace-format
+msgid "The resolution stays at {width}x{height}."
+msgstr "La resolución se mantiene en {width}x{height}."
+
+#: gui/wizard_logic.py:242
+msgid "The slower encoding setting saves a bit more space but takes longer."
+msgstr "El ajuste de codificación más lento ahorra algo más de espacio, pero tarda más."
+
+#: gui/wizard_logic.py:235
+msgid "The video goes from 10 to 8 bits per colour; smooth gradients may show faint bands."
+msgstr "El vídeo pasa de 10 a 8 bits por color; los degradados suaves pueden mostrar bandas tenues."
+
+#: gui/wizard_logic.py:208
+msgid ""
+"The video is re-encoded to H.264, which plays on almost any device but takes more space than "
+"H.265."
+msgstr ""
+"El vídeo se recodifica a H.264, que se reproduce en casi cualquier dispositivo, pero ocupa más "
+"que H.265."
+
+#: gui/wizard_logic.py:201
+msgid ""
+"The video is re-encoded to H.265. It takes less space than H.264 at the same look, but some older"
+" TVs and browsers cannot play it."
+msgstr ""
+"El vídeo se recodifica a H.265. Ocupa menos que H.264 con la misma calidad visual, pero algunos "
+"televisores y navegadores antiguos no pueden reproducirlo."
+
 #: gui/preferences.py:61 gui/preferences.py:112
 msgid "Theme"
 msgstr "Tema"
@@ -1051,7 +1099,7 @@ msgstr "No hay suficiente espacio libre en el disco de destino."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
-#: gui/workers.py:162
+#: gui/workers.py:168
 msgid "This video has no video streams to estimate."
 msgstr "Este vídeo no tiene ninguna pista de vídeo que estimar."
 
@@ -1091,6 +1139,16 @@ msgstr "Aviso desconocido: {code}"
 #: gui/wizard/step_target.py:44
 msgid "Use the Jellyfin profile, which works on almost everything."
 msgstr "Usa el perfil Jellyfin, que funciona en casi todo."
+
+#: gui/wizard_logic.py:249
+msgid "Very fine detail, such as film grain or textures in dark scenes, is slightly smoothed."
+msgstr ""
+"El detalle muy fino, como el grano de la película o las texturas en escenas oscuras, se suaviza "
+"ligeramente."
+
+#: gui/wizard_logic.py:247
+msgid "Very little detail is lost, so the file stays large."
+msgstr "Se pierde muy poco detalle, así que el archivo sigue siendo grande."
 
 #: gui/wizard/step_videos.py:147
 msgid "Video files"

@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QPainter, QPaintEvent
 from PySide6.QtWidgets import (
@@ -61,6 +63,20 @@ class OptionCard(QAbstractButton):
         self.description_label.setWordWrap(True)
         layout.addWidget(self.description_label)
 
+        self.estimate_label = QLabel("", self)
+        self.estimate_label.setObjectName("cardEstimate")
+        self.estimate_label.setProperty("role", "kicker")
+        self.estimate_label.setWordWrap(True)
+        self.estimate_label.hide()
+        layout.addWidget(self.estimate_label)
+
+        self.notes_label = QLabel("", self)
+        self.notes_label.setObjectName("cardNotes")
+        self.notes_label.setProperty("role", "muted")
+        self.notes_label.setWordWrap(True)
+        self.notes_label.hide()
+        layout.addWidget(self.notes_label)
+
         self.set_label(label)
         self.toggled.connect(self._on_toggled)
 
@@ -68,7 +84,30 @@ class OptionCard(QAbstractButton):
         """Show or hide the card tag and refresh its accessible description."""
         self.tag_label.setText(label)
         self.tag_label.setVisible(bool(label))
-        parts = [self.accessibleName(), label, self.description_label.text()]
+        self._refresh_accessible_description()
+
+    def set_estimate(self, text: str) -> None:
+        """Show an estimate line under the description, or hide it when empty."""
+        self.estimate_label.setText(text)
+        self.estimate_label.setVisible(bool(text))
+        self._refresh_accessible_description()
+
+    def set_notes(self, lines: Sequence[str]) -> None:
+        """Show notes as bullet lines under the estimate, or hide them when empty."""
+        visible_lines = [line for line in lines if line]
+        text = "\n".join(f"• {line}" for line in visible_lines)
+        self.notes_label.setText(text)
+        self.notes_label.setVisible(bool(visible_lines))
+        self._refresh_accessible_description()
+
+    def _refresh_accessible_description(self) -> None:
+        parts = [
+            self.accessibleName(),
+            self.tag_label.text(),
+            self.description_label.text(),
+            self.estimate_label.text(),
+            self.notes_label.text(),
+        ]
         description = ". ".join(part for part in parts if part)
         self.setAccessibleDescription(description)
 
