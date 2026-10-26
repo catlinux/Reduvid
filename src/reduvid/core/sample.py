@@ -10,12 +10,13 @@ import tempfile
 import threading
 import time
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from reduvid.core.command import build_video_arguments
+from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import PipelineError
-from reduvid.core.plan import AudioDecision, EncodePlan
+from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, estimate_stream_bytes, parse_bitrate
 from reduvid.core.runner import EncodeHandle, ProgressEvent
 
@@ -149,6 +150,8 @@ class SampleRunner:
         input_path: Path,
         on_progress: Callable[[float], None] | None = None,
         threads: int | None = None,
+        segments: int = 3,
+        length: float = 20.0,
     ) -> None:
         self.ffmpeg_path = ffmpeg_path
         self.media = media
@@ -156,6 +159,8 @@ class SampleRunner:
         self.input_path = input_path
         self.on_progress = on_progress
         self.threads = threads
+        self.segments = segments
+        self.length = length
         self._lock = threading.Lock()
         self._handle: EncodeHandle | None = None
         self._cancelled = False
@@ -167,7 +172,7 @@ class SampleRunner:
         if not self.plan.videos:
             raise ValueError("plan has no video streams")
 
-        segments = sample_segments(self.media.duration)
+        segments = sample_segments(self.media.duration, self.segments, self.length)
         started = time.monotonic()
         video_bytes = 0
         sampled_seconds = 0.0
@@ -242,6 +247,117 @@ class SampleRunner:
         return report
 
 
+class SampleLevelsRunner:
+    """Measure several quality levels in series, exposing pause, resume and cancel.
+
+    Each level contributes the same share of the reported progress, so callers see
+    one aggregate fraction instead of one jump back to zero per level.
+    """
+
+    def __init__(
+        self,
+        ffmpeg_path: str | Path,
+        media: MediaInfo,
+        input_path: Path,
+        options: PlanOptions,
+        ffmpeg_info: FFmpegInfo,
+        qualities: tuple[str, ...] = ("high", "balanced", "max_savings"),
+        on_progress: Callable[[float], None] | None = None,
+        threads: int | None = None,
+        segments: int = 1,
+        length: float = 20.0,
+    ) -> None:
+        self.ffmpeg_path = ffmpeg_path
+        self.media = media
+        self.input_path = input_path
+        self.options = options
+        self.ffmpeg_info = ffmpeg_info
+        self.qualities = qualities
+        self.on_progress = on_progress
+        self.threads = threads
+        self.segments = segments
+        self.length = length
+        self._lock = threading.Lock()
+        self._runner: SampleRunner | None = None
+        self._cancelled = False
+
+    def run(self) -> dict[str, TotalEstimate]:
+        """Measure every quality level and return one estimate per level."""
+        if not self.qualities:
+            raise ValueError("qualities must not be empty")
+
+        estimates: dict[str, TotalEstimate] = {}
+        count = len(self.qualities)
+        for position, quality in enumerate(self.qualities):
+            if self._is_cancelled():
+                raise PipelineError("cancelled", _CANCELLED_DETAIL)
+            plan = build_plan(self.media, self.ffmpeg_info, replace(self.options, quality=quality))
+            runner = SampleRunner(
+                self.ffmpeg_path,
+                self.media,
+                plan,
+                self.input_path,
+                on_progress=self._progress_reporter(position, count),
+                threads=self.threads,
+                segments=self.segments,
+                length=self.length,
+            )
+            with self._lock:
+                cancelled_early = self._cancelled
+                self._runner = runner
+            if cancelled_early:
+                runner.cancel()
+            try:
+                sample = runner.run()
+            finally:
+                with self._lock:
+                    self._runner = None
+            if self._is_cancelled():
+                raise PipelineError("cancelled", _CANCELLED_DETAIL)
+            audio_bytes = audio_bytes_for_plan(self.media, plan)[1]
+            estimates[quality] = estimate_total(sample, self.media, audio_bytes)
+            if self.on_progress is not None:
+                self.on_progress((position + 1) / count)
+        return estimates
+
+    def pause(self) -> None:
+        """Suspend the running level, if any."""
+        runner = self._current_runner()
+        if runner is not None:
+            runner.pause()
+
+    def resume(self) -> None:
+        """Resume a paused level, if any."""
+        runner = self._current_runner()
+        if runner is not None:
+            runner.resume()
+
+    def cancel(self) -> None:
+        """Stop the running level and prevent the next one from starting."""
+        with self._lock:
+            self._cancelled = True
+            runner = self._runner
+        if runner is not None:
+            runner.cancel()
+
+    def _is_cancelled(self) -> bool:
+        with self._lock:
+            return self._cancelled
+
+    def _current_runner(self) -> SampleRunner | None:
+        with self._lock:
+            return self._runner
+
+    def _progress_reporter(self, position: int, count: int) -> Callable[[float], None]:
+        def report(value: float) -> None:
+            if self.on_progress is None:
+                return
+            fraction = min(max(value, 0.0), 1.0)
+            self.on_progress((position + fraction) / count)
+
+        return report
+
+
 def run_sample(
     ffmpeg_path: str | Path,
     media: MediaInfo,
@@ -249,9 +365,13 @@ def run_sample(
     input_path: Path,
     on_progress: Callable[[float], None] | None = None,
     threads: int | None = None,
+    segments: int = 3,
+    length: float = 20.0,
 ) -> SampleEstimate:
     """Run the sample chunks in series and return the measured rate."""
-    return SampleRunner(ffmpeg_path, media, plan, input_path, on_progress, threads).run()
+    return SampleRunner(
+        ffmpeg_path, media, plan, input_path, on_progress, threads, segments, length
+    ).run()
 
 
 def estimate_total(
@@ -305,6 +425,33 @@ def audio_bytes_for_plan(media: MediaInfo, plan: EncodePlan) -> tuple[int | None
         current_parts.append(current)
         final_parts.append(_decision_bytes(decision, current, media.duration))
     return _sum_or_none(current_parts), _sum_or_none(final_parts)
+
+
+def estimate_levels(
+    ffmpeg_path: str | Path,
+    media: MediaInfo,
+    input_path: Path,
+    options: PlanOptions,
+    ffmpeg_info: FFmpegInfo,
+    qualities: tuple[str, ...] = ("high", "balanced", "max_savings"),
+    on_progress: Callable[[float], None] | None = None,
+    threads: int | None = None,
+    segments: int = 1,
+    length: float = 20.0,
+) -> dict[str, TotalEstimate]:
+    """Measure one short sample per quality level and return an estimate for each."""
+    return SampleLevelsRunner(
+        ffmpeg_path,
+        media,
+        input_path,
+        options,
+        ffmpeg_info,
+        qualities,
+        on_progress,
+        threads,
+        segments,
+        length,
+    ).run()
 
 
 def _seconds(value: float) -> str:

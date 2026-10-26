@@ -19,10 +19,12 @@ from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, VideoDecis
 from reduvid.core.probe import AudioStream, MediaInfo, probe_media
 from reduvid.core.sample import (
     SampleEstimate,
+    SampleLevelsRunner,
     SampleRunner,
     SampleSegment,
     audio_bytes_for_plan,
     build_sample_command,
+    estimate_levels,
     estimate_total,
     run_sample,
     sample_segments,
@@ -441,3 +443,144 @@ def test_cancel_stops_the_sample_without_leftover_processes_or_temporaries(
     assert error.code == "cancelled"
     assert _temporaries() == before
     assert _sample_processes(hundred_second_video) == []
+
+
+def _ffmpeg_info() -> FFmpegInfo:
+    return FFmpegInfo(
+        Path("/usr/bin/ffmpeg"),
+        Path("/usr/bin/ffprobe"),
+        "test",
+        frozenset(),
+        frozenset(),
+        (),
+    )
+
+
+def _levels_runner(*qualities: str) -> SampleLevelsRunner:
+    return SampleLevelsRunner(
+        Path("/usr/bin/ffmpeg"),
+        _media(),
+        Path("/media/movie.mkv"),
+        PlanOptions(),
+        _ffmpeg_info(),
+        qualities,
+    )
+
+
+def test_estimate_levels_requires_at_least_one_quality() -> None:
+    with pytest.raises(ValueError, match="qualities must not be empty"):
+        estimate_levels(
+            Path("/usr/bin/ffmpeg"),
+            _media(),
+            Path("/media/movie.mkv"),
+            PlanOptions(),
+            _ffmpeg_info(),
+            qualities=(),
+        )
+
+
+def test_estimate_levels_returns_estimates_in_the_requested_order(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: list[tuple[str, int, float]] = []
+
+    class FakeRunner:
+        def __init__(
+            self,
+            ffmpeg_path: object,
+            media: object,
+            plan: EncodePlan,
+            input_path: object,
+            on_progress: object = None,
+            threads: object = None,
+            segments: int = 3,
+            length: float = 20.0,
+        ) -> None:
+            seen.append((plan.quality, segments, length))
+            self.on_progress = on_progress
+
+        def run(self) -> SampleEstimate:
+            return SampleEstimate(1_000_000, 20.0, 10.0)
+
+    monkeypatch.setattr("reduvid.core.sample.SampleRunner", FakeRunner)
+
+    estimates = estimate_levels(
+        Path("/usr/bin/ffmpeg"),
+        _media(),
+        Path("/media/movie.mkv"),
+        PlanOptions(),
+        _ffmpeg_info(),
+        qualities=("max_savings", "high"),
+        segments=1,
+        length=20.0,
+    )
+
+    assert list(estimates) == ["max_savings", "high"]
+    assert seen == [("max_savings", 1, 20.0), ("high", 1, 20.0)]
+    assert estimates["high"].video_bytes == 30_000_000
+
+
+def test_estimate_levels_reports_monotonic_aggregated_progress(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeRunner:
+        def __init__(self, *args: object, on_progress: object = None, **kwargs: object) -> None:
+            self.on_progress = on_progress
+
+        def run(self) -> SampleEstimate:
+            if callable(self.on_progress):
+                self.on_progress(0.25)
+                self.on_progress(1.0)
+            return SampleEstimate(1_000_000, 20.0, 10.0)
+
+    monkeypatch.setattr("reduvid.core.sample.SampleRunner", FakeRunner)
+    progress: list[float] = []
+
+    estimate_levels(
+        Path("/usr/bin/ffmpeg"),
+        _media(),
+        Path("/media/movie.mkv"),
+        PlanOptions(),
+        _ffmpeg_info(),
+        qualities=("high", "balanced"),
+        on_progress=progress.append,
+    )
+
+    assert progress == sorted(progress)
+    assert progress[0] == pytest.approx(0.125)
+    assert progress[-1] == pytest.approx(1.0)
+
+
+def test_cancelled_levels_runner_raises_before_starting_the_next_level() -> None:
+    runner = _levels_runner("high", "balanced")
+    runner.cancel()
+
+    with pytest.raises(PipelineError) as error:
+        runner.run()
+
+    assert error.value.code == "cancelled"
+
+
+@pytest.mark.ffmpeg
+def test_estimate_levels_orders_video_bytes_from_high_to_max_savings(
+    ffmpeg_info: FFmpegInfo, hundred_second_video: Path
+) -> None:
+    media = probe_media(ffmpeg_info.ffprobe_path, hundred_second_video)
+    options = PlanOptions(destination=_sample_destination(ffmpeg_info))
+
+    estimates = estimate_levels(
+        ffmpeg_info.ffmpeg_path,
+        media,
+        hundred_second_video,
+        options,
+        ffmpeg_info,
+        qualities=("high", "balanced", "max_savings"),
+        threads=2,
+        segments=1,
+        length=20.0,
+    )
+
+    assert list(estimates) == ["high", "balanced", "max_savings"]
+    assert estimates["high"].video_bytes >= estimates["balanced"].video_bytes
+    assert estimates["balanced"].video_bytes >= estimates["max_savings"].video_bytes
+    assert estimates["high"].video_bytes > 0
