@@ -184,7 +184,7 @@ def check_for_update(
             if last_check is not None and 0 <= timestamp - last_check < _CHECK_INTERVAL_SECONDS:
                 return None
 
-        request = urllib.request.Request(
+        request = urllib.request.Request(  # noqa: S310 - fixed https:// constant
             _RELEASES_URL,
             headers={
                 "User-Agent": f"Reduvid/{current}",
