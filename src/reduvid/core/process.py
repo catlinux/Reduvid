@@ -40,11 +40,11 @@ def disable_power_throttling(pid: int) -> bool:
     from ctypes import wintypes
 
     class _PowerThrottlingState(ctypes.Structure):
-        _fields_ = [
+        _fields_ = (
             ("Version", wintypes.ULONG),
             ("ControlMask", wintypes.ULONG),
             ("StateMask", wintypes.ULONG),
-        ]
+        )
 
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     handle = kernel32.OpenProcess(_PROCESS_SET_INFORMATION, False, pid)
