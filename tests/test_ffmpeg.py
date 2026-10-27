@@ -40,6 +40,26 @@ def test_detects_selected_capabilities(monkeypatch) -> None:
     assert info.hardware_encoders == ("h264_nvenc",)
 
 
+def test_detects_filters_with_two_flag_columns_and_skips_legend(monkeypatch) -> None:
+    binary = Path("/mock/bin/ffmpeg")
+    probe = Path("/mock/bin/ffprobe")
+    monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
+    _run_mock(
+        monkeypatch,
+        "Encoders:\n V..... = Video\n ------\n V....D libx264 H.264\n",
+        "Filters:\n  T.. = Timeline support\n  ------\n"
+        " .S tonemap           V->V       Conversion to/from different dynamic ranges.\n"
+        " .S zscale            V->V       Apply resizing, colorspace and bit depth conversion.\n",
+    )
+
+    info = ffmpeg.detect_ffmpeg(binary)
+
+    assert info is not None
+    assert info.has_zscale and info.has_tonemap
+    assert "=" not in info.filters and "=" not in info.encoders
+
+
 def test_missing_capabilities_are_false(monkeypatch) -> None:
     binary = Path("/mock/bin/ffmpeg")
     probe = Path("/mock/bin/ffprobe")

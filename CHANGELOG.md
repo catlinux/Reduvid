@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.6.1] - 2026-10-27
+
+### Corregido
+
+- Con FFmpeg 9 no se detectaba ningún filtro, porque `ffmpeg -filters` muestra dos columnas de banderas en vez de tres. Los vídeos HDR no se convertían a SDR (se avisaba de que faltaban `zscale` y `tonemap`, aunque estaban). También se ignora la leyenda (`=`) al leer codificadores y filtros.
+
 ## [0.6.0] - 2026-10-27
 
 ### Añadido

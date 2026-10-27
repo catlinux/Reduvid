@@ -85,7 +85,9 @@ def _listed_names(output: str) -> set[str]:
     names: set[str] = set()
     for line in output.splitlines():
         parts = line.split()
-        if len(parts) >= 2 and re.fullmatch(r"[A-Z.]{3,6}", parts[0]):
+        # FFmpeg 9 prints two flag columns for filters ("TS"), older versions three ("TSC");
+        # legend lines such as "T.. = Timeline support" carry "=" as the second item.
+        if len(parts) >= 2 and re.fullmatch(r"[A-Z.]{2,6}", parts[0]) and parts[1] != "=":
             names.add(parts[1])
     return names
 
