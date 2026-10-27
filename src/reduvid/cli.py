@@ -382,6 +382,7 @@ def _convert(
     threads: int | None,
     replace_original: bool,
     dry_run: bool,
+    hw_decode: bool,
 ) -> int:
     processor = FileProcessor(
         ffmpeg_info,
@@ -389,6 +390,7 @@ def _convert(
         output_dir=output_dir,
         threads=threads,
         replace_original=replace_original,
+        hw_decode=hw_decode,
     )
 
     def show_file_complete(report: FileReport) -> None:
@@ -537,6 +539,7 @@ def _estimate(
     options: PlanOptions,
     *,
     threads: int | None,
+    hw_decode: bool,
 ) -> int:
     failed = False
     for index, path in enumerate(paths, start=1):
@@ -572,6 +575,7 @@ def _estimate(
             path,
             on_progress=progress,
             threads=threads,
+            hw_decode=hw_decode,
         )
         try:
             sample = _run_interruptible_sample(runner)
@@ -636,6 +640,11 @@ def _add_plan_arguments(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument("--max-height", type=_positive_int)
     parser.add_argument("--threads", type=_positive_int)
+    parser.add_argument(
+        "--no-hw-decode",
+        action="store_true",
+        help=_("Do not use the graphics card to read the videos"),
+    )
 
 
 def _plan_options(parsed: argparse.Namespace) -> PlanOptions:
@@ -729,9 +738,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _show_probe(paths, ffmpeg_info)
 
     options = _plan_options(parsed)
+    hw_decode = False if parsed.no_hw_decode else config.hw_decode
     if not is_convert:
         try:
-            return _estimate(paths, ffmpeg_info, options, threads=parsed.threads)
+            return _estimate(
+                paths,
+                ffmpeg_info,
+                options,
+                threads=parsed.threads,
+                hw_decode=hw_decode,
+            )
         except KeyboardInterrupt:
             print(_("Estimate cancelled."), file=sys.stderr)
             return 130
@@ -745,4 +761,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         threads=parsed.threads,
         replace_original=parsed.replace_original,
         dry_run=parsed.dry_run,
+        hw_decode=hw_decode,
     )

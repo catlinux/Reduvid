@@ -14,6 +14,7 @@ def test_missing_file_returns_defaults(tmp_path: Path) -> None:
     loaded, invalid = load_config(tmp_path / "missing.toml")
 
     assert loaded == Config()
+    assert loaded.hw_decode is True
     assert invalid == ()
 
 
@@ -31,6 +32,7 @@ def test_round_trip_keeps_spaces_accents_and_quotes(tmp_path: Path) -> None:
         destination="archive",
         quality="max_savings",
         container="mp4",
+        hw_decode=False,
     )
 
     save_config(original, target)
@@ -72,6 +74,26 @@ def test_unknown_keys_are_ignored_and_invalid_keys_reported(tmp_path: Path) -> N
 
     assert loaded == Config()
     assert set(invalid) == {"theme", "language", "reduce_motion"}
+
+
+def test_hw_decode_can_be_disabled_in_toml(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text("hw_decode = false\n", encoding="utf-8")
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.hw_decode is False
+    assert invalid == ()
+
+
+def test_invalid_hw_decode_is_reported_and_uses_the_default(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text("hw_decode = 'yes'\n", encoding="utf-8")
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.hw_decode is True
+    assert invalid == ("hw_decode",)
 
 
 def test_ffmpeg_path_is_accepted_at_root_and_in_section(tmp_path: Path) -> None:

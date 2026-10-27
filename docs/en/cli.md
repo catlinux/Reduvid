@@ -55,6 +55,7 @@ By default, the converted file is written next to the original with the `_reduvi
 | `--output-dir` | folder | the original's folder | Where converted files are written. |
 | `--recursive` | — | off | If the argument is a folder, also look for videos in its subfolders. |
 | `--threads` | integer | FFmpeg's own choice | Number of encoding threads (`-threads`). |
+| `--no-hw-decode` | — | off (the GPU is used when available) | Does not use the graphics card to read the videos; by default the GPU is tried when available and the CPU is used if it fails. |
 | `--replace-original` | — | off | Sends the original to the system trash (never deletes it permanently) once the conversion has been verified. |
 | `--dry-run` | — | off | Shows what would happen (output file, per-track decisions, warnings) without converting anything. |
 
@@ -91,7 +92,7 @@ Total savings: 812.40 MB (41.2%)
 
 ## `reduvid-cli estimate`
 
-Estimates the final size and conversion time of one or more files from a one-minute sample, without converting them. It accepts the same encoding options as `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs` and `--threads`), but only files, not folders.
+Estimates the final size and conversion time of one or more files from a one-minute sample, without converting them. It accepts the same encoding options as `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs`, `--threads` and `--no-hw-decode`), but only files, not folders.
 
 The sample is one minute split into three 20-second chunks at 20%, 50% and 80% of the video; videos shorter than 90 seconds use a single chunk from the start. Only the video is encoded with the plan's settings, so the result is an estimate: the actual size and time may vary depending on the content. There is no need for `--dry-run`: this command never converts the file.
 
@@ -120,6 +121,8 @@ If FFmpeg is not on the system `PATH`, you can set its path in a TOML configurat
 ```toml
 ffmpeg_path = "/full/path/to/ffmpeg"
 ```
+
+You can also disable hardware decoding in the configuration with `hw_decode = false`.
 
 ## Exit codes
 

@@ -70,9 +70,11 @@ class FakeSampleRunner:
         _input_path,
         on_progress=None,
         threads: int | None = None,
+        hw_decode: bool = False,
     ) -> None:
         self.on_progress = on_progress
         self.threads = threads
+        self.hw_decode = hw_decode
         self.cancelled = False
         FakeSampleRunner.instances.append(self)
 

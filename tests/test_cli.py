@@ -14,6 +14,7 @@ from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import AudioStream, MediaInfo, VideoStream
 from reduvid.core.runner import EncodeResult
+from reduvid.core.sample import SampleEstimate
 from reduvid.core.verify import VerificationResult
 
 
@@ -174,6 +175,98 @@ def test_convert_runs_pipeline_and_reports_success(monkeypatch: pytest.MonkeyPat
     assert trash_calls == [str(source.resolve())]
     assert source.exists()
     assert str(output) in captured.out
+
+
+@pytest.mark.parametrize(
+    ("config_hw_decode", "extra_arguments", "expected"),
+    [
+        (True, ["--no-hw-decode"], False),
+        (False, [], False),
+        (True, [], True),
+    ],
+)
+def test_convert_passes_hw_decode_to_file_processor(
+    monkeypatch: pytest.MonkeyPatch,
+    config_hw_decode: bool,
+    extra_arguments: list[str],
+    expected: bool,
+) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    monkeypatch.setattr(
+        cli,
+        "load_config",
+        lambda: (Config(language="en", hw_decode=config_hw_decode), ()),
+    )
+    captured: list[dict[str, object]] = []
+
+    class FakeProcessor:
+        def __init__(self, *_args: object, **kwargs: object) -> None:
+            self.last_output_path = None
+            captured.append(kwargs)
+
+    class FakeQueue:
+        def __init__(self, _processor: object, **_kwargs: object) -> None:
+            self.files: list[Path] = []
+
+        def add_files(self, _paths: list[Path]) -> None:
+            pass
+
+        def add_folder(self, _path: Path, *, recursive: bool) -> None:
+            pass
+
+        def run(self) -> None:
+            raise AssertionError("dry-run must not run the queue")
+
+    monkeypatch.setattr(cli, "FileProcessor", FakeProcessor)
+    monkeypatch.setattr(cli, "ConversionQueue", FakeQueue)
+
+    result = cli.main(["convert", str(source), "--dry-run", *extra_arguments])
+
+    assert result == 0
+    assert captured[0]["hw_decode"] is expected
+
+
+@pytest.mark.parametrize(
+    ("config_hw_decode", "extra_arguments", "expected"),
+    [
+        (True, ["--no-hw-decode"], False),
+        (False, [], False),
+        (True, [], True),
+    ],
+)
+def test_estimate_passes_hw_decode_to_sample_runner(
+    monkeypatch: pytest.MonkeyPatch,
+    config_hw_decode: bool,
+    extra_arguments: list[str],
+    expected: bool,
+) -> None:
+    source = Path(__file__).resolve()
+    mock_ffmpeg(monkeypatch)
+    monkeypatch.setattr(
+        cli,
+        "load_config",
+        lambda: (Config(language="en", hw_decode=config_hw_decode), ()),
+    )
+    monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, path: media_info(path))
+    captured: list[dict[str, object]] = []
+
+    class FakeSampleRunner:
+        def __init__(self, *_args: object, **kwargs: object) -> None:
+            captured.append(kwargs)
+
+        def run(self) -> SampleEstimate:
+            return SampleEstimate(2_000_000, 60.0, 30.0)
+
+        def cancel(self) -> None:
+            pass
+
+    monkeypatch.setattr(cli, "SampleRunner", FakeSampleRunner)
+
+    result = cli.main(["estimate", str(source), *extra_arguments])
+
+    assert result == 0
+    assert captured[0]["hw_decode"] is expected
 
 
 def test_replace_original_keeps_source_if_verification_fails(

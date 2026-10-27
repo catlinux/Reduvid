@@ -204,7 +204,7 @@ msgstr ""
 msgid "Another folder"
 msgstr ""
 
-#: cli.py:528
+#: cli.py:530
 #, python-brace-format
 msgid "Approximate conversion time: {duration}"
 msgstr ""
@@ -241,11 +241,11 @@ msgstr ""
 msgid "Audio {position}: {codec}, {channels} channels{language}, {size}"
 msgstr ""
 
-#: cli.py:496
+#: cli.py:498
 msgid "Audio: unknown (the file does not report its bitrate)"
 msgstr ""
 
-#: cli.py:504
+#: cli.py:506
 #, python-brace-format
 msgid "Audio: ~{size}"
 msgstr ""
@@ -378,7 +378,7 @@ msgstr ""
 msgid "Convert it anyway? Colours will look washed out."
 msgstr ""
 
-#: cli.py:671
+#: cli.py:680
 msgid "Convert media files"
 msgstr ""
 
@@ -426,7 +426,11 @@ msgstr ""
 msgid "Direct play"
 msgstr ""
 
-#: cli.py:417
+#: cli.py:646
+msgid "Do not use the graphics card to read the videos"
+msgstr ""
+
+#: cli.py:419
 msgid "Dry run complete."
 msgstr ""
 
@@ -444,7 +448,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: cli.py:580 cli.py:589
+#: cli.py:584 cli.py:593
 #, python-brace-format
 msgid "Error: Could not estimate {path}: {error}"
 msgstr ""
@@ -454,7 +458,7 @@ msgstr ""
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr ""
 
-#: cli.py:304 cli.py:363 cli.py:554
+#: cli.py:304 cli.py:363 cli.py:557
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr ""
@@ -473,7 +477,7 @@ msgstr ""
 msgid "Error: Input does not exist: {path}"
 msgstr ""
 
-#: cli.py:699
+#: cli.py:708
 #, python-brace-format
 msgid "Error: Input is a folder; estimate works on files only: {path}"
 msgstr ""
@@ -483,17 +487,17 @@ msgstr ""
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr ""
 
-#: cli.py:720
+#: cli.py:729
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr ""
 
-#: cli.py:710
+#: cli.py:719
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr ""
 
-#: cli.py:562
+#: cli.py:565
 #, python-brace-format
 msgid "Error: {path} has no video streams to estimate."
 msgstr ""
@@ -503,11 +507,11 @@ msgstr ""
 msgid "Error: {path}{details}"
 msgstr ""
 
-#: cli.py:736
+#: cli.py:752
 msgid "Estimate cancelled."
 msgstr ""
 
-#: cli.py:490
+#: cli.py:492
 #, python-brace-format
 msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
 msgstr ""
@@ -520,7 +524,7 @@ msgstr ""
 msgid "Estimate the final size (1-minute test)"
 msgstr ""
 
-#: cli.py:679
+#: cli.py:688
 msgid "Estimate the final size and time from a short sample"
 msgstr ""
 
@@ -540,7 +544,7 @@ msgstr ""
 msgid "Estimated size and time"
 msgstr ""
 
-#: cli.py:500
+#: cli.py:502
 #, python-brace-format
 msgid "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
 msgstr ""
@@ -552,7 +556,7 @@ msgid ""
 "{time}"
 msgstr ""
 
-#: cli.py:506
+#: cli.py:508
 #, python-brace-format
 msgid "Estimated size: ~{size}"
 msgstr ""
@@ -572,12 +576,12 @@ msgstr ""
 msgid "Estimated size: ~{size} · Approx. time: {time}"
 msgstr ""
 
-#: cli.py:546
+#: cli.py:549
 #, python-brace-format
 msgid "Estimating [{index}/{total}]: {path}"
 msgstr ""
 
-#: cli.py:441
+#: cli.py:443
 #, python-brace-format
 msgid "Estimating: {percent}%"
 msgstr ""
@@ -706,7 +710,7 @@ msgstr ""
 msgid "Include subfolders"
 msgstr ""
 
-#: cli.py:521
+#: cli.py:523
 #, python-brace-format
 msgid "Increase: {percent}% ({size} larger)"
 msgstr ""
@@ -740,19 +744,19 @@ msgstr ""
 msgid "Keep converting"
 msgstr ""
 
-#: cli.py:624
+#: cli.py:628
 msgid "Keep only the highest-quality audio track for each language"
 msgstr ""
 
-#: cli.py:613
+#: cli.py:617
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr ""
 
-#: cli.py:619
+#: cli.py:623
 msgid "Keep only these audio track indices (comma-separated, overrides --keep-audio)"
 msgstr ""
 
-#: cli.py:635
+#: cli.py:639
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr ""
 
@@ -772,7 +776,7 @@ msgstr ""
 msgid "Language changes take effect when Reduvid is restarted."
 msgstr ""
 
-#: cli.py:666
+#: cli.py:675
 msgid "Language for messages"
 msgstr ""
 
@@ -845,7 +849,7 @@ msgstr ""
 msgid "One audio track per language (the best one is kept)"
 msgstr ""
 
-#: cli.py:507
+#: cli.py:509
 #, python-brace-format
 msgid "Original size: {size}"
 msgstr ""
@@ -854,7 +858,7 @@ msgstr ""
 msgid "Output folder"
 msgstr ""
 
-#: cli.py:371 cli.py:397
+#: cli.py:371 cli.py:399
 #, python-brace-format
 msgid "Output: {path}"
 msgstr ""
@@ -923,7 +927,7 @@ msgstr ""
 msgid "Queue · {count} videos"
 msgstr ""
 
-#: cli.py:629
+#: cli.py:633
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr ""
 
@@ -990,12 +994,12 @@ msgstr ""
 msgid "Save for archive"
 msgstr ""
 
-#: cli.py:513
+#: cli.py:515
 #, python-brace-format
 msgid "Savings: {percent}% ({size} smaller)"
 msgstr ""
 
-#: cli.py:669
+#: cli.py:678
 msgid "Show media details"
 msgstr ""
 
@@ -1240,7 +1244,7 @@ msgstr ""
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr ""
 
-#: cli.py:494
+#: cli.py:496
 #, python-brace-format
 msgid "Video: ~{size}"
 msgstr ""

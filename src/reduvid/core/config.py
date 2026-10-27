@@ -39,6 +39,7 @@ class Config:
     destination: Destination = "jellyfin"
     quality: Quality = "balanced"
     container: Container = "mkv"
+    hw_decode: bool = True
 
 
 def config_path() -> Path:
@@ -144,6 +145,14 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         else:
             invalid.append("container")
 
+    hw_decode = True
+    raw_hw_decode = raw.get("hw_decode")
+    if raw_hw_decode is not None:
+        if isinstance(raw_hw_decode, bool):
+            hw_decode = raw_hw_decode
+        else:
+            invalid.append("hw_decode")
+
     config = Config(
         ffmpeg_path=ffmpeg_path,
         language=language,
@@ -155,6 +164,7 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         destination=destination,
         quality=quality,
         container=container,
+        hw_decode=hw_decode,
     )
     return config, tuple(invalid)
 
@@ -178,6 +188,7 @@ def save_config(config: Config, path: Path | None = None) -> None:
     entries.append(("destination", _toml_string(config.destination)))
     entries.append(("quality", _toml_string(config.quality)))
     entries.append(("container", _toml_string(config.container)))
+    entries.append(("hw_decode", "true" if config.hw_decode else "false"))
     payload = "".join(f"{key} = {value}\n" for key, value in entries)
 
     descriptor, temporary_name = tempfile.mkstemp(

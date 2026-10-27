@@ -55,6 +55,7 @@ Por defecto, el archivo convertido se escribe junto al original con el sufijo `_
 | `--output-dir` | carpeta | la del original | Dónde se escriben los archivos convertidos. |
 | `--recursive` | — | desactivado | Si el argumento es una carpeta, busca vídeos también en sus subcarpetas. |
 | `--threads` | número entero | el que decida FFmpeg | Número de hilos de codificación (`-threads`). |
+| `--no-hw-decode` | — | desactivado (se usa la GPU si existe) | No usa la tarjeta gráfica para leer los vídeos; por defecto se intenta la GPU si existe y se vuelve al procesador si falla. |
 | `--replace-original` | — | desactivado | Envía el original a la papelera del sistema (nunca lo borra permanentemente) tras verificar que la conversión es correcta. |
 | `--dry-run` | — | desactivado | Muestra qué se haría (archivo de salida, decisiones por pista, avisos) sin convertir nada. |
 
@@ -91,7 +92,7 @@ Total savings: 812.40 MB (41.2%)
 
 ## `reduvid-cli estimate`
 
-Calcula el tamaño final y el tiempo de conversión aproximados de uno o más archivos a partir de una muestra de un minuto, sin convertirlos. Acepta las mismas opciones de codificación que `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs` y `--threads`), pero solo archivos, no carpetas.
+Calcula el tamaño final y el tiempo de conversión aproximados de uno o más archivos a partir de una muestra de un minuto, sin convertirlos. Acepta las mismas opciones de codificación que `convert` (`--target`, `--quality`, `--container`, `--max-height`, `--keep-audio`, `--audio-tracks`, `--one-audio-per-language`, `--reduce-audio`, `--keep-subs`, `--threads` y `--no-hw-decode`), pero solo archivos, no carpetas.
 
 La muestra es de un minuto repartido en tres trozos de 20 segundos hacia el 20 %, el 50 % y el 80 % del vídeo; los vídeos de menos de 90 segundos usan un único trozo desde el principio. Solo se codifica el vídeo con los ajustes del plan, así que el resultado es una estimación: el tamaño y el tiempo reales pueden variar según el contenido. No hace falta `--dry-run`: esta orden nunca convierte el archivo.
 
@@ -120,6 +121,8 @@ Si FFmpeg no está en el `PATH` del sistema, puedes indicar su ruta en un archiv
 ```toml
 ffmpeg_path = "/ruta/completa/a/ffmpeg"
 ```
+
+También puedes desactivar la decodificación por hardware en la configuración con `hw_decode = false`.
 
 ## Códigos de salida
 
