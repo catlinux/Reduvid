@@ -12,6 +12,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 - If the computer has a graphics card, the original video is read with it (`-hwaccel auto`), which frees the processor for encoding; the result is the same. If FFmpeg fails while using it, the video is automatically redone with the processor. It applies to conversions and sample tests, and can be turned off in Preferences.
 - Engine: `FFmpegInfo.hwaccels` lists the acceleration methods FFmpeg offers.
+- Engine: `core/thumbnail.py` extracts a JPEG thumbnail of each video (frame at 10%) and stores it in the user cache; the redesigned interface will use it.
 - CLI: `--no-hw-decode` for `convert` and `estimate`, and the `hw_decode = false` configuration key, to avoid using the graphics card.
 
 ## [0.6.1] - 2026-10-27
