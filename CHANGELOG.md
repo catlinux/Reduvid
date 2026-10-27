@@ -23,6 +23,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 ### Corregido
 
 - **La conversión de HDR a SDR no convertía los colores**: se aplicaba `zscale,tonemap` sin parámetros y el archivo seguía marcado como HDR, así que los reproductores mostraban los colores mal. Ahora se linealiza, se pasa a BT.709 con *tone mapping* Hable y la salida se marca como BT.709. Además se reduce la resolución antes del *tone mapping*, que en un 4K trabaja con cuatro veces menos píxeles.
+- En Windows, la aplicación instalada abría ventanas de consola vacías delante del programa cada vez que lanzaba FFmpeg o ffprobe (por ejemplo, al estimar el tamaño). Ahora los procesos se lanzan sin ventana.
 - La barra de progreso retrocedía al final de los MP4 mientras FFmpeg movía el índice al principio (`+faststart`).
 
 ### Eliminado

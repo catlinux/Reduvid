@@ -15,6 +15,7 @@ from pathlib import Path
 import platformdirs
 
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.process import hidden_window_kwargs
 
 
 def _default_cache_file() -> Path:
@@ -135,6 +136,7 @@ def probe_hardware_encoders(
                 capture_output=True,
                 timeout=timeout,
                 check=False,
+                **hidden_window_kwargs(),
             )
         except (OSError, subprocess.SubprocessError):
             continue

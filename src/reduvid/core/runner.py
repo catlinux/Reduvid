@@ -16,6 +16,8 @@ from typing import Literal, cast
 
 import psutil  # type: ignore[import-untyped]
 
+from reduvid.core.process import hidden_window_kwargs
+
 EncodeErrorCode = Literal[
     "no_space", "corrupt_input", "missing_codec", "permission_denied", "unknown"
 ]
@@ -94,6 +96,7 @@ class EncodeHandle:
                 stderr=subprocess.PIPE,
                 text=True,
                 bufsize=1,
+                **hidden_window_kwargs(),
             )
         except OSError as error:
             self._remove_temp_output()

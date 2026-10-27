@@ -12,6 +12,8 @@ from dataclasses import dataclass, field
 from pathlib import Path, PureWindowsPath
 from typing import Any
 
+from reduvid.core.process import hidden_window_kwargs
+
 
 class ProbeError(RuntimeError):
     """Raised when ffprobe fails or returns invalid JSON."""
@@ -320,6 +322,7 @@ def probe_media(ffprobe_path: Path, media_path: Path) -> MediaInfo:
         capture_output=True,
         text=True,
         check=False,
+        **hidden_window_kwargs(),
     )
     if result.returncode != 0:
         raise ProbeError(f"ffprobe exited with code {result.returncode}: {result.stderr.strip()}")

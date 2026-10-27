@@ -16,6 +16,7 @@ from pathlib import Path
 import platformdirs
 
 from reduvid.core.probe import MediaInfo
+from reduvid.core.process import hidden_window_kwargs
 
 
 def _default_cache_dir() -> Path:
@@ -93,6 +94,7 @@ def extract_thumbnail(
             capture_output=True,
             timeout=timeout,
             check=False,
+            **hidden_window_kwargs(),
         )
         if completed.returncode != 0:
             return None

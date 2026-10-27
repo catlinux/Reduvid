@@ -12,6 +12,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from reduvid.core.process import hidden_window_kwargs
+
 
 @dataclass(frozen=True)
 class FFmpegInfo:
@@ -125,13 +127,25 @@ def detect_ffmpeg(configured_path: Path | None = None) -> FFmpegInfo | None:
         return None
 
     version_result = subprocess.run(  # noqa: S603
-        [str(ffmpeg_path), "-version"], capture_output=True, text=True, check=False
+        [str(ffmpeg_path), "-version"],
+        capture_output=True,
+        text=True,
+        check=False,
+        **hidden_window_kwargs(),
     )
     encoder_result = subprocess.run(  # noqa: S603
-        [str(ffmpeg_path), "-encoders"], capture_output=True, text=True, check=False
+        [str(ffmpeg_path), "-encoders"],
+        capture_output=True,
+        text=True,
+        check=False,
+        **hidden_window_kwargs(),
     )
     filter_result = subprocess.run(  # noqa: S603
-        [str(ffmpeg_path), "-filters"], capture_output=True, text=True, check=False
+        [str(ffmpeg_path), "-filters"],
+        capture_output=True,
+        text=True,
+        check=False,
+        **hidden_window_kwargs(),
     )
     try:
         hwaccel_result = subprocess.run(  # noqa: S603
@@ -139,6 +153,7 @@ def detect_ffmpeg(configured_path: Path | None = None) -> FFmpegInfo | None:
             capture_output=True,
             text=True,
             check=False,
+            **hidden_window_kwargs(),
         )
     except (OSError, subprocess.SubprocessError):
         hwaccels: tuple[str, ...] = ()
