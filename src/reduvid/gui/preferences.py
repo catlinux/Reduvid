@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from reduvid import __version__
 from reduvid.core.config import Config, save_config
 from reduvid.core.ffmpeg import detect_ffmpeg
 from reduvid.gui.theme.manager import ThemeManager
@@ -149,6 +150,10 @@ class PreferencesDialog(QDialog):
         layout = QVBoxLayout(self)
         layout.addLayout(form)
         layout.addWidget(buttons)
+        self.version_label = QLabel(_("Version {version}").format(version=__version__), self)
+        self.version_label.setObjectName("versionLabel")
+        self.version_label.setProperty("role", "muted")
+        layout.addWidget(self.version_label)
         ok_button = buttons.button(QDialogButtonBox.StandardButton.Ok)
         cancel_button = buttons.button(QDialogButtonBox.StandardButton.Cancel)
         QWidget.setTabOrder(self.theme_combo, self.mode_combo)

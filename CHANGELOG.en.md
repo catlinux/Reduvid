@@ -18,10 +18,13 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
+- The version is shown in the window title and in Preferences.
+- Ticking "One audio track per language" updates the track check boxes to show which ones will be kept and recalculates the audio size; unticking it restores the previous selection, and changing a track by hand unticks it.
 - MP4 files are written with `+faststart`, so the browser can start playing without downloading the end of the file.
 
 ### Fixed
 
+- The Advanced page had no margins and its content touched the window edges.
 - **HDR to SDR conversion did not convert the colours**: `zscale,tonemap` was applied without parameters and the file stayed tagged as HDR, so players showed the colours wrong. Now the video is linearised, converted to BT.709 with Hable tone mapping and the output is tagged as BT.709. The resolution is also reduced before tone mapping, which on a 4K source works on a quarter of the pixels.
 - **On Windows 11 with hybrid CPUs (performance and efficiency cores) conversions were about three times slower**: since FFmpeg was launched with low priority, Windows treated it as background work and kept it on the efficiency cores only (4 of 16 threads on an i5-14400F). The priority stays low so the computer remains responsive, but Windows is now asked not to throttle the process and it uses every core.
 - On Windows, the installed application opened empty console windows in front of the program every time it launched FFmpeg or ffprobe (for example, when estimating the size). Child processes now start without a window.

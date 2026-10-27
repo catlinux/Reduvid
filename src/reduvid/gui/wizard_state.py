@@ -55,6 +55,8 @@ class WizardState(QObject):
         self._subtitle_selected: frozenset[str] | None = None
         self._videos: list[VideoEntry] = []
         self._audio_tracks: frozenset[int] | None = None
+        self._audio_tracks_before_one: frozenset[int] | None = None
+        self._has_audio_tracks_before_one = False
         self._one_audio_per_language = False
         self._reduce_audio = False
 
@@ -179,10 +181,32 @@ class WizardState(QObject):
             self._hw_decode = enabled
             self.changed.emit()
 
-    def set_one_audio_per_language(self, enabled: bool) -> None:
-        if enabled != self._one_audio_per_language:
-            self._one_audio_per_language = enabled
+    def set_one_audio_per_language(self, enabled: bool, *, restore: bool = True) -> None:
+        if enabled:
+            if self._one_audio_per_language:
+                return
+            self._one_audio_per_language = True
+            if self.single_video is not None:
+                self._audio_tracks_before_one = self._audio_tracks
+                self._has_audio_tracks_before_one = True
+            else:
+                self._clear_audio_tracks_snapshot()
             self.changed.emit()
+            return
+
+        if not self._one_audio_per_language:
+            if not restore:
+                self._clear_audio_tracks_snapshot()
+            return
+        self._one_audio_per_language = False
+        if restore and self._has_audio_tracks_before_one:
+            self._audio_tracks = self._audio_tracks_before_one
+        self._clear_audio_tracks_snapshot()
+        self.changed.emit()
+
+    def _clear_audio_tracks_snapshot(self) -> None:
+        self._audio_tracks_before_one = None
+        self._has_audio_tracks_before_one = False
 
     def set_reduce_audio(self, enabled: bool) -> None:
         if enabled != self._reduce_audio:
@@ -319,6 +343,8 @@ class WizardState(QObject):
                 added.append(resolved)
         if added:
             self._audio_tracks = None
+            if self._one_audio_per_language:
+                self._clear_audio_tracks_snapshot()
             self.changed.emit()
         return added
 
@@ -328,6 +354,8 @@ class WizardState(QObject):
         if len(remaining) != len(self._videos):
             self._videos = remaining
             self._audio_tracks = None
+            if self._one_audio_per_language:
+                self._clear_audio_tracks_snapshot()
             self.changed.emit()
 
     def set_media(self, path: Path, media: MediaInfo) -> None:

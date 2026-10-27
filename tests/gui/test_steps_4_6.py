@@ -209,6 +209,70 @@ def test_step_keep_goes_back_to_languages_with_two_videos(tmp_path: Path, qapp) 
     assert state.one_audio_per_language is True
     assert state.options().one_audio_per_language is True
 
+    step.audio_checks["spa"].setChecked(True)
+
+    # Picking languages is compatible with one track per language, so it stays on.
+    assert state.one_audio_per_language is True
+    assert state.options().audio_languages == frozenset({"spa"})
+
+
+def test_one_audio_per_language_updates_tracks_and_restores_the_selection(
+    tmp_path: Path, qapp
+) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+                AudioStream(2, "ac3", 6, "spa", False, bitrate=384_000),
+                AudioStream(3, "aac", 2, "eng", False, bitrate=128_000),
+            ],
+            duration=100.0,
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+    initial_size = step.audio_size_summary.text()
+
+    assert initial_size == "The audio goes from ~14 MB to ~11 MB"
+
+    step.one_audio_per_language.click()
+
+    assert state.one_audio_per_language is True
+    assert [
+        index for index, checkbox in step.audio_track_checks.items() if checkbox.isChecked()
+    ] == [1, 3]
+    assert state.options().audio_tracks == frozenset({1, 3})
+    assert step.audio_size_summary.text() == "The audio goes from ~10 MB to ~6 MB"
+
+    step.one_audio_per_language.click()
+
+    assert state.one_audio_per_language is False
+    assert all(checkbox.isChecked() for checkbox in step.audio_track_checks.values())
+    assert state.options().audio_tracks is None
+    assert step.audio_size_summary.text() == initial_size
+
+    step.one_audio_per_language.click()
+    step.audio_track_checks[3].setChecked(False)
+
+    assert state.one_audio_per_language is False
+    assert [
+        index for index, checkbox in step.audio_track_checks.items() if checkbox.isChecked()
+    ] == [1]
+    assert state.options().audio_tracks == frozenset({1})
+
+    step.one_audio_per_language.click()
+    step.one_audio_per_language.click()
+
+    assert state.options().audio_tracks == frozenset({1})
+    assert [
+        index for index, checkbox in step.audio_track_checks.items() if checkbox.isChecked()
+    ] == [1]
+
 
 def test_step_keep_reduces_the_audio_and_shows_both_sizes(tmp_path: Path, qapp) -> None:
     state = WizardState(Config())

@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFormLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QScrollArea,
@@ -48,7 +49,7 @@ class AdvancedPage(QWidget):
 
     def _build_ui(self) -> None:
         outer = QVBoxLayout(self)
-        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setContentsMargins(16, 20, 16, 12)
         outer.setSpacing(8)
 
         heading = QLabel(_("Advanced"), self)
@@ -63,10 +64,11 @@ class AdvancedPage(QWidget):
         scroll = QScrollArea(self)
         scroll.setObjectName("advancedScroll")
         scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
         scroll.setAccessibleName(_("Advanced options"))
         content = QWidget(scroll)
         layout = QVBoxLayout(content)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(0, 0, 12, 0)
         layout.setSpacing(14)
 
         self.videos = StepVideos(self._state, self._ffmpeg_info.ffprobe_path, parent=content)

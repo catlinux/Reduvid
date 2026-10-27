@@ -14,6 +14,7 @@ pytest.importorskip("PySide6")
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMessageBox
 
+from reduvid import __version__
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.gui.main_window import MainWindow
@@ -37,6 +38,12 @@ def test_window_is_created_for_every_theme(theme: str, mode: str, qapp) -> None:
     assert window.objectName() == "mainWindow"
     assert window.centralWidget() is not None
     assert window.content.count() == 6
+
+
+def test_window_title_includes_the_version(qapp) -> None:
+    window = MainWindow(Config(), ffmpeg_info(), ThemeManager(qapp))
+
+    assert window.windowTitle() == f"Reduvid {__version__}"
 
 
 def test_panels_have_the_expected_names_and_accessible_names(qapp) -> None:

@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from dataclasses import replace
 
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -17,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import resolve_container
+from reduvid.core.plan import build_plan, resolve_container
 from reduvid.core.probe import format_size
 from reduvid.gui.widgets.what_is_this import WhatIsThis
 from reduvid.gui.wizard_logic import (
@@ -140,7 +141,7 @@ class StepKeep(QWidget):
         self.one_audio_per_language.setAccessibleName(
             _("One audio track per language (the best one is kept)")
         )
-        self.one_audio_per_language.toggled.connect(self._state.set_one_audio_per_language)
+        self.one_audio_per_language.toggled.connect(self._one_audio_toggled)
         self.audio_layout.addWidget(self.one_audio_per_language)
         layout.addWidget(self.audio_group)
 
@@ -210,6 +211,8 @@ class StepKeep(QWidget):
             self.audio_group.setVisible(bool(audio_rows))
             self._rebuild_audio_tracks(audio_rows)
             selected_tracks = self._state.selected_audio_tracks()
+            if self._state.one_audio_per_language:
+                selected_tracks = self._tracks_kept_by_one_per_language(single)
             self._apply_checks(self.audio_track_checks.items(), selected_tracks)
             self.audio_warning.setText(
                 _("If you do not tick any audio track, all of them are kept.")
@@ -381,12 +384,29 @@ class StepKeep(QWidget):
             checkbox.setChecked(key in selected_values)
             checkbox.blockSignals(False)
 
+    def _tracks_kept_by_one_per_language(self, single: VideoEntry) -> frozenset[int]:
+        if single.media is None:
+            return frozenset()
+        options = replace(self._state.options(), one_audio_per_language=True)
+        plan = build_plan(single.media, self._ffmpeg_info, options)
+        return frozenset(decision.stream_index for decision in plan.audios)
+
+    def _one_audio_toggled(self, enabled: bool) -> None:
+        self._state.set_one_audio_per_language(enabled)
+        single = self._state.single_video
+        if enabled and single is not None and single.media is not None:
+            self._state.set_audio_tracks(self._tracks_kept_by_one_per_language(single))
+
     def _audio_track_toggled(self, _checked: bool) -> None:
-        self._state.set_audio_tracks(
+        manual = frozenset(
             index for index, checkbox in self.audio_track_checks.items() if checkbox.isChecked()
         )
+        if self._state.one_audio_per_language:
+            self._state.set_one_audio_per_language(False, restore=False)
+        self._state.set_audio_tracks(manual)
 
     def _audio_toggled(self, _checked: bool) -> None:
+        # Choosing languages is compatible with keeping one track per language.
         self._state.set_audio_languages(
             [code for code, checkbox in self.audio_checks.items() if checkbox.isChecked()]
         )

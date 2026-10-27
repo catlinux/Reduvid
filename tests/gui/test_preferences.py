@@ -13,6 +13,7 @@ pytest.importorskip("PySide6")
 
 from PySide6.QtWidgets import QDialogButtonBox
 
+from reduvid import __version__
 from reduvid.core import config as config_module
 from reduvid.core.config import Config, load_config
 from reduvid.core.ffmpeg import FFmpegInfo
@@ -109,6 +110,13 @@ def test_check_button_reports_a_missing_ffmpeg(monkeypatch: pytest.MonkeyPatch, 
     dialog.check_button.click()
 
     assert "not found" in dialog.ffmpeg_status.text().lower()
+
+
+def test_dialog_shows_the_version(qapp) -> None:
+    dialog = PreferencesDialog(Config(), ThemeManager(qapp))
+
+    assert dialog.version_label.text() == f"Version {__version__}"
+    assert dialog.version_label.property("role") == "muted"
 
 
 def test_dialog_has_accessible_controls(qapp) -> None:

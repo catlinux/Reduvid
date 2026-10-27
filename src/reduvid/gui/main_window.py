@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from reduvid import __version__
 from reduvid.core.config import Config, UiMode, save_config
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import FileProcessor
@@ -73,7 +74,7 @@ class MainWindow(QMainWindow):
     ) -> None:
         super().__init__(parent)
         self.setObjectName("mainWindow")
-        self.setWindowTitle(_("Reduvid"))
+        self.setWindowTitle(_("Reduvid {version}").format(version=__version__))
         self._config = config
         self._ffmpeg_info = ffmpeg_info
         self._theme_manager = theme_manager

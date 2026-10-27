@@ -12,6 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QObject, Signal
+from PySide6.QtWidgets import QScrollArea
 
 from reduvid.core.config import Config, load_config
 from reduvid.core.ffmpeg import FFmpegInfo
@@ -143,6 +144,24 @@ def test_advanced_page_builds_cli_equivalent_options(tmp_path: Path, qapp) -> No
         subtitle_languages=None,
     )
     assert state.threads == 4
+
+
+def test_advanced_page_has_outer_and_scroll_margins(qapp) -> None:
+    page = AdvancedPage(WizardState(Config()), ffmpeg())
+
+    margins = page.layout().contentsMargins()
+    assert (margins.left(), margins.top(), margins.right(), margins.bottom()) == (
+        16,
+        20,
+        16,
+        12,
+    )
+    scroll = page.findChild(QScrollArea, "advancedScroll")
+    assert scroll is not None
+    assert scroll.widget() is not None
+    content_layout = scroll.widget().layout()
+    assert content_layout is not None
+    assert content_layout.contentsMargins().right() > 0
 
 
 def test_advanced_page_has_every_option(tmp_path: Path, qapp) -> None:
