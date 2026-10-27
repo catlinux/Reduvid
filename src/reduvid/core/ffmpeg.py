@@ -23,6 +23,7 @@ class FFmpegInfo:
     encoders: frozenset[str]
     filters: frozenset[str]
     hardware_encoders: tuple[str, ...]
+    hwaccels: tuple[str, ...] = ()
 
     @property
     def has_libx264(self) -> bool:
@@ -97,6 +98,17 @@ def _version(output: str) -> str:
     return match.group(1) if match is not None else "unknown"
 
 
+def _hwaccels(output: str) -> tuple[str, ...]:
+    lines = output.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != "Hardware acceleration methods:":
+            continue
+        return tuple(
+            name for name in (candidate.strip() for candidate in lines[index + 1 :]) if name
+        )
+    return ()
+
+
 def detect_ffmpeg(configured_path: Path | None = None) -> FFmpegInfo | None:
     """Locate FFmpeg and ffprobe, returning ``None`` if either is unavailable."""
     ffmpeg_path = _find_executable("ffmpeg", configured_path)
@@ -118,6 +130,17 @@ def detect_ffmpeg(configured_path: Path | None = None) -> FFmpegInfo | None:
     filter_result = subprocess.run(  # noqa: S603
         [str(ffmpeg_path), "-filters"], capture_output=True, text=True, check=False
     )
+    try:
+        hwaccel_result = subprocess.run(  # noqa: S603
+            [str(ffmpeg_path), "-hide_banner", "-hwaccels"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        hwaccels: tuple[str, ...] = ()
+    else:
+        hwaccels = _hwaccels(hwaccel_result.stdout) if hwaccel_result.returncode == 0 else ()
     encoders = _listed_names(encoder_result.stdout)
     filters = _listed_names(filter_result.stdout)
     hardware = tuple(
@@ -132,4 +155,5 @@ def detect_ffmpeg(configured_path: Path | None = None) -> FFmpegInfo | None:
         encoders=frozenset(encoders),
         filters=frozenset(filters),
         hardware_encoders=hardware,
+        hwaccels=hwaccels,
     )

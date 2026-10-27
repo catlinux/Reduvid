@@ -18,7 +18,7 @@ from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import PipelineError
 from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, estimate_stream_bytes, parse_bitrate
-from reduvid.core.runner import EncodeHandle, ProgressEvent
+from reduvid.core.runner import EncodeError, EncodeHandle, EncodeResult, ProgressEvent
 
 _TEMP_PREFIX = "reduvid-sample-"
 _CANCELLED_DETAIL = "Sampling was cancelled."
@@ -93,7 +93,12 @@ def sample_segments(
 
 
 def build_sample_command(
-    plan: EncodePlan, input_path: Path, output_path: Path, segment: SampleSegment
+    plan: EncodePlan,
+    input_path: Path,
+    output_path: Path,
+    segment: SampleSegment,
+    *,
+    hw_decode: bool = False,
 ) -> list[str]:
     """Return FFmpeg arguments that encode one sample chunk as Matroska.
 
@@ -115,9 +120,10 @@ def build_sample_command(
         _seconds(segment.start),
         "-t",
         _seconds(segment.length),
-        "-i",
-        str(input_path),
     ]
+    if hw_decode:
+        arguments.extend(["-hwaccel", "auto"])
+    arguments.extend(["-i", str(input_path)])
     arguments.extend(build_video_arguments(plan.videos[0], 0))
     arguments.extend(
         [
@@ -152,6 +158,7 @@ class SampleRunner:
         threads: int | None = None,
         segments: int = 3,
         length: float = 20.0,
+        hw_decode: bool = False,
     ) -> None:
         self.ffmpeg_path = ffmpeg_path
         self.media = media
@@ -161,6 +168,7 @@ class SampleRunner:
         self.threads = threads
         self.segments = segments
         self.length = length
+        self.hw_decode = hw_decode
         self._lock = threading.Lock()
         self._handle: EncodeHandle | None = None
         self._cancelled = False
@@ -182,30 +190,65 @@ class SampleRunner:
                 if self._is_cancelled():
                     raise PipelineError("cancelled", _CANCELLED_DETAIL)
                 output_path = directory / f"segment-{position}.mkv"
-                handle = EncodeHandle(
-                    build_sample_command(self.plan, self.input_path, output_path, segment),
-                    segment.length,
-                    output_path,
-                    on_progress=self._progress_reporter(position, len(segments), segment.length),
-                    threads=self.threads,
-                    ffmpeg_path=self.ffmpeg_path,
-                )
-                with self._lock:
-                    cancelled_early = self._cancelled
-                    self._handle = handle
-                if cancelled_early:
-                    handle.cancel()
                 try:
-                    result = handle.run()
-                finally:
-                    with self._lock:
-                        self._handle = None
+                    result = self._run_segment(
+                        output_path,
+                        segment,
+                        position,
+                        len(segments),
+                        hw_decode=self.hw_decode,
+                    )
+                except EncodeError:
+                    output_path.unlink(missing_ok=True)
+                    if not self.hw_decode or self._is_cancelled():
+                        raise
+                    result = self._run_segment(
+                        output_path,
+                        segment,
+                        position,
+                        len(segments),
+                        hw_decode=False,
+                    )
                 if result.cancelled:
                     raise PipelineError("cancelled", _CANCELLED_DETAIL)
                 video_bytes += output_path.stat().st_size
                 sampled_seconds += _sampled_length(result.last_progress, segment.length)
 
         return SampleEstimate(video_bytes, sampled_seconds, time.monotonic() - started)
+
+    def _run_segment(
+        self,
+        output_path: Path,
+        segment: SampleSegment,
+        position: int,
+        count: int,
+        *,
+        hw_decode: bool,
+    ) -> EncodeResult:
+        handle = EncodeHandle(
+            build_sample_command(
+                self.plan,
+                self.input_path,
+                output_path,
+                segment,
+                hw_decode=hw_decode,
+            ),
+            segment.length,
+            output_path,
+            on_progress=self._progress_reporter(position, count, segment.length),
+            threads=self.threads,
+            ffmpeg_path=self.ffmpeg_path,
+        )
+        with self._lock:
+            cancelled_early = self._cancelled
+            self._handle = handle
+        if cancelled_early:
+            handle.cancel()
+        try:
+            return handle.run()
+        finally:
+            with self._lock:
+                self._handle = None
 
     def pause(self) -> None:
         """Suspend the running chunk, if any."""
@@ -266,6 +309,7 @@ class SampleLevelsRunner:
         threads: int | None = None,
         segments: int = 1,
         length: float = 20.0,
+        hw_decode: bool = False,
     ) -> None:
         self.ffmpeg_path = ffmpeg_path
         self.media = media
@@ -277,6 +321,7 @@ class SampleLevelsRunner:
         self.threads = threads
         self.segments = segments
         self.length = length
+        self.hw_decode = hw_decode
         self._lock = threading.Lock()
         self._runner: SampleRunner | None = None
         self._cancelled = False
@@ -301,6 +346,7 @@ class SampleLevelsRunner:
                 threads=self.threads,
                 segments=self.segments,
                 length=self.length,
+                hw_decode=self.hw_decode,
             )
             with self._lock:
                 cancelled_early = self._cancelled
@@ -367,10 +413,19 @@ def run_sample(
     threads: int | None = None,
     segments: int = 3,
     length: float = 20.0,
+    hw_decode: bool = False,
 ) -> SampleEstimate:
     """Run the sample chunks in series and return the measured rate."""
     return SampleRunner(
-        ffmpeg_path, media, plan, input_path, on_progress, threads, segments, length
+        ffmpeg_path,
+        media,
+        plan,
+        input_path,
+        on_progress,
+        threads,
+        segments,
+        length,
+        hw_decode=hw_decode,
     ).run()
 
 
@@ -438,6 +493,7 @@ def estimate_levels(
     threads: int | None = None,
     segments: int = 1,
     length: float = 20.0,
+    hw_decode: bool = False,
 ) -> dict[str, TotalEstimate]:
     """Measure one short sample per quality level and return an estimate for each."""
     return SampleLevelsRunner(
@@ -451,6 +507,7 @@ def estimate_levels(
         threads,
         segments,
         length,
+        hw_decode=hw_decode,
     ).run()
 
 

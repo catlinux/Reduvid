@@ -7,11 +7,17 @@ from subprocess import CompletedProcess
 from reduvid.core import ffmpeg
 
 
-def _run_mock(monkeypatch, encoder_output: str, filter_output: str) -> None:
+def _run_mock(
+    monkeypatch,
+    encoder_output: str,
+    filter_output: str,
+    hwaccel_output: str = "Hardware acceleration methods:\ncuda\nd3d11va\n\n",
+) -> None:
     outputs = {
         "-version": "ffmpeg version 7.0.2 Copyright (c) FFmpeg developers\n",
         "-encoders": encoder_output,
         "-filters": filter_output,
+        "-hide_banner": hwaccel_output,
     }
 
     def run(args, **kwargs):
@@ -38,6 +44,7 @@ def test_detects_selected_capabilities(monkeypatch) -> None:
     assert info.has_libx264 and info.has_libx265
     assert info.has_zscale and info.has_tonemap
     assert info.hardware_encoders == ("h264_nvenc",)
+    assert info.hwaccels == ("cuda", "d3d11va")
 
 
 def test_detects_filters_with_two_flag_columns_and_skips_legend(monkeypatch) -> None:
@@ -58,6 +65,30 @@ def test_detects_filters_with_two_flag_columns_and_skips_legend(monkeypatch) -> 
     assert info is not None
     assert info.has_zscale and info.has_tonemap
     assert "=" not in info.filters and "=" not in info.encoders
+
+
+def test_hwaccels_are_empty_when_the_probe_fails(monkeypatch) -> None:
+    binary = Path("/mock/bin/ffmpeg")
+    probe = Path("/mock/bin/ffprobe")
+    monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
+    outputs = {
+        "-version": "ffmpeg version 7.0.2 Copyright (c) FFmpeg developers\n",
+        "-encoders": "Encoders:\n",
+        "-filters": "Filters:\n",
+    }
+
+    def run(args, **kwargs):
+        if args[1] == "-hide_banner":
+            return CompletedProcess(args, 1, stdout="", stderr="failed")
+        return CompletedProcess(args, 0, stdout=outputs[args[1]], stderr="")
+
+    monkeypatch.setattr(ffmpeg.subprocess, "run", run)
+
+    info = ffmpeg.detect_ffmpeg(binary)
+
+    assert info is not None
+    assert info.hwaccels == ()
 
 
 def test_missing_capabilities_are_false(monkeypatch) -> None:

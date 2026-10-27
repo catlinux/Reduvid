@@ -6,6 +6,13 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.7.0] - 2026-10-27
+
+### Añadido
+
+- Si el equipo tiene tarjeta gráfica, el vídeo original se lee con ella (`-hwaccel auto`), lo que libera el procesador para codificar; el resultado es el mismo. Si FFmpeg falla al usarla, el vídeo se repite automáticamente con el procesador. Se aplica a las conversiones; la prueba de muestra lo admite, pero aún no lo activa la interfaz.
+- Motor: `FFmpegInfo.hwaccels` con los métodos de aceleración que ofrece FFmpeg.
+
 ## [0.6.1] - 2026-10-27
 
 ### Corregido

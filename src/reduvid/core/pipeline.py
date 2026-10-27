@@ -18,7 +18,7 @@ from reduvid.core.naming import build_output_path, build_temp_path, finalize_out
 from reduvid.core.plan import PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo
 from reduvid.core.queue import ProcessingResult
-from reduvid.core.runner import EncodeHandle, ProgressEvent
+from reduvid.core.runner import EncodeError, EncodeHandle, EncodeResult, ProgressEvent
 from reduvid.core.verify import verify_output
 
 PipelineErrorCode = Literal["cancelled", "verification_failed"]
@@ -48,12 +48,14 @@ class FileProcessor:
         output_dir: Path | None = None,
         threads: int | None = None,
         replace_original: bool = False,
+        hw_decode: bool = True,
     ) -> None:
         self.ffmpeg_info = ffmpeg_info
         self.options = options
         self.output_dir = output_dir
         self.threads = threads
         self.replace_original = replace_original
+        self.hw_decode = hw_decode
         self._lock = threading.Lock()
         self._handle: EncodeHandle | None = None
         self._cancelled = False
@@ -75,22 +77,25 @@ class FileProcessor:
         destination_dir.mkdir(parents=True, exist_ok=True)
         output_path = build_output_path(media.path, destination_dir, self.options.container)
         temp_path = build_temp_path(output_path)
+        use_hw_decode = self.hw_decode and bool(self.ffmpeg_info.hwaccels)
         try:
-            command = build_command(media, plan, media.path, temp_path)
-            handle = EncodeHandle(
-                command,
-                media.duration,
-                temp_path,
-                on_progress=on_progress,
-                threads=self.threads,
-                ffmpeg_path=self.ffmpeg_info.ffmpeg_path,
-            )
-            with self._lock:
-                cancelled_early = self._cancelled
-                self._handle = handle
-            if cancelled_early:
-                handle.cancel()
-            result = handle.run()
+            try:
+                result = self._run_handle(
+                    build_command(media, plan, media.path, temp_path, hw_decode=use_hw_decode),
+                    media.duration,
+                    temp_path,
+                    on_progress,
+                )
+            except EncodeError:
+                if not use_hw_decode or self._is_cancelled():
+                    raise
+                temp_path.unlink(missing_ok=True)
+                result = self._run_handle(
+                    build_command(media, plan, media.path, temp_path, hw_decode=False),
+                    media.duration,
+                    temp_path,
+                    on_progress,
+                )
             if result.cancelled:
                 raise PipelineError("cancelled", "Encoding was cancelled.")
             verification = verify_output(
@@ -113,6 +118,32 @@ class FileProcessor:
         finally:
             with self._lock:
                 self._handle = None
+
+    def _run_handle(
+        self,
+        command: list[str],
+        duration: float,
+        temp_path: Path,
+        on_progress: Callable[[ProgressEvent], None],
+    ) -> EncodeResult:
+        handle = EncodeHandle(
+            command,
+            duration,
+            temp_path,
+            on_progress=on_progress,
+            threads=self.threads,
+            ffmpeg_path=self.ffmpeg_info.ffmpeg_path,
+        )
+        with self._lock:
+            cancelled_early = self._cancelled
+            self._handle = handle
+        if cancelled_early:
+            handle.cancel()
+        return handle.run()
+
+    def _is_cancelled(self) -> bool:
+        with self._lock:
+            return self._cancelled
 
     def pause(self) -> None:
         """Suspend the running encode, if any."""

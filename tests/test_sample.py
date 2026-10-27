@@ -9,6 +9,7 @@ import tempfile
 import threading
 from itertools import pairwise
 from pathlib import Path
+from typing import ClassVar
 
 import psutil
 import pytest
@@ -17,6 +18,7 @@ from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.pipeline import PipelineError
 from reduvid.core.plan import AudioDecision, EncodePlan, PlanOptions, VideoDecision, build_plan
 from reduvid.core.probe import AudioStream, MediaInfo, probe_media
+from reduvid.core.runner import EncodeError, EncodeResult, ProgressEvent
 from reduvid.core.sample import (
     SampleEstimate,
     SampleLevelsRunner,
@@ -176,6 +178,37 @@ def test_build_sample_command_maps_only_the_first_video_of_the_plan() -> None:
     assert "-c:v:1" not in arguments
     assert "-profile:v:0" not in arguments
     assert "-level:v:0" in arguments
+
+
+def test_build_sample_command_inserts_hwaccel_before_input() -> None:
+    input_path = _ROOT / "videos" / "input.mkv"
+
+    arguments = build_sample_command(
+        _plan(_video()),
+        input_path,
+        _ROOT / "temporaries" / "segment-0.mkv",
+        SampleSegment(0.0, 20.0),
+        hw_decode=True,
+    )
+
+    input_index = arguments.index("-i")
+    assert arguments[input_index - 2 : input_index + 2] == [
+        "-hwaccel",
+        "auto",
+        "-i",
+        str(input_path),
+    ]
+
+
+def test_build_sample_command_omits_hwaccel_by_default() -> None:
+    arguments = build_sample_command(
+        _plan(_video()),
+        _ROOT / "videos" / "input.mkv",
+        _ROOT / "temporaries" / "segment-0.mkv",
+        SampleSegment(0.0, 20.0),
+    )
+
+    assert "-hwaccel" not in arguments
 
 
 def test_build_sample_command_keeps_paths_as_independent_items() -> None:
@@ -486,6 +519,7 @@ def test_estimate_levels_returns_estimates_in_the_requested_order(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     seen: list[tuple[str, int, float]] = []
+    hw_values: list[bool] = []
 
     class FakeRunner:
         def __init__(
@@ -498,8 +532,10 @@ def test_estimate_levels_returns_estimates_in_the_requested_order(
             threads: object = None,
             segments: int = 3,
             length: float = 20.0,
+            hw_decode: bool = False,
         ) -> None:
             seen.append((plan.quality, segments, length))
+            hw_values.append(hw_decode)
             self.on_progress = on_progress
 
         def run(self) -> SampleEstimate:
@@ -516,10 +552,12 @@ def test_estimate_levels_returns_estimates_in_the_requested_order(
         qualities=("max_savings", "high"),
         segments=1,
         length=20.0,
+        hw_decode=True,
     )
 
     assert list(estimates) == ["max_savings", "high"]
     assert seen == [("max_savings", 1, 20.0), ("high", 1, 20.0)]
+    assert hw_values == [True, True]
     assert estimates["high"].video_bytes == 30_000_000
 
 
@@ -587,3 +625,70 @@ def test_estimate_levels_orders_video_bytes_from_high_to_max_savings(
     assert estimates["high"].video_bytes >= estimates["balanced"].video_bytes
     assert estimates["balanced"].video_bytes >= estimates["max_savings"].video_bytes
     assert estimates["high"].video_bytes > 0
+
+
+class _RetrySampleHandle:
+    instances: ClassVar[list[_RetrySampleHandle]] = []
+
+    def __init__(
+        self,
+        command: list[str],
+        _duration: float,
+        temp_path: Path,
+        **_kwargs: object,
+    ) -> None:
+        self.command = command
+        self.temp_path = temp_path
+        type(self).instances.append(self)
+
+    def run(self) -> EncodeResult:
+        if type(self).instances.index(self) == 0:
+            raise EncodeError("unknown", "hardware decode failed")
+        self.temp_path.write_bytes(b"sample")
+        return EncodeResult(0, False, ProgressEvent(20.0, 1.0, 0.0, "end"))
+
+    def cancel(self) -> None:
+        pass
+
+
+def test_sample_retries_once_without_hardware_decode(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _RetrySampleHandle.instances = []
+    monkeypatch.setattr("reduvid.core.sample.EncodeHandle", _RetrySampleHandle)
+    runner = SampleRunner(
+        _ROOT / "usr" / "bin" / "ffmpeg",
+        _media(),
+        _plan(_video()),
+        _ROOT / "videos" / "input.mkv",
+        segments=1,
+        length=20.0,
+        hw_decode=True,
+    )
+
+    sample = runner.run()
+
+    assert len(_RetrySampleHandle.instances) == 2
+    assert "-hwaccel" in _RetrySampleHandle.instances[0].command
+    assert "-hwaccel" not in _RetrySampleHandle.instances[1].command
+    assert sample.video_bytes == 6
+
+
+def test_sample_does_not_retry_without_hardware_decode(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _RetrySampleHandle.instances = []
+    monkeypatch.setattr("reduvid.core.sample.EncodeHandle", _RetrySampleHandle)
+    runner = SampleRunner(
+        _ROOT / "usr" / "bin" / "ffmpeg",
+        _media(),
+        _plan(_video()),
+        _ROOT / "videos" / "input.mkv",
+        segments=1,
+        length=20.0,
+    )
+
+    with pytest.raises(EncodeError):
+        runner.run()
+
+    assert len(_RetrySampleHandle.instances) == 1

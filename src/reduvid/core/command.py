@@ -32,7 +32,12 @@ def build_video_arguments(video: VideoDecision, position: int) -> list[str]:
 
 
 def build_command(
-    media: MediaInfo, plan: EncodePlan, input_path: Path, output_path: Path
+    media: MediaInfo,
+    plan: EncodePlan,
+    input_path: Path,
+    output_path: Path,
+    *,
+    hw_decode: bool = False,
 ) -> list[str]:
     """Return FFmpeg arguments; both paths must already be absolute."""
     if not input_path.is_absolute():
@@ -40,7 +45,10 @@ def build_command(
     if not output_path.is_absolute():
         raise ValueError("output_path must be absolute")
 
-    arguments = ["-nostdin", "-hide_banner", "-y", "-i", str(input_path)]
+    arguments = ["-nostdin", "-hide_banner", "-y"]
+    if hw_decode:
+        arguments.extend(["-hwaccel", "auto"])
+    arguments.extend(["-i", str(input_path)])
 
     for position, video in enumerate(plan.videos):
         arguments.extend(build_video_arguments(video, position))

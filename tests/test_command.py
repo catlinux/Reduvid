@@ -104,6 +104,30 @@ def test_dropped_subtitle_is_not_mapped_and_metadata_is_kept() -> None:
     assert "-map_chapters" in arguments and arguments[arguments.index("-map_chapters") + 1] == "0"
 
 
+def test_hw_decode_inserts_hwaccel_auto_immediately_before_input() -> None:
+    input_path = Path.cwd() / "in.mkv"
+
+    arguments = build_command(
+        _media(), _plan(videos=(_video(),)), input_path, Path.cwd() / "out.mkv", hw_decode=True
+    )
+
+    input_index = arguments.index("-i")
+    assert arguments[input_index - 2 : input_index + 2] == [
+        "-hwaccel",
+        "auto",
+        "-i",
+        str(input_path),
+    ]
+
+
+def test_hw_decode_is_absent_by_default() -> None:
+    arguments = build_command(
+        _media(), _plan(videos=(_video(),)), Path.cwd() / "in.mkv", Path.cwd() / "out.mkv"
+    )
+
+    assert "-hwaccel" not in arguments
+
+
 def test_paths_are_independent_argument_items() -> None:
     input_path = Path.cwd() / "vídeo áéñ 😀" / "-raro.mkv"
     output_path = Path.cwd() / "salida con espacios" / "ñ 😀.mkv"
