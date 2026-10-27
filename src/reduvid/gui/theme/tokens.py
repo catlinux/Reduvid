@@ -35,6 +35,27 @@ class ThemeTokens:
     mono: str
     display_weight: int
     body_weight: int
+    # Cinta keeps its dark casing in both colour modes.
+    sidebar_bg: str
+    sidebar_text: str
+    sidebar_muted: str
+    sidebar_line: str
+    selected_bg: str
+    selected_fg: str
+    selected_muted: str
+    tag_bg: str
+    tag_fg: str
+    chip_bg: str
+    chip_fg: str
+    # Painted by theme widgets; Qt stylesheets have no box-shadow.
+    shadow_offset: int
+    shadow_color: str
+    control_radius: int
+    card_radius: int
+    heading_size: int
+    heading_uppercase: bool
+    heading_letter_spacing: float
+    kicker_uppercase: bool
 
 
 THEMES: dict[tuple[str, str], ThemeTokens] = {
@@ -60,6 +81,25 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"Instrument Sans", sans-serif',
         display_weight=750,
         body_weight=400,
+        sidebar_bg="#F0F3F2",
+        sidebar_text="#15292B",
+        sidebar_muted="#52676A",
+        sidebar_line="#CFD8D7",
+        selected_bg="#0F5E63",
+        selected_fg="#FFFFFF",
+        selected_muted="#D4E6E5",
+        tag_bg="#D39B14",
+        tag_fg="#15292B",
+        chip_bg="#E1EBEA",
+        chip_fg="#15292B",
+        shadow_offset=0,
+        shadow_color="#CFD8D7",
+        control_radius=0,
+        card_radius=0,
+        heading_size=42,
+        heading_uppercase=False,
+        heading_letter_spacing=-1.2,
+        kicker_uppercase=True,
     ),
     ("plegat", "dark"): ThemeTokens(
         bg="#0C1819",
@@ -83,6 +123,25 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"Instrument Sans", sans-serif',
         display_weight=750,
         body_weight=400,
+        sidebar_bg="#0C1819",
+        sidebar_text="#E3EDEB",
+        sidebar_muted="#92A8A7",
+        sidebar_line="#264241",
+        selected_bg="#45AAAD",
+        selected_fg="#0C1819",
+        selected_muted="#16393A",
+        tag_bg="#E7B33A",
+        tag_fg="#0C1819",
+        chip_bg="#183031",
+        chip_fg="#E3EDEB",
+        shadow_offset=0,
+        shadow_color="#264241",
+        control_radius=0,
+        card_radius=0,
+        heading_size=42,
+        heading_uppercase=False,
+        heading_letter_spacing=-1.2,
+        kicker_uppercase=True,
     ),
     ("riso", "light"): ThemeTokens(
         bg="#EEF0EA",
@@ -106,6 +165,25 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"Archivo", sans-serif',
         display_weight=800,
         body_weight=400,
+        sidebar_bg="#EEF0EA",
+        sidebar_text="#1E2440",
+        sidebar_muted="#565E7E",
+        sidebar_line="#1E2440",
+        selected_bg="#FF6A3D",
+        selected_fg="#1E2440",
+        selected_muted="#1E2440",
+        tag_bg="#1E2440",
+        tag_fg="#FF6A3D",
+        chip_bg="#F8F9F5",
+        chip_fg="#1E2440",
+        shadow_offset=4,
+        shadow_color="#3D5AA8",
+        control_radius=0,
+        card_radius=0,
+        heading_size=44,
+        heading_uppercase=True,
+        heading_letter_spacing=-0.4,
+        kicker_uppercase=True,
     ),
     ("riso", "dark"): ThemeTokens(
         bg="#141830",
@@ -129,6 +207,25 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"Archivo", sans-serif',
         display_weight=800,
         body_weight=400,
+        sidebar_bg="#141830",
+        sidebar_text="#E8EAF3",
+        sidebar_muted="#A6ADC9",
+        sidebar_line="#E8EAF3",
+        selected_bg="#FF7A4D",
+        selected_fg="#141830",
+        selected_muted="#141830",
+        tag_bg="#141830",
+        tag_fg="#FF7A4D",
+        chip_bg="#1C2142",
+        chip_fg="#E8EAF3",
+        shadow_offset=4,
+        shadow_color="#8AA2FF",
+        control_radius=0,
+        card_radius=0,
+        heading_size=44,
+        heading_uppercase=True,
+        heading_letter_spacing=-0.4,
+        kicker_uppercase=True,
     ),
     ("cinta", "light"): ThemeTokens(
         bg="#E6E7EA",
@@ -152,6 +249,25 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"JetBrains Mono", ui-monospace, monospace',
         display_weight=700,
         body_weight=400,
+        sidebar_bg="#16171A",
+        sidebar_text="#ECEDEF",
+        sidebar_muted="#9DA2AB",
+        sidebar_line="#26282D",
+        selected_bg="#FBFBFC",
+        selected_fg="#16171A",
+        selected_muted="#43474F",
+        tag_bg="#FBFBFC",
+        tag_fg="#16171A",
+        chip_bg="#EEEFF1",
+        chip_fg="#16171A",
+        shadow_offset=0,
+        shadow_color="#C3C6CC",
+        control_radius=3,
+        card_radius=3,
+        heading_size=50,
+        heading_uppercase=True,
+        heading_letter_spacing=0.6,
+        kicker_uppercase=True,
     ),
     ("cinta", "dark"): ThemeTokens(
         bg="#0F1012",
@@ -175,5 +291,24 @@ THEMES: dict[tuple[str, str], ThemeTokens] = {
         mono='"JetBrains Mono", ui-monospace, monospace',
         display_weight=700,
         body_weight=400,
+        sidebar_bg="#17181B",
+        sidebar_text="#ECEDEF",
+        sidebar_muted="#9DA2AB",
+        sidebar_line="#26282D",
+        selected_bg="#24262B",
+        selected_fg="#ECEDEF",
+        selected_muted="#9DA2AB",
+        tag_bg="#1D1F23",
+        tag_fg="#ECEDEF",
+        chip_bg="#272A2F",
+        chip_fg="#ECEDEF",
+        shadow_offset=0,
+        shadow_color="#33363C",
+        control_radius=3,
+        card_radius=3,
+        heading_size=50,
+        heading_uppercase=True,
+        heading_letter_spacing=0.6,
+        kicker_uppercase=True,
     ),
 }

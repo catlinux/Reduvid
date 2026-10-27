@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.7.1] - 2026-10-27
+
+### Cambiado
+
+- Interfaz: los temas ganan los tokens y las reglas de estilo del rediseño (barra lateral, tarjeta elegida, etiquetas, chips, controles segmentados, títulos y barra de la cola), con tests de contraste de 4,5:1 en los tres temas y en los dos modos de color. Todavía no cambia ninguna pantalla.
+
 ## [0.7.0] - 2026-10-27
 
 ### Añadido

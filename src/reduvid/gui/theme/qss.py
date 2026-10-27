@@ -30,11 +30,40 @@ QLabel[role="heading"] {
     font-size: 24px;
     font-weight: ${display_weight};
 }
+QLabel[role="display"] {
+    font-family: ${display};
+    font-size: ${heading_size}px;
+    font-weight: ${display_weight};
+}
 QLabel[role="kicker"] {
     font-family: ${mono};
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     color: ${muted};
+}
+QLabel[role="chip"] {
+    background-color: ${chip_bg};
+    color: ${chip_fg};
+    padding: 2px 7px;
+    border-radius: ${control_radius}px;
+    font-size: 12px;
+    font-weight: 600;
+}
+QLabel[role="chip"][tone="warn"] {
+    background-color: ${warn_bg};
+    color: ${warn_fg};
+}
+QLabel[role="tag"] {
+    background-color: ${tag_bg};
+    color: ${tag_fg};
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+}
+QLabel[role="size"] {
+    font-family: ${display};
+    font-size: 24px;
+    font-weight: ${display_weight};
 }
 
 QPushButton {
@@ -64,6 +93,14 @@ QPushButton[role="primary"] {
     background-color: ${accent};
     color: ${on_accent};
     border-color: ${accent};
+    border-radius: ${control_radius}px;
+    min-height: 40px;
+}
+QPushButton[role="ghost"] {
+    background-color: transparent;
+    border: ${border_width}px solid ${text};
+    border-radius: ${control_radius}px;
+    min-height: 40px;
 }
 QPushButton[role="primary"]:hover {
     border-color: ${accent2};
@@ -145,6 +182,43 @@ QAbstractButton#card:focus {
 }
 #stepList QPushButton:focus {
     border: 1px solid ${accent};
+}
+
+#segmented {
+    border: ${border_width}px solid ${text};
+    border-radius: ${control_radius}px;
+}
+#segmented QPushButton {
+    border: 0;
+    background-color: transparent;
+    border-radius: 0;
+    padding: 6px 12px;
+}
+#segmented QPushButton:checked {
+    background-color: ${text};
+    color: ${bg};
+}
+
+#sideBar {
+    background-color: ${sidebar_bg};
+    border-right: ${border_width}px solid ${sidebar_line};
+}
+#sideBar QLabel {
+    color: ${sidebar_text};
+}
+#sideBar QLabel[role="muted"] {
+    color: ${sidebar_muted};
+}
+#sideBar QPushButton {
+    background-color: transparent;
+    border: 0;
+    color: ${sidebar_text};
+}
+#sideBar QPushButton[state="current"] {
+    background-color: ${surface};
+    color: ${text};
+    border: ${border_width}px solid ${line};
+    font-weight: 700;
 }
 
 #compatLight {
@@ -327,6 +401,32 @@ QGroupBox::title {
     background-color: ${surface};
     border-left: ${border_width}px solid ${line};
 }
+#optionCard {
+    background-color: ${surface};
+    border: ${border_width}px solid ${line};
+    border-radius: ${card_radius}px;
+}
+#optionCard[selected="true"] {
+    background-color: ${selected_bg};
+    border-color: ${selected_bg};
+    color: ${selected_fg};
+}
+#optionCard[selected="true"] QLabel {
+    color: ${selected_fg};
+}
+#optionCard[selected="true"] QLabel[role="muted"] {
+    color: ${selected_muted};
+}
+#contextPanel {
+    background-color: transparent;
+}
+#transportBar {
+    background-color: ${surface};
+    border-top: ${border_width}px solid ${line};
+}
+#transportBar QLabel[role="size"] {
+    font-size: 30px;
+}
 #warnChip {
     background-color: ${warn_bg};
     color: ${warn_fg};
@@ -359,6 +459,20 @@ def build_qss(tokens: ThemeTokens) -> str:
         display=tokens.display,
         mono=tokens.mono,
         display_weight=tokens.display_weight,
+        sidebar_bg=tokens.sidebar_bg,
+        sidebar_text=tokens.sidebar_text,
+        sidebar_muted=tokens.sidebar_muted,
+        sidebar_line=tokens.sidebar_line,
+        selected_bg=tokens.selected_bg,
+        selected_fg=tokens.selected_fg,
+        selected_muted=tokens.selected_muted,
+        tag_bg=tokens.tag_bg,
+        tag_fg=tokens.tag_fg,
+        chip_bg=tokens.chip_bg,
+        chip_fg=tokens.chip_fg,
+        control_radius=tokens.control_radius,
+        card_radius=tokens.card_radius,
+        heading_size=tokens.heading_size,
         progress_fill=_progress_fill(tokens),
     )
 

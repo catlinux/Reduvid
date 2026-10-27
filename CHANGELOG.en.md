@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-10-27
+
+### Changed
+
+- Interface: the themes gain the redesign's tokens and style rules (sidebar, selected card, tags, chips, segmented controls, headings and the queue bar), with 4.5:1 contrast tests in all three themes and both colour modes. No screen changes yet.
+
 ## [0.7.0] - 2026-10-27
 
 ### Added
