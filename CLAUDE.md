@@ -2,7 +2,7 @@
 
 # Reduvid — instrucciones del proyecto
 
-Compresor de vídeo con interfaz gráfica (Linux y Windows) para que cualquiera reduzca sus vídeos perdiendo muy poca calidad, pensado para bibliotecas Jellyfin. Usa FFmpeg como herramienta externa y lo oculta tras un asistente paso a paso. Autor y titular: **Catlinux** (`https://github.com/catlinux`). Repo: `git@github-catlinux:catlinux/Reduvid.git`.
+Compresor de vídeo con interfaz gráfica (Linux y Windows) para que cualquiera reduzca sus vídeos perdiendo muy poca calidad, pensado para las bibliotecas de **Cinecat**, el servidor multimedia propio del autor (`https://github.com/catlinux/Cinecat`; otro repo, aquí solo se lee). Jellyfin ya no es objetivo. Usa FFmpeg como herramienta externa y lo oculta tras un asistente paso a paso. Autor y titular: **Catlinux** (`https://github.com/catlinux`). Repo: `git@github-catlinux:catlinux/Reduvid.git`.
 
 Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.agents/plans/reduvid/reduvid.PLAN.md). Léela antes de empezar cualquier tarea.
 
@@ -22,7 +22,7 @@ Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.age
 - **Dependencias de ejecución:** PySide6-Essentials (LGPL-3), platformdirs (MIT), Send2Trash (BSD-3), psutil (BSD-3). Añadir otra requiere preguntar.
 - **Traducción:** gettext (dominio `reduvid`, `.po` en `src/reduvid/locale/`), compartido por la CLI y la interfaz; Babel solo en desarrollo. Idiomas: ca, es, en.
 - **FFmpeg:** nunca dentro del repo ni de los paquetes. Se detecta en la ruta configurada y luego en el PATH.
-- **Destinos («¿dónde lo vas a ver?»)** como perfiles de datos, no como código especial: añadir el reproductor propio del autor en el futuro debe ser un perfil más.
+- **Destinos («¿dónde lo vas a ver?»)** como perfiles de datos, no como código especial. Desde 0.8.0 el perfil por defecto es `cinecat` (MP4, H.264 de 8 bits, AAC), porque Cinecat solo reproduce directamente MP4 en el navegador; antes de cambiarlo, vuelve a leer qué reproduce Cinecat en su repo.
 - **Temas visuales:** tres, intercambiables por tokens → QSS: **Plegat** (por defecto), **Riso** y **Cinta**. Maquetas en `docs/design/mockups.html`.
 - **Contribuciones de código de terceros:** se aceptan bajo DCO (`Signed-off-by`, sin CLA ni cesión de derechos); ver `CONTRIBUTING.md`.
 
@@ -45,7 +45,7 @@ Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.age
 - Rutas con `pathlib`; directorios de usuario con `platformdirs`. Cuidado con espacios, tildes y Unicode (hay tests).
 - Los originales no se tocan nunca por defecto. Se escribe a un temporal en la carpeta de destino y solo se renombra tras verificar. Nunca se sobrescribe.
 - Sin telemetría ni conexiones de red.
-- Comentarios solo para el porqué no obvio; en el perfil Jellyfin, cada valor lleva su porqué.
+- Comentarios solo para el porqué no obvio; en el perfil Cinecat, cada valor lleva su porqué.
 - Textos de la interfaz siempre por gettext (`_()`); sin jerga sin explicar.
 
 ## Tests
@@ -62,7 +62,7 @@ Los vídeos de prueba se generan con FFmpeg en `tests/_media/` (ignorado); nunca
 
 ## Git
 
-- Conventional Commits: tipo en inglés y descripción en castellano (`feat: añade perfil Jellyfin compatible`). Tipos: feat, fix, docs, refactor, test, build, ci, chore, style, perf.
+- Conventional Commits: tipo en inglés y descripción en castellano (`feat: añade el perfil de Cinecat`). Tipos: feat, fix, docs, refactor, test, build, ci, chore, style, perf.
 - `main` estable y ramas `feat/…` o `fix/…` por funcionalidad. Crear ramas sigue necesitando el OK del usuario.
 - Cada trabajo acabado sube la versión y lleva su entrada en `CHANGELOG.md` **y** `CHANGELOG.en.md`, en el mismo commit.
 
