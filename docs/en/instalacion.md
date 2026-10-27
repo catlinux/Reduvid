@@ -1,8 +1,8 @@
-# Windows installer
+# Reduvid installers
 
 [Castellano](../es/instalacion.md) · **English**
 
-This guide explains how to build the Windows installer from the source code. It does not include FFmpeg: Reduvid uses the one installed on the system.
+This guide explains how to build the Windows installer and the Linux AppImage from the source code. Neither of them includes FFmpeg: Reduvid uses the one installed on the system.
 
 ## Windows
 
@@ -67,3 +67,42 @@ If `ISCC.exe` is not available, the script finishes successfully after building 
 ### SmartScreen warning
 
 The installer is not digitally signed, so the first time Windows SmartScreen may show "Windows protected your PC". To continue, click **More info** and then **Run anyway**; there is no need to disable any Windows protection.
+
+## Linux (AppImage)
+
+The AppImage includes Python, Qt and Reduvid, so the application and its Python dependencies do not have to be installed. FFmpeg remains external: Reduvid looks for it on the system or at the configured path.
+
+### Requirements
+
+- Linux x86_64, targeting Debian 12 or later.
+- Python 3.11 or later, `python3-venv`, `curl` and the PyInstaller tools (`ldd`, `objdump`, `objcopy`), only to build the AppImage.
+- FFmpeg with `libx264` and `libx265`, to use the application.
+- The usual Qt graphical libraries on the system (X11 or Wayland).
+- FUSE only if the distribution cannot run AppImages without extracting them; if it is missing, `--appimage-extract-and-run` can be used.
+
+### Build the AppImage
+
+From the repository root:
+
+```bash
+bash packaging/linux/build_appimage.sh
+```
+
+The script creates an isolated Python environment, installs Reduvid and PyInstaller, bundles Python, Qt, the fonts and the translations, and downloads [appimagetool 1.9.1](https://github.com/AppImage/appimagetool/releases/tag/1.9.1) and the AppImage runtime 20251108 if they are not there yet. The result is `dist/linux/Reduvid-<version>-x86_64.AppImage`.
+
+### Run the AppImage
+
+From `dist/linux/`:
+
+```bash
+chmod +x Reduvid-<version>-x86_64.AppImage
+./Reduvid-<version>-x86_64.AppImage
+```
+
+If the distribution does not have FUSE:
+
+```bash
+./Reduvid-<version>-x86_64.AppImage --appimage-extract-and-run
+```
+
+On startup, if it cannot find FFmpeg, Reduvid shows the screen with instructions to install it.

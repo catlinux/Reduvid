@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Reduvid
+Comment=Easy video compression with FFmpeg
+Exec=AppRun %F
+Icon=reduvid
+Terminal=false
+Categories=AudioVideo;Video;
+Keywords=video;compress;ffmpeg;

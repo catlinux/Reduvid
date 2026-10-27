@@ -60,3 +60,24 @@ jobs:
           name: windows-installer
           path: dist/windows/Reduvid-Setup-*.exe
           if-no-files-found: error
+
+  build-linux:
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -e ".[build]"
+      # appimagetool needs file and desktop-file-validate; the runner already
+      # has mksquashfs inside appimagetool and doesn't need libfuse2 in extract mode.
+      - run: sudo apt-get update && sudo apt-get install -y file desktop-file-utils
+      - run: bash packaging/linux/build_appimage.sh
+      - name: Upload Linux AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: dist/linux/Reduvid-*.AppImage
+          if-no-files-found: error

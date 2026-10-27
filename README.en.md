@@ -70,7 +70,7 @@ Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
    python -m pip install -e .
    ```
 
-To build the Windows installer instead of running from source, see the [installer guide](docs/en/instalacion.md). Packages for `pipx` and a Linux AppImage will come later.
+To build a Windows installer or a Linux AppImage instead of running from source, see the [installers guide](docs/en/instalacion.md). The `pipx` package will come later.
 
 ## Quick start
 

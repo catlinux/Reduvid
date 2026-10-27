@@ -70,7 +70,7 @@ Maquetas de diseño originales en [docs/design/mockups.html](docs/design/mockups
    python -m pip install -e .
    ```
 
-Para generar el instalador de Windows en lugar de ejecutar desde el código fuente, consulta la [guía del instalador](docs/es/instalacion.md). Los paquetes con `pipx` y la AppImage para Linux llegarán más adelante.
+Para generar un instalador de Windows o un AppImage de Linux en lugar de ejecutar desde el código fuente, consulta la [guía de instaladores](docs/es/instalacion.md). El paquete con `pipx` llegará más adelante.
 
 ## Uso rápido
 

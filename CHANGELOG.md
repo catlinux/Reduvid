@@ -15,6 +15,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Motor: `core/thumbnail.py` extrae una miniatura JPEG de cada vídeo (fotograma al 10 %) y la guarda en la caché del usuario; la usará la interfaz rediseñada.
 - Motor: `core/hardware.py` comprueba qué codificadores por hardware (NVENC, QSV, VAAPI, AMF) funcionan de verdad codificando un fotograma con cada uno, con caché por versión de FFmpeg. FFmpeg los anuncia aunque el driver no los admita.
 - Motor: `core/profile_store.py` guarda perfiles con nombre (destino, calidad, contenedor, altura máxima, idiomas y opciones de audio) como archivos TOML en la configuración del usuario. Los índices de pista no se guardan porque solo valen para un vídeo concreto.
+- AppImage de Linux (`packaging/linux/`) y el job `build-linux` del CI, recuperados de la rama paralela de Windows; la guía de instaladores vuelve a explicar Linux. Pendiente de probar en un Debian real.
 - CLI: `--no-hw-decode` en `convert` y `estimate`, y la clave de configuración `hw_decode = false`, para no usar la tarjeta gráfica.
 
 ## [0.6.1] - 2026-10-27
