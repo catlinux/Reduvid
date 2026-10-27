@@ -7,7 +7,7 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 ## High priority
 
 - Decide how external code contributions are licensed before accepting the first one: the license only covers material owned by Catlinux.
-- 0.6.0, helpers: final report, saved profiles and warnings for HDR, 10-bit video and image subtitles in the interface.
+- 0.7.0 → 0.9.0: GPU decoding when available, thumbnails, final report, saved profiles, early HDR/10-bit/image subtitle warnings and the visual redesign of the three themes. Steps in [.agents/plans/rediseno/rediseno.PLAN.md](.agents/plans/rediseno/rediseno.PLAN.md) (in Spanish).
 
 ## Medium priority
 

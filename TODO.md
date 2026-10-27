@@ -7,7 +7,7 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 ## Prioridad alta
 
 - Definir cómo se licencian las contribuciones externas de código antes de aceptar la primera: la licencia solo cubre material de Catlinux.
-- 0.6.0, ayudas: informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz.
+- 0.7.0 → 0.9.0: decodificar con la gráfica si la hay, miniaturas, informe final, perfiles guardados, avisos tempranos de HDR, 10 bits y subtítulos de imagen, y el rediseño visual de los tres temas. Pasos en [.agents/plans/rediseno/rediseno.PLAN.md](.agents/plans/rediseno/rediseno.PLAN.md).
 
 ## Prioridad media
 
