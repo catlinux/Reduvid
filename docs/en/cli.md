@@ -37,27 +37,29 @@ reduvid-cli convert movie.mkv --keep-audio ca,es --keep-subs ca,und
 reduvid-cli convert movie.mkv --audio-tracks 1,3 --reduce-audio
 ```
 
-By default, the converted file is written next to the original with the `_reduvid` suffix (for example `movie_reduvid.mkv`), without touching the source. The original is only sent to the trash if you pass `--replace-original`, and only after checking the conversion is correct.
+By default, the converted file is written next to the original with the `_reduvid` suffix (for example `movie_reduvid.mp4` with the Cinecat profile, or `movie_reduvid.mkv` with `--container mkv`), without touching the source. The original is only sent to the trash if you pass `--replace-original`, and only after checking the conversion is correct.
 
 ### Options
 
 | Option | Values | Default | What it does |
 | --- | --- | --- | --- |
-| `--target` | `jellyfin`, `modern`, `archive` | `jellyfin` | Destination profile. `jellyfin` prioritizes direct playback on Jellyfin (H.264); `modern` uses H.265 for more savings; `archive` is H.265 with maximum compression and a slower preset. |
+| `--target` | `cinecat`, `modern`, `archive` | `cinecat` | Destination profile. `cinecat` uses 8-bit H.264 so Cinecat can direct-play it in the browser; `modern` uses H.265 for more savings; `archive` is H.265 with maximum compression and a slower preset. |
 | `--quality` | `high`, `balanced`, `max_savings` | `balanced` | Quality/size level. See the CRF table in the [README](../../README.en.md). |
-| `--container` | `mkv`, `mp4` | `mkv` | Output file format. |
+| `--container` | `mkv`, `mp4` | automatic | Output file format. Without this option, MP4 is used with `cinecat` and MKV with the other destinations. |
 | `--audio-tracks` | comma-separated track indices | all | Keeps only the audio tracks with those ffprobe indices (`0`, `1`...). Overrides `--keep-audio`. |
 | `--one-audio-per-language` | — | off | Keeps only the highest-quality audio track for each language (channels, bitrate and default flag). |
 | `--reduce-audio` | — | off | Re-encodes audio tracks to AAC (256 kbps multichannel, 128 kbps stereo) to save space. |
 | `--keep-audio` | comma-separated languages | all | Keeps only the audio tracks in those languages; `und` means "no language". If none match, all are kept and a warning is shown. |
 | `--keep-subs` | comma-separated languages | all | Keeps only the subtitles in those languages (`und` means "no language"). There may be none left. |
-| `--max-height` | integer | `1080` (on `jellyfin`) | Maximum video height: if the source is taller it is scaled down to this value; it never scales up. Without it, `jellyfin` scales down to 1080p and the other profiles keep the resolution. |
+| `--max-height` | integer | `1080` (on `cinecat`) | Maximum video height: if the source is taller it is scaled down to this value; it never scales up. Without it, `cinecat` scales down to 1080p and the other profiles keep the resolution. |
 | `--output-dir` | folder | the original's folder | Where converted files are written. |
 | `--recursive` | — | off | If the argument is a folder, also look for videos in its subfolders. |
 | `--threads` | integer | FFmpeg's own choice | Number of encoding threads (`-threads`). |
 | `--no-hw-decode` | — | off (the GPU is used when available) | Does not use the graphics card to read the videos; by default the GPU is tried when available and the CPU is used if it fails. |
 | `--replace-original` | — | off | Sends the original to the system trash (never deletes it permanently) once the conversion has been verified. |
 | `--dry-run` | — | off | Shows what would happen (output file, per-track decisions, warnings) without converting anything. |
+
+With `--target cinecat`, audio that is not AAC or MP3 is re-encoded to AAC (384 kbps for 5.1, 192 kbps for stereo, up to 6 channels). When the container is MP4 (the automatic one), files are written with `+faststart`, text subtitles become `mov_text` and image subtitles are dropped with a warning.
 
 ### Dry run (`--dry-run`)
 
@@ -79,7 +81,7 @@ Dry run complete.
 
 ### Warnings
 
-During conversion you may see warnings about plan decisions: resolution reduced to 1080p, HDR converted to SDR (or a warning if FFmpeg lacks the needed filters), image subtitles kept with a warning that Jellyfin will "burn" them in, image subtitles dropped in MP4, or audio tracks re-encoded or reduced to AAC to save space. They are printed as-is in the command's output.
+During conversion you may see warnings about plan decisions: resolution reduced to 1080p, HDR converted to SDR (or a warning if FFmpeg lacks the needed filters), image subtitles dropped in MP4 or kept in MKV with a warning that Cinecat cannot show them, or audio tracks re-encoded or reduced to AAC to save space. They are printed as-is in the command's output.
 
 ### When it finishes
 
@@ -123,6 +125,8 @@ ffmpeg_path = "/full/path/to/ffmpeg"
 ```
 
 You can also disable hardware decoding in the configuration with `hw_decode = false`.
+
+Old configurations with `destination = "jellyfin"` are migrated automatically to `cinecat` (their old `container = "mkv"` goes back to automatic).
 
 ## Exit codes
 

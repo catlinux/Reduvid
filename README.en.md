@@ -2,14 +2,14 @@
 
 [Castellano](README.md) · **English**
 
-Easy, cross-platform video compressor for your Jellyfin library: shrink files with H.264/H.265 while keeping subtitles and chapters. Step-by-step wizard. Powered by FFmpeg.
+Easy, cross-platform video compressor built for [Cinecat](https://github.com/catlinux/Cinecat) libraries, the author's media server: shrink files with H.264/H.265 while keeping subtitles and chapters. Step-by-step wizard. Powered by FFmpeg.
 
 ## What it is
 
 Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for Linux and Windows that makes your videos smaller with very little quality loss. It uses [FFmpeg](https://ffmpeg.org/) under the hood, but you don't need to know anything about codecs: a wizard asks where you'll watch the videos and how much space you want to save, and explains every option in plain language.
 
 - **Your originals stay untouched.** Reduvid writes a new file, checks that it is complete, and only then gives it its final name. It never overwrites anything.
-- **Built for Jellyfin.** A "Jellyfin compatible" profile produces video that plays directly on almost any device, without the server having to convert it.
+- **Built for Cinecat.** A "Cinecat" profile produces MP4 with 8-bit H.264 that Cinecat direct-plays in the browser, without the server having to convert it.
 - **Keeps what matters:** subtitles, chapters, audio tracks and languages, metadata and cover art.
 - **For everyone:** Wizard mode (one decision per screen), Advanced mode (everything in one view), and a command line for servers and scripts.
 
@@ -78,21 +78,21 @@ To build a Windows installer or a Linux AppImage instead of running from source,
 
 ```bash
 reduvid-cli probe video.mkv              # See what a video contains
-reduvid-cli convert video.mkv            # Convert it with the default Jellyfin profile
+reduvid-cli convert video.mkv            # Convert it with the default Cinecat profile
 reduvid-cli convert folder/ --recursive  # Convert an entire folder
 ```
 
 Interface guide (wizard and Advanced mode) in [docs/en/gui.md](docs/en/gui.md). Full details on commands, options and exit codes in the [command-line guide](docs/en/cli.md).
 
-## H.264 or H.265 for Jellyfin?
+## H.264 or H.265 for Cinecat?
 
-| | H.264 ("Jellyfin compatible") | H.265 / HEVC |
+| | 8-bit H.264 in MP4 ("Cinecat") | H.265 / HEVC ("modern") |
 |---|---|---|
 | Typical savings | 20-40 % | 40-70 % |
-| Plays directly on | Almost everything: TVs, phones, browsers | Modern devices; elsewhere Jellyfin converts it on the server or fails |
-| Choose it if | You watch on several devices, or you're not sure | Your devices are modern, or you only want to archive |
+| Direct play in Cinecat | Yes, in the browser | No: Cinecat converts it while you watch |
+| Choose it if | You watch in the browser, or you're not sure | Your devices are modern, or you only want to archive |
 
-These figures are rough and depend on each video; Reduvid's sample test (since 0.4.0) gives the real number. Even with a compatible codec, Jellyfin also transcodes 10-bit video, HDR, some image subtitles (PGS, VobSub) and DTS or TrueHD audio. Reduvid warns about each case and suggests a fix.
+Cinecat only direct-plays MP4 in the browser. 8-bit H.264 in MP4 is what works in every browser; for Cinecat not to convert anything, the video must be 8-bit H.264 up to 1080p, and the audio AAC or MP3. The Cinecat profile already prepares it that way, converts HDR to SDR and drops image subtitles with a warning. H.265 takes less space, but Cinecat will have to convert it while you watch, using the server's CPU. These figures are rough and depend on each video; Reduvid's sample test (since 0.4.0) gives the real number.
 
 ## Privacy
 

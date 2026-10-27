@@ -39,7 +39,7 @@ python scripts/check_doc_sync.py
 Usamos [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/), con el tipo en inglés y la descripción en castellano:
 
 ```text
-feat: añade perfil Jellyfin compatible
+feat: añade perfil Cinecat compatible
 fix: no sobrescribe la salida si ya existe
 ```
 

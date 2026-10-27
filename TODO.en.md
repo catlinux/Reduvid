@@ -12,7 +12,7 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 ## Medium priority
 
 - 0.7.0 → 1.0.0: pipx, AppImage, testing the Windows installer on a clean machine, screenshots and first release.
-- When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.
+- When creating the GitHub repository: "About" description, topics (`video`, `ffmpeg`, `cinecat`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) and private vulnerability reporting enabled.
 
 ## Low priority / later
 
@@ -21,7 +21,6 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 - AV1 (libsvtav1): the profile architecture already allows it; the profile, tests and explanation are missing.
 - Polished hardware acceleration (NVENC, QSV, VAAPI): in 0.1.0 it is only detected and reported.
 - Qt-free install for Linux servers (`reduvid-cli` only): decide in phase 4 how to split off the PySide6 dependency.
-- A target profile for the author's own playback platform, once it exists.
 - OCR of image subtitles into text (would need Tesseract as an external tool).
 - .deb and Flatpak packages.
 - macOS: not a goal for now; don't break it without reason.
