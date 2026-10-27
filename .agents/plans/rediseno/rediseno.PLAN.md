@@ -15,6 +15,8 @@ Maqueta aprobable: https://claude.ai/artifact/ADqmDRoDWKx9JcdyoABB1X (privada; 6
 - Estructura nueva común: barra lateral fija (logo, pasos, modo, preferencias), contenido con columna de contexto «Tu vídeo» a la derecha, navegación Atrás/Continuar al pie del contenido, y **barra de transporte** inferior a todo el ancho que hace de cola (sustituye a `QueuePanel` como columna).
 - Sin sombras de QSS (no existen): la sombra desplazada de Riso, la esquina doblada de Plegat y las franjas de Cinta se pintan con `QPainter`.
 - La gráfica se usa **si la hay** y, si falla, se vuelve a la CPU sin intervención (petición del usuario).
+- **Maqueta de Plegat aprobada** (2026-10-27, «me gusta Plegat»). Se implementa primero la estructura común con Plegat; Riso y Cinta, después, sobre la misma estructura.
+- **Modo «Rápido» con la gráfica: sí** (2026-10-27), pero solo se ofrece cuando `probe_hardware_encoders` confirma un codificador que funciona; si no hay ninguno, la opción no aparece y todo sigue por CPU. Paso A8.
 
 ## Fase A: motor y funciones (no depende de la maqueta)
 
@@ -26,7 +28,9 @@ Maqueta aprobable: https://claude.ai/artifact/ADqmDRoDWKx9JcdyoABB1X (privada; 6
 - [~] **A6. Rescatar de la rama paralela de Windows** *((a) motor hecho en 0.7.0: `core/profile_store.py`; decisión: no guarda `audio_tracks` (índices de un archivo concreto) y prefija los nombres reservados de Windows. La integración en la interfaz, (b) y (c) se harán dentro de B5 para no programar dos veces las pantallas)* (segundo padre del merge `419e676`, commits hasta `35970a1`), reimplementándolo sobre la base actual, un commit por punto: (a) perfiles guardados (`core/profile_store.py` + paso Calidad), (b) avisos de compatibilidad tempranos en Calidad (HDR, 10 bits, subtítulos de imagen), (c) comparación antes/después de un fotograma en la prueba de muestra. Leer el código antiguo con `git show 35970a1:<ruta>`. *AgentRelay, esfuerzo alto; la sesión revisa.* 0.8.0.
 - [~] **A7. AppImage.** *(Archivos, CI y docs recuperados en 0.7.0, idénticos al original y con sintaxis comprobada; falta que el usuario lo construya y lo pruebe en su Debian)* Traer `packaging/linux/` de `35970a1`, adaptarlo y añadir el job `build-linux` al CI; el usuario lo prueba en su Debian. *AgentRelay, esfuerzo medio.* 0.8.x.
 
-## Fase B: rediseño (empezar solo con la maqueta aprobada)
+- [ ] **A8. Modo «Rápido» con la gráfica.** Perfil de codificación por hardware (HEVC/H.264 con NVENC, QSV, VAAPI o AMF, el primero que confirme `probe_hardware_encoders`), con calidad constante equivalente a cada nivel (`-cq`/`-global_quality`/`-qp` según el codificador). Solo se ofrece si hay uno que funciona; si la codificación falla, repite el vídeo con el perfil normal por CPU. Diseño del mapeo de calidad: sesión (Opus); implementación: AgentRelay, esfuerzo alto. 0.8.0.
+
+## Fase B: rediseño (maqueta de Plegat aprobada)
 
 - [ ] **B1. Tokens ampliados y QSS.** `ThemeTokens` gana lo que la maqueta usa: radios por componente, grosor de borde, desplazamiento de sombra (Riso), colores de barra lateral, chips, segmentos, estados hover/pressed/disabled. QSS regenerado; tests de que los 6 juegos (3 temas × claro/oscuro) generan QSS válido y contrastes ≥ 4,5:1 en texto. *AgentRelay, esfuerzo alto; maqueta en references.*
 - [ ] **B2. Estructura de ventana.** `MainWindow`: barra lateral (logo + `StepList` nueva + modo segmentado + Preferencias), contenido + columna «Tu vídeo», barra de transporte inferior (`TransportBar`, reemplaza `QueuePanel`; misma API de señales que hoy). Diseño compacto (< 900 px): la columna de contexto pasa debajo. *AgentRelay, esfuerzo xhigh.*
@@ -42,4 +46,4 @@ Maqueta aprobable: https://claude.ai/artifact/ADqmDRoDWKx9JcdyoABB1X (privada; 6
 ## Dudas abiertas
 
 - ¿Pasar el perfil «archive» de `preset slow` a `medium`? En la medición sintética de este PC, `slow` tardó 2,2 veces más sin dar un archivo menor; falta medir con vídeo real antes de decidir. Cambia el comportamiento: lo decide el usuario.
-- ¿Añadir un modo «Rápido» que codifique con la gráfica (NVENC/QSV/VAAPI) cuando A3 confirme que funciona? Archivos mayores a igual calidad: decisión del usuario.
+- ¿Riso y Cinta tal como están en la maqueta, o hay que retocarlos? Pendiente de respuesta; no bloquea, porque se empieza por Plegat.
