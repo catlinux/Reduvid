@@ -44,7 +44,7 @@ Hoja de ruta y estado de cada paso: [.agents/plans/reduvid/reduvid.PLAN.md](.age
 - Seguridad: procesos siempre con lista de argumentos, nunca `shell=True` ni texto concatenado. Las rutas se pasan absolutas (`Path.resolve()`), así ningún nombre puede empezar por `-` y confundirse con una opción.
 - Rutas con `pathlib`; directorios de usuario con `platformdirs`. Cuidado con espacios, tildes y Unicode (hay tests).
 - Los originales no se tocan nunca por defecto. Se escribe a un temporal en la carpeta de destino y solo se renombra tras verificar. Nunca se sobrescribe.
-- Sin telemetría ni conexiones de red.
+- Sin telemetría. La única conexión de red permitida es la comprobación y descarga de actualizaciones desde las releases de GitHub (activada por defecto, desactivable, sin enviar datos); diseño en [.agents/plans/actualizaciones/actualizaciones.PLAN.md](.agents/plans/actualizaciones/actualizaciones.PLAN.md).
 - Comentarios solo para el porqué no obvio; en el perfil Cinecat, cada valor lleva su porqué.
 - Textos de la interfaz siempre por gettext (`_()`); sin jerga sin explicar.
 

@@ -9,6 +9,8 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 - Decide how external code contributions are licensed before accepting the first one: the license only covers material owned by Catlinux.
 - 0.7.0 → 0.9.0: GPU decoding when available, thumbnails, final report, saved profiles, early HDR/10-bit/image subtitle warnings and the visual redesign of the three themes. Steps in [.agents/plans/rediseno/rediseno.PLAN.md](.agents/plans/rediseno/rediseno.PLAN.md) (in Spanish).
 
+- Automatic updates from GitHub releases (check, download, verify and install), version 0.9.0. Steps in [.agents/plans/actualizaciones/actualizaciones.PLAN.md](.agents/plans/actualizaciones/actualizaciones.PLAN.md) (in Spanish).
+
 ## Medium priority
 
 - 0.7.0 → 1.0.0: pipx, AppImage, testing the Windows installer on a clean machine, screenshots and first release.
@@ -32,4 +34,4 @@ The detailed plan for each step is in [.agents/plans/reduvid/reduvid.PLAN.md](.a
 - **Shipping FFmpeg in the repository or packages:** for licensing (GPL of libx264/libx265) and size reasons. The system's FFmpeg is used.
 - **Tkinter:** it doesn't allow the distinctive design the project wants.
 - **Full PySide6 (with Addons):** much heavier and unnecessary; PySide6-Essentials is enough.
-- **Telemetry or online update checks:** the program does not connect to the network.
+- **Telemetry:** the program sends no usage data. Its only connection is the update check (see high priority).
