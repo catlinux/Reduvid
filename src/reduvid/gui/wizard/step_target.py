@@ -18,11 +18,11 @@ def _options() -> tuple[tuple[str, str, str, str, str], ...]:
         (
             "cinecat",
             "cinecat",
-            _("Jellyfin"),
+            _("Cinecat"),
             _("H.264"),
             _(
-                "Plays directly on almost any TV, phone or browser through your Jellyfin "
-                "server. Files are larger and 4K is scaled down to 1080p."
+                "Plays directly in your Cinecat server, in any browser. MP4 files, and 4K "
+                "is reduced to 1080p."
             ),
         ),
         (
@@ -50,7 +50,7 @@ def _options() -> tuple[tuple[str, str, str, str, str], ...]:
             "cinecat",
             _("I don't know"),
             "",
-            _("Use the Jellyfin profile, which works on almost everything."),
+            _("Use the Cinecat profile, which plays in any browser."),
         ),
     )
 

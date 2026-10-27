@@ -76,7 +76,7 @@ def test_unknown_keys_are_ignored_and_invalid_keys_reported(tmp_path: Path) -> N
     assert set(invalid) == {"theme", "language", "reduce_motion"}
 
 
-def test_legacy_jellyfin_destination_is_migrated(tmp_path: Path) -> None:
+def test_legacy_destination_is_migrated(tmp_path: Path) -> None:
     target = tmp_path / "config.toml"
     target.write_text(
         'destination = "jellyfin"\ncontainer = "mkv"\n',

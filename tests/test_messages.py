@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
 # Copyright (C) 2026 Catlinux
 
+import re
 import subprocess
 import sys
 from collections.abc import Iterator
@@ -26,6 +27,7 @@ WARNING_PARAMS: dict[str, dict[str, object]] = {
     "image_subtitle_dropped_mp4": {"stream_index": 2},
     "audio_filter_kept_all": {},
     "not_direct_play_profile": {"destination": "modern"},
+    "not_direct_play_container": {"container": "mkv"},
     "ten_bit_video": {"stream_index": 0},
 }
 ERROR_CODES = (
@@ -93,6 +95,21 @@ def test_every_warning_has_catalan_and_spanish_text() -> None:
             text = warning_text(Warning(code, params))
             assert text
             assert text != english[code]
+
+
+def test_every_warning_code_used_by_the_engine_has_text() -> None:
+    engine_sources = "\n".join(
+        (ROOT / "src" / "reduvid" / "core" / name).read_text(encoding="utf-8")
+        for name in ("plan.py", "compat.py")
+    )
+    codes = set(re.findall(r'Warning\(\s*"([^"]+)"', engine_sources))
+
+    assert codes
+    assert codes <= set(WARNING_PARAMS)
+    i18n.setup_language("en")
+    for code in codes:
+        text = warning_text(Warning(code, WARNING_PARAMS[code]))
+        assert "Unknown warning" not in text
 
 
 def test_every_error_code_has_catalan_and_spanish_text() -> None:

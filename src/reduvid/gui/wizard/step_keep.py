@@ -351,10 +351,7 @@ class StepKeep(QWidget):
         if note == "image_dropped_mp4":
             text = _("Image subtitles do not fit in MP4 and will be dropped. Text ones are kept.")
         elif note == "image_kept_mkv":
-            text = _(
-                "Image subtitles are kept in MKV, but Jellyfin will have to burn them in "
-                "while playing."
-            )
+            text = _("Image subtitles are kept in MKV, but Cinecat cannot show them.")
         else:
             text = ""
         self.subtitle_container_note.setText(text)

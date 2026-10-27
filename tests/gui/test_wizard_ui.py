@@ -161,7 +161,7 @@ def test_quality_recommendation_follows_the_destination(qapp) -> None:
     quality = window.content.widget(2)
 
     assert quality.cards["balanced"].tag_label.text() == "Recommended"
-    assert "Jellyfin" in quality.recommendation_label.text()
+    assert "Cinecat" in quality.recommendation_label.text()
 
     window.wizard_state.set_destination("archive")
 

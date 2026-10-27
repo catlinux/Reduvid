@@ -143,7 +143,7 @@ def test_option_cards_keep_a_description(tmp_path: Path, qapp) -> None:
 
 
 def test_option_card_estimate_and_notes_stay_hidden_until_set(qapp) -> None:
-    card = OptionCard("Jellyfin", "Recommended", "Streams to your TV")
+    card = OptionCard("Cinecat", "Recommended", "Streams to your TV")
     description = card.accessibleDescription()
 
     card.set_estimate("")
@@ -154,7 +154,7 @@ def test_option_card_estimate_and_notes_stay_hidden_until_set(qapp) -> None:
 
 
 def test_option_card_estimate_and_notes_feed_the_description(qapp) -> None:
-    card = OptionCard("Jellyfin", "Recommended", "Streams to your TV")
+    card = OptionCard("Cinecat", "Recommended", "Streams to your TV")
 
     card.set_estimate("About 1.2 GB")
     card.set_notes(["Keeps HDR", "Same audio tracks"])

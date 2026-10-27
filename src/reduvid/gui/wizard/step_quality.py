@@ -76,8 +76,8 @@ def _recommendation(destination: str) -> str:
             "very good quality."
         )
     return _(
-        "Why Balanced? You will watch them on Jellyfin: it saves a lot of space and "
-        "plays directly, without the server converting anything."
+        "Why Balanced? You will watch them on Cinecat: it saves a lot of space and "
+        "plays directly in the browser, without the server having to convert anything."
     )
 
 

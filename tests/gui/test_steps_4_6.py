@@ -285,7 +285,7 @@ def test_step_keep_explains_the_container_and_groups_subtitles(tmp_path: Path, q
     state.set_container("mkv")
 
     assert step.subtitle_container_note.text() == (
-        "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
+        "Image subtitles are kept in MKV, but Cinecat cannot show them."
     )
 
     state.set_container("mp4")
@@ -347,9 +347,11 @@ def test_step_destination_controls_container_folder_and_4k(tmp_path: Path, qapp)
     step = StepDestination(state)
 
     assert state.container is None
-    assert not any(card.isChecked() for card in step.container_cards.values())
-    step.container_cards["mp4"].click()
-    assert state.container == "mp4"
+    assert step.container_cards["mp4"].isChecked()
+    assert step.container_cards["mp4"].tag_label.text() == "Recommended"
+    assert step.container_cards["mp4"].description_label.text() == "Plays directly in Cinecat"
+    assert step.container_cards["mkv"].tag_label.text() == ""
+    assert "Cinecat will convert it" in step.container_cards["mkv"].description_label.text()
 
     assert step.same_folder_radio.isChecked()
     step.other_folder_radio.click()
@@ -369,6 +371,11 @@ def test_step_destination_controls_container_folder_and_4k(tmp_path: Path, qapp)
 
     state.set_destination("modern")
     assert step.reduce_4k.isHidden()
+    assert step.container_cards["mkv"].isChecked()
+    assert step.container_cards["mkv"].tag_label.text() == "Recommended"
+    assert step.container_cards["mp4"].tag_label.text() == "More compatible"
+    step.container_cards["mp4"].click()
+    assert state.container == "mp4"
 
 
 def test_summary_traffic_lights_warnings_and_skip_decisions(tmp_path: Path, qapp) -> None:

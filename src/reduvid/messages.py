@@ -24,8 +24,7 @@ def warning_text(warning: Warning) -> str:
             "cannot convert it to SDR."
         ),
         "audio_recoded": _(
-            "Audio track {stream_index} will be converted to {codec} so that "
-            "Jellyfin can play it directly."
+            "Audio track {stream_index} will be converted to {codec} so that it plays directly."
         ),
         "audio_reduced": _(
             "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
@@ -41,12 +40,15 @@ def warning_text(warning: Warning) -> str:
             "No audio track matches the selected languages, so all of them will be kept."
         ),
         "not_direct_play_profile": _(
-            "{destination} output is not the Jellyfin profile, so Jellyfin may have to "
-            "transcode it."
+            "The {destination} profile is not prepared for Cinecat, so Cinecat may have "
+            "to convert it while you watch."
+        ),
+        "not_direct_play_container": _(
+            "Cinecat only plays MP4 files directly; a {container} file will be converted "
+            "while you watch."
         ),
         "ten_bit_video": _(
-            "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot "
-            "play directly."
+            "Video track {stream_index} is 10-bit, which browsers cannot always play directly."
         ),
     }
     template = templates.get(warning.code)

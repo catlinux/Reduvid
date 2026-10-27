@@ -53,7 +53,7 @@ def test_all_motifs_paint_without_errors(key: tuple[str, str], qapp) -> None:
 def test_option_card_paints_checked_and_unchecked(key: tuple[str, str], qapp) -> None:
     tokens = THEMES[key]
     set_active_tokens(tokens)
-    card = OptionCard("Jellyfin", "Recommended", "A description")
+    card = OptionCard("Cinecat", "Recommended", "A description")
     card.resize(260, 90)
     try:
         card.grab()

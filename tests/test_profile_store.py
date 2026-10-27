@@ -76,7 +76,7 @@ def test_none_and_empty_sets_survive(tmp_path: Path) -> None:
     assert load_profile("conjuntos vacíos", directory) == empty
 
 
-def test_legacy_jellyfin_profile_drops_the_old_mkv_default(tmp_path: Path) -> None:
+def test_legacy_profile_drops_the_old_mkv_default(tmp_path: Path) -> None:
     directory = tmp_path / "profiles"
     directory.mkdir()
     (directory / "legacy.toml").write_text(
@@ -90,7 +90,7 @@ def test_legacy_jellyfin_profile_drops_the_old_mkv_default(tmp_path: Path) -> No
     assert loaded.container is None
 
 
-def test_legacy_jellyfin_profile_migrates_and_missing_container_is_automatic(
+def test_legacy_profile_migrates_and_missing_container_is_automatic(
     tmp_path: Path,
 ) -> None:
     directory = tmp_path / "profiles"

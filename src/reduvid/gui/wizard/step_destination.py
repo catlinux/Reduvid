@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from reduvid.core.plan import resolve_container
 from reduvid.gui.widgets.option_card import OptionCard
 from reduvid.gui.wizard_state import WizardState
 from reduvid.i18n import _
@@ -122,7 +123,9 @@ class StepDestination(QWidget):
         self.reduce_4k.setAccessibleName(_("Reduce 4K video to 1080p"))
         self.reduce_4k.toggled.connect(self._state.set_reduce_4k)
         layout.addWidget(self.reduce_4k)
-        self.reduce_4k_hint = QLabel(_("If you keep 4K, Jellyfin will have to transcode it."), self)
+        self.reduce_4k_hint = QLabel(
+            _("If you keep 4K, Cinecat will have to convert it while you watch."), self
+        )
         self.reduce_4k_hint.setProperty("role", "muted")
         self.reduce_4k_hint.setWordWrap(True)
         layout.addWidget(self.reduce_4k_hint)
@@ -147,11 +150,7 @@ class StepDestination(QWidget):
         self.folder_edit.setEnabled(output_dir is not None)
         self.browse_button.setEnabled(output_dir is not None)
 
-        container = self._state.container
-        if container is not None:
-            card = self.container_cards.get(container)
-            if card is not None:
-                card.setChecked(True)
+        self._sync_container_cards()
 
         self.replace_original.blockSignals(True)
         self.replace_original.setChecked(self._state.replace_original)
@@ -164,6 +163,37 @@ class StepDestination(QWidget):
             self.reduce_4k.blockSignals(True)
             self.reduce_4k.setChecked(self._state.reduce_4k)
             self.reduce_4k.blockSignals(False)
+
+    def _sync_container_cards(self) -> None:
+        if self._state.destination == "cinecat":
+            self._set_container_card(
+                "mkv",
+                "",
+                _(
+                    "Keeps every track and subtitle format, but Cinecat will convert it "
+                    "while you watch"
+                ),
+            )
+            self._set_container_card("mp4", _("Recommended"), _("Plays directly in Cinecat"))
+        else:
+            self._set_container_card(
+                "mkv", _("Recommended"), _("Keeps every track and subtitle format.")
+            )
+            self._set_container_card(
+                "mp4",
+                _("More compatible"),
+                _("Plays on more devices, but image subtitles are dropped."),
+            )
+        card = self.container_cards.get(resolve_container(self._state.options()))
+        if card is not None:
+            card.setChecked(True)
+
+    def _set_container_card(self, key: str, tag: str, description: str) -> None:
+        card = self.container_cards.get(key)
+        if card is None:
+            return
+        card.description_label.setText(description)
+        card.set_label(tag)
 
     def _folder_changed(self) -> None:
         if self.other_folder_radio.isChecked():

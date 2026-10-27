@@ -28,7 +28,7 @@ msgstr " como {codec}"
 msgid " at {bitrate}"
 msgstr " a {bitrate}"
 
-#: gui/preferences.py:143 gui/preferences.py:144
+#: gui/preferences.py:141 gui/preferences.py:142
 msgid "&Accept"
 msgstr "&Aceptar"
 
@@ -40,11 +40,11 @@ msgstr "A&vanzado"
 msgid "&Back"
 msgstr "&Atrás"
 
-#: gui/preferences.py:108 gui/wizard/step_destination.py:73
+#: gui/preferences.py:106 gui/wizard/step_destination.py:74
 msgid "&Browse…"
 msgstr "&Examinar…"
 
-#: gui/preferences.py:145 gui/preferences.py:146 gui/queue_panel.py:126
+#: gui/preferences.py:143 gui/preferences.py:144 gui/queue_panel.py:126
 msgid "&Cancel"
 msgstr "&Cancelar"
 
@@ -158,11 +158,11 @@ msgstr "Añadir una carpeta…"
 msgid "Add the videos you want to shrink. You can also drop files or folders here."
 msgstr "Añade los vídeos que quieres reducir. También puedes arrastrar archivos o carpetas aquí."
 
-#: gui/wizard/step_keep.py:274
+#: gui/wizard/step_keep.py:275
 msgid "Add videos to see their audio languages."
 msgstr "Añade vídeos para ver sus idiomas de audio."
 
-#: gui/wizard/step_keep.py:312
+#: gui/wizard/step_keep.py:313
 msgid "Add videos to see their subtitle languages."
 msgstr "Añade vídeos para ver sus idiomas de subtítulos."
 
@@ -194,7 +194,7 @@ msgstr "Todas las opciones en un solo lugar. Se comparten con el asistente."
 msgid "Almost identical"
 msgstr "Casi idéntica"
 
-#: gui/wizard/step_keep.py:181
+#: gui/wizard/step_keep.py:182
 msgid ""
 "An audio track is the sound of the video, and its format (such as AC3, E-AC3 or AAC) is how that "
 "sound is stored. MP4 accepts text subtitles but not image ones, which only fit in MKV. Reducing "
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Analysing…"
 msgstr "Analizando…"
 
-#: gui/wizard/step_destination.py:61 gui/wizard/step_destination.py:62
+#: gui/wizard/step_destination.py:62 gui/wizard/step_destination.py:63
 msgid "Another folder"
 msgstr "Otra carpeta"
 
@@ -219,15 +219,15 @@ msgstr "Otra carpeta"
 msgid "Approximate conversion time: {duration}"
 msgstr "Tiempo aproximado de conversión: {duration}"
 
-#: gui/wizard/step_keep.py:202
+#: gui/wizard/step_keep.py:203
 msgid "Audio"
 msgstr "Audio"
 
-#: gui/wizard/step_keep.py:121 gui/wizard/step_keep.py:202
+#: gui/wizard/step_keep.py:122 gui/wizard/step_keep.py:203
 msgid "Audio languages"
 msgstr "Idiomas de audio"
 
-#: gui/wizard/step_keep.py:153
+#: gui/wizard/step_keep.py:154
 msgid "Audio size"
 msgstr "Peso del audio"
 
@@ -238,12 +238,10 @@ msgstr "Pista de audio {index}: {details}"
 
 #: messages.py:27
 #, python-brace-format
-msgid "Audio track {stream_index} will be converted to {codec} so that Jellyfin can play it directly."
-msgstr ""
-"La pista de audio {stream_index} se convertirá a {codec} para que Jellyfin la pueda reproducir "
-"directamente."
+msgid "Audio track {stream_index} will be converted to {codec} so that it plays directly."
+msgstr "La pista de audio {stream_index} se convertirá a {codec} para que se reproduzca directamente."
 
-#: messages.py:31
+#: messages.py:30
 #, python-brace-format
 msgid "Audio track {stream_index} will be reduced to AAC at {bitrate} to save space."
 msgstr "La pista de audio {stream_index} se reducirá a AAC a {bitrate} para ahorrar espacio."
@@ -270,11 +268,11 @@ msgstr "Automática"
 msgid "Balanced"
 msgstr "Equilibrada"
 
-#: gui/preferences.py:110
+#: gui/preferences.py:108
 msgid "Browse for ffmpeg"
 msgstr "Buscar el archivo de FFmpeg"
 
-#: gui/wizard/step_destination.py:75
+#: gui/wizard/step_destination.py:76
 msgid "Browse for the output folder"
 msgstr "Buscar la carpeta de salida"
 
@@ -311,11 +309,11 @@ msgstr "Cancelando…"
 msgid "Catalan"
 msgstr "Catalán"
 
-#: gui/preferences.py:112
+#: gui/preferences.py:110
 msgid "Check"
 msgstr "Comprobar"
 
-#: gui/preferences.py:114
+#: gui/preferences.py:112
 msgid "Check FFmpeg"
 msgstr "Comprobar FFmpeg"
 
@@ -335,7 +333,7 @@ msgstr ""
 "Elige cuánto quieres reducir. Los tamaños solo se conocen tras estimarlos; puedes cambiarlo más "
 "adelante."
 
-#: gui/wizard/step_keep.py:115
+#: gui/wizard/step_keep.py:116
 msgid "Choose the audio and subtitle languages you understand."
 msgstr "Elige los idiomas de audio y de subtítulos que entiendas."
 
@@ -343,11 +341,11 @@ msgstr "Elige los idiomas de audio y de subtítulos que entiendas."
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Elige el dispositivo que usarás más. Puedes cambiarlo más adelante."
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:185
+#: gui/ffmpeg_missing.py:107 gui/preferences.py:183
 msgid "Choose the ffmpeg executable"
 msgstr "Elige el ejecutable de ffmpeg"
 
-#: gui/wizard/step_destination.py:184
+#: gui/wizard/step_destination.py:216
 msgid "Choose the output folder"
 msgstr "Elige la carpeta de salida"
 
@@ -355,20 +353,35 @@ msgstr "Elige la carpeta de salida"
 msgid "Choose videos"
 msgstr "Elige vídeos"
 
-#: gui/wizard/step_destination.py:51
+#: gui/wizard/step_destination.py:52
 msgid "Choose where the converted files go and how they are stored."
 msgstr "Elige dónde van los archivos convertidos y cómo se guardan."
+
+#: gui/advanced_page.py:82 gui/wizard/step_target.py:21
+msgid "Cinecat"
+msgstr "Cinecat"
+
+#: messages.py:47
+#, python-brace-format
+msgid "Cinecat only plays MP4 files directly; a {container} file will be converted while you watch."
+msgstr ""
+"Cinecat solo reproduce archivos MP4 directamente; un archivo {container} se convertirá mientras "
+"lo ves."
+
+#: gui/wizard/step_summary.py:66
+msgid "Cinecat will convert it while playing"
+msgstr "Cinecat lo convertirá mientras se reproduce"
 
 #: gui/wizard/step_quality.py:266
 #, python-brace-format
 msgid "Codec: {codec}"
 msgstr "Códec: {codec}"
 
-#: gui/preferences.py:67 gui/preferences.py:129
+#: gui/preferences.py:67 gui/preferences.py:127
 msgid "Colour mode"
 msgstr "Modo de color"
 
-#: gui/wizard/step_destination.py:82
+#: gui/wizard/step_destination.py:83
 msgid "Container"
 msgstr "Contenedor"
 
@@ -410,7 +423,7 @@ msgstr "Convirtiendo…"
 msgid "Could not estimate the size: {message}"
 msgstr "No se ha podido estimar el tamaño: {message}"
 
-#: gui/preferences.py:194
+#: gui/preferences.py:192
 #, python-brace-format
 msgid "Could not inspect FFmpeg: {error}"
 msgstr "No se ha podido inspeccionar FFmpeg: {error}"
@@ -429,18 +442,14 @@ msgstr ""
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
-#: gui/wizard/step_keep.py:250
+#: gui/wizard/step_keep.py:251
 msgid "Default"
 msgstr "Predeterminada"
 
 #: gui/advanced_page.py:80 gui/advanced_page.py:124 gui/main_window.py:59
-#: gui/wizard/step_destination.py:48
+#: gui/wizard/step_destination.py:49
 msgid "Destination"
 msgstr "Destino"
-
-#: gui/wizard/step_summary.py:64
-msgid "Direct play"
-msgstr "Reproducción directa"
 
 #: cli.py:646
 msgid "Do not use the graphics card to read the videos"
@@ -612,11 +621,11 @@ msgstr "Explicación"
 msgid "FFmpeg is required"
 msgstr "Se necesita FFmpeg"
 
-#: gui/preferences.py:107 gui/preferences.py:135
+#: gui/preferences.py:105 gui/preferences.py:133
 msgid "FFmpeg path"
 msgstr "Ruta de FFmpeg"
 
-#: gui/preferences.py:197
+#: gui/preferences.py:195
 msgid "FFmpeg was not found at that path."
 msgstr "No se ha encontrado FFmpeg en esa ruta."
 
@@ -624,12 +633,12 @@ msgstr "No se ha encontrado FFmpeg en esa ruta."
 msgid "FFmpeg was still not found."
 msgstr "Todavía no se ha encontrado FFmpeg."
 
-#: gui/preferences.py:199
+#: gui/preferences.py:197
 #, python-brace-format
 msgid "FFmpeg {version} detected."
 msgstr "Se ha detectado FFmpeg {version}."
 
-#: gui/preferences.py:98
+#: gui/preferences.py:97
 msgid "Faster, with the same result. If it fails, Reduvid uses the processor instead."
 msgstr "Más rápido y con el mismo resultado. Si falla, Reduvid usa el procesador."
 
@@ -698,24 +707,24 @@ msgstr "Alta"
 msgid "I don't know"
 msgstr "No lo sé"
 
-#: gui/wizard/step_keep.py:214
+#: gui/wizard/step_keep.py:215
 msgid "If you do not tick any audio track, all of them are kept."
 msgstr "Si no marcas ninguna pista de audio, se conservan todas."
 
-#: gui/wizard/step_destination.py:125
-msgid "If you keep 4K, Jellyfin will have to transcode it."
-msgstr "Si conservas el 4K, Jellyfin tendrá que transcodificarlo."
+#: gui/wizard/step_destination.py:127
+msgid "If you keep 4K, Cinecat will have to convert it while you watch."
+msgstr "Si mantienes el 4K, Cinecat tendrá que convertirlo mientras lo ves."
 
 #: gui/main_window.py:300
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si sales ahora, se cancelará la conversión."
 
-#: messages.py:38
+#: messages.py:37
 #, python-brace-format
 msgid "Image subtitle track {stream_index} cannot be stored in MP4 and will be removed."
 msgstr "La pista de subtítulos de imagen {stream_index} no se puede guardar en MP4 y se eliminará."
 
-#: messages.py:34
+#: messages.py:33
 #, python-brace-format
 msgid "Image subtitle track {stream_index} will have to be converted while playing, which uses more CPU."
 msgstr ""
@@ -723,12 +732,10 @@ msgstr ""
 "lo que consume más CPU."
 
 #: gui/wizard/step_keep.py:354
-msgid "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
-msgstr ""
-"Los subtítulos de imagen se conservan en MKV, pero Jellyfin tendrá que quemarlos mientras "
-"reproduce."
+msgid "Image subtitles are kept in MKV, but Cinecat cannot show them."
+msgstr "Los subtítulos de imagen se conservan en MKV, pero Cinecat no puede mostrarlos."
 
-#: gui/wizard/step_keep.py:351
+#: gui/wizard/step_keep.py:352
 msgid "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
 msgstr "Los subtítulos de imagen no caben en MP4 y se descartarán. Los de texto sí se conservan."
 
@@ -758,14 +765,6 @@ msgstr "Italiano"
 msgid "Japanese"
 msgstr "Japonés"
 
-#: gui/advanced_page.py:82 gui/wizard/step_target.py:21
-msgid "Jellyfin"
-msgstr "Jellyfin"
-
-#: gui/wizard/step_summary.py:66
-msgid "Jellyfin will transcode"
-msgstr "Jellyfin transcodificará"
-
 #: gui/main_window.py:304
 msgid "Keep converting"
 msgstr "Seguir convirtiendo"
@@ -786,7 +785,11 @@ msgstr "Conserva solo las pistas de audio con estos índices (separados por coma
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr "Conserva solo estos idiomas de subtítulos (separados por comas; 'und' significa sin idioma)"
 
-#: gui/wizard/step_destination.py:90
+#: gui/wizard/step_destination.py:173
+msgid "Keeps every track and subtitle format, but Cinecat will convert it while you watch"
+msgstr "Conserva todas las pistas y formatos de subtítulos, pero Cinecat lo convertirá mientras lo ves"
+
+#: gui/wizard/step_destination.py:91 gui/wizard/step_destination.py:180
 msgid "Keeps every track and subtitle format."
 msgstr "Conserva todas las pistas y formatos de subtítulos."
 
@@ -794,7 +797,7 @@ msgstr "Conserva todas las pistas y formatos de subtítulos."
 msgid "Korean"
 msgstr "Coreano"
 
-#: gui/preferences.py:77 gui/preferences.py:130
+#: gui/preferences.py:77 gui/preferences.py:128
 msgid "Language"
 msgstr "Idioma"
 
@@ -815,11 +818,11 @@ msgstr "Nivel: {level}"
 msgid "Light"
 msgstr "Claro"
 
-#: gui/wizard/step_destination.py:88
+#: gui/wizard/step_destination.py:89
 msgid "MKV"
 msgstr "MKV"
 
-#: gui/wizard/step_destination.py:94
+#: gui/wizard/step_destination.py:95
 msgid "MP4"
 msgstr "MP4"
 
@@ -839,11 +842,11 @@ msgstr "Máximo ahorro"
 msgid "Modern devices"
 msgstr "Dispositivos modernos"
 
-#: gui/wizard/step_keep.py:41
+#: gui/wizard/step_keep.py:42
 msgid "Mono"
 msgstr "Mono"
 
-#: gui/wizard/step_destination.py:95
+#: gui/wizard/step_destination.py:96 gui/wizard/step_destination.py:184
 msgid "More compatible"
 msgstr "Más compatible"
 
@@ -855,7 +858,7 @@ msgstr "¿Más calidad o más espacio?"
 msgid "Needs attention"
 msgstr "Necesita atención"
 
-#: messages.py:41
+#: messages.py:40
 msgid "No audio track matches the selected languages, so all of them will be kept."
 msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que se conservarán todas."
 
@@ -871,7 +874,7 @@ msgstr "Todavía no has añadido ningún vídeo."
 msgid "Number of encoding threads"
 msgstr "Número de hilos de codificación"
 
-#: gui/wizard/step_keep.py:136 gui/wizard/step_keep.py:140
+#: gui/wizard/step_keep.py:137 gui/wizard/step_keep.py:141
 msgid "One audio track per language (the best one is kept)"
 msgstr "Una sola pista de audio por idioma (se conserva la mejor)"
 
@@ -880,7 +883,7 @@ msgstr "Una sola pista de audio por idioma (se conserva la mejor)"
 msgid "Original size: {size}"
 msgstr "Tamaño original: {size}"
 
-#: gui/wizard/step_destination.py:57 gui/wizard/step_destination.py:71
+#: gui/wizard/step_destination.py:58 gui/wizard/step_destination.py:72
 msgid "Output folder"
 msgstr "Carpeta de salida"
 
@@ -907,15 +910,17 @@ msgstr "Formato de píxel: {pixel_format}"
 msgid "Plan: {destination}, {quality}, {container}"
 msgstr "Plan: {destination}, {quality}, {container}"
 
-#: gui/wizard/step_target.py:24
-msgid ""
-"Plays directly on almost any TV, phone or browser through your Jellyfin server. Files are larger "
-"and 4K is scaled down to 1080p."
-msgstr ""
-"Se reproduce directamente en casi cualquier televisor, móvil o navegador a través de tu servidor "
-"Jellyfin. Los archivos son más grandes y el 4K se reduce a 1080p."
+#: gui/wizard/step_destination.py:177 gui/wizard/step_summary.py:64
+msgid "Plays directly in Cinecat"
+msgstr "Se reproduce directamente en Cinecat"
 
-#: gui/wizard/step_destination.py:96
+#: gui/wizard/step_target.py:24
+msgid "Plays directly in your Cinecat server, in any browser. MP4 files, and 4K is reduced to 1080p."
+msgstr ""
+"Se reproduce directamente en tu servidor Cinecat, en cualquier navegador. Archivos MP4, y el 4K "
+"se reduce a 1080p."
+
+#: gui/wizard/step_destination.py:97 gui/wizard/step_destination.py:185
 msgid "Plays on more devices, but image subtitles are dropped."
 msgstr "Se reproduce en más dispositivos, pero los subtítulos de imagen se descartan."
 
@@ -968,11 +973,12 @@ msgstr "Listo"
 msgid "Ready and verified: {percent}% smaller. The originals are untouched."
 msgstr "Listo y verificado: un {percent}% más pequeño. Los originales siguen intactos."
 
-#: gui/wizard/step_destination.py:89 gui/wizard/step_quality.py:305
+#: gui/wizard/step_destination.py:90 gui/wizard/step_destination.py:177
+#: gui/wizard/step_destination.py:180 gui/wizard/step_quality.py:305
 msgid "Recommended"
 msgstr "Recomendada"
 
-#: gui/wizard/step_destination.py:120 gui/wizard/step_destination.py:122
+#: gui/wizard/step_destination.py:121 gui/wizard/step_destination.py:123
 msgid "Reduce 4K video to 1080p"
 msgstr "Reduce el vídeo 4K a 1080p"
 
@@ -980,7 +986,7 @@ msgstr "Reduce el vídeo 4K a 1080p"
 msgid "Reduce animations"
 msgstr "Reducir animaciones"
 
-#: gui/wizard/step_keep.py:155 gui/wizard/step_keep.py:157
+#: gui/wizard/step_keep.py:156 gui/wizard/step_keep.py:158
 msgid "Reduce the audio size"
 msgstr "Reducir el peso del audio"
 
@@ -1000,7 +1006,7 @@ msgstr ""
 msgid "Remove selected"
 msgstr "Quitar los seleccionados"
 
-#: gui/wizard/step_destination.py:108 gui/wizard/step_destination.py:110
+#: gui/wizard/step_destination.py:109 gui/wizard/step_destination.py:111
 msgid "Replace the original"
 msgstr "Reemplazar el original"
 
@@ -1016,7 +1022,7 @@ msgstr "Revisa qué hará Reduvid con cada vídeo antes de empezar."
 msgid "Russian"
 msgstr "Ruso"
 
-#: gui/wizard/step_destination.py:59 gui/wizard/step_destination.py:60
+#: gui/wizard/step_destination.py:60 gui/wizard/step_destination.py:61
 msgid "Same folder as each video"
 msgstr "La misma carpeta que cada vídeo"
 
@@ -1054,7 +1060,7 @@ msgstr ""
 "Archivos más pequeños que con H.264. Los móviles, tabletas y televisores nuevos lo reproducen; "
 "los antiguos y algunos navegadores quizá no."
 
-#: messages.py:79
+#: messages.py:81
 msgid "Something went wrong while processing the file."
 msgstr "Ha ocurrido un problema al procesar el archivo."
 
@@ -1070,11 +1076,11 @@ msgstr "Empezar la conversión"
 msgid "Step content"
 msgstr "Contenido del paso"
 
-#: gui/wizard/step_keep.py:43
+#: gui/wizard/step_keep.py:44
 msgid "Stereo"
 msgstr "Estéreo"
 
-#: gui/wizard/step_keep.py:167
+#: gui/wizard/step_keep.py:168
 msgid "Subtitle languages"
 msgstr "Idiomas de subtítulos"
 
@@ -1104,20 +1110,20 @@ msgstr "Idioma del sistema"
 msgid "Technical details"
 msgstr "Detalles técnicos"
 
-#: gui/wizard/step_keep.py:341
+#: gui/wizard/step_keep.py:342
 #, python-brace-format
 msgid "The audio goes from ~{current} to ~{final}"
 msgstr "El audio pasa de ~{current} a ~{final}"
 
-#: gui/wizard/step_keep.py:339
+#: gui/wizard/step_keep.py:340
 msgid "The audio size of this video cannot be estimated."
 msgstr "No se puede estimar el peso del audio de este vídeo."
 
-#: messages.py:72
+#: messages.py:74
 msgid "The conversion was cancelled."
 msgstr "Se ha cancelado la conversión."
 
-#: messages.py:74
+#: messages.py:76
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr "El archivo convertido no ha superado las comprobaciones de seguridad y se ha descartado."
 
@@ -1126,19 +1132,19 @@ msgstr "El archivo convertido no ha superado las comprobaciones de seguridad y s
 msgid "The estimate is for the reference video: {name}."
 msgstr "La estimación es para el vídeo de referencia: {name}."
 
-#: messages.py:65
+#: messages.py:67
 msgid "The file appears to be damaged and could not be read."
 msgstr "El archivo parece dañado y no se ha podido leer."
 
-#: messages.py:77
+#: messages.py:79
 msgid "The file could not be analysed. It may be damaged or in an unsupported format."
 msgstr "No se ha podido analizar el archivo. Puede estar dañado o en un formato no compatible."
 
-#: messages.py:70
+#: messages.py:72
 msgid "The file or folder cannot be read or written because of a permissions problem."
 msgstr "No se puede leer o escribir el archivo o la carpeta por un problema de permisos."
 
-#: gui/wizard/step_destination.py:114
+#: gui/wizard/step_destination.py:115
 msgid "The original is sent to the trash only if the copy is verified."
 msgstr "El original solo va a la papelera si la copia se verifica."
 
@@ -1182,15 +1188,24 @@ msgstr ""
 "El vídeo se recodifica a H.265. Ocupa menos que H.264 con la misma calidad visual, pero algunos "
 "televisores y navegadores antiguos no pueden reproducirlo."
 
-#: gui/preferences.py:61 gui/preferences.py:128
+#: messages.py:43
+#, python-brace-format
+msgid ""
+"The {destination} profile is not prepared for Cinecat, so Cinecat may have to convert it while "
+"you watch."
+msgstr ""
+"El perfil {destination} no está preparado para Cinecat, así que Cinecat puede tener que "
+"convertirlo mientras lo ves."
+
+#: gui/preferences.py:61 gui/preferences.py:126
 msgid "Theme"
 msgstr "Tema"
 
-#: messages.py:64
+#: messages.py:66
 msgid "There is not enough free space on the destination drive."
 msgstr "No hay suficiente espacio libre en el disco de destino."
 
-#: messages.py:67
+#: messages.py:69
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
@@ -1226,14 +1241,14 @@ msgstr "Total: {original} → {estimated} estimados"
 msgid "Total: {original} → {final}"
 msgstr "Total: {original} → {final}"
 
-#: messages.py:54 messages.py:58
+#: messages.py:56 messages.py:60
 #, python-brace-format
 msgid "Unknown warning: {code}"
 msgstr "Aviso desconocido: {code}"
 
 #: gui/wizard/step_target.py:53
-msgid "Use the Jellyfin profile, which works on almost everything."
-msgstr "Usa el perfil Jellyfin, que funciona en casi todo."
+msgid "Use the Cinecat profile, which plays in any browser."
+msgstr "Usa el perfil Cinecat, que se reproduce en cualquier navegador."
 
 #: gui/preferences.py:90 gui/preferences.py:94
 msgid "Use the graphics card to read videos, when there is one"
@@ -1263,12 +1278,12 @@ msgstr "Solo vídeo: unos {size}"
 msgid "Video stream {index}: {action}, {details}"
 msgstr "Pista de vídeo {index}: {action}, {details}"
 
-#: messages.py:48
+#: messages.py:51
 #, python-brace-format
-msgid "Video track {stream_index} is 10-bit, which some Jellyfin clients cannot play directly."
+msgid "Video track {stream_index} is 10-bit, which browsers cannot always play directly."
 msgstr ""
-"La pista de vídeo {stream_index} es de 10 bits y algunos clientes de Jellyfin no pueden "
-"reproducirla directamente."
+"La pista de vídeo {stream_index} es de 10 bits; no todos los navegadores pueden reproducirla "
+"directamente."
 
 #: messages.py:23
 #, python-brace-format
@@ -1313,7 +1328,7 @@ msgstr "Aviso: no se ha podido leer el archivo de configuración: {error}"
 msgid "Warning: {text}"
 msgstr "Aviso: {text}"
 
-#: gui/main_window.py:58 gui/wizard/step_keep.py:112
+#: gui/main_window.py:58 gui/wizard/step_keep.py:113
 msgid "What to keep"
 msgstr "Qué conservar"
 
@@ -1333,11 +1348,11 @@ msgstr ""
 
 #: gui/wizard/step_quality.py:79
 msgid ""
-"Why Balanced? You will watch them on Jellyfin: it saves a lot of space and plays directly, "
-"without the server converting anything."
+"Why Balanced? You will watch them on Cinecat: it saves a lot of space and plays directly in the "
+"browser, without the server having to convert anything."
 msgstr ""
-"¿Por qué Equilibrada? Los verás en Jellyfin: ahorra mucho espacio y se reproduce directamente, "
-"sin que el servidor tenga que convertir nada."
+"¿Por qué Equilibrada? Los verás en Cinecat: ahorra mucho espacio y se reproduce directamente en "
+"el navegador, sin que el servidor tenga que convertir nada."
 
 #: gui/wizard/step_quality.py:70
 msgid ""
@@ -1351,7 +1366,7 @@ msgstr ""
 msgid "Windows"
 msgstr "Windows"
 
-#: gui/wizard/step_keep.py:228
+#: gui/wizard/step_keep.py:229
 msgid "With no audio language selected, every video keeps all its audio tracks."
 msgstr "Sin ningún idioma de audio seleccionado, cada vídeo conserva todas sus pistas de audio."
 
@@ -1392,7 +1407,7 @@ msgstr "descartar"
 msgid "encode"
 msgstr "codificar"
 
-#: gui/wizard/step_keep.py:68
+#: gui/wizard/step_keep.py:69
 msgid "image"
 msgstr "imagen"
 
@@ -1416,7 +1431,7 @@ msgstr "debe ser un número entero positivo"
 msgid "no"
 msgstr "no"
 
-#: gui/wizard/step_keep.py:68
+#: gui/wizard/step_keep.py:69
 msgid "text"
 msgstr "texto"
 
@@ -1437,7 +1452,7 @@ msgstr "sí"
 msgid "yes ({variant})"
 msgstr "sí ({variant})"
 
-#: gui/wizard/step_keep.py:69
+#: gui/wizard/step_keep.py:70
 #, python-brace-format
 msgid "{codec} ({kind})"
 msgstr "{codec} ({kind})"
@@ -1447,24 +1462,17 @@ msgstr "{codec} ({kind})"
 msgid "{codec}, CRF {crf}, {preset} preset"
 msgstr "{codec}, CRF {crf}, preajuste {preset}"
 
-#: gui/wizard/step_keep.py:49
+#: gui/wizard/step_keep.py:50
 #, python-brace-format
 msgid "{count} channels"
 msgstr "{count} canales"
 
-#: messages.py:44
-#, python-brace-format
-msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
-msgstr ""
-"La salida con el perfil {destination} no es la de Jellyfin, así que es posible que Jellyfin tenga"
-" que transcodificarla."
-
-#: gui/wizard/step_keep.py:59
+#: gui/wizard/step_keep.py:60
 #, python-brace-format
 msgid "{language} · {codec} · {channels} · {size}"
 msgstr "{language} · {codec} · {channels} · {size}"
 
-#: gui/wizard/step_keep.py:298
+#: gui/wizard/step_keep.py:299
 #, python-brace-format
 msgid "{language} · {formats}"
 msgstr "{language} · {formats}"
@@ -1494,7 +1502,7 @@ msgstr "{name} · {state}"
 msgid "{percent}%"
 msgstr "{percent}%"
 
-#: gui/wizard/step_keep.py:57
+#: gui/wizard/step_keep.py:58
 #, python-brace-format
 msgid "~{size}"
 msgstr "~{size}"
@@ -1517,8 +1525,27 @@ msgstr "~{size} estimados"
 #~ "una pista sin etiqueta se muestra como sin "
 #~ "idioma indicado."
 
+#~ msgid "Direct play"
+#~ msgstr "Reproducción directa"
+
+#~ msgid "Jellyfin"
+#~ msgstr "Jellyfin"
+
+#~ msgid "Jellyfin will transcode"
+#~ msgstr "Jellyfin transcodificará"
+
 #~ msgid "Newer phones, tablets and TVs that play H.265."
 #~ msgstr "Móviles, tabletas y televisores nuevos que reproducen H.265."
+
+#~ msgid ""
+#~ "Plays directly on almost any TV, phone or "
+#~ "browser through your Jellyfin server. Files are "
+#~ "larger and 4K is scaled down to 1080p."
+#~ msgstr ""
+#~ "Se reproduce directamente en casi cualquier televisor, "
+#~ "móvil o navegador a través de tu servidor "
+#~ "Jellyfin. Los archivos son más grandes y el 4K"
+#~ " se reduce a 1080p."
 
 #~ msgid "Steps"
 #~ msgstr "Pasos"
@@ -1540,3 +1567,9 @@ msgstr "~{size} estimados"
 
 #~ msgid "Videos you keep for later; saving space matters more than speed."
 #~ msgstr "Vídeos que guardas para más adelante; ahorrar espacio importa más que la velocidad."
+
+#~ msgid "{destination} output is not the Jellyfin profile, so Jellyfin may have to transcode it."
+#~ msgstr ""
+#~ "La salida con el perfil {destination} no es la"
+#~ " de Jellyfin, así que es posible que Jellyfin "
+#~ "tenga que transcodificarla."

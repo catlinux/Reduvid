@@ -61,9 +61,9 @@ def _estimate_text(total: TotalEstimate, media: MediaInfo) -> str:
 
 def _level_text(level: str) -> str:
     if level == "direct":
-        return _("Direct play")
+        return _("Plays directly in Cinecat")
     if level == "partial":
-        return _("Jellyfin will transcode")
+        return _("Cinecat will convert it while playing")
     return _("Needs attention")
 
 
