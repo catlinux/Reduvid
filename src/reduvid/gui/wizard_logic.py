@@ -142,7 +142,7 @@ def track_rows(media: MediaInfo) -> tuple[TrackRow, ...]:
             codec=stream.codec,
             channels=None,
             bitrate=None,
-            estimated_bytes=None,
+            estimated_bytes=stream.size_bytes,
             is_image=stream.is_image,
             is_default=stream.is_default,
         )

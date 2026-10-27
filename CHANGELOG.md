@@ -19,6 +19,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 ### Añadido
 
 - La versión se ve en el título de la ventana y en Preferencias.
+- «Qué conservar» muestra el peso de cada pista de subtítulos (de las etiquetas que escribe MKVToolNix), y los tamaños pequeños se muestran en KB.
 - Al marcar «Una sola pista de audio por idioma», las casillas de las pistas muestran cuáles se conservarán y el tamaño del audio se recalcula; al desmarcarla vuelve la selección anterior, y tocar una pista a mano la desmarca.
 - Los MP4 se escriben con `+faststart`, para que el navegador empiece a reproducir sin descargar el final del archivo.
 

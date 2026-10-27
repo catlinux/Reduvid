@@ -167,6 +167,37 @@ def test_step_keep_lists_every_track_of_a_single_video(tmp_path: Path, qapp) -> 
     assert step.audio_warning.isHidden()
 
 
+def test_step_keep_shows_subtitle_track_sizes(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "subtitles.mkv",
+        media(
+            tmp_path / "subtitles.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            subtitles=[
+                SubtitleStream(1, "subrip", "spa", False, False, False, size_bytes=42_000),
+                SubtitleStream(
+                    2,
+                    "hdmv_pgs_subtitle",
+                    "eng",
+                    True,
+                    False,
+                    False,
+                    size_bytes=1_200_000,
+                ),
+                SubtitleStream(3, "subrip", "fra", False, False, False),
+            ],
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert step.subtitle_checks["spa"].text() == "Spanish · subrip (text) · ~42 KB"
+    assert step.subtitle_checks["eng"].text() == ("English · hdmv_pgs_subtitle (image) · ~1 MB")
+    assert step.subtitle_checks["fra"].text() == "French · subrip (text)"
+
+
 def test_step_keep_goes_back_to_languages_with_two_videos(tmp_path: Path, qapp) -> None:
     state = three_audio_state(tmp_path)
     step = StepKeep(state, ffmpeg())

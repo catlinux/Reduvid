@@ -201,6 +201,8 @@ def test_summaries_include_traffic_light_and_blocking_warnings(tmp_path: Path) -
 def test_size_and_duration_formatting() -> None:
     assert format_size(1_500_000_000) == "1.5 GB"
     assert format_size(250_000_000) == "250 MB"
+    assert format_size(42_000) == "42 KB"
+    assert format_size(500) == "1 KB"
     assert format_duration(3725) == "1:02:05"
     assert format_duration(65) == "1:05"
 

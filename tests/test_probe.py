@@ -140,6 +140,46 @@ def test_probe_audio_without_bitrate(monkeypatch: pytest.MonkeyPatch) -> None:
     assert info.audio_streams[0].bitrate is None
 
 
+def test_probe_reads_subtitle_sizes(monkeypatch: pytest.MonkeyPatch) -> None:
+    payload = {
+        "format": {"format_name": "matroska", "duration": "10.0", "size": "1000"},
+        "streams": [
+            {
+                "index": 0,
+                "codec_name": "subrip",
+                "codec_type": "subtitle",
+                "tags": {"NUMBER_OF_BYTES": "42000", "BPS": "800000"},
+            },
+            {
+                "index": 1,
+                "codec_name": "subrip",
+                "codec_type": "subtitle",
+                "tags": {"number_of_bytes-spa": "1234"},
+            },
+            {
+                "index": 2,
+                "codec_name": "subrip",
+                "codec_type": "subtitle",
+                "tags": {"BPS": "8000"},
+            },
+            {
+                "index": 3,
+                "codec_name": "subrip",
+                "codec_type": "subtitle",
+            },
+        ],
+    }
+    monkeypatch.setattr(
+        probe.subprocess,
+        "run",
+        lambda args, **kwargs: CompletedProcess(args, 0, stdout=json.dumps(payload), stderr=""),
+    )
+
+    subtitles = probe.probe_media(Path("ffprobe"), Path("C:/movie.mkv")).subtitle_streams
+
+    assert [stream.size_bytes for stream in subtitles] == [42000, 1234, 10000, None]
+
+
 def test_probe_reads_audio_bitrate_from_bps_tags(monkeypatch: pytest.MonkeyPatch) -> None:
     payload = {
         "format": {"format_name": "matroska", "duration": "10.0", "size": "1000"},

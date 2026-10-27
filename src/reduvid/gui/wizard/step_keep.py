@@ -52,23 +52,28 @@ def _channels_label(channels: int | None) -> str:
     return EMPTY_SIZE
 
 
+def _track_size(row: TrackRow) -> str | None:
+    if row.estimated_bytes is None:
+        return None
+    return _("~{size}").format(size=format_size(row.estimated_bytes))
+
+
 def _audio_track_text(row: TrackRow) -> str:
-    size = (
-        EMPTY_SIZE
-        if row.estimated_bytes is None
-        else _("~{size}").format(size=format_size(row.estimated_bytes))
-    )
     return _("{language} · {codec} · {channels} · {size}").format(
         language=language_name(row.language),
         codec=row.codec,
         channels=_channels_label(row.channels),
-        size=size,
+        size=_track_size(row) or EMPTY_SIZE,
     )
 
 
 def _subtitle_format(row: TrackRow) -> str:
     kind = _("image") if row.is_image else _("text")
-    return _("{codec} ({kind})").format(codec=row.codec, kind=kind)
+    description = _("{codec} ({kind})").format(codec=row.codec, kind=kind)
+    size = _track_size(row)
+    if size is None:
+        return description
+    return _("{format} · {size}").format(format=description, size=size)
 
 
 def _subtitle_groups(rows: Iterable[TrackRow]) -> tuple[tuple[str, tuple[str, ...]], ...]:

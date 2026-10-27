@@ -56,11 +56,11 @@ msgstr "&Tria el ffmpeg…"
 msgid "&Hide technical details"
 msgstr "&Amaga els detalls tècnics"
 
-#: gui/advanced_page.py:112 gui/advanced_page.py:114
+#: gui/advanced_page.py:114 gui/advanced_page.py:116
 msgid "&Limit encoding threads"
 msgstr "&Limita els fils de codificació"
 
-#: gui/advanced_page.py:98 gui/advanced_page.py:100
+#: gui/advanced_page.py:100 gui/advanced_page.py:102
 msgid "&Maximum height"
 msgstr "&Altura màxima"
 
@@ -158,11 +158,11 @@ msgstr "Afegeix una carpeta…"
 msgid "Add the videos you want to shrink. You can also drop files or folders here."
 msgstr "Afegeix els vídeos que vols reduir. També pots arrossegar-hi fitxers o carpetes."
 
-#: gui/wizard/step_keep.py:278
+#: gui/wizard/step_keep.py:283
 msgid "Add videos to see their audio languages."
 msgstr "Afegeix vídeos per veure'n els idiomes d'àudio."
 
-#: gui/wizard/step_keep.py:316
+#: gui/wizard/step_keep.py:321
 msgid "Add videos to see their subtitle languages."
 msgstr "Afegeix vídeos per veure'n els idiomes de subtítols."
 
@@ -174,11 +174,11 @@ msgstr "Afegeix vídeos…"
 msgid "Added videos"
 msgstr "Vídeos afegits"
 
-#: gui/advanced_page.py:54
+#: gui/advanced_page.py:55
 msgid "Advanced"
 msgstr "Avançat"
 
-#: gui/advanced_page.py:66
+#: gui/advanced_page.py:68
 msgid "Advanced options"
 msgstr "Opcions avançades"
 
@@ -186,7 +186,7 @@ msgstr "Opcions avançades"
 msgid "All files (*)"
 msgstr "Tots els fitxers (*)"
 
-#: gui/advanced_page.py:57
+#: gui/advanced_page.py:58
 msgid "All options in one place. They are shared with the assistant."
 msgstr "Totes les opcions en un sol lloc. Es comparteixen amb l'assistent."
 
@@ -194,7 +194,7 @@ msgstr "Totes les opcions en un sol lloc. Es comparteixen amb l'assistent."
 msgid "Almost identical"
 msgstr "Gairebé idèntica"
 
-#: gui/wizard/step_keep.py:183
+#: gui/wizard/step_keep.py:188
 msgid ""
 "An audio track is the sound of the video, and its format (such as AC3, E-AC3 or AAC) is how that "
 "sound is stored. MP4 accepts text subtitles but not image ones, which only fit in MKV. Reducing "
@@ -219,15 +219,15 @@ msgstr "Una altra carpeta"
 msgid "Approximate conversion time: {duration}"
 msgstr "Temps aproximat de conversió: {duration}"
 
-#: gui/wizard/step_keep.py:204
+#: gui/wizard/step_keep.py:209
 msgid "Audio"
 msgstr "Àudio"
 
-#: gui/wizard/step_keep.py:123 gui/wizard/step_keep.py:204
+#: gui/wizard/step_keep.py:128 gui/wizard/step_keep.py:209
 msgid "Audio languages"
 msgstr "Idiomes d'àudio"
 
-#: gui/wizard/step_keep.py:155
+#: gui/wizard/step_keep.py:160
 msgid "Audio size"
 msgstr "Pes de l'àudio"
 
@@ -264,7 +264,7 @@ msgstr "Àudio: ~{size}"
 msgid "Automatic"
 msgstr "Automàtica"
 
-#: gui/advanced_page.py:92 gui/wizard/step_quality.py:50
+#: gui/advanced_page.py:94 gui/wizard/step_quality.py:50
 msgid "Balanced"
 msgstr "Equilibrada"
 
@@ -333,7 +333,7 @@ msgstr ""
 "Tria quant vols reduir. Les mides només es coneixen després d'estimar-les; ho pots canviar més "
 "endavant."
 
-#: gui/wizard/step_keep.py:117
+#: gui/wizard/step_keep.py:122
 msgid "Choose the audio and subtitle languages you understand."
 msgstr "Tria els idiomes d'àudio i de subtítols que entenguis."
 
@@ -357,7 +357,7 @@ msgstr "Tria vídeos"
 msgid "Choose where the converted files go and how they are stored."
 msgstr "Tria on van els fitxers convertits i com es guarden."
 
-#: gui/advanced_page.py:82 gui/wizard/step_target.py:21
+#: gui/advanced_page.py:84 gui/wizard/step_target.py:21
 msgid "Cinecat"
 msgstr "Cinecat"
 
@@ -442,11 +442,11 @@ msgstr ""
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
-#: gui/wizard/step_keep.py:254
+#: gui/wizard/step_keep.py:259
 msgid "Default"
 msgstr "Predeterminada"
 
-#: gui/advanced_page.py:80 gui/advanced_page.py:124 gui/main_window.py:60
+#: gui/advanced_page.py:82 gui/advanced_page.py:126 gui/main_window.py:60
 #: gui/wizard/step_destination.py:49
 msgid "Destination"
 msgstr "Destinació"
@@ -699,7 +699,7 @@ msgstr "Es manté l'HDR."
 msgid "HDR video"
 msgstr "Vídeo HDR"
 
-#: gui/advanced_page.py:91
+#: gui/advanced_page.py:93
 msgid "High"
 msgstr "Alta"
 
@@ -707,7 +707,7 @@ msgstr "Alta"
 msgid "I don't know"
 msgstr "No ho sé"
 
-#: gui/wizard/step_keep.py:218
+#: gui/wizard/step_keep.py:223
 msgid "If you do not tick any audio track, all of them are kept."
 msgstr "Si no marques cap pista d'àudio, es conserven totes."
 
@@ -731,11 +731,11 @@ msgstr ""
 "La pista de subtítols d'imatge {stream_index} s'haurà de convertir durant la reproducció, cosa "
 "que consumeix més CPU."
 
-#: gui/wizard/step_keep.py:357
+#: gui/wizard/step_keep.py:362
 msgid "Image subtitles are kept in MKV, but Cinecat cannot show them."
 msgstr "Els subtítols d'imatge es conserven en MKV, però Cinecat no els pot mostrar."
 
-#: gui/wizard/step_keep.py:355
+#: gui/wizard/step_keep.py:360
 msgid "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
 msgstr "Els subtítols d'imatge no caben en MP4 i es descartaran. Els de text sí que es conserven."
 
@@ -830,15 +830,15 @@ msgstr "MP4"
 msgid "Main panels"
 msgstr "Panells principals"
 
-#: gui/advanced_page.py:103
+#: gui/advanced_page.py:105
 msgid "Maximum height in pixels"
 msgstr "Altura màxima en píxels"
 
-#: gui/advanced_page.py:93 gui/wizard/step_quality.py:55
+#: gui/advanced_page.py:95 gui/wizard/step_quality.py:55
 msgid "Maximum savings"
 msgstr "Estalvi màxim"
 
-#: gui/advanced_page.py:83 gui/wizard/step_target.py:31
+#: gui/advanced_page.py:85 gui/wizard/step_target.py:31
 msgid "Modern devices"
 msgstr "Dispositius moderns"
 
@@ -870,11 +870,11 @@ msgstr "Sense idioma indicat"
 msgid "No videos added yet."
 msgstr "Encara no has afegit cap vídeo."
 
-#: gui/advanced_page.py:117
+#: gui/advanced_page.py:119
 msgid "Number of encoding threads"
 msgstr "Nombre de fils de codificació"
 
-#: gui/wizard/step_keep.py:138 gui/wizard/step_keep.py:142
+#: gui/wizard/step_keep.py:143 gui/wizard/step_keep.py:147
 msgid "One audio track per language (the best one is kept)"
 msgstr "Una sola pista d'àudio per idioma (es conserva la millor)"
 
@@ -947,7 +947,7 @@ msgstr "Perfil: {profile}"
 msgid "Progress: {percent:.0f}% ({state})"
 msgstr "Progrés: {percent:.0f}% ({state})"
 
-#: gui/advanced_page.py:89 gui/advanced_page.py:125 gui/main_window.py:58
+#: gui/advanced_page.py:91 gui/advanced_page.py:127 gui/main_window.py:58
 msgid "Quality"
 msgstr "Qualitat"
 
@@ -986,7 +986,7 @@ msgstr "Redueix el vídeo 4K a 1080p"
 msgid "Reduce animations"
 msgstr "Redueix les animacions"
 
-#: gui/wizard/step_keep.py:157 gui/wizard/step_keep.py:159
+#: gui/wizard/step_keep.py:162 gui/wizard/step_keep.py:164
 msgid "Reduce the audio size"
 msgstr "Reduir el pes de l'àudio"
 
@@ -1031,7 +1031,7 @@ msgstr "Rus"
 msgid "Same folder as each video"
 msgstr "La mateixa carpeta que cada vídeo"
 
-#: gui/advanced_page.py:84 gui/wizard/step_target.py:41
+#: gui/advanced_page.py:86 gui/wizard/step_target.py:41
 msgid "Save for archive"
 msgstr "Desa per a l'arxiu"
 
@@ -1085,7 +1085,7 @@ msgstr "Contingut del pas"
 msgid "Stereo"
 msgstr "Estèreo"
 
-#: gui/wizard/step_keep.py:169
+#: gui/wizard/step_keep.py:174
 msgid "Subtitle languages"
 msgstr "Idiomes de subtítols"
 
@@ -1115,12 +1115,12 @@ msgstr "Idioma del sistema"
 msgid "Technical details"
 msgstr "Detalls tècnics"
 
-#: gui/wizard/step_keep.py:345
+#: gui/wizard/step_keep.py:350
 #, python-brace-format
 msgid "The audio goes from ~{current} to ~{final}"
 msgstr "L'àudio passa de ~{current} a ~{final}"
 
-#: gui/wizard/step_keep.py:343
+#: gui/wizard/step_keep.py:348
 msgid "The audio size of this video cannot be estimated."
 msgstr "No es pot estimar el pes de l'àudio d'aquest vídeo."
 
@@ -1334,7 +1334,7 @@ msgstr "Avís: no s'ha pogut llegir el fitxer de configuració: {error}"
 msgid "Warning: {text}"
 msgstr "Avís: {text}"
 
-#: gui/main_window.py:59 gui/wizard/step_keep.py:114
+#: gui/main_window.py:59 gui/wizard/step_keep.py:119
 msgid "What to keep"
 msgstr "Què conservar"
 
@@ -1372,7 +1372,7 @@ msgstr ""
 msgid "Windows"
 msgstr "Windows"
 
-#: gui/wizard/step_keep.py:232
+#: gui/wizard/step_keep.py:237
 msgid "With no audio language selected, every video keeps all its audio tracks."
 msgstr "Sense cap idioma d'àudio seleccionat, cada vídeo conserva totes les pistes d'àudio."
 
@@ -1413,7 +1413,7 @@ msgstr "descartar"
 msgid "encode"
 msgstr "codificar"
 
-#: gui/wizard/step_keep.py:70
+#: gui/wizard/step_keep.py:71
 msgid "image"
 msgstr "imatge"
 
@@ -1437,7 +1437,7 @@ msgstr "ha de ser un nombre enter positiu"
 msgid "no"
 msgstr "no"
 
-#: gui/wizard/step_keep.py:70
+#: gui/wizard/step_keep.py:71
 msgid "text"
 msgstr "text"
 
@@ -1458,7 +1458,7 @@ msgstr "sí"
 msgid "yes ({variant})"
 msgstr "sí ({variant})"
 
-#: gui/wizard/step_keep.py:71
+#: gui/wizard/step_keep.py:72
 #, python-brace-format
 msgid "{codec} ({kind})"
 msgstr "{codec} ({kind})"
@@ -1473,12 +1473,17 @@ msgstr "{codec}, CRF {crf}, predefinit {preset}"
 msgid "{count} channels"
 msgstr "{count} canals"
 
-#: gui/wizard/step_keep.py:61
+#: gui/wizard/step_keep.py:76
+#, python-brace-format
+msgid "{format} · {size}"
+msgstr "{format} · {size}"
+
+#: gui/wizard/step_keep.py:62
 #, python-brace-format
 msgid "{language} · {codec} · {channels} · {size}"
 msgstr "{language} · {codec} · {channels} · {size}"
 
-#: gui/wizard/step_keep.py:302
+#: gui/wizard/step_keep.py:307
 #, python-brace-format
 msgid "{language} · {formats}"
 msgstr "{language} · {formats}"
@@ -1508,7 +1513,7 @@ msgstr "{name} · {state}"
 msgid "{percent}%"
 msgstr "{percent}%"
 
-#: gui/wizard/step_keep.py:59
+#: gui/wizard/step_keep.py:58
 #, python-brace-format
 msgid "~{size}"
 msgstr "~{size}"

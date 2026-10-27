@@ -52,6 +52,7 @@ class SubtitleStream:
     is_image: bool
     is_default: bool
     forced: bool
+    size_bytes: int | None = None
 
 
 @dataclass(frozen=True)
@@ -83,9 +84,15 @@ class MediaInfo:
 
 
 def format_size(size: int) -> str:
-    """Human-readable decimal size (MB or GB)."""
+    """Human-readable decimal size (KB, MB or GB)."""
     if size >= 1_000_000_000:
         return f"{size / 1_000_000_000:.1f} GB"
+    if size < 1_000_000:
+        if size <= 0:
+            return "0 KB"
+        if size < 1_000:
+            return "1 KB"
+        return f"{size / 1000:.0f} KB"
     return f"{size / 1_000_000:.0f} MB"
 
 
@@ -185,6 +192,23 @@ def _bitrate(stream: dict[str, Any]) -> int | None:
     return None
 
 
+def _subtitle_size(stream: dict[str, Any], duration: float) -> int | None:
+    tags = _tags(stream)
+    for key, value in tags.items():
+        if key.upper() == "NUMBER_OF_BYTES":
+            size = _positive_int(value)
+            if size is not None:
+                return size
+    for key, value in tags.items():
+        if key.upper().startswith("NUMBER_OF_BYTES-"):
+            size = _positive_int(value)
+            if size is not None:
+                return size
+    usable_duration = duration if math.isfinite(duration) and duration > 0 else None
+    estimated = estimate_stream_bytes(_bitrate(stream), usable_duration)
+    return estimated if estimated is not None and estimated > 0 else None
+
+
 def _video(stream: dict[str, Any]) -> VideoStream:
     transfer = stream.get("color_transfer")
     variant = None
@@ -222,6 +246,7 @@ def _video(stream: dict[str, Any]) -> VideoStream:
 def _parse(payload: object, path: Path) -> MediaInfo:
     root = _mapping(payload)
     form = _mapping(root.get("format"))
+    duration = _float(form.get("duration"))
     raw_streams = root.get("streams")
     streams = raw_streams if isinstance(raw_streams, list) else []
     videos: list[VideoStream] = []
@@ -259,6 +284,7 @@ def _parse(payload: object, path: Path) -> MediaInfo:
                     is_image=codec.lower() in {"hdmv_pgs_subtitle", "dvd_subtitle", "vobsub"},
                     is_default=bool(_disposition(stream).get("default", 0)),
                     forced=bool(_disposition(stream).get("forced", 0)),
+                    size_bytes=_subtitle_size(stream, duration),
                 )
             )
         elif codec_type == "attachment":
@@ -289,7 +315,7 @@ def _parse(payload: object, path: Path) -> MediaInfo:
     return MediaInfo(
         path=path,
         format=str(form.get("format_name") or "unknown"),
-        duration=_float(form.get("duration")),
+        duration=duration,
         size=_int(form.get("size")),
         video_streams=videos,
         audio_streams=audios,
