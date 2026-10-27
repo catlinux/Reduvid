@@ -63,6 +63,9 @@ def _registry_path() -> str:
     after a fresh logon — so a just-installed FFmpeg would otherwise go
     undetected until the user signs out and back in.
     """
+    # Lets mypy skip the winreg calls when it checks the code for Linux.
+    if sys.platform != "win32":
+        return ""
     import winreg
 
     values = []
