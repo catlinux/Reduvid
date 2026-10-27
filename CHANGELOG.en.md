@@ -18,6 +18,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Added
 
+- Engine: `core/updates.py` checks whether there is a newer GitHub release (at most once a day, sending no data), downloads the installer or the AppImage over HTTPS only and verifies it with `SHA256SUMS`. The interface that uses it arrives in 0.9.0.
 - The version is shown in the window title and in Preferences.
 - "What to keep" shows the size of each subtitle track (from the tags MKVToolNix writes), and small sizes are shown in KB.
 - Ticking "One audio track per language" updates the track check boxes to show which ones will be kept and recalculates the audio size; unticking it restores the previous selection, and changing a track by hand unticks it.
