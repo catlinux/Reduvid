@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-from reduvid.core.compat import CompatStatus, jellyfin_status
+from reduvid.core.compat import CompatStatus, cinecat_status
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.plan import EncodePlan, PlanOptions, Warning, build_plan
 from reduvid.core.probe import MediaInfo, estimate_stream_bytes
@@ -280,7 +280,7 @@ def summarize(
         path=entry.path,
         media=entry.media,
         plan=plan,
-        status=jellyfin_status(plan),
+        status=cinecat_status(plan),
         warnings=plan.warnings,
         blocking=blocking,
     )

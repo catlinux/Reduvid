@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 )
 
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.plan import resolve_container
 from reduvid.core.probe import format_size
 from reduvid.gui.widgets.what_is_this import WhatIsThis
 from reduvid.gui.wizard_logic import (
@@ -346,7 +347,7 @@ class StepKeep(QWidget):
 
     def _refresh_container_note(self) -> None:
         media_list = [entry.media for entry in self._state.videos if entry.media is not None]
-        note = subtitle_container_note(media_list, self._state.container)
+        note = subtitle_container_note(media_list, resolve_container(self._state.options()))
         if note == "image_dropped_mp4":
             text = _("Image subtitles do not fit in MP4 and will be dropped. Text ones are kept.")
         elif note == "image_kept_mkv":

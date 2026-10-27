@@ -142,18 +142,18 @@ def test_navigation_needs_a_probed_video_and_step_list_navigates(tmp_path: Path,
         window.close()
 
 
-def test_target_cards_are_exclusive_and_unknown_uses_jellyfin(qapp) -> None:
+def test_target_cards_are_exclusive_and_unknown_uses_cinecat(qapp) -> None:
     window = MainWindow(Config(), ffmpeg_info(), ThemeManager(qapp))
     target = window.content.widget(1)
 
     target.cards["modern"].click()
     assert window.wizard_state.destination == "modern"
     assert target.cards["modern"].isChecked()
-    assert not target.cards["jellyfin"].isChecked()
+    assert not target.cards["cinecat"].isChecked()
 
     target.cards["unknown"].click()
     assert target.cards["unknown"].isChecked()
-    assert window.wizard_state.options().destination == "jellyfin"
+    assert window.wizard_state.options().destination == "cinecat"
 
 
 def test_quality_recommendation_follows_the_destination(qapp) -> None:

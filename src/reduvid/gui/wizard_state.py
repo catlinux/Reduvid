@@ -17,7 +17,7 @@ from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import MediaInfo
 from reduvid.core.queue import VIDEO_EXTENSIONS
 
-DESTINATIONS = ("jellyfin", "modern", "archive")
+DESTINATIONS = ("cinecat", "modern", "archive")
 QUALITIES = ("high", "balanced", "max_savings")
 CONTAINERS = ("mkv", "mp4")
 
@@ -44,7 +44,7 @@ class WizardState(QObject):
         super().__init__(parent)
         self._destination: str = config.destination
         self._quality: str = config.quality
-        self._container: Container = config.container
+        self._container: Container | None = config.container
         self._output_dir: Path | None = config.output_dir
         self._replace_original = False
         self._reduce_4k = True
@@ -83,7 +83,7 @@ class WizardState(QObject):
         return None
 
     @property
-    def container(self) -> str:
+    def container(self) -> Container | None:
         return self._container
 
     @property
@@ -271,7 +271,7 @@ class WizardState(QObject):
         )
 
     def _keep_4k(self) -> bool:
-        return not self._reduce_4k and self._destination == "jellyfin" and self.has_4k()
+        return not self._reduce_4k and self._destination == "cinecat" and self.has_4k()
 
     def _set_languages(self, attribute: str, codes: Iterable[str], kind: str) -> None:
         normalized = frozenset(code.strip().lower() for code in codes if code.strip())

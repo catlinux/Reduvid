@@ -229,7 +229,7 @@ def test_step_keep_reduces_the_audio_and_shows_both_sizes(tmp_path: Path, qapp) 
     step = StepKeep(state, ffmpeg())
 
     assert not step.audio_weight_group.isHidden()
-    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~16 MB"
+    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~10 MB"
     assert not step.reduce_audio.isChecked()
 
     step.reduce_audio.click()
@@ -248,7 +248,7 @@ def test_step_keep_explains_when_the_audio_size_is_unknown(tmp_path: Path, qapp)
         media(
             tmp_path / "video.mkv",
             video=VideoStream(0, "h264", 1920, 1080, 24),
-            audios=[AudioStream(1, "ac3", 6, "spa", True)],
+            audios=[AudioStream(1, "aac", 6, "spa", True)],
             duration=100.0,
         ),
     )
@@ -278,6 +278,12 @@ def test_step_keep_explains_the_container_and_groups_subtitles(tmp_path: Path, q
         "Spanish · subrip (text), hdmv_pgs_subtitle (image)"
     )
     assert not step.subtitle_container_note.isHidden()
+    assert step.subtitle_container_note.text() == (
+        "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
+    )
+
+    state.set_container("mkv")
+
     assert step.subtitle_container_note.text() == (
         "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
     )
@@ -340,7 +346,8 @@ def test_step_destination_controls_container_folder_and_4k(tmp_path: Path, qapp)
     )
     step = StepDestination(state)
 
-    assert state.container == "mkv"
+    assert state.container is None
+    assert not any(card.isChecked() for card in step.container_cards.values())
     step.container_cards["mp4"].click()
     assert state.container == "mp4"
 
@@ -477,7 +484,7 @@ def test_warning_text_is_used_in_the_summary(tmp_path: Path, qapp) -> None:
     summary.refresh()
 
     labels = [label.text() for label in summary.findChildren(QLabel, "compatWarning")]
-    expected = warning_text(Warning("image_subtitle_burn_in", {"stream_index": 1}))
+    expected = warning_text(Warning("image_subtitle_dropped_mp4", {"stream_index": 1}))
     assert expected in labels
 
 

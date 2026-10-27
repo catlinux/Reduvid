@@ -21,7 +21,7 @@ def _plan(
     subtitles: tuple[SubtitleDecision, ...] = (),
     container: str = "mkv",
 ) -> EncodePlan:
-    return EncodePlan("jellyfin", "balanced", container, videos, audios, subtitles, ())
+    return EncodePlan("cinecat", "balanced", container, videos, audios, subtitles, ())
 
 
 def _video(*, filters: tuple[str, ...] = (), target_height: int | None = None) -> VideoDecision:
@@ -70,6 +70,29 @@ def test_builds_audio_copy_and_encode_in_order() -> None:
     assert arguments[arguments.index("-c:a:0") + 1] == "copy"
     assert arguments[arguments.index("-c:a:1") + 1] == "aac"
     assert arguments[arguments.index("-b:a:1") + 1] == "192k"
+
+
+def test_audio_channel_limit_is_added_per_stream() -> None:
+    plan = _plan(audios=(AudioDecision(1, "encode", "aac", "256k", 6),))
+    arguments = build_command(_media(), plan, Path.cwd() / "in.mkv", Path.cwd() / "out.mp4")
+
+    assert arguments[arguments.index("-ac:a:0") + 1] == "6"
+
+
+def test_mp4_adds_faststart_before_the_output_path() -> None:
+    output_path = Path.cwd() / "out.mp4"
+    arguments = build_command(_media(), _plan(container="mp4"), Path.cwd() / "in.mkv", output_path)
+
+    assert arguments[arguments.index("-movflags") + 1] == "+faststart"
+    assert arguments[-2:] == ["+faststart", str(output_path)]
+
+
+def test_mkv_does_not_add_faststart() -> None:
+    arguments = build_command(
+        _media(), _plan(container="mkv"), Path.cwd() / "in.mkv", Path.cwd() / "out.mkv"
+    )
+
+    assert "-movflags" not in arguments
 
 
 def test_maps_attachments_for_mkv() -> None:

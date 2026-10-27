@@ -58,7 +58,7 @@ def _video(
 
 
 def _plan(*videos: VideoDecision) -> EncodePlan:
-    return EncodePlan("jellyfin", "balanced", "mkv", videos, (), (), ())
+    return EncodePlan("cinecat", "balanced", "mkv", videos, (), (), ())
 
 
 def _media(duration: float = 600.0, size: int = 1_000_000_000) -> MediaInfo:
@@ -321,7 +321,7 @@ def _audio_media(*bitrates: int | None) -> MediaInfo:
 def test_audio_bytes_for_plan_sums_current_and_final_tracks() -> None:
     media = _audio_media(640_000, 500_000)
     plan = EncodePlan(
-        "jellyfin",
+        "cinecat",
         "balanced",
         "mkv",
         (),
@@ -339,7 +339,7 @@ def test_audio_bytes_for_plan_sums_current_and_final_tracks() -> None:
 def test_audio_bytes_for_plan_is_unknown_when_a_bitrate_is_missing() -> None:
     media = _audio_media(640_000, None)
     plan = EncodePlan(
-        "jellyfin",
+        "cinecat",
         "balanced",
         "mkv",
         (),
@@ -352,14 +352,14 @@ def test_audio_bytes_for_plan_is_unknown_when_a_bitrate_is_missing() -> None:
 
 
 def test_audio_bytes_for_plan_without_audio_tracks_is_zero() -> None:
-    plan = EncodePlan("jellyfin", "balanced", "mkv", (), (), (), ())
+    plan = EncodePlan("cinecat", "balanced", "mkv", (), (), (), ())
 
     assert audio_bytes_for_plan(_audio_media(), plan) == (0, 0)
 
 
 def _sample_destination(ffmpeg_info: FFmpegInfo) -> str:
     if ffmpeg_info.has_libx264:
-        return "jellyfin"
+        return "cinecat"
     if ffmpeg_info.has_libx265:
         return "modern"
     pytest.skip("FFmpeg H.264/H.265 encoder not available")

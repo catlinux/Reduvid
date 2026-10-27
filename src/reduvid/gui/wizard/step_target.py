@@ -16,8 +16,8 @@ from reduvid.i18n import _
 def _options() -> tuple[tuple[str, str, str, str, str], ...]:
     return (
         (
-            "jellyfin",
-            "jellyfin",
+            "cinecat",
+            "cinecat",
             _("Jellyfin"),
             _("H.264"),
             _(
@@ -47,7 +47,7 @@ def _options() -> tuple[tuple[str, str, str, str, str], ...]:
         ),
         (
             "unknown",
-            "jellyfin",
+            "cinecat",
             _("I don't know"),
             "",
             _("Use the Jellyfin profile, which works on almost everything."),
@@ -110,7 +110,7 @@ class StepTarget(QWidget):
         if current is None:
             current = next(
                 (key for key, destination in self._keys if destination == self._state.destination),
-                "jellyfin",
+                "cinecat",
             )
         card = self.cards.get(current)
         if card is not None:

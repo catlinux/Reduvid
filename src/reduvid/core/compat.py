@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
 # Copyright (C) 2026 Catlinux
 
-"""Jellyfin compatibility traffic light computed from an encoding plan."""
+"""Cinecat compatibility traffic light computed from an encoding plan."""
 
 from __future__ import annotations
 
@@ -19,24 +19,29 @@ class CompatStatus:
     reasons: tuple[Warning, ...] = ()
 
 
-def jellyfin_status(plan: EncodePlan) -> CompatStatus:
-    """Classify how likely Jellyfin is to direct-play the planned output.
+def cinecat_status(plan: EncodePlan) -> CompatStatus:
+    """Classify how likely Cinecat is to direct-play the planned output.
 
-    The rule is intentionally simple: blocking warnings win; anything that makes
-    Jellyfin transcode (a non-Jellyfin profile, 10-bit video or image subtitles it
-    must burn in) is partial; everything else plays directly.
+    Blocking warnings win. Cinecat only direct-plays MP4 with 8-bit video and no
+    discarded image subtitles; anything else makes it transcode.
     """
     blocking = tuple(warning for warning in plan.warnings if warning.params.get("blocking") is True)
     if blocking:
         return CompatStatus("blocked", blocking)
 
     reasons: list[Warning] = []
-    if plan.destination != "jellyfin":
+    if plan.destination != "cinecat":
         reasons.append(Warning("not_direct_play_profile", {"destination": plan.destination}))
+    if plan.container != "mp4":
+        reasons.append(Warning("not_direct_play_container", {"container": plan.container}))
     for video in plan.videos:
         if video.pixel_format is not None and "10" in video.pixel_format:
             reasons.append(Warning("ten_bit_video", {"stream_index": video.stream_index}))
-    reasons.extend(warning for warning in plan.warnings if warning.code == "image_subtitle_burn_in")
+    reasons.extend(
+        warning
+        for warning in plan.warnings
+        if warning.code in {"image_subtitle_burn_in", "image_subtitle_dropped_mp4"}
+    )
 
     if reasons:
         return CompatStatus("partial", tuple(reasons))

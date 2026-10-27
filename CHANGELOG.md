@@ -6,6 +6,23 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.8.0] - 2026-10-27
+
+### Cambiado
+
+- **Cinecat sustituye a Jellyfin** como destino por defecto (`cinecat`). Cinecat solo reproduce directamente MP4 en el navegador, así que con este destino el contenedor automático es MP4; el vídeo sigue en H.264 High@4.1 de 8 bits, hasta 1080p y con el HDR pasado a SDR. El audio se copia si ya es AAC o MP3; si no, se recodifica a AAC (384k en 5.1, 192k en estéreo, hasta 6 canales), porque Chrome y Firefox no reproducen AC-3/E-AC-3. Los subtítulos de imagen se descartan con aviso.
+- El semáforo de compatibilidad mide ahora la reproducción directa en Cinecat.
+- El contenedor pasa a ser automático por defecto (MP4 para Cinecat, MKV para los demás destinos).
+- Las configuraciones y los perfiles guardados con `destination = "jellyfin"` se leen como `cinecat`; el `container = "mkv"` que guardaban por defecto vuelve a automático.
+
+### Añadido
+
+- Los MP4 se escriben con `+faststart`, para que el navegador empiece a reproducir sin descargar el final del archivo.
+
+### Eliminado
+
+- El destino `jellyfin` y `reduvid-cli --target jellyfin`.
+
 ## [0.7.1] - 2026-10-27
 
 ### Cambiado

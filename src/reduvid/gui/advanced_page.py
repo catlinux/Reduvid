@@ -79,7 +79,7 @@ class AdvancedPage(QWidget):
         self.destination_combo.setObjectName("advancedDestination")
         self.destination_combo.setAccessibleName(_("Destination"))
         for label, value in (
-            (_("Jellyfin"), "jellyfin"),
+            (_("Jellyfin"), "cinecat"),
             (_("Modern devices"), "modern"),
             (_("Save for archive"), "archive"),
         ):

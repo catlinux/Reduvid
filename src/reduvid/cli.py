@@ -366,7 +366,7 @@ def _dry_run(
             continue
         plan = build_plan(media, ffmpeg_info, options)
         destination_dir = output_dir or media.path.parent
-        output_path = build_output_path(media.path, destination_dir, options.container)
+        output_path = build_output_path(media.path, destination_dir, plan.container)
         print(_("Would convert: {path}").format(path=path))
         print(_("Output: {path}").format(path=output_path))
         _show_plan(plan, media)
@@ -605,11 +605,11 @@ def _estimate(
 
 def _add_plan_arguments(parser: argparse.ArgumentParser) -> None:
     """Add the encoding options shared by ``convert`` and ``estimate``."""
-    parser.add_argument("--target", choices=("jellyfin", "modern", "archive"), default="jellyfin")
+    parser.add_argument("--target", choices=("cinecat", "modern", "archive"), default="cinecat")
     parser.add_argument(
         "--quality", choices=("high", "balanced", "max_savings"), default="balanced"
     )
-    parser.add_argument("--container", choices=("mkv", "mp4"), default="mkv")
+    parser.add_argument("--container", choices=("mkv", "mp4"))
     parser.add_argument(
         "--keep-audio",
         type=_language_set,

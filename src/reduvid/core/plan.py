@@ -24,9 +24,9 @@ from reduvid.core.profiles import PROFILES, QUALITY_CRFS, Profile
 
 @dataclass(frozen=True)
 class PlanOptions:
-    destination: str = "jellyfin"
+    destination: str = "cinecat"
     quality: str = "balanced"
-    container: Literal["mkv", "mp4"] = "mkv"
+    container: Literal["mkv", "mp4"] | None = None
     max_height: int | None = None
     audio_languages: frozenset[str] | None = None
     subtitle_languages: frozenset[str] | None = None
@@ -61,6 +61,7 @@ class AudioDecision:
     action: Literal["copy", "encode"]
     codec: str | None = None
     bitrate: str | None = None
+    channels: int | None = None
 
 
 @dataclass(frozen=True)
@@ -95,10 +96,17 @@ def _crf(quality: str, codec: str) -> int:
         raise ValueError(f"Unknown quality level: {quality}") from error
 
 
+def resolve_container(options: PlanOptions) -> Literal["mkv", "mp4"]:
+    """Return the explicit container or the automatic one for the destination."""
+    if options.container is not None:
+        return options.container
+    return "mp4" if options.destination == "cinecat" else "mkv"
+
+
 def _target_height(stream: VideoStream, profile: Profile, max_height: int | None) -> int | None:
     if max_height is None:
-        # Jellyfin's level 4.1 profile tops out at 1080p; other profiles keep the source size.
-        limit = 1080 if profile.name == "jellyfin" else None
+        # Cinecat's H.264 level 4.1 profile tops out at 1080p; other profiles keep it.
+        limit = 1080 if profile.name == "cinecat" else None
     else:
         # Even heights keep yuv420p encoders happy, so round the limit down.
         limit = max_height - max_height % 2
@@ -115,7 +123,7 @@ def _video_decision(
     warnings: list[Warning],
     max_height: int | None,
 ) -> VideoDecision:
-    jellyfin = profile.name == "jellyfin"
+    cinecat = profile.name == "cinecat"
     target_height = _target_height(stream, profile, max_height)
     if target_height is not None:
         warnings.append(
@@ -130,7 +138,7 @@ def _video_decision(
         )
 
     filters: tuple[str, ...] = ()
-    if stream.hdr and jellyfin:
+    if stream.hdr and cinecat:
         if ffmpeg_info.has_zscale and ffmpeg_info.has_tonemap:
             filters = ("zscale", "tonemap")
             warnings.append(Warning("hdr_converted_to_sdr", {"stream_index": stream.index}))
@@ -150,7 +158,7 @@ def _video_decision(
         preset=profile.preset,
         profile=profile.video_profile,
         level=profile.video_level,
-        pixel_format=("yuv420p10le" if stream.hdr and not jellyfin else profile.pixel_format),
+        pixel_format=("yuv420p10le" if stream.hdr and not cinecat else profile.pixel_format),
         filters=filters,
         target_height=target_height,
     )
@@ -171,8 +179,17 @@ def rank_audio(streams: Sequence[AudioStream]) -> list[AudioStream]:
     return sorted(streams, key=rank_audio_key, reverse=True)
 
 
+def _aac_bitrate(channels: int) -> str:
+    # 384k is the usual transparent rate for 5.1 AAC; 192k for mono and stereo.
+    return "384k" if channels > 2 else "192k"
+
+
 def _audio_decision(
-    stream: AudioStream, warnings: list[Warning], reduce_audio: bool = False
+    stream: AudioStream,
+    warnings: list[Warning],
+    reduce_audio: bool = False,
+    *,
+    destination: str,
 ) -> AudioDecision:
     if reduce_audio:
         target_bitrate = "256k" if stream.channels > 2 else "128k"
@@ -186,9 +203,19 @@ def _audio_decision(
         warnings.append(
             Warning("audio_reduced", {"stream_index": stream.index, "bitrate": target_bitrate})
         )
-        return AudioDecision(stream.index, "encode", "aac", target_bitrate)
+        channels = 6 if destination == "cinecat" and stream.channels > 6 else None
+        return AudioDecision(stream.index, "encode", "aac", target_bitrate, channels)
 
-    # Jellyfin clients generally direct-play these codecs.
+    if destination == "cinecat":
+        # Chrome and Firefox cannot decode AC-3/E-AC-3; browsers play AAC/MP3 directly.
+        if stream.codec.lower() in {"aac", "mp3"}:
+            return AudioDecision(stream.index, "copy")
+        channels = 6 if stream.channels > 6 else None
+        bitrate = _aac_bitrate(stream.channels)
+        warnings.append(Warning("audio_recoded", {"stream_index": stream.index, "codec": "aac"}))
+        return AudioDecision(stream.index, "encode", "aac", bitrate, channels)
+
+    # Modern and archive keep the previous audio rules.
     if stream.codec.lower() in {"aac", "ac3", "eac3"}:
         return AudioDecision(stream.index, "copy")
     # AC3 640k preserves multichannel compatibility; AAC 192k suits mono and stereo.
@@ -202,7 +229,7 @@ def _subtitle_decision(
 ) -> SubtitleDecision:
     if stream.is_image:
         if container == "mkv":
-            # Jellyfin can burn image subtitles in during playback.
+            # MKV keeps PGS/VobSub; players that cannot draw them have to burn them in.
             warnings.append(Warning("image_subtitle_burn_in", {"stream_index": stream.index}))
             return SubtitleDecision(stream.index, "copy")
         # MP4 cannot preserve PGS/VobSub as a playable text subtitle.
@@ -260,9 +287,16 @@ def build_plan(
         selected_audio = [stream for stream in selected_audio if stream.index in chosen_indices]
 
     audios = tuple(
-        _audio_decision(stream, warnings, options.reduce_audio) for stream in selected_audio
+        _audio_decision(
+            stream,
+            warnings,
+            options.reduce_audio,
+            destination=profile.name,
+        )
+        for stream in selected_audio
     )
 
+    container = resolve_container(options)
     subtitle_languages = _language_filter(options.subtitle_languages)
     selected_subtitles = [
         stream
@@ -270,12 +304,12 @@ def build_plan(
         if _language_allowed(stream.language, subtitle_languages)
     ]
     subtitles = tuple(
-        _subtitle_decision(stream, options.container, warnings) for stream in selected_subtitles
+        _subtitle_decision(stream, container, warnings) for stream in selected_subtitles
     )
     return EncodePlan(
         destination=profile.name,
         quality=options.quality,
-        container=options.container,
+        container=container,
         videos=videos,
         audios=audios,
         subtitles=subtitles,

@@ -76,6 +76,36 @@ def test_none_and_empty_sets_survive(tmp_path: Path) -> None:
     assert load_profile("conjuntos vacíos", directory) == empty
 
 
+def test_legacy_jellyfin_profile_drops_the_old_mkv_default(tmp_path: Path) -> None:
+    directory = tmp_path / "profiles"
+    directory.mkdir()
+    (directory / "legacy.toml").write_text(
+        'name = "legacy"\ndestination = "jellyfin"\ncontainer = "mkv"\n',
+        encoding="utf-8",
+    )
+
+    loaded = load_profile("legacy", directory)
+
+    assert loaded.destination == "cinecat"
+    assert loaded.container is None
+
+
+def test_legacy_jellyfin_profile_migrates_and_missing_container_is_automatic(
+    tmp_path: Path,
+) -> None:
+    directory = tmp_path / "profiles"
+    directory.mkdir()
+    (directory / "legacy.toml").write_text(
+        'name = "legacy"\ndestination = "jellyfin"\n',
+        encoding="utf-8",
+    )
+
+    loaded = load_profile("legacy", directory)
+
+    assert loaded.destination == "cinecat"
+    assert loaded.container is None
+
+
 def test_missing_and_invalid_fields_use_defaults(tmp_path: Path) -> None:
     directory = tmp_path / "profiles"
     directory.mkdir()

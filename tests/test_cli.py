@@ -115,7 +115,7 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
             "--max-height",
             "480",
             "--target",
-            "jellyfin",
+            "cinecat",
             "--quality",
             "high",
             "--container",
@@ -126,7 +126,7 @@ def test_convert_dry_run_does_not_start_encoder(monkeypatch: pytest.MonkeyPatch,
     captured = capsys.readouterr()
     assert result == 0
     assert "Would convert" in captured.out
-    assert "Plan: jellyfin, high, mp4" in captured.out
+    assert "Plan: cinecat, high, mp4" in captured.out
     assert "Video stream 0" in captured.out
     assert "scale to 480p" in captured.out
     assert "scaled down from 720p to 480p" in captured.out
@@ -467,13 +467,13 @@ def test_convert_dry_run_shows_audio_estimated_size(
     )
     monkeypatch.setattr(cli, "probe_media", lambda _ffprobe, _path: media)
 
-    # Dry-run without --reduce-audio: Stream 1 (eac3 6ch) is copied,
+    # Dry-run without --reduce-audio: Stream 1 (eac3 6ch) is re-encoded to AAC,
     # Stream 2 (aac 2ch, no bitrate) is copied
     result = cli.main(["convert", str(source), "--dry-run"])
     captured = capsys.readouterr()
     assert result == 0
-    # 640_000 * 100 / 8 = 8_000_000 bytes -> 8 MB
-    assert "Audio stream 1: copy, ~8 MB estimated" in captured.out
+    # 384_000 * 100 / 8 = 4_800_000 bytes -> 5 MB
+    assert "Audio stream 1: encode as aac at 384k, ~5 MB estimated" in captured.out
     # Stream 2 has no bitrate -> "—"
     assert "Audio stream 2: copy, —" in captured.out
 

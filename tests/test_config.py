@@ -76,6 +76,51 @@ def test_unknown_keys_are_ignored_and_invalid_keys_reported(tmp_path: Path) -> N
     assert set(invalid) == {"theme", "language", "reduce_motion"}
 
 
+def test_legacy_jellyfin_destination_is_migrated(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text(
+        'destination = "jellyfin"\ncontainer = "mkv"\n',
+        encoding="utf-8",
+    )
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.destination == "cinecat"
+    # The old default "mkv" goes back to automatic, which is MP4 for Cinecat.
+    assert loaded.container is None
+    assert invalid == ()
+
+
+def test_container_is_kept_when_not_migrating(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text('destination = "cinecat"\ncontainer = "mkv"\n', encoding="utf-8")
+
+    loaded, _invalid = load_config(target)
+
+    assert loaded.container == "mkv"
+
+
+def test_automatic_container_is_none_and_is_not_saved(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+
+    save_config(Config(), target)
+
+    loaded, invalid = load_config(target)
+    assert loaded.container is None
+    assert invalid == ()
+    assert "container" not in target.read_text(encoding="utf-8")
+
+
+def test_invalid_container_falls_back_to_automatic(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text('container = "avi"\n', encoding="utf-8")
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.container is None
+    assert invalid == ("container",)
+
+
 def test_hw_decode_can_be_disabled_in_toml(tmp_path: Path) -> None:
     target = tmp_path / "config.toml"
     target.write_text("hw_decode = false\n", encoding="utf-8")

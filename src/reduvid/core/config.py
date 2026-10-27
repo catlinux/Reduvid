@@ -18,7 +18,7 @@ Language = Literal["ca", "es", "en"]
 Theme = Literal["plegat", "riso", "cinta"]
 ColorMode = Literal["system", "light", "dark"]
 UiMode = Literal["wizard", "advanced"]
-Destination = Literal["jellyfin", "modern", "archive"]
+Destination = Literal["cinecat", "modern", "archive"]
 Quality = Literal["high", "balanced", "max_savings"]
 Container = Literal["mkv", "mp4"]
 
@@ -36,9 +36,9 @@ class Config:
     ui_mode: UiMode = "wizard"
     reduce_motion: bool = False
     output_dir: Path | None = None
-    destination: Destination = "jellyfin"
+    destination: Destination = "cinecat"
     quality: Quality = "balanced"
-    container: Container = "mkv"
+    container: Container | None = None
     hw_decode: bool = True
 
 
@@ -121,10 +121,13 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         else:
             invalid.append("output_dir")
 
-    destination: Destination = "jellyfin"
+    destination: Destination = "cinecat"
     raw_destination = raw.get("destination")
     if raw_destination is not None:
-        if raw_destination in ("jellyfin", "modern", "archive"):
+        if raw_destination == "jellyfin":
+            # Migrate configurations from before Cinecat replaced Jellyfin.
+            destination = "cinecat"
+        elif raw_destination in ("cinecat", "modern", "archive"):
             destination = raw_destination
         else:
             invalid.append("destination")
@@ -137,8 +140,11 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         else:
             invalid.append("quality")
 
-    container: Container = "mkv"
+    container: Container | None = None
     raw_container = raw.get("container")
+    if raw_destination == "jellyfin" and raw_container == "mkv":
+        # Old versions always saved "mkv"; Cinecat only direct-plays MP4, so go automatic.
+        raw_container = None
     if raw_container is not None:
         if raw_container in ("mkv", "mp4"):
             container = raw_container
@@ -187,7 +193,8 @@ def save_config(config: Config, path: Path | None = None) -> None:
         entries.append(("output_dir", _toml_string(str(config.output_dir))))
     entries.append(("destination", _toml_string(config.destination)))
     entries.append(("quality", _toml_string(config.quality)))
-    entries.append(("container", _toml_string(config.container)))
+    if config.container is not None:
+        entries.append(("container", _toml_string(config.container)))
     entries.append(("hw_decode", "true" if config.hw_decode else "false"))
     payload = "".join(f"{key} = {value}\n" for key, value in entries)
 

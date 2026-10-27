@@ -145,7 +145,7 @@ def test_options_use_none_when_everything_is_selected(tmp_path: Path) -> None:
     assert state.options().audio_languages is None
 
 
-def test_reduce_4k_is_only_applied_for_jellyfin_with_4k_video(tmp_path: Path) -> None:
+def test_reduce_4k_is_only_applied_for_cinecat_with_4k_video(tmp_path: Path) -> None:
     state = WizardState(Config())
     video = VideoStream(0, "hevc", 3840, 2160, 24)
     add_video(state, tmp_path, "uhd.mkv", media(tmp_path / "uhd.mkv", video=video))
@@ -158,7 +158,7 @@ def test_reduce_4k_is_only_applied_for_jellyfin_with_4k_video(tmp_path: Path) ->
     state.set_destination("modern")
     assert state.options().max_height is None
 
-    state.set_destination("jellyfin")
+    state.set_destination("cinecat")
     state.set_reduce_4k(True)
     assert state.options().max_height is None
 
@@ -247,12 +247,13 @@ def test_audio_size_summary_with_two_audio_tracks(tmp_path: Path) -> None:
     everything = audio_size_summary(entries, PlanOptions(), ffmpeg())
 
     assert everything.current_bytes == 16_000_000
-    assert everything.final_bytes == 16_000_000
+    # Cinecat recodes E-AC-3/AC-3 5.1 to AAC at 384k: 384_000 * 100 / 8 per track.
+    assert everything.final_bytes == 9_600_000
 
     one_track = audio_size_summary(entries, PlanOptions(audio_tracks=frozenset({1})), ffmpeg())
 
     assert one_track.current_bytes == 8_000_000
-    assert one_track.final_bytes == 8_000_000
+    assert one_track.final_bytes == 4_800_000
 
     reduced = audio_size_summary(
         entries,
@@ -268,7 +269,7 @@ def test_audio_size_summary_is_none_when_a_bitrate_is_missing(tmp_path: Path) ->
     info = media(
         tmp_path / "video.mkv",
         duration=100.0,
-        audios=[AudioStream(1, "ac3", 6, "spa", True)],
+        audios=[AudioStream(1, "aac", 6, "spa", True)],
     )
     entries = [VideoEntry(tmp_path / "video.mkv", info)]
 
@@ -317,9 +318,9 @@ def test_change_notes_for_modern_keeps_resolution_and_names_h265() -> None:
     assert not any("scaled down" in note for note in notes)
 
 
-def test_change_notes_for_jellyfin_4k_hdr_mentions_scaling_and_sdr() -> None:
+def test_change_notes_for_cinecat_4k_hdr_mentions_scaling_and_sdr() -> None:
     notes = _notes(
-        VideoStream(0, "hevc", 3840, 2160, 24.0, bit_depth=10, hdr=True), destination="jellyfin"
+        VideoStream(0, "hevc", 3840, 2160, 24.0, bit_depth=10, hdr=True), destination="cinecat"
     )
 
     assert any("H.264" in note for note in notes)
@@ -342,7 +343,7 @@ def test_change_notes_leave_the_quality_sentence_out() -> None:
 
 
 def test_change_notes_say_when_ten_bit_becomes_eight_bit() -> None:
-    notes = _notes(VideoStream(0, "hevc", 1920, 1080, 24.0, bit_depth=10), destination="jellyfin")
+    notes = _notes(VideoStream(0, "hevc", 1920, 1080, 24.0, bit_depth=10), destination="cinecat")
 
     assert any("10 to 8 bits" in note for note in notes)
 

@@ -147,15 +147,17 @@ class StepDestination(QWidget):
         self.folder_edit.setEnabled(output_dir is not None)
         self.browse_button.setEnabled(output_dir is not None)
 
-        card = self.container_cards.get(self._state.container)
-        if card is not None:
-            card.setChecked(True)
+        container = self._state.container
+        if container is not None:
+            card = self.container_cards.get(container)
+            if card is not None:
+                card.setChecked(True)
 
         self.replace_original.blockSignals(True)
         self.replace_original.setChecked(self._state.replace_original)
         self.replace_original.blockSignals(False)
 
-        show_reduce = self._state.destination == "jellyfin" and self._state.has_4k()
+        show_reduce = self._state.destination == "cinecat" and self._state.has_4k()
         self.reduce_4k.setVisible(show_reduce)
         self.reduce_4k_hint.setVisible(show_reduce)
         if show_reduce:

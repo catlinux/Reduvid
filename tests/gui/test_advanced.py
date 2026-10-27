@@ -162,7 +162,7 @@ def test_advanced_page_has_every_option(tmp_path: Path, qapp) -> None:
         page.summary,
     ):
         assert widget is not None
-    assert page.destination_combo.currentData() == "jellyfin"
+    assert page.destination_combo.currentData() == "cinecat"
     assert page.quality_combo.currentData() == "balanced"
     assert not page.max_height_check.isChecked()
     assert not page.threads_check.isChecked()

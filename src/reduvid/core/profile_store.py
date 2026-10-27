@@ -17,7 +17,7 @@ from platformdirs import user_config_dir
 from reduvid.core.plan import PlanOptions
 
 _UNSAFE_FILENAME = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
-_DESTINATIONS = ("jellyfin", "modern", "archive")
+_DESTINATIONS = ("cinecat", "modern", "archive")
 _QUALITIES = ("high", "balanced", "max_savings")
 _CONTAINERS = ("mkv", "mp4")
 _WINDOWS_RESERVED = frozenset(
@@ -103,13 +103,24 @@ def _stored_name(file_path: Path) -> str | None:
 
 
 def _options_from_raw(raw: dict[str, object]) -> PlanOptions:
-    destination = _string_choice(raw, "destination", _DESTINATIONS, "jellyfin")
+    raw_destination = raw.get("destination")
+    destination = (
+        "cinecat"
+        if raw_destination == "jellyfin"
+        else _string_choice(raw, "destination", _DESTINATIONS, "cinecat")
+    )
     quality = _string_choice(raw, "quality", _QUALITIES, "balanced")
-    container = _string_choice(raw, "container", _CONTAINERS, "mkv")
+    raw_container = raw.get("container")
+    if raw_destination == "jellyfin" and raw_container == "mkv":
+        # Jellyfin profiles stored the old "mkv" default; Cinecat needs the automatic MP4.
+        raw_container = None
+    container: Literal["mkv", "mp4"] | None = (
+        cast(Literal["mkv", "mp4"], raw_container) if raw_container in _CONTAINERS else None
+    )
     return PlanOptions(
         destination=destination,
         quality=quality,
-        container=cast(Literal["mkv", "mp4"], container),
+        container=container,
         max_height=_optional_int(raw.get("max_height")),
         audio_languages=_string_set(raw.get("audio_languages")),
         subtitle_languages=_string_set(raw.get("subtitle_languages")),
@@ -170,8 +181,9 @@ def _write_profile(target: Path, name: str, options: PlanOptions) -> None:
         f"name = {_toml_string(name)}",
         f"destination = {_toml_string(options.destination)}",
         f"quality = {_toml_string(options.quality)}",
-        f"container = {_toml_string(options.container)}",
     ]
+    if options.container is not None:
+        lines.append(f"container = {_toml_string(options.container)}")
     if options.max_height is not None:
         lines.append(f"max_height = {options.max_height}")
     if options.audio_languages is not None:

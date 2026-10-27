@@ -61,7 +61,7 @@ def _options() -> tuple[tuple[str, str, str], ...]:
     )
 
 
-_RECOMMENDED = {"jellyfin": "balanced", "modern": "balanced", "archive": "max_savings"}
+_RECOMMENDED = {"cinecat": "balanced", "modern": "balanced", "archive": "max_savings"}
 
 
 def _recommendation(destination: str) -> str:

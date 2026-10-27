@@ -19,7 +19,7 @@ from reduvid.core.verify import VerificationResult, verify_output
 
 def _conversion_destination(ffmpeg_info: FFmpegInfo) -> str:
     if ffmpeg_info.has_libx264:
-        return "jellyfin"
+        return "cinecat"
     if ffmpeg_info.has_libx265:
         return "modern"
     pytest.skip("FFmpeg H.264/H.265 encoder not available")
@@ -89,7 +89,9 @@ def test_second_conversion_uses_a_numeric_suffix_without_overwriting(
     destination_dir = tmp_path / "output"
     first_path, first_verification = _convert(ffmpeg_info, video_with_streams, destination_dir)
     first_size = first_path.stat().st_size
-    second_candidate = build_output_path(video_with_streams, destination_dir, "mkv")
+    second_candidate = build_output_path(
+        video_with_streams, destination_dir, first_path.suffix.lstrip(".")
+    )
 
     second_path, second_verification = _convert(ffmpeg_info, video_with_streams, destination_dir)
 

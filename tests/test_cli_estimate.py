@@ -39,6 +39,7 @@ def media_info(
     duration: float = 600.0,
     size: int = 1_000_000_000,
     audio_bitrate: int | None = 640_000,
+    audio_codec: str = "eac3",
 ) -> MediaInfo:
     return MediaInfo(
         path,
@@ -46,7 +47,7 @@ def media_info(
         duration,
         size,
         [VideoStream(0, "hevc", 1920, 1080, 24.0)],
-        [AudioStream(1, "eac3", 6, "eng", True, bitrate=audio_bitrate)],
+        [AudioStream(1, audio_codec, 6, "eng", True, bitrate=audio_bitrate)],
         [],
         [],
     )
@@ -107,10 +108,10 @@ def test_estimate_reports_size_savings_and_time(
     assert "Estimating [1/1]" in captured.out
     assert "Estimate from a 60-second sample" in captured.out
     assert "Video: ~20 MB" in captured.out
-    assert "Audio: ~48 MB" in captured.out
-    assert "Estimated size: ~68 MB" in captured.out
+    assert "Audio: ~29 MB" in captured.out
+    assert "Estimated size: ~49 MB" in captured.out
     assert "Original size: 1.0 GB" in captured.out
-    assert "Savings: 93% (932 MB smaller)" in captured.out
+    assert "Savings: 95% (951 MB smaller)" in captured.out
     assert "Approximate conversion time: 5:00" in captured.out
     assert FakeSampleRunner.instances[0].threads == 3
 
@@ -121,7 +122,9 @@ def test_estimate_without_an_audio_bitrate_shows_video_only(
     source = Path(__file__).resolve()
     mock_ffmpeg(monkeypatch)
     monkeypatch.setattr(
-        cli, "probe_media", lambda _ffprobe, path: media_info(path, audio_bitrate=None)
+        cli,
+        "probe_media",
+        lambda _ffprobe, path: media_info(path, audio_bitrate=None, audio_codec="aac"),
     )
     monkeypatch.setattr(cli, "SampleRunner", FakeSampleRunner)
 
@@ -151,7 +154,7 @@ def test_estimate_processes_several_files(
     assert result == 0
     assert "Estimating [1/2]" in captured.out
     assert "Estimating [2/2]" in captured.out
-    assert captured.out.count("Estimated size: ~68 MB") == 2
+    assert captured.out.count("Estimated size: ~49 MB") == 2
 
 
 def test_estimate_rejects_a_folder(
@@ -282,7 +285,7 @@ def test_importing_the_cli_does_not_load_pyside6() -> None:
 
 def _integration_destination(ffmpeg_info: FFmpegInfo) -> str:
     if ffmpeg_info.has_libx264:
-        return "jellyfin"
+        return "cinecat"
     if ffmpeg_info.has_libx265:
         return "modern"
     pytest.skip("FFmpeg H.264/H.265 encoder not available")

@@ -60,6 +60,8 @@ def build_command(
         arguments.extend([f"-c:a:{position}", audio.codec or "copy"])
         if audio.action == "encode" and audio.bitrate is not None:
             arguments.extend([f"-b:a:{position}", audio.bitrate])
+        if audio.action == "encode" and audio.channels is not None:
+            arguments.extend([f"-ac:a:{position}", str(audio.channels)])
 
     subtitle_position = 0
     for subtitle in plan.subtitles:
@@ -74,5 +76,8 @@ def build_command(
             arguments.extend(["-map", f"0:{attachment.index}", "-c:t", "copy"])
 
     arguments.extend(["-map_metadata", "0", "-map_chapters", "0"])
+    if plan.container == "mp4":
+        # Faststart lets a browser start playback before the file finishes downloading.
+        arguments.extend(["-movflags", "+faststart"])
     arguments.append(str(output_path))
     return arguments

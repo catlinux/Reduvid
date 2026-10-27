@@ -20,13 +20,13 @@ class Profile:
 
 
 PROFILES: dict[str, Profile] = {
-    "jellyfin": Profile(
-        name="jellyfin",
-        video_codec="libx264",  # Widely supported by Jellyfin playback devices.
-        preset="medium",  # The balanced default encoding speed.
-        video_profile="high",  # High@4.1 decodes on nearly every TV, phone, and browser.
-        video_level="4.1",  # Higher levels trigger Jellyfin transcoding on many clients.
-        pixel_format="yuv420p",  # Eight-bit output avoids client transcodes caused by 10-bit video.
+    "cinecat": Profile(
+        name="cinecat",
+        video_codec="libx264",  # Browsers and the Cinecat web player decode H.264 everywhere.
+        preset="medium",  # Balanced speed; Cinecat direct play does not depend on the preset.
+        video_profile="high",  # High profile at 8 bits is the broad browser baseline.
+        video_level="4.1",  # Level 4.1 keeps 1080p within what the browser can decode.
+        pixel_format="yuv420p",  # 8-bit 4:2:0 is what browsers expect for direct play.
     ),
     "modern": Profile(
         name="modern",

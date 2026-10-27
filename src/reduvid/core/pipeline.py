@@ -75,7 +75,7 @@ class FileProcessor:
         plan = build_plan(media, self.ffmpeg_info, self.options)
         destination_dir = self.output_dir or media.path.parent
         destination_dir.mkdir(parents=True, exist_ok=True)
-        output_path = build_output_path(media.path, destination_dir, self.options.container)
+        output_path = build_output_path(media.path, destination_dir, plan.container)
         temp_path = build_temp_path(output_path)
         use_hw_decode = self.hw_decode and bool(self.ffmpeg_info.hwaccels)
         try:
