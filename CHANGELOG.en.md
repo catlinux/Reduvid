@@ -14,6 +14,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 - Engine: `FFmpegInfo.hwaccels` lists the acceleration methods FFmpeg offers.
 - Engine: `core/thumbnail.py` extracts a JPEG thumbnail of each video (frame at 10%) and stores it in the user cache; the redesigned interface will use it.
 - Engine: `core/hardware.py` checks which hardware encoders (NVENC, QSV, VAAPI, AMF) really work by encoding one frame with each, cached per FFmpeg version. FFmpeg lists them even when the driver does not support them.
+- Engine: `core/profile_store.py` saves named profiles (destination, quality, container, maximum height, languages and audio options) as TOML files in the user configuration. Track indices are not saved because they only apply to one specific video.
 - CLI: `--no-hw-decode` for `convert` and `estimate`, and the `hw_decode = false` configuration key, to avoid using the graphics card.
 
 ## [0.6.1] - 2026-10-27
