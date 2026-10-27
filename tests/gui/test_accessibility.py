@@ -142,6 +142,39 @@ def test_option_cards_keep_a_description(tmp_path: Path, qapp) -> None:
             assert card.accessibleDescription()
 
 
+def test_option_card_estimate_and_notes_stay_hidden_until_set(qapp) -> None:
+    card = OptionCard("Jellyfin", "Recommended", "Streams to your TV")
+    description = card.accessibleDescription()
+
+    card.set_estimate("")
+
+    assert card.estimate_label.isHidden()
+    assert card.notes_label.isHidden()
+    assert card.accessibleDescription() == description
+
+
+def test_option_card_estimate_and_notes_feed_the_description(qapp) -> None:
+    card = OptionCard("Jellyfin", "Recommended", "Streams to your TV")
+
+    card.set_estimate("About 1.2 GB")
+    card.set_notes(["Keeps HDR", "Same audio tracks"])
+
+    assert not card.estimate_label.isHidden()
+    assert card.estimate_label.objectName() == "cardEstimate"
+    assert not card.notes_label.isHidden()
+    assert card.notes_label.objectName() == "cardNotes"
+    assert card.notes_label.text() == "• Keeps HDR\n• Same audio tracks"
+    description = card.accessibleDescription()
+    assert "About 1.2 GB" in description
+    assert "Keeps HDR" in description
+    assert "Same audio tracks" in description
+
+    card.set_notes([])
+
+    assert card.notes_label.isHidden()
+    assert "About 1.2 GB" in card.accessibleDescription()
+
+
 def _mnemonics(root: QWidget) -> list[str]:
     values: list[str] = []
     for button in root.findChildren(QAbstractButton):

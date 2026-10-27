@@ -7,14 +7,17 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 ## Prioridad alta
 
 - Definir cómo se licencian las contribuciones externas de código antes de aceptar la primera: la licencia solo cubre material de Catlinux.
-- Fase 4 (0.4.0 → 1.0.0), empaquetado: icono de la aplicación, instalador de Windows (PyInstaller + Inno Setup) y AppImage de Linux, probados en un Windows y un Debian reales con un vídeo de prueba de unos 6 GB.
+- 0.6.0, ayudas: informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz.
 
 ## Prioridad media
 
+- 0.7.0 → 1.0.0: pipx, AppImage, probar el instalador de Windows en un equipo limpio, capturas y primera release.
 - Al crear el repositorio en GitHub: descripción «About», topics (`video`, `ffmpeg`, `jellyfin`, `h264`, `h265`, `video-compression`, `pyside6`, `cross-platform`) y avisos privados de seguridad activados.
 
 ## Prioridad baja / más adelante
 
+- Comparación de fotograma antes/después en la prueba de muestra.
+- Medir el margen de error real de la estimación (comparar con la conversión completa) antes de afirmar una cifra en la documentación.
 - AV1 (libsvtav1): la arquitectura de perfiles ya lo permite; falta perfil, pruebas y explicación.
 - Aceleración por hardware (NVENC, QSV, VAAPI) pulida: en 0.1.0 solo se detecta e informa.
 - Instalación sin Qt para servidores Linux (solo `reduvid-cli`): decidir en la Fase 4 cómo separar la dependencia de PySide6.

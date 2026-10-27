@@ -76,7 +76,7 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 - **Textos**: los `msgid` van en inglés y hay catálogos `ca` y `es`; `en` usa el `msgid` tal cual. Los `.mo` no se suben (ya están en `.gitignore`): los compila un hook de hatch al construir o instalar (también en `pip install -e`), con Babel como dependencia del hook.
 - **Idioma de la interfaz**: el de la configuración; si no hay, el del sistema (`LANGUAGE`, `LC_ALL`, `LC_MESSAGES`, `LANG` y `locale.getlocale()`); si no es ca/es/en, inglés.
 - **Modo de color**: Sistema (por defecto, `QStyleHints.colorScheme()`), Claro u Oscuro. Hay una preferencia «Reducir animaciones», porque Qt no lee la del sistema.
-- **Paso «Calidad» sin tamaños**: los tamaños de la maqueta salen de la muestra de 30 s, que es de la Fase 3. En la 0.2.0 las tarjetas no muestran tamaño.
+- **Paso «Calidad» sin tamaños**: los tamaños de la maqueta salen de la muestra de 1 minuto, que es de la Fase 3. En la 0.2.0 las tarjetas no muestran tamaño.
 - **HDR sin `tonemap`** (aviso bloqueante): en el Resumen, un diálogo por vídeo con «Saltar este vídeo» (por defecto) o «Convertir igualmente (los colores se verán apagados)». Los vídeos saltados no entran en la cola. La CLI no cambia.
 - **Semáforo Jellyfin**: se calcula en el motor (`core/compat.py`), no en la interfaz. Verde: se reproduce directo. Ámbar: algo hará que Jellyfin convierta (subtítulos de imagen que quemará, HDR o 10 bits conservados, perfil `modern`/`archive`). Rojo: hay un aviso bloqueante.
 - **Tests de interfaz**: sin `pytest-qt` (no se añaden dependencias). Se usa `QT_QPA_PLATFORM=offscreen` y una `QApplication` de sesión en `tests/gui/conftest.py`. Si el CI de Ubuntu falla por librerías de Qt, se añaden con apt en `ci.yml` (`libegl1`, `libxkbcommon0`, `libfontconfig1`; compruébalo antes).
@@ -186,86 +186,21 @@ En `main`, sin rama (decisión del usuario, 24-10-2026). Cada paso añade su ent
 
 ## Fase 3: ayudas (0.3.0)
 
-Muestra de 30 s (en el 40 % del vídeo) con estimación y comparación de fotograma antes/después, estimación de tamaño y tiempo, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz. Objetivo del usuario: 24-10-2026, «hacerlo todo» hasta tener algo instalable y probarlo con un Windows (instalador) y un Debian (reducir un vídeo real de 6 GB).
-
-### Decisiones de la Fase 3
-
-- **Muestra de 30 s:** se recorta con FFmpeg (`-ss <40%> -t 30`) a un archivo temporal en el directorio de caché del usuario (`platformdirs.user_cache_dir("reduvid")`), se codifica con el plan ya calculado y se borra al cerrar la aplicación o al descartar la muestra. Nunca se guarda junto al original.
-- **Comparación de fotograma antes/después:** un fotograma a mitad de la muestra (no del vídeo completo, para no tardar), extraído con ffprobe/ffmpeg a PNG temporal, mostrado lado a lado (o con deslizador si acaba siendo sencillo en QSS/Qt; si resulta complejo, lado a lado y se anota en el plan).
-- **Estimación de tamaño y tiempo:** tamaño, igual que ahora hace la muestra (ya extrapolable: tamaño_muestra / 30 s × duración_total). Tiempo: se mide la velocidad real de codificación de la muestra (x tiempo real) y se extrapola a la duración total; si no hay muestra calculada, se oculta el dato en vez de inventar un número.
-- **Perfiles guardados:** un perfil es un `PlanOptions` con nombre, guardado en `platformdirs.user_config_dir("reduvid")/profiles/<nombre>.toml` (mismo escritor TOML atómico que `core/config.py`). La interfaz permite guardar la combinación actual del asistente/Avanzado con un nombre y cargarla después; no hay perfiles de fábrica más allá de jellyfin/modern/archive, que ya existen como destino.
-- **Avisos de HDR/10 bits/subtítulos de imagen:** ya calculados por el motor (`core/plan.py`, `core/compat.py`); esta fase solo añade su aparición también en el paso de Calidad/Resumen antes de la muestra, para que el usuario los vea antes de gastar tiempo en una muestra o conversión completa.
-
-### Pasos
-
-- [x] 3.1 **Motor: recorte de muestra y estimación.** *(AgentRelay, esfuerzo alto; revisado, 288/292 tests en verde, 4 de integración saltados por no detectar FFmpeg en el PATH de esta sesión de Bash)* *AgentRelay, esfuerzo alto.* Versión: entrada en Sin publicar.
-  - `core/sample.py`: `build_sample_command(path, plan, start, duration) -> list[str]` (recorte + codificación con el plan ya calculado, usando `-ss`/`-t` antes de `-i` para que sea rápido) y `extract_frame_command(path, timestamp) -> list[str]` (un PNG a un temporal).
-  - `core/estimate.py`: `estimate_from_sample(original_sample_bytes, encoded_sample_bytes, sample_duration, total_duration, elapsed_encode_seconds) -> Estimate` (dataclass con `estimated_total_bytes`, `estimated_total_seconds`), pura, sin I/O.
-  - Tests: comandos generados (rutas con espacios/tildes, `-ss` antes de `-i`), y la extrapolación aritmética con casos límite (muestra más corta que 30 s si el vídeo dura menos de 75 s, duración cero).
-- [x] 3.2 **Motor: perfiles guardados.** *(AgentRelay, esfuerzo medio; revisado, 302/306 tests en verde)*
-  - `core/profile_store.py`: `list_profiles()`, `load_profile(name)`, `save_profile(name, options)`, `delete_profile(name)`, mismo escritor TOML atómico que `core/config.py` (puede reusar su función interna si ya está extraída, o duplicarla mínimamente si no merece la pena abstraer).
-  - Tests: ida y vuelta de un `PlanOptions` completo (incluye `audio_languages`/`subtitle_languages` como `frozenset`), nombres con espacios/tildes, perfil inexistente.
-- [x] 3.3 **Interfaz: muestra y comparación en el paso Calidad.** *(AgentRelay, esfuerzo xhigh; revisado con auditoría de diseño aparte sobre hilos/temporales/invalidación, sin bloqueantes; 308/312 tests en verde)*
-  - Botón «Probar con una muestra de 30 s» en el paso 3 (Calidad), que lanza `QueueWorker`-like en segundo plano (reusar el patrón de hilos de `gui/workers.py`, nunca tocar widgets desde otro hilo).
-  - Panel de resultado: dos imágenes (antes/después) con `QLabel`+`QPixmap`, tamaño estimado y porcentaje de ahorro, con los tokens de tema (tarjeta `#card`, colores habituales).
-  - Si cambia la calidad elegida, la muestra anterior se invalida y hay que volver a pedirla (no se recalcula sola).
-  - Tests offscreen: arranque de la muestra, resultado mostrado, invalidación al cambiar de calidad.
-- [x] 3.4 **Interfaz: estimación de tamaño/tiempo sin muestra.** *(AgentRelay, esfuerzo medio; revisado, 311/315 tests en verde. Nota: `estimate_from_sample` tiene el parámetro `original_sample_bytes` sin usar desde el 3.1, se arrastra sin afectar al resultado; limpiar en una pasada de pulido si se retoma `core/estimate.py`)*
-  - Si no hay muestra calculada, el paso Resumen no muestra tamaño/tiempo estimado (como ahora); si la hay, los usa para todos los vídeos de la cola con las mismas opciones (extrapolando por duración de cada uno).
-  - Tests: con y sin muestra.
-- [x] 3.5 **Interfaz: perfiles guardados.** *(AgentRelay, esfuerzo alto; revisado, 316/320 tests en verde. Decisión de la sesión: va en el paso Calidad, no en Preferencias, por ser el paso central de decisión del asistente)*
-  - En el paso Calidad, desplegable para cargar un perfil y botón «Guardar como perfil…» con diálogo de nombre.
-  - Aplicar un perfil rellena todo el estado del asistente (destino, calidad, contenedor, idiomas, etc.), igual que si el usuario lo hubiera elegido paso a paso.
-  - Tests offscreen: guardar, listar, cargar, eliminar.
-- [x] 3.6 **Interfaz: avisos tempranos de HDR/10 bits/subtítulos de imagen.** *(AgentRelay, esfuerzo medio; revisado, 321/325 tests en verde)*
-  - En el paso Calidad, mostrar los avisos relevantes del plan actual (ya calculados por el motor) antes de que el usuario llegue al Resumen, para que no se lleve la sorpresa solo al final.
-  - Tests: aviso visible cuando aplica, ausente cuando no.
-- [x] 3.7 **Docs y versión 0.3.0.** *(Sesión, Opus; verificado con FFmpeg real: 325/325 tests en verde incluida la suite de integración, y la muestra de 30 s probada de extremo a extremo contra un vídeo generado con FFmpeg, con recorte y los dos fotogramas de comparación generados de verdad)*
-  - README(.en) y `docs/{es,en}/gui.md`: cómo usar la muestra, la comparación y los perfiles guardados.
-  - Versión 0.3.0 en `__init__.py` y CHANGELOG(.en): Sin publicar → `[0.3.0]`. Menor: añade funcionalidad compatible.
-  - Terminado cuando pasan `pytest`, `ruff`, `mypy`, `pre-commit`, `check_doc_sync`, y una muestra real de 30 s con FFmpeg de verdad se ve y se guarda/carga un perfil real.
+Muestra de 1 minuto en total (decisión del usuario), repartida en 3 trozos de 20 s hacia el 20 %, 50 % y 80 % del vídeo (más representativa que un solo trozo seguido; el usuario puede cambiarlo) con estimación y comparación de fotograma antes/después, estimación de tamaño y tiempo, informe final, perfiles guardados y avisos de HDR, 10 bits y subtítulos de imagen en la interfaz.
 
 ## Fase 4: empaquetado y publicación (0.4.0 → 1.0.0)
 
-Objetivo: instalador de Windows funcional (probado en un Windows real) y paquete instalable en Debian (probado reduciendo un vídeo real de 6 GB). Primera release pública solo con OK explícito del usuario.
-
-### Decisiones de la Fase 4
-
-- **Windows:** PyInstaller en modo `--onedir` (carpeta, no `--onefile`), porque la LGPL de PySide6 exige poder sustituir la biblioteca Qt sin recompilar la app; eso solo es practicable en modo carpeta. Instalador con Inno Setup (gratuito, script de texto versionable en el repo, sin dependencias de pago). Sin firma de código por ahora (certificado de pago; se anota en TODO si se quiere más adelante) — avisar al usuario de que Windows SmartScreen mostrará advertencia la primera vez.
-- **Debian/Linux:** AppImage como formato principal (no exige instalación como root ni gestor de paquetes concreto). Evaluar `.deb` nativo más adelante si AppImage no basta para el test con Debian (anotado ya en TODO como prioridad baja); para el test de este plan, AppImage es suficiente si funciona.
-- **FFmpeg nunca se empaqueta** (ya decidido en CLAUDE.md): el instalador de Windows debe comprobar si hay FFmpeg y, si no, mostrar la pantalla ya existente (`gui/ffmpeg_missing.py`) con instrucciones; no se añade descarga automática sin que el usuario lo pida explícitamente (sería una decisión nueva, preguntar si aparece la tentación).
-- **PyPI/pipx:** se deja para después de probar los dos instaladores (Windows y Debian); no bloquea el test de este plan. Queda como paso 4.5, al final.
-- **CI de artefactos:** generar los paquetes en GitHub Actions (ubuntu-latest y windows-latest, ya en `ci.yml`) para que sean reproducibles y no dependan solo del equipo de este usuario; los artefactos de prueba para el test local pueden generarse también a mano mientras tanto.
-
-### Pasos
-
-- [x] 4.0 **Icono de la aplicación.** *(Sesión, Opus; aprobado por el usuario)* `src/reduvid/resources/icon/reduvid.{ico,png,svg}`: el gato de origami de Plegat (reusando `draw_origami_cat` de `gui/widgets/motifs.py` para el trazado, sin redibujarlo a mano) sobre fondo teal (`accent` de Plegat claro), cabeza en `accent2`. El `.ico` lleva 7 resoluciones (16 a 256 px); el `.svg` reproduce las mismas coordenadas, verificado renderizándolo y comparando píxel a píxel con el PNG.
-- [x] 4.1 **Windows: PyInstaller en modo carpeta.** *(AgentRelay, esfuerzo alto; revisado y verificado generando el paquete de verdad: `dist/windows/Reduvid/Reduvid.exe` arranca, fuentes y traducciones incluidas, 322/326 tests en verde)*
-  - `packaging/windows/reduvid.spec` (PyInstaller): usa el icono del paso 4.0, `reduvid.__main__` como entrada, excluye módulos de desarrollo (pytest, mypy, ruff, babel, pre_commit) del bundle.
-  - `scripts/build_windows.py` compila las traducciones y ejecuta PyInstaller, deja el resultado en `dist/windows/`.
-- [x] 4.2 **Windows: instalador Inno Setup.** *(AgentRelay, esfuerzo alto; revisado y compilado de verdad con Inno Setup 6.7.3 instalado en el equipo de desarrollo: `Reduvid-Setup-0.3.0.exe` se genera sin avisos tras corregir `ArchitecturesAllowed`/`ArchitecturesInstallIn64BitMode` de `x64` a `x64compatible`, deprecado en esa versión. Falta la prueba de instalación en un Windows limpio aparte de este equipo de desarrollo, prevista en la prueba de aceptación de la Fase 4.)*
-  - `packaging/windows/reduvid.iss`: instala la carpeta de PyInstaller en Archivos de Programa, crea acceso directo en el menú inicio (opcional en escritorio), desinstalador limpio, versión tomada de `__init__.py` (pasada como parámetro al compilar, no hardcodeada).
-  - Documentado en `docs/{es,en}/instalacion.md`, enlazado desde ambos README.
-- [x] 4.3 **Linux: AppImage.** *(AgentRelay, esfuerzo alto; revisado. Sintaxis bash validada con bash real vía WSL Debian; appimagetool 1.9.1 y el runtime de AppImage con versión fijada. Ni este equipo (Windows) ni el entorno del ejecutor tienen FUSE/herramientas de AppImage: la generación y ejecución real del `.AppImage` NO se ha probado todavía — queda para la prueba de aceptación de la Fase 4, en la Debian real del usuario.)*
-  - `packaging/linux/` con el `AppDir` (`AppRun`, `.desktop`, icono) y script de construcción `build_appimage.sh` con `appimagetool`.
-- [x] 4.4 **CI de artefactos.** *(AgentRelay, esfuerzo medio; revisado, YAML validado con PyYAML. Pendiente de confirmar con una ejecución real: el repositorio no tiene remoto en GitHub todavía.)*
-  - `ci.yml`: jobs `build-windows`/`build-linux` (dependientes de `checks`) que construyen el instalador y el `.AppImage` y los suben como artefactos de la ejecución (no publica release).
-- [ ] 4.5 **pipx/PyPI (si procede tras probar los instaladores).** *Pendiente de decidir alcance tras 4.1-4.4.*
-- [ ] 4.6 **Revisión final de licencias, capturas actualizadas y primera release.** *Sesión (Opus); Skill `licencias` obligatoria.* Requiere OK explícito del usuario para crear el tag y publicar. Versión 1.0.0 (mayor: primera versión considerada estable/instalable por cualquiera, puede justificar el salto si hay algún cambio incompatible pendiente; si no hay ninguno, valorar si no sería más bien 0.4.0 y dejar 1.0.0 para más adelante — decidirlo en el momento con lo que haya cambiado realmente, no de antemano).
-
-### Prueba de aceptación de la Fase 4 (con el usuario)
-
-1. Instalar el `.exe` de Inno Setup en un Windows real (no este equipo de desarrollo) y comprobar que abre y funciona.
-2. Instalar/ejecutar el `.AppImage` en un Debian real y usarlo para reducir un vídeo real de unos 6 GB de principio a fin (incluye verificación y, si aplica, reemplazo a papelera).
-3. Cualquier fallo encontrado en este paso se trata como bloqueante antes de considerar la Fase 4 cerrada, incluso si ya se había marcado algún paso anterior como hecho.
+- pipx/PyPI.
+- [x] Windows: PyInstaller en modo carpeta (Qt queda reemplazable, como exige la LGPL) + instalador Inno Setup, icono y job `build-windows` en CI. *(0.6.0: portado de una rama paralela hecha en el PC Windows que divergió en 0.2.0; esa rama queda en el historial como segundo padre del merge. Pendiente de rescatar de ella, reimplementándolo sobre esta base: perfiles guardados, avisos de compatibilidad en Calidad, comparación antes/después de la muestra y AppImage)*
+- Linux: AppImage; evaluar .deb y Flatpak.
+- CI de artefactos, capturas, revisión final de licencias y primera release (con OK).
 
 ## Decisiones resueltas (histórico)
 
 - **Contribuciones externas de código:** se exigirá **DCO** (Developer Certificate of Origin), no un CLA. Quien contribuye certifica con `Signed-off-by` en el commit que el código es suyo y lo aporta bajo WNCL-CU-1.0; no hay cesión de derechos a Catlinux ni papeleo aparte. Es el mínimo habitual en proyectos pequeños de un solo mantenedor; un CLA sería desproporcionado aquí. Pendiente de aplicar en `CONTRIBUTING.md`/`.en.md` (quitar el bloqueo de PRs de código y explicar el DCO) cuando se abra el repositorio a contribuciones.
 - **`--max-height` soportado de verdad:** `PlanOptions` gana el campo `max_height: int | None = None` (por defecto 1080, el límite del nivel 4.1 en jellyfin). `VideoDecision.reduce_to_1080p` (bool) se sustituyó por `target_height: int | None` para poder llevar cualquier altura objetivo, no solo 1080; `command.py` genera `scale=-2:<target_height>`. Solo afecta al perfil jellyfin, igual que antes. *(AgentRelay, esfuerzo alto; revisado y probado con la CLI real contra un vídeo generado con FFmpeg)*
 - **Adjuntos y portada en MKV:** `probe.py` añade `AttachmentStream` (index, filename, mime_type) y `MediaInfo.attachments` (streams con `codec_type: attachment` en ffprobe, con valor por defecto `[]` para no romper construcciones posicionales existentes). `command.py` los copia con `-map 0:<index> -c:t copy` solo cuando `plan.container == "mkv"`; en MP4 se omiten sin aviso (detalle técnico de compatibilidad de contenedor). *(AgentRelay, esfuerzo alto; revisado, 70/70 tests en verde incluida la suite de integración con FFmpeg real)*
-- **Reducción 4K desmarcada:** con `max_height` igual a la altura real del vídeo (p. ej. 2160 en un 4K nativo), el motor ya no debía avisar de una reducción que no ocurre ni aplicar un filtro `scale` redundante. La condición de `_video_decision` en `core/plan.py` comparaba `stream.width > 1920 OR stream.height > height_limit`, una anchura fija ajena al límite pedido; se cambió a comparar solo `stream.height > height_limit`, coherente con que `scale=-2:<target_height>` solo restringe la altura. Efecto colateral correcto: un vídeo panorámico ancho pero de poca altura (p. ej. 1920×804) tampoco se reduce ya sin necesidad. *(Sesión, Opus; trivial, dos líneas de condición; 2 tests nuevos, 324/328 en verde)*
 
 ## Dudas abiertas
 
-Ninguna pendiente.
+- **Reducción 4K desmarcada (2.9):** con `max_height=2160` el motor sigue emitiendo el aviso `resolution_reduced_4k_to_1080p` y `scale=-2:2160` (no-op), aunque el vídeo no se reduzca a 1080p. Decidir si el motor debe distinguir el caso (aviso y filtro) o se deja así.

@@ -12,12 +12,12 @@ import pytest
 pytest.importorskip("PySide6")
 
 from reduvid.core.config import Config
-from reduvid.core.probe import MediaInfo
+from reduvid.core.probe import AudioStream, MediaInfo
 from reduvid.gui.wizard_state import WizardState
 
 
-def media(path: Path) -> MediaInfo:
-    return MediaInfo(path, "matroska", 90.0, 1000, [], [], [], [])
+def media(path: Path, audios: list[AudioStream] | None = None) -> MediaInfo:
+    return MediaInfo(path, "matroska", 90.0, 1000, [], audios or [], [], [])
 
 
 def test_initial_values_come_from_the_config() -> None:
@@ -102,3 +102,114 @@ def test_unknown_destination_is_rejected() -> None:
         state.set_destination("unknown")
     with pytest.raises(ValueError):
         state.set_quality("ultra")
+
+
+def test_single_video_needs_exactly_one_probed_video(tmp_path: Path) -> None:
+    first = tmp_path / "one.mkv"
+    second = tmp_path / "two.mkv"
+    first.touch()
+    second.touch()
+    state = WizardState(Config())
+
+    assert state.single_video is None
+
+    state.add_paths([first])
+    assert state.single_video is None
+
+    state.set_media(first, media(first))
+    assert state.single_video is not None
+    assert state.single_video.path == first.resolve()
+
+    state.add_paths([second])
+    assert state.single_video is None
+
+
+def test_audio_track_selection_and_options(tmp_path: Path) -> None:
+    video = tmp_path / "video.mkv"
+    other = tmp_path / "other.mkv"
+    video.touch()
+    other.touch()
+    state = WizardState(Config())
+    state.add_paths([video])
+    state.set_media(
+        video,
+        media(
+            video,
+            audios=[
+                AudioStream(1, "aac", 2, "spa", True),
+                AudioStream(2, "ac3", 6, "spa", False),
+            ],
+        ),
+    )
+
+    assert state.selected_audio_tracks() == frozenset({1, 2})
+    assert state.options().audio_tracks is None
+
+    state.set_audio_tracks([1])
+
+    assert state.selected_audio_tracks() == frozenset({1})
+    assert state.options().audio_tracks == frozenset({1})
+
+    state.set_audio_tracks([1, 2])
+
+    assert state.options().audio_tracks is None
+
+    state.set_audio_tracks([2])
+    state.add_paths([other])
+    state.set_media(other, media(other))
+
+    assert state.audio_tracks is None
+    assert state.options().audio_tracks is None
+
+
+def test_audio_track_selection_resets_when_videos_are_removed(tmp_path: Path) -> None:
+    video = tmp_path / "video.mkv"
+    video.touch()
+    state = WizardState(Config())
+    state.add_paths([video])
+    state.set_media(video, media(video, audios=[AudioStream(1, "aac", 2, "spa", True)]))
+    state.set_audio_tracks([1])
+
+    state.remove_paths([video])
+
+    assert state.audio_tracks is None
+
+
+def test_audio_track_setters_only_notify_on_change() -> None:
+    state = WizardState(Config())
+    changes: list[int] = []
+    state.changed.connect(lambda: changes.append(1))
+
+    state.set_audio_tracks(None)
+    state.set_one_audio_per_language(False)
+    state.set_reduce_audio(False)
+
+    assert changes == []
+
+    state.set_audio_tracks([1, 2])
+    state.set_one_audio_per_language(True)
+    state.set_reduce_audio(True)
+
+    assert len(changes) == 3
+
+
+def test_audio_options_use_safe_defaults(tmp_path: Path) -> None:
+    state = WizardState(Config())
+    video = tmp_path / "video.mkv"
+    video.touch()
+    state.add_paths([video])
+    state.set_media(video, media(video))
+
+    options = state.options()
+
+    assert options.audio_tracks is None
+    assert options.one_audio_per_language is False
+    assert options.reduce_audio is False
+
+    state.set_one_audio_per_language(True)
+    state.set_reduce_audio(True)
+
+    options = state.options()
+
+    assert options.one_audio_per_language is True
+    assert options.reduce_audio is True

@@ -129,7 +129,7 @@ class AdvancedPage(QWidget):
 
         self.destination = StepDestination(self._state, content)
         layout.addWidget(self.destination)
-        self.keep = StepKeep(self._state, content)
+        self.keep = StepKeep(self._state, self._ffmpeg_info, content)
         layout.addWidget(self.keep)
         self.summary = StepSummary(self._state, self._ffmpeg_info, content)
         layout.addWidget(self.summary)

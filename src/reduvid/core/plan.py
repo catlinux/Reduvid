@@ -5,11 +5,20 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Literal
 
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.probe import AudioStream, MediaInfo, SubtitleStream, VideoStream
+from reduvid.core.probe import (
+    AudioStream,
+    MediaInfo,
+    SubtitleStream,
+    VideoStream,
+)
+from reduvid.core.probe import (
+    estimate_stream_bytes as estimate_stream_bytes,
+)
 from reduvid.core.profiles import PROFILES, QUALITY_CRFS, Profile
 
 
@@ -21,6 +30,9 @@ class PlanOptions:
     max_height: int | None = None
     audio_languages: frozenset[str] | None = None
     subtitle_languages: frozenset[str] | None = None
+    audio_tracks: frozenset[int] | None = None
+    one_audio_per_language: bool = False
+    reduce_audio: bool = False
 
 
 @dataclass(frozen=True)
@@ -83,6 +95,18 @@ def _crf(quality: str, codec: str) -> int:
         raise ValueError(f"Unknown quality level: {quality}") from error
 
 
+def _target_height(stream: VideoStream, profile: Profile, max_height: int | None) -> int | None:
+    if max_height is None:
+        # Jellyfin's level 4.1 profile tops out at 1080p; other profiles keep the source size.
+        limit = 1080 if profile.name == "jellyfin" else None
+    else:
+        # Even heights keep yuv420p encoders happy, so round the limit down.
+        limit = max_height - max_height % 2
+    if limit is None or limit < 2 or stream.height <= limit:
+        return None
+    return limit
+
+
 def _video_decision(
     stream: VideoStream,
     profile: Profile,
@@ -92,16 +116,18 @@ def _video_decision(
     max_height: int | None,
 ) -> VideoDecision:
     jellyfin = profile.name == "jellyfin"
-    # Level 4.1 tops out at 1080p by default; max_height can override that limit.
-    # The scale filter only constrains height (scale=-2:<target_height>), so the
-    # decision must compare against height alone: otherwise an explicit
-    # max_height matching the stream's own 4K height (no real reduction) would
-    # still trigger a bogus warning and a redundant no-op filter.
-    height_limit = max_height if max_height is not None else 1080
-    should_reduce = jellyfin and stream.height > height_limit
-    target_height = height_limit if should_reduce else None
+    target_height = _target_height(stream, profile, max_height)
     if target_height is not None:
-        warnings.append(Warning("resolution_reduced_4k_to_1080p", {"stream_index": stream.index}))
+        warnings.append(
+            Warning(
+                "resolution_reduced",
+                {
+                    "stream_index": stream.index,
+                    "from_height": stream.height,
+                    "to_height": target_height,
+                },
+            )
+        )
 
     filters: tuple[str, ...] = ()
     if stream.hdr and jellyfin:
@@ -130,7 +156,38 @@ def _video_decision(
     )
 
 
-def _audio_decision(stream: AudioStream, warnings: list[Warning]) -> AudioDecision:
+def rank_audio_key(stream: AudioStream) -> tuple[int, int, int, int]:
+    """Sort key for audio stream quality: channels, bitrate, is_default, -index."""
+    return (
+        stream.channels,
+        stream.bitrate or 0,
+        1 if stream.is_default else 0,
+        -stream.index,
+    )
+
+
+def rank_audio(streams: Sequence[AudioStream]) -> list[AudioStream]:
+    """Return audio streams ranked from best to worst quality."""
+    return sorted(streams, key=rank_audio_key, reverse=True)
+
+
+def _audio_decision(
+    stream: AudioStream, warnings: list[Warning], reduce_audio: bool = False
+) -> AudioDecision:
+    if reduce_audio:
+        target_bitrate = "256k" if stream.channels > 2 else "128k"
+        target_bps = 256_000 if stream.channels > 2 else 128_000
+        if (
+            stream.codec.lower() == "aac"
+            and stream.bitrate is not None
+            and stream.bitrate <= target_bps
+        ):
+            return AudioDecision(stream.index, "copy")
+        warnings.append(
+            Warning("audio_reduced", {"stream_index": stream.index, "bitrate": target_bitrate})
+        )
+        return AudioDecision(stream.index, "encode", "aac", target_bitrate)
+
     # Jellyfin clients generally direct-play these codecs.
     if stream.codec.lower() in {"aac", "ac3", "eac3"}:
         return AudioDecision(stream.index, "copy")
@@ -171,17 +228,40 @@ def build_plan(
         for stream in media.video_streams
     )
 
-    audio_languages = _language_filter(options.audio_languages)
-    selected_audio = [
-        stream
-        for stream in media.audio_streams
-        if _language_allowed(stream.language, audio_languages)
-    ]
-    if options.audio_languages is not None and media.audio_streams and not selected_audio:
-        # Keeping some audio beats producing a silent video, even if none matches.
+    selected_audio: list[AudioStream]
+    if options.audio_tracks is not None:
+        selected_audio = [
+            stream for stream in media.audio_streams if stream.index in options.audio_tracks
+        ]
+        if media.audio_streams and not selected_audio:
+            # Keeping some audio beats producing a silent video, even if none matches.
+            selected_audio = list(media.audio_streams)
+            warnings.append(Warning("audio_filter_kept_all"))
+    elif options.audio_languages is not None:
+        audio_languages = _language_filter(options.audio_languages)
+        selected_audio = [
+            stream
+            for stream in media.audio_streams
+            if _language_allowed(stream.language, audio_languages)
+        ]
+        if media.audio_streams and not selected_audio:
+            # Keeping some audio beats producing a silent video, even if none matches.
+            selected_audio = list(media.audio_streams)
+            warnings.append(Warning("audio_filter_kept_all"))
+    else:
         selected_audio = list(media.audio_streams)
-        warnings.append(Warning("audio_filter_kept_all"))
-    audios = tuple(_audio_decision(stream, warnings) for stream in selected_audio)
+
+    if options.one_audio_per_language and selected_audio:
+        groups: dict[str, list[AudioStream]] = {}
+        for stream in selected_audio:
+            lang = _normalized_language(stream.language)
+            groups.setdefault(lang, []).append(stream)
+        chosen_indices = {rank_audio(group)[0].index for group in groups.values()}
+        selected_audio = [stream for stream in selected_audio if stream.index in chosen_indices]
+
+    audios = tuple(
+        _audio_decision(stream, warnings, options.reduce_audio) for stream in selected_audio
+    )
 
     subtitle_languages = _language_filter(options.subtitle_languages)
     selected_subtitles = [

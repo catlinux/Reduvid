@@ -6,40 +6,65 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
-## [0.3.2] - 2026-10-26
-
-### Corregido
-
-- En Windows, Reduvid detecta ahora FFmpeg recién instalado (por ejemplo con `winget install Gyan.FFmpeg`) sin necesidad de cerrar sesión ni reiniciar: además del `PATH` heredado del proceso, se consulta el `PATH` de usuario y de sistema directamente del registro de Windows, que sí refleja lo que acaba de escribir el instalador.
-
-## [0.3.1] - 2026-10-25
-
-### Corregido
-
-- Al desmarcar la reducción de 4K con un vídeo que ya está a la altura pedida (p. ej. `max_height=2160` en un vídeo 3840×2160), el motor ya no emite el aviso de reducción a 1080p ni aplica un filtro de escalado redundante; la decisión de reducir se basa solo en la altura, no en una anchura fija de 1920 px, por lo que un vídeo panorámico ancho pero de poca altura tampoco se reduce sin necesidad.
-
-### Cambiado
-
-- `core/estimate.py`: `estimate_from_sample` pierde el parámetro `original_sample_bytes`, que no se usaba en el cálculo desde el paso 3.1.
-
-## [0.3.0] - 2026-10-25
+## [0.6.0] - 2026-10-27
 
 ### Añadido
 
-- Motor de muestra y estimación: recorte rápido de un fragmento de 30 s reutilizando el plan de codificación (`-ss` antes de `-i`), extracción de un fotograma PNG y extrapolación lineal de tamaño y tiempo de conversión desde la muestra.
-- Perfiles guardados en el motor: `core/profile_store.py` con lista, carga, guardado atómico y borrado de perfiles TOML individuales en la carpeta de configuración, conservando los nombres reales y la diferencia entre idiomas sin filtrar y conjunto vacío.
-- Muestra y comparación en el paso Calidad: botón para probar 30 s en segundo plano, fotogramas antes/después, tamaño total estimado, porcentaje de ahorro e invalidación al cambiar la calidad; los temporales usan nombres fijos en la caché.
-- Estimación en el paso Resumen: si hay una muestra vigente para la calidad elegida, cada tarjeta muestra tamaño y tiempo estimados extrapolados a su duración; sin muestra no se muestra ningún dato.
-- Perfiles guardados desde el paso Calidad: desplegable para aplicar un perfil completo y diálogo para guardar la combinación actual con nombre, con errores visibles y sin crear nada si el nombre está vacío.
-- Empaquetado para Windows con PyInstaller en modo carpeta (`--onedir`) mediante `packaging/windows/reduvid.spec` y `scripts/build_windows.py`, con las fuentes y traducciones incluidas, el icono en el ejecutable y en las ventanas, y FFmpeg siempre externo.
-- Avisos tempranos en el paso Calidad: el primer vídeo disponible muestra los avisos del plan (HDR, 10 bits, subtítulos de imagen, etc.) antes de llegar al Resumen, recalculados al cambiar las opciones o los vídeos.
+- Instalador de Windows: paquete de carpeta con PyInstaller (`packaging/windows/reduvid.spec`, `scripts/build_windows.py`, extra `build`) e instalador con Inno Setup (`packaging/windows/reduvid.iss`), con acceso en el menú Inicio, desinstalador y actualización sobre la versión anterior. FFmpeg sigue siendo externo. Guía en `docs/es/instalacion.md`.
+- Icono de la aplicación (`resources/icon/`), en el ejecutable, el instalador y las ventanas.
+- CI: el job `build-windows` genera el instalador y lo publica como artefacto.
 
-## [0.2.1] - 2026-10-25
+### Corregido
+
+- En Windows se detecta un FFmpeg recién instalado (por ejemplo con winget) sin cerrar sesión: si no está en el `PATH` del proceso, se busca también en el `PATH` del registro.
+- Los tests de `build_sample_command` fallaban en Windows porque usaban rutas POSIX (`/videos/…`), que allí no son absolutas.
+
+## [0.5.2] - 2026-10-27
+
+### Corregido
+
+- La interfaz se cerraba con «Error del bus» o «Violación de segmento» al estimar tamaños (por niveles de calidad o en el resumen), sobre todo con varios vídeos. Los hilos de trabajo se programaban para borrarse (`deleteLater`) mientras el paso aún esperaba por ellos; ahora los conserva el módulo `workers` hasta que Qt confirma que han terminado.
+
+## [0.5.1] - 2026-10-26
+
+### Añadido
+
+- La interfaz activa `faulthandler`: si hay un fallo nativo (por ejemplo «Error del bus»), imprime en la terminal en qué línea estaba cada hilo de Python, para poder localizarlo.
+
+## [0.5.0] - 2026-10-26
+
+### Añadido
+
+- Asistente, paso «Calidad»: cada tarjeta explica qué cambia (códec, resolución, HDR o 10 bits) y qué detalle se pierde; un botón estima el tamaño de los tres niveles con una muestra corta de 20 s por nivel, en segundo plano y cancelable; un selector de resolución (Automática, 1080p, 720p, 480p) y los «Detalles técnicos» plegados (códec, preajuste, CRF, perfil y formato de píxel).
+- Motor: `estimate_levels` y `SampleLevelsRunner` (`core/sample.py`) estiman varios niveles de calidad; `SampleRunner` admite número y duración de trozos.
 
 ### Cambiado
 
-- Botones principales con `role=primary` (Empezar, Siguiente y Elegir ffmpeg) y Cancelar de la cola con `role=danger`, en vez del mismo estilo plano que el resto de botones; la sombra desplazada de Riso se aplica también a los botones primarios y las tarjetas de opción recomendadas muestran un fondo tintado.
-- En el paso Resumen, cada vídeo pasa de una línea de texto con un badge pequeño a una tarjeta completa coloreada según el semáforo de compatibilidad con Jellyfin, y el hueco vertical que antes se repartía entre filas ahora queda agrupado en un solo bloque.
+- La altura máxima (`--max-height` y selector de resolución) se aplica en todos los perfiles; antes solo en `jellyfin`. Sin ella, `jellyfin` sigue bajando a 1080p y los demás perfiles conservan la resolución. Nunca se escala hacia arriba.
+- El aviso de reducción de resolución es genérico («de 2160p a 1080p») en lugar de mencionar siempre 1080p.
+- Asistente, paso «Destino»: cada opción indica su códec y su compromiso entre tamaño y compatibilidad.
+
+## [0.4.0] - 2026-10-26
+
+### Añadido
+
+- Prueba de muestra: el motor convierte 3 trozos de 20 s (hacia el 20 %, 50 % y 80 % del vídeo) con los ajustes del plan, mide el vídeo y estima el tamaño final y el tiempo de conversión (`core/sample.py`).
+- CLI: nueva orden `reduvid-cli estimate` con las mismas opciones de plan que `convert`.
+- Asistente, paso «Resumen»: botón «Estimar el tamaño final (prueba de 1 minuto)» por vídeo, con progreso, cancelación y resultado; se descarta si cambian los ajustes.
+
+## [0.3.0] - 2026-10-26
+
+### Añadido
+
+- Motor: selección de audio por pista (`audio_tracks`), «una pista por idioma» (`one_audio_per_language`), reducción del audio a AAC (`reduce_audio`), bitrate por pista en el sondeo y estimación de su tamaño.
+- CLI: opciones `--audio-tracks`, `--one-audio-per-language` y `--reduce-audio` en `convert`, y tamaño estimado de cada pista de audio en `probe` y `--dry-run`.
+- Asistente, paso «Qué conservar»: con un solo vídeo se elige el audio pista a pista (idioma, formato, canales y peso estimado), casilla «Una sola pista de audio por idioma», casilla «Reducir el peso del audio» con el resumen «el audio pasa de X a Y» y aviso de qué subtítulos admite cada contenedor.
+
+## [0.2.1] - 2026-10-26
+
+### Corregido
+
+- Instalación del README y de CONTRIBUTING: usa `python3` (en Debian no existe `python`) y activa el entorno virtual antes de `pip install`, que fallaba con `externally-managed-environment`.
 
 ## [0.2.0] - 2026-10-25
 

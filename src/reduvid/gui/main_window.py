@@ -237,6 +237,7 @@ class MainWindow(QMainWindow):
     def _start_from_summary(self) -> None:
         if self.has_running_queue():
             return
+        self._cancel_estimates()
         summary = self._active_summary()
         summary.resolve_blocking()
         paths = summary.remaining_paths()
@@ -275,12 +276,18 @@ class MainWindow(QMainWindow):
             self.queue_thread.quit()
             self.queue_thread.wait(5000)
 
+    def _cancel_estimates(self) -> None:
+        self.step_quality.cancel_estimate()
+        self.step_summary.cancel_estimate()
+        self.advanced_page.summary.cancel_estimate()
+
     def closeEvent(self, event: QCloseEvent) -> None:
         if self.has_running_queue() and not self._confirm_quit():
             event.ignore()
             return
         if self.has_running_queue():
             self.cancel_queue()
+        self._cancel_estimates()
         super().closeEvent(event)
 
     def _confirm_quit(self) -> bool:
@@ -372,8 +379,9 @@ class MainWindow(QMainWindow):
         stack.setAccessibleName(_("Step content"))
         stack.addWidget(StepVideos(self.wizard_state, self._ffmpeg_info.ffprobe_path, parent=stack))
         stack.addWidget(StepTarget(self.wizard_state, stack))
-        stack.addWidget(StepQuality(self.wizard_state, self._ffmpeg_info, stack))
-        self.step_keep = StepKeep(self.wizard_state, stack)
+        self.step_quality = StepQuality(self.wizard_state, self._ffmpeg_info, stack)
+        stack.addWidget(self.step_quality)
+        self.step_keep = StepKeep(self.wizard_state, self._ffmpeg_info, stack)
         stack.addWidget(self.step_keep)
         self.step_destination = StepDestination(self.wizard_state, stack)
         stack.addWidget(self.step_destination)

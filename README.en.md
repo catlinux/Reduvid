@@ -15,14 +15,17 @@ Reduvid (from *reducir vídeo*, Spanish for "shrink video") is a desktop app for
 
 ## Project status
 
-In development. The current version (0.3.0) already has a graphical interface, a step-by-step wizard, a command line, a sample test and saved profiles. Plan:
+In development. The current version (0.5.2) already has a graphical interface, a step-by-step wizard and a command line. Plan:
 
 | Version | Contents |
 |---|---|
 | 0.1.0 | Conversion engine and command line |
 | 0.2.0 | Graphical interface, wizard and languages (Català, Castellano, English) |
-| 0.3.0 | Sample test, estimates and saved profiles |
-| 0.4.0 → 1.0.0 | Linux and Windows installers and first stable release |
+| 0.3.0 | Choose audio tracks one by one, reduce the audio size and see how much each part weighs |
+| 0.4.0 | Sample test: estimated size and time before converting |
+| 0.5.0 | Clear video options: what changes, estimated size per quality level and resolution |
+| 0.6.0 | Final report, saved profiles and warnings for HDR, 10-bit video and image subtitles |
+| 0.7.0 → 1.0.0 | Linux and Windows installers and first stable release |
 
 Details in [TODO.en.md](TODO.en.md) and the [CHANGELOG](CHANGELOG.en.md).
 
@@ -61,14 +64,13 @@ Original design mockups in [docs/design/mockups.html](docs/design/mockups.html).
    ```bash
    git clone https://github.com/catlinux/Reduvid.git
    cd Reduvid
-   python -m venv .venv
-   # Linux: source .venv/bin/activate    Windows: .venv\Scripts\activate
+   # On Debian/Ubuntu the command is python3 (if it fails: sudo apt install python3-venv)
+   python3 -m venv .venv          # Windows: py -m venv .venv
+   source .venv/bin/activate    # Windows: .venv\Scripts\activate
    python -m pip install -e .
    ```
 
-To build a Windows installer or a Linux AppImage instead of running from source, see the [installers guide](docs/en/instalacion.md).
-
-The Windows installer and the Linux AppImage can already be built from source (see above); the `pipx` package is coming before version 1.0.0.
+To build the Windows installer instead of running from source, see the [installer guide](docs/en/instalacion.md). Packages for `pipx` and a Linux AppImage will come later.
 
 ## Quick start
 
@@ -90,7 +92,7 @@ Interface guide (wizard and Advanced mode) in [docs/en/gui.md](docs/en/gui.md). 
 | Plays directly on | Almost everything: TVs, phones, browsers | Modern devices; elsewhere Jellyfin converts it on the server or fails |
 | Choose it if | You watch on several devices, or you're not sure | Your devices are modern, or you only want to archive |
 
-These figures are rough and depend on each video; Reduvid's sample test (wizard step 3, "Try a 30-second sample") gives the real number. Even with a compatible codec, Jellyfin also transcodes 10-bit video, HDR, some image subtitles (PGS, VobSub) and DTS or TrueHD audio. Reduvid warns about each case and suggests a fix.
+These figures are rough and depend on each video; Reduvid's sample test (since 0.4.0) gives the real number. Even with a compatible codec, Jellyfin also transcodes 10-bit video, HDR, some image subtitles (PGS, VobSub) and DTS or TrueHD audio. Reduvid warns about each case and suggests a fix.
 
 ## Privacy
 

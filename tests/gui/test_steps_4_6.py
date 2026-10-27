@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import threading
+import time
 from pathlib import Path
 
 import pytest
@@ -12,13 +14,15 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QObject, Signal
-from PySide6.QtWidgets import QLabel, QSizePolicy
+from PySide6.QtWidgets import QLabel, QProgressBar, QPushButton
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
+from reduvid.core.pipeline import PipelineError
 from reduvid.core.plan import Warning
 from reduvid.core.probe import AudioStream, MediaInfo, SubtitleStream, VideoStream
 from reduvid.core.report import build_file_report, build_queue_report
+from reduvid.core.sample import SampleEstimate
 from reduvid.gui.main_window import MainWindow
 from reduvid.gui.theme.manager import ThemeManager
 from reduvid.gui.theme.qss import build_qss
@@ -63,28 +67,6 @@ def add_video(state: WizardState, tmp_path: Path, name: str, info: MediaInfo) ->
     return path.resolve()
 
 
-def languages_state(tmp_path: Path) -> WizardState:
-    state = WizardState(Config())
-    add_video(
-        state,
-        tmp_path,
-        "video.mkv",
-        media(
-            tmp_path / "video.mkv",
-            video=VideoStream(0, "h264", 1920, 1080, 24),
-            audios=[
-                AudioStream(1, "aac", 2, "eng", True),
-                AudioStream(2, "aac", 2, "spa", False),
-            ],
-            subtitles=[
-                SubtitleStream(3, "subrip", "eng", False, False, False),
-                SubtitleStream(4, "subrip", "", False, False, False),
-            ],
-        ),
-    )
-    return state
-
-
 class FakePrompt:
     def __init__(self, keep: bool) -> None:
         self.keep = keep
@@ -127,15 +109,90 @@ def summary_state(tmp_path: Path) -> WizardState:
     return state
 
 
-def test_step_keep_checks_every_language_and_reports_subsets(tmp_path: Path, qapp) -> None:
-    state = languages_state(tmp_path)
-    step = StepKeep(state)
+def three_audio_state(tmp_path: Path) -> WizardState:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+                AudioStream(2, "ac3", 6, "spa", False),
+                AudioStream(3, "aac", 2, "eng", False, bitrate=128_000),
+            ],
+            subtitles=[SubtitleStream(4, "subrip", "eng", False, False, False)],
+            duration=100.0,
+        ),
+    )
+    return state
 
+
+def test_step_keep_lists_every_track_of_a_single_video(tmp_path: Path, qapp) -> None:
+    state = three_audio_state(tmp_path)
+    step = StepKeep(state, ffmpeg())
+
+    assert step.audio_group.title() == "Audio"
+    assert list(step.audio_track_checks) == [1, 2, 3]
+    assert all(checkbox.isChecked() for checkbox in step.audio_track_checks.values())
+    assert step.audio_track_checks[1].text() == "Spanish · eac3 · 5.1 · ~8 MB"
+    assert step.audio_track_checks[2].text() == "Spanish · ac3 · 5.1 · —"
+    assert step.audio_track_checks[3].text() == "English · aac · Stereo · ~2 MB"
+    assert [index for index in step.audio_default_tags] == [1]
+    assert step.subtitle_checks["eng"].text() == "English · subrip (text)"
+    assert not step.one_audio_per_language.isHidden()
+    assert state.options().audio_tracks is None
+
+    step.audio_track_checks[2].setChecked(False)
+
+    assert state.options().audio_tracks == frozenset({1, 3})
+    assert step.audio_warning.isHidden()
+
+    step.audio_track_checks[1].setChecked(False)
+    step.audio_track_checks[3].setChecked(False)
+
+    assert state.options().audio_tracks == frozenset()
+    assert not step.audio_warning.isHidden()
+    assert step.audio_warning.text() == (
+        "If you do not tick any audio track, all of them are kept."
+    )
+
+    step.audio_track_checks[1].setChecked(True)
+    step.audio_track_checks[2].setChecked(True)
+    step.audio_track_checks[3].setChecked(True)
+
+    assert state.options().audio_tracks is None
+    assert step.audio_warning.isHidden()
+
+
+def test_step_keep_goes_back_to_languages_with_two_videos(tmp_path: Path, qapp) -> None:
+    state = three_audio_state(tmp_path)
+    step = StepKeep(state, ffmpeg())
+
+    assert set(step.audio_track_checks) == {1, 2, 3}
+
+    add_video(
+        state,
+        tmp_path,
+        "second.mkv",
+        media(
+            tmp_path / "second.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "aac", 2, "eng", True),
+                AudioStream(2, "aac", 2, "spa", False),
+            ],
+            subtitles=[SubtitleStream(3, "subrip", "eng", False, False, False)],
+        ),
+    )
+
+    assert step.audio_group.title() == "Audio languages"
+    assert step.audio_track_checks == {}
     assert set(step.audio_checks) == {"eng", "spa"}
-    assert set(step.subtitle_checks) == {"eng", "und"}
-    assert all(checkbox.isChecked() for checkbox in step.audio_checks.values())
+    assert state.options().audio_tracks is None
     assert state.options().audio_languages is None
-    assert state.options().subtitle_languages is None
 
     step.audio_checks["spa"].setChecked(False)
 
@@ -146,12 +203,128 @@ def test_step_keep_checks_every_language_and_reports_subsets(tmp_path: Path, qap
 
     assert state.options().audio_languages == frozenset()
     assert not step.audio_warning.isHidden()
-    assert state.selected_audio_languages() == frozenset()
 
-    step.audio_checks["eng"].setChecked(True)
-    step.audio_checks["spa"].setChecked(True)
+    step.one_audio_per_language.click()
 
-    assert state.options().audio_languages is None
+    assert state.one_audio_per_language is True
+    assert state.options().one_audio_per_language is True
+
+
+def test_step_keep_reduces_the_audio_and_shows_both_sizes(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[
+                AudioStream(1, "eac3", 6, "spa", True, bitrate=640_000),
+                AudioStream(2, "ac3", 6, "eng", False, bitrate=640_000),
+            ],
+            duration=100.0,
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert not step.audio_weight_group.isHidden()
+    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~16 MB"
+    assert not step.reduce_audio.isChecked()
+
+    step.reduce_audio.click()
+
+    assert state.reduce_audio is True
+    assert state.options().reduce_audio is True
+    assert step.audio_size_summary.text() == "The audio goes from ~16 MB to ~6 MB"
+
+
+def test_step_keep_explains_when_the_audio_size_is_unknown(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[AudioStream(1, "ac3", 6, "spa", True)],
+            duration=100.0,
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert step.audio_size_summary.text() == ("The audio size of this video cannot be estimated.")
+
+
+def test_step_keep_explains_the_container_and_groups_subtitles(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    add_video(
+        state,
+        tmp_path,
+        "video.mkv",
+        media(
+            tmp_path / "video.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            subtitles=[
+                SubtitleStream(4, "subrip", "spa", False, False, False),
+                SubtitleStream(5, "hdmv_pgs_subtitle", "spa", True, False, False),
+            ],
+        ),
+    )
+    step = StepKeep(state, ffmpeg())
+
+    assert step.subtitle_checks["spa"].text() == (
+        "Spanish · subrip (text), hdmv_pgs_subtitle (image)"
+    )
+    assert not step.subtitle_container_note.isHidden()
+    assert step.subtitle_container_note.text() == (
+        "Image subtitles are kept in MKV, but Jellyfin will have to burn them in while playing."
+    )
+
+    state.set_container("mp4")
+
+    assert step.subtitle_container_note.text() == (
+        "Image subtitles do not fit in MP4 and will be dropped. Text ones are kept."
+    )
+
+    text_only = WizardState(Config())
+    add_video(
+        text_only,
+        tmp_path,
+        "text.mkv",
+        media(
+            tmp_path / "text.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            subtitles=[SubtitleStream(4, "subrip", "eng", False, False, False)],
+        ),
+    )
+    text_step = StepKeep(text_only, ffmpeg())
+
+    assert text_step.subtitle_container_note.isHidden()
+
+
+def test_step_keep_without_videos_keeps_the_empty_texts(tmp_path: Path, qapp) -> None:
+    step = StepKeep(WizardState(Config()), ffmpeg())
+
+    texts = [label.text() for label in step.findChildren(QLabel)]
+    assert "Add videos to see their audio languages." in texts
+    assert "Add videos to see their subtitle languages." in texts
+    assert step.audio_track_checks == {}
+    assert step.subtitle_checks == {}
+    assert step.audio_weight_group.isHidden()
+    assert step.subtitle_container_note.isHidden()
+
+
+@pytest.mark.parametrize(("theme", "mode"), sorted(THEMES))
+def test_step_keep_builds_with_every_theme(theme: str, mode: str, tmp_path: Path, qapp) -> None:
+    ThemeManager(qapp).apply(theme, mode)
+    state = three_audio_state(tmp_path)
+
+    step = StepKeep(state, ffmpeg())
+
+    assert step.findChild(QLabel, "audioSizeSummary") is not None
+    assert step.findChild(QLabel, "subtitleContainerNote") is not None
 
 
 def test_step_destination_controls_container_folder_and_4k(tmp_path: Path, qapp) -> None:
@@ -211,27 +384,6 @@ def test_summary_traffic_lights_warnings_and_skip_decisions(tmp_path: Path, qapp
         "direct.mkv",
         "image-subs.mkv",
     ]
-
-
-def test_summary_rows_are_coloured_cards(tmp_path: Path, qapp) -> None:
-    state = summary_state(tmp_path)
-    summary = StepSummary(state, ffmpeg())
-    summary.blocking_prompt = FakePrompt(keep=False)
-
-    summary.refresh()
-
-    cards = [
-        summary.items_layout.itemAt(index).widget() for index in range(summary.items_layout.count())
-    ]
-    assert all(card is not None for card in cards)
-    cards = [card for card in cards if card is not None]
-    levels = {card.property("level") for card in cards}
-    assert len(cards) == 3
-    assert levels == {"direct", "partial", "blocked"}
-    assert all(card.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Preferred for card in cards)
-    layout = summary.layout()
-    assert layout is not None
-    assert layout.itemAt(3).spacerItem() is not None
 
 
 def test_summary_keeps_blocking_videos_when_converting_anyway(tmp_path: Path, qapp) -> None:
@@ -327,3 +479,291 @@ def test_warning_text_is_used_in_the_summary(tmp_path: Path, qapp) -> None:
     labels = [label.text() for label in summary.findChildren(QLabel, "compatWarning")]
     expected = warning_text(Warning("image_subtitle_burn_in", {"stream_index": 1}))
     assert expected in labels
+
+
+def wait_for(predicate, qapp, timeout: float = 10.0) -> None:
+    deadline = time.monotonic() + timeout
+    while not predicate():
+        if time.monotonic() > deadline:
+            pytest.fail("condition not met before the timeout")
+        qapp.processEvents()
+        time.sleep(0.01)
+
+
+def estimate_state(
+    tmp_path: Path,
+    *,
+    bitrate: int | None = 640_000,
+    size: int = 6_700_000_000,
+    count: int = 1,
+) -> WizardState:
+    state = WizardState(Config())
+    for index in range(count):
+        name = f"movie{index}.mkv"
+        add_video(
+            state,
+            tmp_path,
+            name,
+            media(
+                tmp_path / name,
+                video=VideoStream(0, "h264", 1920, 1080, 24),
+                audios=[AudioStream(1, "aac", 2, "eng", True, bitrate=bitrate)],
+                size=size,
+                duration=100.0,
+            ),
+        )
+    return state
+
+
+def install_sample_runner(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    video_bytes: int = 350_000_000,
+    paused: bool = False,
+) -> list:
+    instances: list = []
+
+    class Runner:
+        def __init__(self, _ffmpeg, _media, _plan, _input, *, on_progress=None, threads=None):
+            self.on_progress = on_progress
+            self.started = threading.Event()
+            self.release = threading.Event()
+            self.cancelled = False
+            instances.append(self)
+
+        def run(self) -> SampleEstimate:
+            if self.on_progress is not None:
+                self.on_progress(0.5)
+            if paused:
+                self.started.set()
+                self.release.wait(timeout=10)
+            for value in (0.75, 1.0):
+                if self.on_progress is not None:
+                    self.on_progress(value)
+            if self.cancelled:
+                raise PipelineError("cancelled", "Sampling was cancelled.")
+            return SampleEstimate(video_bytes, 10.0, 5.0)
+
+        def cancel(self) -> None:
+            self.cancelled = True
+            self.release.set()
+
+    monkeypatch.setattr("reduvid.gui.workers.SampleRunner", Runner)
+    return instances
+
+
+def test_summary_estimates_the_final_size_from_a_sample(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path)
+    summary = StepSummary(state, ffmpeg())
+    path = state.videos[0].path
+    button = summary.estimate_buttons[path]
+    bar = summary.estimate_progress_bars[path]
+    cancel = summary.estimate_cancel_buttons[path]
+    result = summary.estimate_results[path]
+    assert button.text() == "Estimate the final size (1-minute test)"
+    assert bar.isHidden()
+    assert cancel.isHidden()
+    assert result.isHidden()
+    instances = install_sample_runner(monkeypatch, paused=True)
+
+    button.click()
+
+    assert not bar.isHidden()
+    wait_for(lambda: instances and instances[0].started.is_set(), qapp)
+    wait_for(lambda: bar.value() == 50, qapp)
+    instances[0].release.set()
+    wait_for(lambda: not result.isHidden(), qapp)
+
+    assert result.text() == (
+        "Estimated size: ~3.5 GB (from 6.7 GB: −48 %) · Approx. time: 0:50"  # noqa: RUF001
+    )
+    wait_for(lambda: summary.estimating_path is None, qapp)
+    assert bar.isHidden()
+    assert cancel.isHidden()
+    assert button.isEnabled()
+    assert summary.start_button.isEnabled()
+
+
+def test_summary_cancel_returns_to_the_initial_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path)
+    summary = StepSummary(state, ffmpeg())
+    path = state.videos[0].path
+    instances = install_sample_runner(monkeypatch, paused=True)
+
+    summary.estimate_buttons[path].click()
+    wait_for(lambda: instances and instances[0].started.is_set(), qapp)
+
+    summary.estimate_cancel_buttons[path].click()
+
+    assert instances[0].cancelled
+    assert summary.estimating_path is None
+    assert summary.estimate_progress_bars[path].isHidden()
+    assert summary.estimate_cancel_buttons[path].isHidden()
+    assert summary.estimate_results[path].isHidden()
+    assert summary.estimate_buttons[path].isEnabled()
+    assert summary.start_button.isEnabled()
+    assert summary._estimate_thread is None
+
+
+def test_summary_estimate_is_invalidated_when_options_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path)
+    summary = StepSummary(state, ffmpeg())
+    path = state.videos[0].path
+    install_sample_runner(monkeypatch)
+
+    summary.estimate_buttons[path].click()
+    wait_for(lambda: not summary.estimate_results[path].isHidden(), qapp)
+    wait_for(lambda: summary.estimating_path is None, qapp)
+
+    summary.refresh()
+
+    assert not summary.estimate_results[path].isHidden()
+
+    state.set_quality("high")
+    summary.refresh()
+
+    assert summary.estimate_results[path].isHidden()
+    assert summary.estimate_buttons[path].isEnabled()
+
+
+def test_summary_estimate_without_the_audio_size(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path, bitrate=None)
+    summary = StepSummary(state, ffmpeg())
+    path = state.videos[0].path
+    install_sample_runner(monkeypatch)
+
+    summary.estimate_buttons[path].click()
+    wait_for(lambda: not summary.estimate_results[path].isHidden(), qapp)
+    wait_for(lambda: summary.estimating_path is None, qapp)
+
+    assert summary.estimate_results[path].text() == (
+        "Estimated size: cannot be calculated without the audio size; "
+        "video only: ~3.5 GB · Approx. time: 0:50"
+    )
+
+
+def test_summary_estimate_bigger_than_the_original(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path)
+    summary = StepSummary(state, ffmpeg())
+    path = state.videos[0].path
+    install_sample_runner(monkeypatch, video_bytes=800_000_000)
+
+    summary.estimate_buttons[path].click()
+    wait_for(lambda: not summary.estimate_results[path].isHidden(), qapp)
+    wait_for(lambda: summary.estimating_path is None, qapp)
+
+    assert summary.estimate_results[path].text() == (
+        "Estimated size: ~8.0 GB (bigger than the original 6.7 GB) · Approx. time: 0:50"
+    )
+
+
+def test_summary_estimates_one_video_at_a_time(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    state = estimate_state(tmp_path, count=2)
+    summary = StepSummary(state, ffmpeg())
+    first, second = (entry.path for entry in state.videos)
+    instances = install_sample_runner(monkeypatch, paused=True)
+
+    summary.estimate_buttons[first].click()
+    wait_for(lambda: instances and instances[0].started.is_set(), qapp)
+
+    assert not summary.estimate_buttons[first].isEnabled()
+    assert not summary.estimate_buttons[second].isEnabled()
+    assert not summary.start_button.isEnabled()
+
+    instances[0].release.set()
+    wait_for(lambda: summary.estimating_path is None, qapp)
+
+    assert summary.estimate_buttons[first].isEnabled()
+    assert summary.estimate_buttons[second].isEnabled()
+    assert summary.start_button.isEnabled()
+
+
+def test_closing_the_window_cancels_a_running_estimate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    window = MainWindow(Config(), ffmpeg(), ThemeManager(qapp))
+    state = window.wizard_state
+    path = add_video(
+        state,
+        tmp_path,
+        "movie.mkv",
+        media(
+            tmp_path / "movie.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[AudioStream(1, "aac", 2, "eng", True, bitrate=640_000)],
+            size=6_700_000_000,
+            duration=100.0,
+        ),
+    )
+    window.step_summary.refresh()
+    instances = install_sample_runner(monkeypatch, paused=True)
+
+    window.step_summary.estimate_buttons[path].click()
+    wait_for(lambda: instances and instances[0].started.is_set(), qapp)
+
+    window.close()
+
+    assert instances[0].cancelled
+    assert window.step_summary.estimating_path is None
+    assert window.step_summary.estimate_progress_bars[path].isHidden()
+    assert window.step_summary._estimate_thread is None
+
+
+def test_starting_the_conversion_cancels_a_running_estimate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    window = MainWindow(Config(), ffmpeg(), ThemeManager(qapp))
+    state = window.wizard_state
+    path = add_video(
+        state,
+        tmp_path,
+        "movie.mkv",
+        media(
+            tmp_path / "movie.mkv",
+            video=VideoStream(0, "h264", 1920, 1080, 24),
+            audios=[AudioStream(1, "aac", 2, "eng", True, bitrate=640_000)],
+            size=6_700_000_000,
+            duration=100.0,
+        ),
+    )
+    window.step_summary.refresh()
+    instances = install_sample_runner(monkeypatch, paused=True)
+
+    window.step_summary.estimate_buttons[path].click()
+    wait_for(lambda: instances and instances[0].started.is_set(), qapp)
+    monkeypatch.setattr(window, "start_queue", lambda *_args, **_kwargs: FakeWorker())
+
+    window._start_from_summary()
+
+    assert instances[0].cancelled
+    assert window.step_summary.estimating_path is None
+    assert window.step_summary._estimate_thread is None
+
+
+@pytest.mark.parametrize(("theme", "mode"), sorted(THEMES))
+def test_summary_estimate_row_builds_with_every_theme(
+    theme: str, mode: str, tmp_path: Path, qapp
+) -> None:
+    ThemeManager(qapp).apply(theme, mode)
+    state = estimate_state(tmp_path)
+
+    summary = StepSummary(state, ffmpeg())
+
+    assert summary.findChild(QPushButton, "estimateButton") is not None
+    assert summary.findChild(QProgressBar, "estimateProgress") is not None
+    assert summary.findChild(QPushButton, "estimateCancel") is not None
+    result = summary.findChild(QLabel, "estimateResult")
+    assert result is not None
+    assert result.accessibleName()

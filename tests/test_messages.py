@@ -17,10 +17,11 @@ from reduvid.messages import error_text, warning_text
 ROOT = Path(__file__).resolve().parent.parent
 LOCALE_DIR = ROOT / "src" / "reduvid" / "locale"
 WARNING_PARAMS: dict[str, dict[str, object]] = {
-    "resolution_reduced_4k_to_1080p": {"stream_index": 0},
+    "resolution_reduced": {"stream_index": 0, "from_height": 2160, "to_height": 1080},
     "hdr_converted_to_sdr": {"stream_index": 0},
     "hdr_tonemap_unavailable": {"stream_index": 0, "blocking": True},
     "audio_recoded": {"stream_index": 1, "codec": "aac"},
+    "audio_reduced": {"stream_index": 1, "bitrate": "128k"},
     "image_subtitle_burn_in": {"stream_index": 2},
     "image_subtitle_dropped_mp4": {"stream_index": 2},
     "audio_filter_kept_all": {},
@@ -118,6 +119,15 @@ def test_unknown_warning_code_is_reported() -> None:
 
     assert "not_a_real_code" in text
     assert text != warning_text(Warning("audio_filter_kept_all"))
+
+
+def test_audio_reduced_warning_text() -> None:
+    warning = Warning("audio_reduced", {"stream_index": 2, "bitrate": "128k"})
+    i18n.setup_language("en")
+    text = warning_text(warning)
+    assert "Audio track 2" in text
+    assert "128k" in text
+    assert "AAC" in text
 
 
 def test_catalogs_have_no_untranslated_entries() -> None:

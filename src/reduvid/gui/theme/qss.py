@@ -119,10 +119,6 @@ QAbstractButton#card {
 QAbstractButton#card:hover {
     border-color: ${muted};
 }
-QAbstractButton#card[recommended="true"] {
-    background-color: ${recommended_bg};
-    border-color: ${accent2};
-}
 QAbstractButton#card[checked="true"], QAbstractButton#card:checked {
     background-color: ${soft};
     border-color: ${accent};
@@ -157,41 +153,19 @@ QAbstractButton#card:focus {
     padding: 2px 8px;
 }
 #compatLight[level="direct"] {
-    background-color: ${surface};
+    background-color: ${soft};
     color: ${text};
     border-color: ${accent};
 }
 #compatLight[level="partial"] {
-    background-color: ${surface};
+    background-color: ${warn_bg};
     color: ${warn_fg};
     border-color: ${accent2};
 }
 #compatLight[level="blocked"] {
-    background-color: ${surface};
+    background-color: ${warn_bg};
     color: ${warn_fg};
     border-color: ${warn_fg};
-}
-
-#summaryCard, #sampleResult {
-    background-color: ${surface};
-    border: ${border_width}px solid ${line};
-    border-radius: ${radius}px;
-}
-#summaryCard[level="direct"] {
-    background-color: ${soft};
-    border-color: ${line};
-}
-#summaryCard[level="partial"] {
-    background-color: ${warn_bg};
-    border-color: ${accent2};
-}
-#summaryCard[level="blocked"] {
-    background-color: ${warn_bg};
-    border-color: ${warn_fg};
-}
-#summaryCard[level="partial"] QLabel,
-#summaryCard[level="blocked"] QLabel {
-    color: ${warn_fg};
 }
 
 QLineEdit, QComboBox {
@@ -379,7 +353,6 @@ def build_qss(tokens: ThemeTokens) -> str:
         warn_bg=tokens.warn_bg,
         warn_fg=tokens.warn_fg,
         track=tokens.track,
-        recommended_bg=_mix(tokens.accent2, tokens.surface, 0.18),
         radius=tokens.radius,
         border_width=tokens.border_width,
         body=tokens.body,
@@ -388,22 +361,6 @@ def build_qss(tokens: ThemeTokens) -> str:
         display_weight=tokens.display_weight,
         progress_fill=_progress_fill(tokens),
     )
-
-
-def _mix(foreground: str, background: str, weight: float) -> str:
-    """Blend two token colours to obtain an intermediate tone."""
-
-    def channels(value: str) -> list[int]:
-        digits = value.lstrip("#")
-        return [int(digits[index : index + 2], 16) for index in (0, 2, 4)]
-
-    blended = [
-        round(foreground_channel * weight + background_channel * (1 - weight))
-        for foreground_channel, background_channel in zip(
-            channels(foreground), channels(background), strict=True
-        )
-    ]
-    return "#" + "".join(f"{channel:02X}" for channel in blended)
 
 
 def _progress_fill(tokens: ThemeTokens) -> str:

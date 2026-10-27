@@ -19,22 +19,31 @@ def _options() -> tuple[tuple[str, str, str, str, str], ...]:
             "jellyfin",
             "jellyfin",
             _("Jellyfin"),
-            _("Direct play"),
-            _("TV, phone or browser through your Jellyfin server."),
+            _("H.264"),
+            _(
+                "Plays directly on almost any TV, phone or browser through your Jellyfin "
+                "server. Files are larger and 4K is scaled down to 1080p."
+            ),
         ),
         (
             "modern",
             "modern",
             _("Modern devices"),
             _("H.265"),
-            _("Newer phones, tablets and TVs that play H.265."),
+            _(
+                "Smaller files than H.264. Newer phones, tablets and TVs play it; older "
+                "ones and some browsers may not."
+            ),
         ),
         (
             "archive",
             "archive",
             _("Save for archive"),
             _("H.265"),
-            _("Videos you keep for later; saving space matters more than speed."),
+            _(
+                "The smallest files: H.265 with the slowest, most careful encoding. "
+                "Conversion takes longer."
+            ),
         ),
         (
             "unknown",

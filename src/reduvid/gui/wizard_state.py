@@ -16,7 +16,6 @@ from reduvid.core.config import Config, Container
 from reduvid.core.plan import PlanOptions
 from reduvid.core.probe import MediaInfo
 from reduvid.core.queue import VIDEO_EXTENSIONS
-from reduvid.gui.workers import SampleResult
 
 DESTINATIONS = ("jellyfin", "modern", "archive")
 QUALITIES = ("high", "balanced", "max_savings")
@@ -53,10 +52,10 @@ class WizardState(QObject):
         self._threads: int | None = None
         self._audio_selected: frozenset[str] | None = None
         self._subtitle_selected: frozenset[str] | None = None
-        self._sample_result: SampleResult | None = None
-        self._sample_quality: str | None = None
-        self._applying_options = False
         self._videos: list[VideoEntry] = []
+        self._audio_tracks: frozenset[int] | None = None
+        self._one_audio_per_language = False
+        self._reduce_audio = False
 
     @property
     def videos(self) -> tuple[VideoEntry, ...]:
@@ -71,16 +70,16 @@ class WizardState(QObject):
         return self._quality
 
     @property
-    def sample_result(self) -> SampleResult | None:
-        """Sample valid for the current quality, if one has been calculated."""
-        if self._sample_quality == self._quality:
-            return self._sample_result
-        return None
-
-    @property
     def ready(self) -> bool:
         """Whether at least one video has been probed successfully."""
         return any(entry.ready for entry in self._videos)
+
+    @property
+    def single_video(self) -> VideoEntry | None:
+        """The single probed video when exactly one video is in the wizard."""
+        if len(self._videos) == 1 and self._videos[0].ready:
+            return self._videos[0]
+        return None
 
     @property
     def container(self) -> str:
@@ -106,93 +105,85 @@ class WizardState(QObject):
     def threads(self) -> int | None:
         return self._threads
 
+    @property
+    def audio_tracks(self) -> frozenset[int] | None:
+        return self._audio_tracks
+
+    @property
+    def one_audio_per_language(self) -> bool:
+        return self._one_audio_per_language
+
+    @property
+    def reduce_audio(self) -> bool:
+        return self._reduce_audio
+
     def set_destination(self, destination: str) -> None:
         if destination not in DESTINATIONS:
             raise ValueError(f"Unknown destination: {destination}")
         if destination != self._destination:
             self._destination = destination
-            self._notify_changed()
+            self.changed.emit()
 
     def set_quality(self, quality: str) -> None:
         if quality not in QUALITIES:
             raise ValueError(f"Unknown quality: {quality}")
         if quality != self._quality:
             self._quality = quality
-            self._sample_result = None
-            self._sample_quality = None
-            self._notify_changed()
-
-    def apply_options(self, options: PlanOptions) -> None:
-        """Apply a complete profile, emitting a single change at the end."""
-        self._applying_options = True
-        try:
-            self.set_destination(options.destination)
-            self.set_quality(options.quality)
-            self.set_container(options.container)
-            self.set_max_height(options.max_height)
-            self.set_audio_languages(
-                options.audio_languages
-                if options.audio_languages is not None
-                else self.available_audio_languages()
-            )
-            self.set_subtitle_languages(
-                options.subtitle_languages
-                if options.subtitle_languages is not None
-                else self.available_subtitle_languages()
-            )
-        finally:
-            self._applying_options = False
-        self.changed.emit()
-
-    def _notify_changed(self) -> None:
-        if not self._applying_options:
             self.changed.emit()
-
-    def set_sample_result(self, result: SampleResult) -> None:
-        self._sample_result = result
-        self._sample_quality = self._quality
-
-    def clear_sample_result(self) -> None:
-        self._sample_result = None
-        self._sample_quality = None
 
     def set_container(self, container: str) -> None:
         if container not in CONTAINERS:
             raise ValueError(f"Unknown container: {container}")
         if container != self._container:
             self._container = cast(Container, container)
-            self._notify_changed()
+            self.changed.emit()
 
     def set_output_dir(self, output_dir: Path | None) -> None:
         resolved = output_dir.expanduser() if output_dir is not None else None
         if resolved != self._output_dir:
             self._output_dir = resolved
-            self._notify_changed()
+            self.changed.emit()
 
     def set_replace_original(self, replace: bool) -> None:
         if replace != self._replace_original:
             self._replace_original = replace
-            self._notify_changed()
+            self.changed.emit()
 
     def set_reduce_4k(self, reduce: bool) -> None:
         if reduce != self._reduce_4k:
             self._reduce_4k = reduce
             self._max_height = None
-            self._notify_changed()
+            self.changed.emit()
 
     def set_max_height(self, max_height: int | None) -> None:
         if max_height is not None and max_height < 1:
             raise ValueError("max_height must be positive")
         if max_height != self._max_height:
             self._max_height = max_height
-            self._notify_changed()
+            self.changed.emit()
 
     def set_threads(self, threads: int | None) -> None:
         if threads is not None and threads < 1:
             raise ValueError("threads must be positive")
         if threads != self._threads:
             self._threads = threads
-            self._notify_changed()
+            self.changed.emit()
+
+    def set_one_audio_per_language(self, enabled: bool) -> None:
+        if enabled != self._one_audio_per_language:
+            self._one_audio_per_language = enabled
+            self.changed.emit()
+
+    def set_reduce_audio(self, enabled: bool) -> None:
+        if enabled != self._reduce_audio:
+            self._reduce_audio = enabled
+            self.changed.emit()
+
+    def set_audio_tracks(self, tracks: Iterable[int] | None) -> None:
+        normalized = frozenset(tracks) if tracks is not None else None
+        if normalized != self._audio_tracks:
+            self._audio_tracks = normalized
+            self.changed.emit()
 
     def available_audio_languages(self) -> tuple[str, ...]:
         return _languages(self._videos, "audio")
@@ -211,6 +202,15 @@ class WizardState(QObject):
         if self._subtitle_selected is None:
             return available
         return frozenset(code for code in self._subtitle_selected if code in available)
+
+    def selected_audio_tracks(self) -> frozenset[int]:
+        video = self.single_video
+        if video is None or video.media is None:
+            return frozenset()
+        available = frozenset(stream.index for stream in video.media.audio_streams)
+        if self._audio_tracks is None:
+            return available
+        return frozenset(index for index in self._audio_tracks if index in available)
 
     def set_audio_languages(self, codes: Iterable[str]) -> None:
         self._set_languages("_audio_selected", codes, "audio")
@@ -241,6 +241,13 @@ class WizardState(QObject):
             max_height = self._max_height
         else:
             max_height = 2160 if self._keep_4k() else None
+        tracks: frozenset[int] | None = None
+        single = self.single_video
+        if single is not None and single.media is not None and self._audio_tracks is not None:
+            available_tracks = frozenset(stream.index for stream in single.media.audio_streams)
+            selected = self.selected_audio_tracks()
+            if selected != available_tracks:
+                tracks = selected
         return PlanOptions(
             destination=self._destination,
             quality=self._quality,
@@ -248,6 +255,9 @@ class WizardState(QObject):
             max_height=max_height,
             audio_languages=audio,
             subtitle_languages=subtitles,
+            audio_tracks=tracks,
+            one_audio_per_language=self._one_audio_per_language,
+            reduce_audio=self._reduce_audio,
         )
 
     def _keep_4k(self) -> bool:
@@ -261,7 +271,7 @@ class WizardState(QObject):
         new_value = None if normalized == available else normalized
         if new_value != current:
             setattr(self, attribute, new_value)
-            self._notify_changed()
+            self.changed.emit()
 
     def add_paths(self, paths: Iterable[Path], *, recursive: bool = False) -> list[Path]:
         """Add video files, expanding folders; return the new absolute paths."""
@@ -298,7 +308,8 @@ class WizardState(QObject):
                 existing.add(resolved)
                 added.append(resolved)
         if added:
-            self._notify_changed()
+            self._audio_tracks = None
+            self.changed.emit()
         return added
 
     def remove_paths(self, paths: Iterable[Path]) -> None:
@@ -306,21 +317,22 @@ class WizardState(QObject):
         remaining = [entry for entry in self._videos if entry.path not in wanted]
         if len(remaining) != len(self._videos):
             self._videos = remaining
-            self._notify_changed()
+            self._audio_tracks = None
+            self.changed.emit()
 
     def set_media(self, path: Path, media: MediaInfo) -> None:
         entry = self._entry(path)
         if entry is not None:
             entry.media = media
             entry.error = None
-            self._notify_changed()
+            self.changed.emit()
 
     def set_error(self, path: Path, reason: str) -> None:
         entry = self._entry(path)
         if entry is not None:
             entry.media = None
             entry.error = reason
-            self._notify_changed()
+            self.changed.emit()
 
     def _entry(self, path: Path) -> VideoEntry | None:
         try:

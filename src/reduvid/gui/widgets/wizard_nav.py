@@ -8,7 +8,6 @@ from __future__ import annotations
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QHBoxLayout, QPushButton, QWidget
 
-from reduvid.gui.widgets.primary_button import PrimaryButton
 from reduvid.i18n import _
 
 
@@ -30,7 +29,7 @@ class WizardNav(QWidget):
         self.back_button.setAccessibleName(_("&Back"))
         self.back_button.setMinimumWidth(0)
         self.back_button.clicked.connect(self.back_clicked.emit)
-        self.next_button = PrimaryButton(_("&Next"), self)
+        self.next_button = QPushButton(_("&Next"), self)
         self.next_button.setObjectName("nextButton")
         self.next_button.setAccessibleName(_("&Next"))
         self.next_button.setMinimumWidth(0)

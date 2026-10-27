@@ -5,20 +5,26 @@
 
 from __future__ import annotations
 
-import subprocess
-import time
+import threading
 from collections.abc import Callable, Iterable, Sequence
-from dataclasses import dataclass
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QThread, Signal, Slot
 
 from reduvid.core.ffmpeg import FFmpegInfo
-from reduvid.core.plan import EncodePlan
+from reduvid.core.pipeline import PipelineError
+from reduvid.core.plan import PlanOptions, build_plan
 from reduvid.core.probe import MediaInfo, probe_media
 from reduvid.core.queue import ConversionQueue, ProcessorProtocol, QueueProgressEvent
-from reduvid.core.runner import EncodeHandle
-from reduvid.core.sample import build_sample_command, extract_frame_command
+from reduvid.core.runner import EncodeError
+from reduvid.core.sample import (
+    SampleLevelsRunner,
+    SampleRunner,
+    TotalEstimate,
+    audio_bytes_for_plan,
+    estimate_total,
+)
+from reduvid.i18n import _
 
 
 class ProbeWorker(QObject):
@@ -124,134 +130,189 @@ class QueueWorker(QObject):
         self.progress.emit(event)
 
 
-@dataclass(frozen=True)
-class SampleResult:
-    """Outcome of encoding and extracting a short sample."""
-
-    encoded_sample_bytes: int
-    sample_duration_seconds: float
-    total_duration_seconds: float
-    original_total_bytes: int
-    encode_seconds: float
-    original_frame_path: Path
-    encoded_frame_path: Path
-
-
 class SampleWorker(QObject):
-    """Encode a short sample and extract before/after frames in a worker thread."""
+    """Estimate one video's final size from a short sample, emitting only signals."""
 
-    finished = Signal(object)
-    failed = Signal(str)
+    progress = Signal(float)
+    done = Signal(object)
+    failed = Signal(str, str)
+    finished = Signal()
 
     def __init__(
         self,
-        media: MediaInfo,
-        plan: EncodePlan,
         ffmpeg_info: FFmpegInfo,
+        media: MediaInfo,
+        options: PlanOptions,
         input_path: Path,
-        start_seconds: float,
-        duration_seconds: float,
-        work_dir: Path,
+        *,
+        threads: int | None = None,
+        runner_factory: Callable[..., SampleRunner] | None = None,
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
-        self._media = media
-        self._plan = plan
         self._ffmpeg_info = ffmpeg_info
+        self._media = media
+        self._options = options
         self._input_path = input_path
-        self._start_seconds = start_seconds
-        self._duration_seconds = duration_seconds
-        self._work_dir = work_dir
-        self._sample_path = work_dir / f"sample.{plan.container}"
-        self._original_frame_path = work_dir / "before.png"
-        self._encoded_frame_path = work_dir / "after.png"
+        self._threads = threads
+        self._runner_factory = runner_factory
+        self._lock = threading.Lock()
+        self._runner: SampleRunner | None = None
+        self._cancelled = False
 
     @Slot()
     def run(self) -> None:
-        result: SampleResult | None = None
         try:
-            result = self._process()
-        except Exception as error:
-            self._remove_outputs()
-            self.failed.emit(str(error))
+            plan = build_plan(self._media, self._ffmpeg_info, self._options)
+            if not plan.videos:
+                self.failed.emit("unknown", _("This video has no video streams to estimate."))
+                return
+            factory = self._runner_factory or SampleRunner
+            runner = factory(
+                self._ffmpeg_info.ffmpeg_path,
+                self._media,
+                plan,
+                self._input_path,
+                on_progress=self.progress.emit,
+                threads=self._threads,
+            )
+            with self._lock:
+                cancelled_early = self._cancelled
+                self._runner = runner
+            if cancelled_early:
+                runner.cancel()
+            sample = runner.run()
+            audio_bytes = audio_bytes_for_plan(self._media, plan)[1]
+            total = estimate_total(sample, self._media, audio_bytes)
+        except (EncodeError, PipelineError) as error:
+            self.failed.emit(error.code, error.detail)
+        except ValueError as error:
+            self.failed.emit("unknown", str(error))
+        else:
+            self.done.emit(total)
         finally:
-            self.finished.emit(result)
+            with self._lock:
+                self._runner = None
+            self.finished.emit()
 
-    def _process(self) -> SampleResult:
-        self._work_dir.mkdir(parents=True, exist_ok=True)
-        self._remove_outputs()
-        command = build_sample_command(
-            self._media,
-            self._plan,
-            self._input_path,
-            self._sample_path,
-            self._start_seconds,
-            self._duration_seconds,
-        )
-        started = time.monotonic()
-        encode_result = EncodeHandle(
-            command,
-            self._duration_seconds,
-            self._sample_path,
-            ffmpeg_path=self._ffmpeg_info.ffmpeg_path,
-        ).run()
-        elapsed = time.monotonic() - started
-        if encode_result.cancelled:
-            raise RuntimeError("sample encoding was cancelled")
-        encoded_bytes = self._sample_path.stat().st_size
-
-        self._extract_frame(
-            self._input_path,
-            self._start_seconds + self._duration_seconds / 2,
-            self._original_frame_path,
-        )
-        self._extract_frame(
-            self._sample_path,
-            self._duration_seconds / 2,
-            self._encoded_frame_path,
-        )
-        return SampleResult(
-            encoded_sample_bytes=encoded_bytes,
-            sample_duration_seconds=self._duration_seconds,
-            total_duration_seconds=self._media.duration,
-            original_total_bytes=self._media.size,
-            encode_seconds=elapsed,
-            original_frame_path=self._original_frame_path,
-            encoded_frame_path=self._encoded_frame_path,
-        )
-
-    def _extract_frame(self, source: Path, timestamp: float, output: Path) -> None:
-        command = extract_frame_command(source, timestamp, output)
-        completed = subprocess.run(  # noqa: S603
-            [str(self._ffmpeg_info.ffmpeg_path), *command],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if completed.returncode != 0:
-            detail = completed.stderr.strip()[-500:]
-            raise RuntimeError(detail or "could not extract a sample frame")
-
-    def _remove_outputs(self) -> None:
-        for path in (
-            self._sample_path,
-            self._original_frame_path,
-            self._encoded_frame_path,
-        ):
-            path.unlink(missing_ok=True)
+    def cancel(self) -> None:
+        """Stop the running sample and prevent the rest from starting."""
+        with self._lock:
+            self._cancelled = True
+            runner = self._runner
+        if runner is not None:
+            runner.cancel()
 
 
-def start_worker_thread(worker: ProbeWorker | QueueWorker | SampleWorker) -> QThread:
+class LevelsWorker(QObject):
+    """Estimate several quality levels in series, emitting only signals."""
+
+    progress = Signal(float)
+    done = Signal(object)
+    failed = Signal(str, str)
+    finished = Signal()
+
+    def __init__(
+        self,
+        ffmpeg_info: FFmpegInfo,
+        media: MediaInfo,
+        options: PlanOptions,
+        input_path: Path,
+        *,
+        qualities: tuple[str, ...] = ("high", "balanced", "max_savings"),
+        threads: int | None = None,
+        runner_factory: Callable[..., SampleLevelsRunner] | None = None,
+        parent: QObject | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._ffmpeg_info = ffmpeg_info
+        self._media = media
+        self._options = options
+        self._input_path = input_path
+        self._qualities = qualities
+        self._threads = threads
+        self._runner_factory = runner_factory
+        self._lock = threading.Lock()
+        self._runner: SampleLevelsRunner | None = None
+        self._cancelled = False
+
+    @Slot()
+    def run(self) -> None:
+        try:
+            factory = self._runner_factory or SampleLevelsRunner
+            runner = factory(
+                self._ffmpeg_info.ffmpeg_path,
+                self._media,
+                self._input_path,
+                self._options,
+                self._ffmpeg_info,
+                qualities=self._qualities,
+                on_progress=self.progress.emit,
+                threads=self._threads,
+            )
+            with self._lock:
+                cancelled_early = self._cancelled
+                self._runner = runner
+            if cancelled_early:
+                runner.cancel()
+            estimates: dict[str, TotalEstimate] = runner.run()
+        except (EncodeError, PipelineError) as error:
+            self.failed.emit(error.code, error.detail)
+        except ValueError as error:
+            self.failed.emit("unknown", str(error))
+        else:
+            self.done.emit(estimates)
+        finally:
+            with self._lock:
+                self._runner = None
+            self.finished.emit()
+
+    def cancel(self) -> None:
+        """Stop the running level and prevent the next one from starting."""
+        with self._lock:
+            self._cancelled = True
+            runner = self._runner
+        if runner is not None:
+            runner.cancel()
+
+
+class _ThreadReaper(QObject):
+    """Release a finished worker thread from the GUI thread.
+
+    The thread is never scheduled with ``deleteLater``: Python owns the ``QThread``, so
+    a second, queued deletion would race with the steps that still wait on it and
+    crash. It is dropped here only once Qt reports that it has really finished.
+    """
+
+    @Slot()
+    def reap(self) -> None:
+        thread = self.sender()
+        if isinstance(thread, QThread):
+            thread.wait()
+            _RUNNING.pop(thread, None)
+
+
+_RUNNING: dict[QThread, QObject] = {}
+_reaper: _ThreadReaper | None = None
+
+
+def start_worker_thread(
+    worker: ProbeWorker | QueueWorker | SampleWorker | LevelsWorker,
+) -> QThread:
     """Move *worker* to a new thread, start it and return the thread.
 
-    ``finished`` quits the thread; both objects are scheduled for deletion once
-    the thread stops.
+    ``finished`` quits the thread. This module keeps the thread and the worker alive
+    until the thread has finished, so callers may drop their own references or wait
+    on the thread at any moment without it being destroyed underneath them.
     """
+    global _reaper
+    if _reaper is None:
+        _reaper = _ThreadReaper()
     thread = QThread()
+    _RUNNING[thread] = worker
     worker.moveToThread(thread)
     thread.started.connect(worker.run)
     worker.finished.connect(thread.quit)
-    worker.finished.connect(worker.deleteLater)
-    thread.finished.connect(thread.deleteLater)
+    thread.finished.connect(_reaper.reap)
     thread.start()
     return thread

@@ -10,7 +10,7 @@ This folder will grow with each version.
 | --- | --- |
 | [Using the graphical interface](gui.md) | Anyone using the interface |
 | [Command-line usage](cli.md) | People using Reduvid on servers or in scripts |
-| [Windows and Linux installers](instalacion.md) | People who want to build the installer or AppImage instead of running from source |
+| [Windows installer](instalacion.md) | People who want to build the installer instead of running from source |
 
 ## Planned guides
 
@@ -18,7 +18,7 @@ This folder will grow with each version.
 | --- | --- | --- |
 | Jargon-free glossary | People who don't know what a codec is | 0.2.0 |
 | Jellyfin guide | People who want everything to play without transcoding | 0.2.0 |
-| FAQ | Everyone | 0.3.0 |
+| FAQ | Everyone | 0.6.0 |
 | Architecture and development | People who want to understand or improve the code | 0.2.0 |
 
 ## Design

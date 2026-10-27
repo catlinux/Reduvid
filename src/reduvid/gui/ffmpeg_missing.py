@@ -21,7 +21,6 @@ from PySide6.QtWidgets import (
 
 from reduvid.core.config import Config, save_config
 from reduvid.core.ffmpeg import detect_ffmpeg
-from reduvid.gui.widgets.primary_button import PrimaryButton
 from reduvid.i18n import _
 
 
@@ -66,7 +65,7 @@ class FFmpegMissingWidget(QWidget):
         layout.addWidget(self._command_row(_("Fedora"), "sudo dnf install ffmpeg"))
 
         buttons = QHBoxLayout()
-        self.choose_button = PrimaryButton(_("&Choose ffmpeg…"), self)
+        self.choose_button = QPushButton(_("&Choose ffmpeg…"), self)
         self.choose_button.setObjectName("chooseFfmpegButton")
         self.choose_button.setAccessibleName(_("&Choose ffmpeg…"))
         self.choose_button.clicked.connect(self._choose_ffmpeg)

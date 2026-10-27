@@ -7,8 +7,28 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from reduvid.core.plan import EncodePlan
+from reduvid.core.plan import EncodePlan, VideoDecision
 from reduvid.core.probe import MediaInfo
+
+
+def build_video_arguments(video: VideoDecision, position: int) -> list[str]:
+    """Return the map, encoder and filter arguments for one output video stream."""
+    arguments = ["-map", f"0:{video.stream_index}"]
+    arguments.extend([f"-c:v:{position}", video.codec])
+    arguments.extend([f"-crf:v:{position}", str(video.crf)])
+    arguments.extend([f"-preset:v:{position}", video.preset])
+    if video.profile is not None:
+        arguments.extend([f"-profile:v:{position}", video.profile])
+    if video.level is not None:
+        arguments.extend([f"-level:v:{position}", video.level])
+    if video.pixel_format is not None:
+        arguments.extend([f"-pix_fmt:v:{position}", video.pixel_format])
+    filters = list(video.filters)
+    if video.target_height is not None:
+        filters.append(f"scale=-2:{video.target_height}")
+    if filters:
+        arguments.extend([f"-filter:v:{position}", ",".join(filters)])
+    return arguments
 
 
 def build_command(
@@ -23,21 +43,7 @@ def build_command(
     arguments = ["-nostdin", "-hide_banner", "-y", "-i", str(input_path)]
 
     for position, video in enumerate(plan.videos):
-        arguments.extend(["-map", f"0:{video.stream_index}"])
-        arguments.extend([f"-c:v:{position}", video.codec])
-        arguments.extend([f"-crf:v:{position}", str(video.crf)])
-        arguments.extend([f"-preset:v:{position}", video.preset])
-        if video.profile is not None:
-            arguments.extend([f"-profile:v:{position}", video.profile])
-        if video.level is not None:
-            arguments.extend([f"-level:v:{position}", video.level])
-        if video.pixel_format is not None:
-            arguments.extend([f"-pix_fmt:v:{position}", video.pixel_format])
-        filters = list(video.filters)
-        if video.target_height is not None:
-            filters.append(f"scale=-2:{video.target_height}")
-        if filters:
-            arguments.extend([f"-filter:v:{position}", ",".join(filters)])
+        arguments.extend(build_video_arguments(video, position))
 
     # Tracks keep source order, so FFmpeg marks the first remaining track of each
     # type as the default when the original default was filtered out.
