@@ -9,11 +9,13 @@ from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, Signal, Slot
 from PySide6.QtWidgets import (
+    QFrame,
     QHBoxLayout,
     QLabel,
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -102,8 +104,12 @@ class StepSummary(QWidget):
         state: WizardState,
         ffmpeg_info: FFmpegInfo,
         parent: QWidget | None = None,
+        *,
+        scrollable: bool = True,
     ) -> None:
         super().__init__(parent)
+        # Advanced already scrolls the whole page; a second scroll would squeeze the rows.
+        self._scrollable = scrollable
         self._state = state
         self._ffmpeg_info = ffmpeg_info
         self.blocking_prompt = BlockingPrompt(self)
@@ -146,7 +152,16 @@ class StepSummary(QWidget):
         self.items_layout = QVBoxLayout(self.items_container)
         self.items_layout.setContentsMargins(0, 0, 0, 0)
         self.items_layout.setSpacing(8)
-        layout.addWidget(self.items_container, 1)
+        if self._scrollable:
+            scroll = QScrollArea(self)
+            scroll.setObjectName("summaryScroll")
+            scroll.setWidgetResizable(True)
+            scroll.setFrameShape(QFrame.Shape.NoFrame)
+            scroll.setAccessibleName(_("Summary"))
+            scroll.setWidget(self.items_container)
+            layout.addWidget(scroll, 1)
+        else:
+            layout.addWidget(self.items_container, 1)
 
         self.start_button = QPushButton(_("&Start"), self)
         self.start_button.setObjectName("startButton")
@@ -274,6 +289,7 @@ class StepSummary(QWidget):
         self.estimate_results.clear()
         for summary in self.summaries:
             self.items_layout.addWidget(self._build_row(summary))
+        self.items_layout.addStretch(1)
         self._apply_estimate_widgets()
 
     def _build_row(self, summary: VideoSummary) -> QWidget:

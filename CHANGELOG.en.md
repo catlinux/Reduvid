@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-27
+
+### Fixed
+
+- The wizard's Summary step looked broken with several videos: rows were squashed and overlapped (the estimate button covered the title). The list now has its own scroll and every row keeps its height.
+
 ## [0.8.0] - 2026-10-27
 
 ### Changed

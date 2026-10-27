@@ -14,7 +14,7 @@ import pytest
 pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QObject, Signal
-from PySide6.QtWidgets import QLabel, QProgressBar, QPushButton
+from PySide6.QtWidgets import QLabel, QProgressBar, QPushButton, QScrollArea, QWidget
 
 from reduvid.core.config import Config
 from reduvid.core.ffmpeg import FFmpegInfo
@@ -887,3 +887,23 @@ def test_summary_estimate_row_builds_with_every_theme(
     result = summary.findChild(QLabel, "estimateResult")
     assert result is not None
     assert result.accessibleName()
+
+
+def test_summary_scrolls_instead_of_squeezing_rows(tmp_path: Path, qapp) -> None:
+    state = WizardState(Config())
+    stream = VideoStream(0, "h264", 1920, 1080, 24)
+    for number in range(6):
+        name = f"video-{number}.mkv"
+        audios = [AudioStream(1, "ac3", 6, "spa", True), AudioStream(2, "ac3", 6, "eng", False)]
+        add_video(state, tmp_path, name, media(tmp_path / name, video=stream, audios=audios))
+    summary = StepSummary(state, ffmpeg())
+    summary.resize(400, 300)
+    summary.show()
+    qapp.processEvents()
+
+    scroll = summary.findChild(QScrollArea, "summaryScroll")
+    assert scroll is not None
+    assert scroll.widget().height() > scroll.viewport().height()
+    rows = summary.items_container.findChildren(QWidget, "summaryRow")
+    assert len(rows) == 6
+    assert all(row.height() >= row.minimumSizeHint().height() for row in rows)

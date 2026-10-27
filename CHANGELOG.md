@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.8.1] - 2026-10-27
+
+### Corregido
+
+- El paso Resumen del asistente se veía mal con varios vídeos: las filas se aplastaban y se pisaban (el botón de estimar tapaba el título). Ahora la lista tiene su propio scroll y cada fila conserva su altura.
+
 ## [0.8.0] - 2026-10-27
 
 ### Cambiado
