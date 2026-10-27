@@ -146,6 +146,7 @@ class SampleWorker(QObject):
         input_path: Path,
         *,
         threads: int | None = None,
+        hw_decode: bool = False,
         runner_factory: Callable[..., SampleRunner] | None = None,
         parent: QObject | None = None,
     ) -> None:
@@ -155,6 +156,7 @@ class SampleWorker(QObject):
         self._options = options
         self._input_path = input_path
         self._threads = threads
+        self._hw_decode = hw_decode
         self._runner_factory = runner_factory
         self._lock = threading.Lock()
         self._runner: SampleRunner | None = None
@@ -175,6 +177,7 @@ class SampleWorker(QObject):
                 self._input_path,
                 on_progress=self.progress.emit,
                 threads=self._threads,
+                hw_decode=self._hw_decode,
             )
             with self._lock:
                 cancelled_early = self._cancelled
@@ -221,6 +224,7 @@ class LevelsWorker(QObject):
         *,
         qualities: tuple[str, ...] = ("high", "balanced", "max_savings"),
         threads: int | None = None,
+        hw_decode: bool = False,
         runner_factory: Callable[..., SampleLevelsRunner] | None = None,
         parent: QObject | None = None,
     ) -> None:
@@ -231,6 +235,7 @@ class LevelsWorker(QObject):
         self._input_path = input_path
         self._qualities = qualities
         self._threads = threads
+        self._hw_decode = hw_decode
         self._runner_factory = runner_factory
         self._lock = threading.Lock()
         self._runner: SampleLevelsRunner | None = None
@@ -249,6 +254,7 @@ class LevelsWorker(QObject):
                 qualities=self._qualities,
                 on_progress=self.progress.emit,
                 threads=self._threads,
+                hw_decode=self._hw_decode,
             )
             with self._lock:
                 cancelled_early = self._cancelled

@@ -27,7 +27,7 @@ msgstr ""
 msgid " at {bitrate}"
 msgstr ""
 
-#: gui/preferences.py:125 gui/preferences.py:126
+#: gui/preferences.py:143 gui/preferences.py:144
 msgid "&Accept"
 msgstr ""
 
@@ -39,11 +39,11 @@ msgstr ""
 msgid "&Back"
 msgstr ""
 
-#: gui/preferences.py:92 gui/wizard/step_destination.py:73
+#: gui/preferences.py:108 gui/wizard/step_destination.py:73
 msgid "&Browse…"
 msgstr ""
 
-#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:126
+#: gui/preferences.py:145 gui/preferences.py:146 gui/queue_panel.py:126
 msgid "&Cancel"
 msgstr ""
 
@@ -119,11 +119,11 @@ msgstr ""
 msgid "A 1-minute test of this video, scaled to the whole file. The real size and time may differ."
 msgstr ""
 
-#: gui/main_window.py:221
+#: gui/main_window.py:222
 msgid "A conversion is already running."
 msgstr ""
 
-#: gui/main_window.py:297
+#: gui/main_window.py:299
 msgid "A conversion is still running."
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Balanced"
 msgstr ""
 
-#: gui/preferences.py:94
+#: gui/preferences.py:110
 msgid "Browse for ffmpeg"
 msgstr ""
 
@@ -279,7 +279,7 @@ msgstr ""
 msgid "Cancel conversion"
 msgstr ""
 
-#: gui/main_window.py:300
+#: gui/main_window.py:302
 msgid "Cancel conversion and quit"
 msgstr ""
 
@@ -299,11 +299,11 @@ msgstr ""
 msgid "Catalan"
 msgstr ""
 
-#: gui/preferences.py:96
+#: gui/preferences.py:112
 msgid "Check"
 msgstr ""
 
-#: gui/preferences.py:98
+#: gui/preferences.py:114
 msgid "Check FFmpeg"
 msgstr ""
 
@@ -329,7 +329,7 @@ msgstr ""
 msgid "Choose the device you will use the most. You can change this later."
 msgstr ""
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:165
+#: gui/ffmpeg_missing.py:107 gui/preferences.py:185
 msgid "Choose the ffmpeg executable"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Codec: {codec}"
 msgstr ""
 
-#: gui/preferences.py:67 gui/preferences.py:113
+#: gui/preferences.py:67 gui/preferences.py:129
 msgid "Colour mode"
 msgstr ""
 
@@ -358,7 +358,7 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-#: gui/main_window.py:296
+#: gui/main_window.py:298
 msgid "Conversion in progress"
 msgstr ""
 
@@ -391,12 +391,12 @@ msgstr ""
 msgid "Converting…"
 msgstr ""
 
-#: gui/wizard/step_summary.py:442
+#: gui/wizard/step_summary.py:443
 #, python-brace-format
 msgid "Could not estimate the size: {message}"
 msgstr ""
 
-#: gui/preferences.py:174
+#: gui/preferences.py:194
 #, python-brace-format
 msgid "Could not inspect FFmpeg: {error}"
 msgstr ""
@@ -594,11 +594,11 @@ msgstr ""
 msgid "FFmpeg is required"
 msgstr ""
 
-#: gui/preferences.py:91 gui/preferences.py:117
+#: gui/preferences.py:107 gui/preferences.py:135
 msgid "FFmpeg path"
 msgstr ""
 
-#: gui/preferences.py:177
+#: gui/preferences.py:197
 msgid "FFmpeg was not found at that path."
 msgstr ""
 
@@ -606,9 +606,13 @@ msgstr ""
 msgid "FFmpeg was still not found."
 msgstr ""
 
-#: gui/preferences.py:179
+#: gui/preferences.py:199
 #, python-brace-format
 msgid "FFmpeg {version} detected."
+msgstr ""
+
+#: gui/preferences.py:98
+msgid "Faster, with the same result. If it fails, Reduvid uses the processor instead."
 msgstr ""
 
 #: gui/ffmpeg_missing.py:65
@@ -684,7 +688,7 @@ msgstr ""
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr ""
 
-#: gui/main_window.py:298
+#: gui/main_window.py:300
 msgid "If you quit now, the conversion will be cancelled."
 msgstr ""
 
@@ -740,7 +744,7 @@ msgstr ""
 msgid "Jellyfin will transcode"
 msgstr ""
 
-#: gui/main_window.py:302
+#: gui/main_window.py:304
 msgid "Keep converting"
 msgstr ""
 
@@ -768,7 +772,7 @@ msgstr ""
 msgid "Korean"
 msgstr ""
 
-#: gui/preferences.py:77 gui/preferences.py:114
+#: gui/preferences.py:77 gui/preferences.py:130
 msgid "Language"
 msgstr ""
 
@@ -956,7 +960,7 @@ msgstr ""
 msgid "Reduce the audio size"
 msgstr ""
 
-#: gui/main_window.py:76 gui/main_window.py:347 gui/main_window.py:350
+#: gui/main_window.py:76 gui/main_window.py:349 gui/main_window.py:352
 msgid "Reduvid"
 msgstr ""
 
@@ -1034,7 +1038,7 @@ msgstr ""
 msgid "Start conversion"
 msgstr ""
 
-#: gui/main_window.py:379
+#: gui/main_window.py:381
 msgid "Step content"
 msgstr ""
 
@@ -1144,7 +1148,7 @@ msgid ""
 " TVs and browsers cannot play it."
 msgstr ""
 
-#: gui/preferences.py:61 gui/preferences.py:112
+#: gui/preferences.py:61 gui/preferences.py:128
 msgid "Theme"
 msgstr ""
 
@@ -1156,7 +1160,7 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/workers.py:168
+#: gui/workers.py:170
 msgid "This video has no video streams to estimate."
 msgstr ""
 
@@ -1193,6 +1197,10 @@ msgstr ""
 
 #: gui/wizard/step_target.py:53
 msgid "Use the Jellyfin profile, which works on almost everything."
+msgstr ""
+
+#: gui/preferences.py:90 gui/preferences.py:94
+msgid "Use the graphics card to read videos, when there is one"
 msgstr ""
 
 #: gui/wizard_logic.py:248

@@ -56,6 +56,7 @@ On the right (below, in narrow windows) you see the current video with its perce
 - **Colour mode:** System (default), Light or Dark.
 - **Language:** System, català, castellano or English. It applies after a restart.
 - **Reduce animations.**
+- **Use the graphics card to read videos, when there is one.** Faster, with the same result; if it fails, Reduvid uses the processor.
 - **FFmpeg path:** with **Browse…** and **Check**.
 
 They are saved in the configuration file, the same one the command line uses (see [the CLI guide](cli.md)).

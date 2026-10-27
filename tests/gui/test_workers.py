@@ -238,9 +238,20 @@ def test_worker_thread_quits_cleanly(tmp_path: Path, qapp) -> None:
 
 
 class FakeSampleRunner:
-    def __init__(self, _ffmpeg, _media, _plan, _input, *, on_progress=None, threads=None):
+    def __init__(
+        self,
+        _ffmpeg,
+        _media,
+        _plan,
+        _input,
+        *,
+        on_progress=None,
+        threads=None,
+        hw_decode=False,
+    ):
         self.on_progress = on_progress
         self.threads = threads
+        self.hw_decode = hw_decode
         self.cancelled = False
 
     def run(self) -> SampleEstimate:
@@ -277,7 +288,18 @@ def test_sample_worker_reports_progress_and_the_estimate(tmp_path: Path, qapp) -
 
 
 class CancelledSampleRunner:
-    def __init__(self, _ffmpeg, _media, _plan, _input, *, on_progress=None, threads=None):
+    def __init__(
+        self,
+        _ffmpeg,
+        _media,
+        _plan,
+        _input,
+        *,
+        on_progress=None,
+        threads=None,
+        hw_decode=False,
+    ):
+        self.hw_decode = hw_decode
         self.started = threading.Event()
         self.release = threading.Event()
         self.cancelled = False
@@ -345,10 +367,12 @@ class FakeLevelsRunner:
         qualities=("high", "balanced", "max_savings"),
         on_progress=None,
         threads=None,
+        hw_decode=False,
     ):
         self.qualities = qualities
         self.on_progress = on_progress
         self.threads = threads
+        self.hw_decode = hw_decode
         self.cancelled = False
 
     def run(self) -> dict[str, TotalEstimate]:

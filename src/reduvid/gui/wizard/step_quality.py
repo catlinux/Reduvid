@@ -353,7 +353,12 @@ class StepQuality(QWidget):
         path, media = reference
         options = replace(self._state.options(), quality="balanced")
         worker = self._levels_worker_factory(
-            self._ffmpeg_info, media, options, path, threads=self._state.threads
+            self._ffmpeg_info,
+            media,
+            options,
+            path,
+            threads=self._state.threads,
+            hw_decode=self._state.hw_decode,
         )
         worker.progress.connect(self._on_levels_progress)
         worker.done.connect(self._on_levels_done)

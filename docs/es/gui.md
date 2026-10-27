@@ -56,6 +56,7 @@ A la derecha (debajo, en ventanas estrechas) se ve el vídeo actual con su porce
 - **Modo de color:** Sistema (por defecto), Claro u Oscuro.
 - **Idioma:** Sistema, català, castellano o English. Se aplica al reiniciar.
 - **Reducir animaciones.**
+- **Usar la tarjeta gráfica para leer los vídeos, si la hay.** Más rápido y con el mismo resultado; si falla, Reduvid usa el procesador.
 - **Ruta de FFmpeg:** con **Examinar…** y **Comprobar**.
 
 Se guardan en el archivo de configuración, el mismo que usa la línea de órdenes (ver [la guía de la CLI](cli.md)).

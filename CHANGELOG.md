@@ -10,7 +10,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Añadido
 
-- Si el equipo tiene tarjeta gráfica, el vídeo original se lee con ella (`-hwaccel auto`), lo que libera el procesador para codificar; el resultado es el mismo. Si FFmpeg falla al usarla, el vídeo se repite automáticamente con el procesador. Se aplica a las conversiones; la prueba de muestra lo admite, pero aún no lo activa la interfaz.
+- Si el equipo tiene tarjeta gráfica, el vídeo original se lee con ella (`-hwaccel auto`), lo que libera el procesador para codificar; el resultado es el mismo. Si FFmpeg falla al usarla, el vídeo se repite automáticamente con el procesador. Se aplica a las conversiones y a las pruebas de muestra, y se puede desactivar en Preferencias.
 - Motor: `FFmpegInfo.hwaccels` con los métodos de aceleración que ofrece FFmpeg.
 - CLI: `--no-hw-decode` en `convert` y `estimate`, y la clave de configuración `hw_decode = false`, para no usar la tarjeta gráfica.
 

@@ -380,6 +380,7 @@ class StepSummary(QWidget):
             options,
             summary.path,
             threads=self._state.threads,
+            hw_decode=self._state.hw_decode,
         )
         worker.progress.connect(self._on_estimate_progress)
         worker.done.connect(self._on_estimate_done)

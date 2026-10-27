@@ -50,6 +50,7 @@ class WizardState(QObject):
         self._reduce_4k = True
         self._max_height: int | None = None
         self._threads: int | None = None
+        self._hw_decode = config.hw_decode
         self._audio_selected: frozenset[str] | None = None
         self._subtitle_selected: frozenset[str] | None = None
         self._videos: list[VideoEntry] = []
@@ -104,6 +105,10 @@ class WizardState(QObject):
     @property
     def threads(self) -> int | None:
         return self._threads
+
+    @property
+    def hw_decode(self) -> bool:
+        return self._hw_decode
 
     @property
     def audio_tracks(self) -> frozenset[int] | None:
@@ -167,6 +172,11 @@ class WizardState(QObject):
             raise ValueError("threads must be positive")
         if threads != self._threads:
             self._threads = threads
+            self.changed.emit()
+
+    def set_hw_decode(self, enabled: bool) -> None:
+        if enabled != self._hw_decode:
+            self._hw_decode = enabled
             self.changed.emit()
 
     def set_one_audio_per_language(self, enabled: bool) -> None:

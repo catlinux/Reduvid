@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
 # Copyright (C) 2026 Catlinux
 
-"""Preferences dialog: theme, colour mode, language, motion and FFmpeg path."""
+"""Preferences dialog: theme, colour mode, language, motion, hardware and FFmpeg."""
 
 from __future__ import annotations
 
@@ -86,6 +86,20 @@ class PreferencesDialog(QDialog):
         self.reduce_motion.setObjectName("reduceMotionCheck")
         self.reduce_motion.setAccessibleName(_("Reduce animations"))
 
+        self.hw_decode = QCheckBox(
+            _("Use the graphics card to read videos, when there is one"), self
+        )
+        self.hw_decode.setObjectName("hwDecodeCheck")
+        self.hw_decode.setAccessibleName(
+            _("Use the graphics card to read videos, when there is one")
+        )
+        self.hw_decode_hint = QLabel(
+            _("Faster, with the same result. If it fails, Reduvid uses the processor instead."),
+            self,
+        )
+        self.hw_decode_hint.setProperty("role", "muted")
+        self.hw_decode_hint.setWordWrap(True)
+
         self.ffmpeg_edit = QLineEdit(self)
         self.ffmpeg_edit.setObjectName("ffmpegPathEdit")
         self.ffmpeg_edit.setAccessibleName(_("FFmpeg path"))
@@ -114,6 +128,8 @@ class PreferencesDialog(QDialog):
         form.addRow(_("Language"), self.language_combo)
         form.addRow("", language_hint)
         form.addRow("", self.reduce_motion)
+        form.addRow("", self.hw_decode)
+        form.addRow("", self.hw_decode_hint)
         form.addRow(_("FFmpeg path"), path_row)
         form.addRow("", self.ffmpeg_status)
         self.form = form
@@ -138,7 +154,8 @@ class PreferencesDialog(QDialog):
         QWidget.setTabOrder(self.theme_combo, self.mode_combo)
         QWidget.setTabOrder(self.mode_combo, self.language_combo)
         QWidget.setTabOrder(self.language_combo, self.reduce_motion)
-        QWidget.setTabOrder(self.reduce_motion, self.ffmpeg_edit)
+        QWidget.setTabOrder(self.reduce_motion, self.hw_decode)
+        QWidget.setTabOrder(self.hw_decode, self.ffmpeg_edit)
         QWidget.setTabOrder(self.ffmpeg_edit, self.browse_button)
         QWidget.setTabOrder(self.browse_button, self.check_button)
         if ok_button is not None:
@@ -153,6 +170,7 @@ class PreferencesDialog(QDialog):
             max(0, self.language_combo.findData(config.language or ""))
         )
         self.reduce_motion.setChecked(config.reduce_motion)
+        self.hw_decode.setChecked(config.hw_decode)
         self.ffmpeg_edit.setText(str(config.ffmpeg_path) if config.ffmpeg_path else "")
 
     def _ffmpeg_path(self) -> Path | None:
@@ -186,6 +204,7 @@ class PreferencesDialog(QDialog):
             color_mode=self.mode_combo.currentData(),
             language=self.language_combo.currentData() or None,
             reduce_motion=self.reduce_motion.isChecked(),
+            hw_decode=self.hw_decode.isChecked(),
             ffmpeg_path=self._ffmpeg_path(),
         )
         save_config(config)

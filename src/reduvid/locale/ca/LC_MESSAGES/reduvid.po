@@ -28,7 +28,7 @@ msgstr " com a {codec}"
 msgid " at {bitrate}"
 msgstr " a {bitrate}"
 
-#: gui/preferences.py:125 gui/preferences.py:126
+#: gui/preferences.py:143 gui/preferences.py:144
 msgid "&Accept"
 msgstr "&Accepta"
 
@@ -40,11 +40,11 @@ msgstr "A&vançat"
 msgid "&Back"
 msgstr "&Enrere"
 
-#: gui/preferences.py:92 gui/wizard/step_destination.py:73
+#: gui/preferences.py:108 gui/wizard/step_destination.py:73
 msgid "&Browse…"
 msgstr "&Examina…"
 
-#: gui/preferences.py:127 gui/preferences.py:128 gui/queue_panel.py:126
+#: gui/preferences.py:145 gui/preferences.py:146 gui/queue_panel.py:126
 msgid "&Cancel"
 msgstr "&Cancel·la"
 
@@ -122,11 +122,11 @@ msgstr ""
 "Una prova d'1 minut d'aquest vídeo, escalada a tot el fitxer. La mida i el temps reals poden "
 "variar."
 
-#: gui/main_window.py:221
+#: gui/main_window.py:222
 msgid "A conversion is already running."
 msgstr "Ja hi ha una conversió en marxa."
 
-#: gui/main_window.py:297
+#: gui/main_window.py:299
 msgid "A conversion is still running."
 msgstr "Encara hi ha una conversió en marxa."
 
@@ -214,7 +214,7 @@ msgstr "S'està analitzant…"
 msgid "Another folder"
 msgstr "Una altra carpeta"
 
-#: cli.py:528
+#: cli.py:530
 #, python-brace-format
 msgid "Approximate conversion time: {duration}"
 msgstr "Temps aproximat de conversió: {duration}"
@@ -253,11 +253,11 @@ msgstr "La pista d'àudio {stream_index} es reduirà a AAC a {bitrate} per estal
 msgid "Audio {position}: {codec}, {channels} channels{language}, {size}"
 msgstr "Àudio {position}: {codec}, {channels} canals{language}, {size}"
 
-#: cli.py:496
+#: cli.py:498
 msgid "Audio: unknown (the file does not report its bitrate)"
 msgstr "Àudio: desconegut (el fitxer no indica el bitrate)"
 
-#: cli.py:504
+#: cli.py:506
 #, python-brace-format
 msgid "Audio: ~{size}"
 msgstr "Àudio: ~{size}"
@@ -270,7 +270,7 @@ msgstr "Automàtica"
 msgid "Balanced"
 msgstr "Equilibrada"
 
-#: gui/preferences.py:94
+#: gui/preferences.py:110
 msgid "Browse for ffmpeg"
 msgstr "Cerca el fitxer de FFmpeg"
 
@@ -291,7 +291,7 @@ msgstr "Cancel·la"
 msgid "Cancel conversion"
 msgstr "Cancel·la la conversió"
 
-#: gui/main_window.py:300
+#: gui/main_window.py:302
 msgid "Cancel conversion and quit"
 msgstr "Cancel·la la conversió i surt"
 
@@ -311,11 +311,11 @@ msgstr "Cancel·lant…"
 msgid "Catalan"
 msgstr "Català"
 
-#: gui/preferences.py:96
+#: gui/preferences.py:112
 msgid "Check"
 msgstr "Comprova"
 
-#: gui/preferences.py:98
+#: gui/preferences.py:114
 msgid "Check FFmpeg"
 msgstr "Comprova el FFmpeg"
 
@@ -343,7 +343,7 @@ msgstr "Tria els idiomes d'àudio i de subtítols que entenguis."
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Tria el dispositiu que faràs servir més. Ho pots canviar més endavant."
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:165
+#: gui/ffmpeg_missing.py:107 gui/preferences.py:185
 msgid "Choose the ffmpeg executable"
 msgstr "Tria l'executable de ffmpeg"
 
@@ -364,7 +364,7 @@ msgstr "Tria on van els fitxers convertits i com es guarden."
 msgid "Codec: {codec}"
 msgstr "Còdec: {codec}"
 
-#: gui/preferences.py:67 gui/preferences.py:113
+#: gui/preferences.py:67 gui/preferences.py:129
 msgid "Colour mode"
 msgstr "Mode de color"
 
@@ -372,7 +372,7 @@ msgstr "Mode de color"
 msgid "Container"
 msgstr "Contenidor"
 
-#: gui/main_window.py:296
+#: gui/main_window.py:298
 msgid "Conversion in progress"
 msgstr "Conversió en marxa"
 
@@ -392,7 +392,7 @@ msgstr "Converteix igualment (els colors es veuran apagats)"
 msgid "Convert it anyway? Colours will look washed out."
 msgstr "Vols convertir-lo igualment? Els colors es veuran apagats."
 
-#: cli.py:671
+#: cli.py:680
 msgid "Convert media files"
 msgstr "Converteix fitxers multimèdia"
 
@@ -405,12 +405,12 @@ msgstr "Convertint [{index}/{total}]: {path}"
 msgid "Converting…"
 msgstr "S'està convertint…"
 
-#: gui/wizard/step_summary.py:442
+#: gui/wizard/step_summary.py:443
 #, python-brace-format
 msgid "Could not estimate the size: {message}"
 msgstr "No s'ha pogut estimar la mida: {message}"
 
-#: gui/preferences.py:174
+#: gui/preferences.py:194
 #, python-brace-format
 msgid "Could not inspect FFmpeg: {error}"
 msgstr "No s'ha pogut inspeccionar FFmpeg: {error}"
@@ -442,7 +442,11 @@ msgstr "Destinació"
 msgid "Direct play"
 msgstr "Reproducció directa"
 
-#: cli.py:417
+#: cli.py:646
+msgid "Do not use the graphics card to read the videos"
+msgstr "No utilitzis la targeta gràfica per llegir els vídeos"
+
+#: cli.py:419
 msgid "Dry run complete."
 msgstr "Simulació completada."
 
@@ -460,7 +464,7 @@ msgstr "Durada: {duration}"
 msgid "English"
 msgstr "Anglès"
 
-#: cli.py:580 cli.py:589
+#: cli.py:584 cli.py:593
 #, python-brace-format
 msgid "Error: Could not estimate {path}: {error}"
 msgstr "Error: No s'ha pogut estimar {path}: {error}"
@@ -470,7 +474,7 @@ msgstr "Error: No s'ha pogut estimar {path}: {error}"
 msgid "Error: Could not inspect FFmpeg: {error}"
 msgstr "Error: no s'ha pogut inspeccionar FFmpeg: {error}"
 
-#: cli.py:304 cli.py:363 cli.py:554
+#: cli.py:304 cli.py:363 cli.py:557
 #, python-brace-format
 msgid "Error: Could not probe {path}: {error}"
 msgstr "Error: no s'ha pogut analitzar {path}: {error}"
@@ -489,7 +493,7 @@ msgstr "Error: no s'han trobat FFmpeg ni ffprobe."
 msgid "Error: Input does not exist: {path}"
 msgstr "Error: l'entrada no existeix: {path}"
 
-#: cli.py:699
+#: cli.py:708
 #, python-brace-format
 msgid "Error: Input is a folder; estimate works on files only: {path}"
 msgstr "Error: L'entrada és una carpeta; l'estimació només funciona amb fitxers: {path}"
@@ -499,17 +503,17 @@ msgstr "Error: L'entrada és una carpeta; l'estimació només funciona amb fitxe
 msgid "Error: Input is not a supported file or folder: {path}"
 msgstr "Error: l'entrada no és un fitxer ni una carpeta compatible: {path}"
 
-#: cli.py:720
+#: cli.py:729
 #, python-brace-format
 msgid "Error: Output path is not a folder: {path}"
 msgstr "Error: la ruta de sortida no és una carpeta: {path}"
 
-#: cli.py:710
+#: cli.py:719
 #, python-brace-format
 msgid "Error: Probe input is not a file: {path}"
 msgstr "Error: l'entrada d'anàlisi no és un fitxer: {path}"
 
-#: cli.py:562
+#: cli.py:565
 #, python-brace-format
 msgid "Error: {path} has no video streams to estimate."
 msgstr "Error: {path} no té cap pista de vídeo per estimar."
@@ -519,11 +523,11 @@ msgstr "Error: {path} no té cap pista de vídeo per estimar."
 msgid "Error: {path}{details}"
 msgstr "Error: {path}{details}"
 
-#: cli.py:736
+#: cli.py:752
 msgid "Estimate cancelled."
 msgstr "Estimació cancel·lada."
 
-#: cli.py:490
+#: cli.py:492
 #, python-brace-format
 msgid "Estimate from a {seconds}-second sample; sizes and time are approximate."
 msgstr "Estimació a partir d'una mostra de {seconds} segons; les mides i el temps són aproximats."
@@ -536,7 +540,7 @@ msgstr "Progrés de l'estimació"
 msgid "Estimate the final size (1-minute test)"
 msgstr "Estimar la mida final (prova d'1 minut)"
 
-#: cli.py:679
+#: cli.py:688
 msgid "Estimate the final size and time from a short sample"
 msgstr "Estima la mida final i el temps a partir d'una mostra curta"
 
@@ -556,7 +560,7 @@ msgstr "Estima la mida de cada nivell de qualitat"
 msgid "Estimated size and time"
 msgstr "Mida i temps estimats"
 
-#: cli.py:500
+#: cli.py:502
 #, python-brace-format
 msgid "Estimated size: cannot be calculated without the audio size; video only: ~{size}"
 msgstr "Mida estimada: no es pot calcular sense la mida de l'àudio; només el vídeo: ~{size}"
@@ -570,7 +574,7 @@ msgstr ""
 "Mida estimada: no es pot calcular sense la mida de l'àudio; només el vídeo: ~{size} · Temps "
 "aprox.: {time}"
 
-#: cli.py:506
+#: cli.py:508
 #, python-brace-format
 msgid "Estimated size: ~{size}"
 msgstr "Mida estimada: ~{size}"
@@ -590,12 +594,12 @@ msgstr "Mida estimada: ~{size} (de {original}: −{percent:.0f} %) · Temps apro
 msgid "Estimated size: ~{size} · Approx. time: {time}"
 msgstr "Mida estimada: ~{size} · Temps aprox.: {time}"
 
-#: cli.py:546
+#: cli.py:549
 #, python-brace-format
 msgid "Estimating [{index}/{total}]: {path}"
 msgstr "Estimant [{index}/{total}]: {path}"
 
-#: cli.py:441
+#: cli.py:443
 #, python-brace-format
 msgid "Estimating: {percent}%"
 msgstr "Estimant: {percent}%"
@@ -608,11 +612,11 @@ msgstr "Explicació"
 msgid "FFmpeg is required"
 msgstr "Cal FFmpeg"
 
-#: gui/preferences.py:91 gui/preferences.py:117
+#: gui/preferences.py:107 gui/preferences.py:135
 msgid "FFmpeg path"
 msgstr "Ruta de FFmpeg"
 
-#: gui/preferences.py:177
+#: gui/preferences.py:197
 msgid "FFmpeg was not found at that path."
 msgstr "No s'ha trobat FFmpeg en aquesta ruta."
 
@@ -620,10 +624,14 @@ msgstr "No s'ha trobat FFmpeg en aquesta ruta."
 msgid "FFmpeg was still not found."
 msgstr "Encara no s'ha trobat FFmpeg."
 
-#: gui/preferences.py:179
+#: gui/preferences.py:199
 #, python-brace-format
 msgid "FFmpeg {version} detected."
 msgstr "S'ha detectat FFmpeg {version}."
+
+#: gui/preferences.py:98
+msgid "Faster, with the same result. If it fails, Reduvid uses the processor instead."
+msgstr "Més ràpid i amb el mateix resultat. Si falla, Reduvid fa servir el processador."
 
 #: gui/ffmpeg_missing.py:65
 msgid "Fedora"
@@ -698,7 +706,7 @@ msgstr "Si no marques cap pista d'àudio, es conserven totes."
 msgid "If you keep 4K, Jellyfin will have to transcode it."
 msgstr "Si conserves el 4K, el Jellyfin l'haurà de transcodificar."
 
-#: gui/main_window.py:298
+#: gui/main_window.py:300
 msgid "If you quit now, the conversion will be cancelled."
 msgstr "Si surts ara, es cancel·larà la conversió."
 
@@ -728,7 +736,7 @@ msgstr "Els subtítols d'imatge no caben en MP4 i es descartaran. Els de text s�
 msgid "Include subfolders"
 msgstr "Inclou les subcarpetes"
 
-#: cli.py:521
+#: cli.py:523
 #, python-brace-format
 msgid "Increase: {percent}% ({size} larger)"
 msgstr "Augment: {percent}% ({size} més)"
@@ -758,23 +766,23 @@ msgstr "Jellyfin"
 msgid "Jellyfin will transcode"
 msgstr "El Jellyfin transcodificarà"
 
-#: gui/main_window.py:302
+#: gui/main_window.py:304
 msgid "Keep converting"
 msgstr "Continua convertint"
 
-#: cli.py:624
+#: cli.py:628
 msgid "Keep only the highest-quality audio track for each language"
 msgstr "Conserva només la pista d'àudio de més qualitat per a cada idioma"
 
-#: cli.py:613
+#: cli.py:617
 msgid "Keep only these audio languages (comma-separated, 'und' for no language)"
 msgstr "Conserva només aquests idiomes d'àudio (separats per comes; 'und' vol dir sense idioma)"
 
-#: cli.py:619
+#: cli.py:623
 msgid "Keep only these audio track indices (comma-separated, overrides --keep-audio)"
 msgstr "Conserva només les pistes d'àudio amb aquests índexs (separats per comes, anul·la --keep-audio)"
 
-#: cli.py:635
+#: cli.py:639
 msgid "Keep only these subtitle languages (comma-separated, 'und' for no language)"
 msgstr "Conserva només aquests idiomes de subtítols (separats per comes; 'und' vol dir sense idioma)"
 
@@ -786,7 +794,7 @@ msgstr "Conserva totes les pistes i formats de subtítols."
 msgid "Korean"
 msgstr "Coreà"
 
-#: gui/preferences.py:77 gui/preferences.py:114
+#: gui/preferences.py:77 gui/preferences.py:130
 msgid "Language"
 msgstr "Idioma"
 
@@ -794,7 +802,7 @@ msgstr "Idioma"
 msgid "Language changes take effect when Reduvid is restarted."
 msgstr "Els canvis d'idioma s'apliquen quan reinicies el Reduvid."
 
-#: cli.py:666
+#: cli.py:675
 msgid "Language for messages"
 msgstr "Idioma dels missatges"
 
@@ -867,7 +875,7 @@ msgstr "Nombre de fils de codificació"
 msgid "One audio track per language (the best one is kept)"
 msgstr "Una sola pista d'àudio per idioma (es conserva la millor)"
 
-#: cli.py:507
+#: cli.py:509
 #, python-brace-format
 msgid "Original size: {size}"
 msgstr "Mida original: {size}"
@@ -876,7 +884,7 @@ msgstr "Mida original: {size}"
 msgid "Output folder"
 msgstr "Carpeta de sortida"
 
-#: cli.py:371 cli.py:397
+#: cli.py:371 cli.py:399
 #, python-brace-format
 msgid "Output: {path}"
 msgstr "Sortida: {path}"
@@ -947,7 +955,7 @@ msgstr "Cua"
 msgid "Queue · {count} videos"
 msgstr "Cua · {count} vídeos"
 
-#: cli.py:629
+#: cli.py:633
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr "Recodifica les pistes d'àudio a AAC per estalviar espai"
 
@@ -976,7 +984,7 @@ msgstr "Redueix les animacions"
 msgid "Reduce the audio size"
 msgstr "Reduir el pes de l'àudio"
 
-#: gui/main_window.py:76 gui/main_window.py:347 gui/main_window.py:350
+#: gui/main_window.py:76 gui/main_window.py:349 gui/main_window.py:352
 msgid "Reduvid"
 msgstr "Reduvid"
 
@@ -1016,12 +1024,12 @@ msgstr "La mateixa carpeta que cada vídeo"
 msgid "Save for archive"
 msgstr "Desa per a l'arxiu"
 
-#: cli.py:513
+#: cli.py:515
 #, python-brace-format
 msgid "Savings: {percent}% ({size} smaller)"
 msgstr "Estalvi: {percent}% ({size} menys)"
 
-#: cli.py:669
+#: cli.py:678
 msgid "Show media details"
 msgstr "Mostra els detalls del multimèdia"
 
@@ -1058,7 +1066,7 @@ msgstr "Castellà"
 msgid "Start conversion"
 msgstr "Comença la conversió"
 
-#: gui/main_window.py:379
+#: gui/main_window.py:381
 msgid "Step content"
 msgstr "Contingut del pas"
 
@@ -1172,7 +1180,7 @@ msgstr ""
 "El vídeo es recodifica a H.265. Ocupa menys que H.264 amb la mateixa qualitat visual, però alguns"
 " televisors i navegadors antics no el poden reproduir."
 
-#: gui/preferences.py:61 gui/preferences.py:112
+#: gui/preferences.py:61 gui/preferences.py:128
 msgid "Theme"
 msgstr "Tema"
 
@@ -1184,7 +1192,7 @@ msgstr "No hi ha prou espai lliure al disc de destinació."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Aquesta instal·lació de FFmpeg no té un codificador necessari per convertir el fitxer."
 
-#: gui/workers.py:168
+#: gui/workers.py:170
 msgid "This video has no video streams to estimate."
 msgstr "Aquest vídeo no té cap pista de vídeo per estimar."
 
@@ -1224,6 +1232,10 @@ msgstr "Avís desconegut: {code}"
 #: gui/wizard/step_target.py:53
 msgid "Use the Jellyfin profile, which works on almost everything."
 msgstr "Fes servir el perfil Jellyfin, que funciona a gairebé tot."
+
+#: gui/preferences.py:90 gui/preferences.py:94
+msgid "Use the graphics card to read videos, when there is one"
+msgstr "Utilitza la targeta gràfica per llegir els vídeos, si n'hi ha"
 
 #: gui/wizard_logic.py:248
 msgid "Very fine detail, such as film grain or textures in dark scenes, is slightly smoothed."
@@ -1278,7 +1290,7 @@ msgstr "La pista de vídeo {stream_index} es reduirà de {from_height}p a {to_he
 msgid "Video {position}: {codec}, {width}x{height}, {fps:g} fps, {depth}-bit, HDR {hdr}"
 msgstr "Vídeo {position}: {codec}, {width}x{height}, {fps:g} fps, {depth} bits, HDR {hdr}"
 
-#: cli.py:494
+#: cli.py:496
 #, python-brace-format
 msgid "Video: ~{size}"
 msgstr "Vídeo: ~{size}"

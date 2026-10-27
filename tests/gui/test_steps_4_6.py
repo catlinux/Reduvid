@@ -524,8 +524,19 @@ def install_sample_runner(
     instances: list = []
 
     class Runner:
-        def __init__(self, _ffmpeg, _media, _plan, _input, *, on_progress=None, threads=None):
+        def __init__(
+            self,
+            _ffmpeg,
+            _media,
+            _plan,
+            _input,
+            *,
+            on_progress=None,
+            threads=None,
+            hw_decode=False,
+        ):
             self.on_progress = on_progress
+            self.hw_decode = hw_decode
             self.started = threading.Event()
             self.release = threading.Event()
             self.cancelled = False

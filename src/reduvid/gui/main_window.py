@@ -206,6 +206,7 @@ class MainWindow(QMainWindow):
         dialog = PreferencesDialog(self._config, self._theme_manager, self)
         if dialog.exec():
             self._config = dialog.config
+            self.wizard_state.set_hw_decode(self._config.hw_decode)
 
     def start_queue(
         self,
@@ -225,6 +226,7 @@ class MainWindow(QMainWindow):
             output_dir=output_dir,
             threads=threads,
             replace_original=replace_original,
+            hw_decode=self.wizard_state.hw_decode,
         )
         worker = QueueWorker(processor, self._ffmpeg_info.ffprobe_path)
         worker.add_files(paths)
