@@ -13,6 +13,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 - Si el equipo tiene tarjeta gráfica, el vídeo original se lee con ella (`-hwaccel auto`), lo que libera el procesador para codificar; el resultado es el mismo. Si FFmpeg falla al usarla, el vídeo se repite automáticamente con el procesador. Se aplica a las conversiones y a las pruebas de muestra, y se puede desactivar en Preferencias.
 - Motor: `FFmpegInfo.hwaccels` con los métodos de aceleración que ofrece FFmpeg.
 - Motor: `core/thumbnail.py` extrae una miniatura JPEG de cada vídeo (fotograma al 10 %) y la guarda en la caché del usuario; la usará la interfaz rediseñada.
+- Motor: `core/hardware.py` comprueba qué codificadores por hardware (NVENC, QSV, VAAPI, AMF) funcionan de verdad codificando un fotograma con cada uno, con caché por versión de FFmpeg. FFmpeg los anuncia aunque el driver no los admita.
 - CLI: `--no-hw-decode` en `convert` y `estimate`, y la clave de configuración `hw_decode = false`, para no usar la tarjeta gráfica.
 
 ## [0.6.1] - 2026-10-27
