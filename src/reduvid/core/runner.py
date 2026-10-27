@@ -165,6 +165,10 @@ class EncodeHandle:
             processed = int(block.get("out_time_us", "0")) / 1_000_000
         except ValueError:
             processed = 0.0
+        # While +faststart moves the index FFmpeg reports N/A or an earlier time; never go back.
+        with self._state_lock:
+            if self._last_progress is not None:
+                processed = max(processed, self._last_progress.tiempo_procesado_segundos)
 
         raw_speed = block.get("speed", "N/A").removesuffix("x")
         try:

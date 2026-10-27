@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from reduvid.core.plan import EncodePlan, VideoDecision
+from reduvid.core.plan import HDR_TO_SDR_FILTERS, EncodePlan, VideoDecision
 from reduvid.core.probe import MediaInfo
 
 
@@ -23,11 +23,17 @@ def build_video_arguments(video: VideoDecision, position: int) -> list[str]:
         arguments.extend([f"-level:v:{position}", video.level])
     if video.pixel_format is not None:
         arguments.extend([f"-pix_fmt:v:{position}", video.pixel_format])
-    filters = list(video.filters)
+    filters: list[str] = []
+    # Scaling first makes tone mapping a 4K source work on a quarter of the pixels.
     if video.target_height is not None:
         filters.append(f"scale=-2:{video.target_height}")
+    filters.extend(video.filters)
     if filters:
         arguments.extend([f"-filter:v:{position}", ",".join(filters)])
+    if video.filters == HDR_TO_SDR_FILTERS:
+        # Without these tags players keep reading the SDR result as HDR (PQ).
+        for option in ("color_primaries", "color_trc", "colorspace"):
+            arguments.extend([f"-{option}:v:{position}", "bt709"])
     return arguments
 
 

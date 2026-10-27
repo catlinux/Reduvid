@@ -96,6 +96,18 @@ def _crf(quality: str, codec: str) -> int:
         raise ValueError(f"Unknown quality level: {quality}") from error
 
 
+# PQ/HLG → linear light → BT.709 primaries → Hable tone mapping → BT.709 8-bit. Each step
+# needs its parameters: a bare "zscale,tonemap" leaves the colours untouched.
+HDR_TO_SDR_FILTERS: tuple[str, ...] = (
+    "zscale=t=linear:npl=100",
+    "format=gbrpf32le",
+    "zscale=p=bt709",
+    "tonemap=tonemap=hable:desat=0",
+    "zscale=t=bt709:m=bt709:r=tv",
+    "format=yuv420p",
+)
+
+
 def resolve_container(options: PlanOptions) -> Literal["mkv", "mp4"]:
     """Return the explicit container or the automatic one for the destination."""
     if options.container is not None:
@@ -140,7 +152,7 @@ def _video_decision(
     filters: tuple[str, ...] = ()
     if stream.hdr and cinecat:
         if ffmpeg_info.has_zscale and ffmpeg_info.has_tonemap:
-            filters = ("zscale", "tonemap")
+            filters = HDR_TO_SDR_FILTERS
             warnings.append(Warning("hdr_converted_to_sdr", {"stream_index": stream.index}))
         else:
             warnings.append(

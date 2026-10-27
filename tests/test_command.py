@@ -6,7 +6,13 @@ from pathlib import Path
 import pytest
 
 from reduvid.core.command import build_command
-from reduvid.core.plan import AudioDecision, EncodePlan, SubtitleDecision, VideoDecision
+from reduvid.core.plan import (
+    HDR_TO_SDR_FILTERS,
+    AudioDecision,
+    EncodePlan,
+    SubtitleDecision,
+    VideoDecision,
+)
 from reduvid.core.probe import AttachmentStream, MediaInfo
 
 
@@ -50,6 +56,22 @@ def test_builds_video_filter_argument_as_one_item() -> None:
     )
 
     assert arguments[arguments.index("-filter:v:0") + 1] == "zscale,tonemap"
+    assert "-color_trc:v:0" not in arguments
+
+
+def test_hdr_to_sdr_scales_first_and_tags_the_output_as_bt709() -> None:
+    arguments = build_command(
+        _media(),
+        _plan(videos=(_video(filters=HDR_TO_SDR_FILTERS, target_height=1080),)),
+        Path.cwd() / "in.mkv",
+        Path.cwd() / "out.mkv",
+    )
+
+    chain = arguments[arguments.index("-filter:v:0") + 1].split(",")
+    assert chain[0] == "scale=-2:1080"
+    assert tuple(chain[1:]) == HDR_TO_SDR_FILTERS
+    for option in ("-color_primaries:v:0", "-color_trc:v:0", "-colorspace:v:0"):
+        assert arguments[arguments.index(option) + 1] == "bt709"
 
 
 def test_builds_video_scale_filter_for_target_height() -> None:

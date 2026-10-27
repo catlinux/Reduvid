@@ -119,6 +119,25 @@ def test_progress_blocks_are_parsed_and_end_is_reported(
     assert events[-1].tiempo_restante_segundos == 4.0
 
 
+def test_progress_never_goes_back_while_faststart_moves_the_index(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    process = FakeProcess(
+        "out_time_us=9000000\nspeed=2.0x\nprogress=continue\n"
+        "out_time_us=N/A\nspeed=N/A\nprogress=continue\n"
+        "out_time_us=5000000\nspeed=2.0x\nprogress=end\n"
+    )
+    _install_process(monkeypatch, process)
+    _install_psutil(monkeypatch)
+    events: list[runner.ProgressEvent] = []
+
+    runner.EncodeHandle(
+        ["-i", "input.mkv", "output.mp4"], 10.0, tmp_path / "temporary.mp4", events.append
+    ).run()
+
+    assert [event.tiempo_procesado_segundos for event in events] == [9.0, 9.0, 9.0]
+
+
 def test_successful_encode_builds_ffmpeg_arguments(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

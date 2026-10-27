@@ -7,6 +7,7 @@ import pytest
 
 from reduvid.core.ffmpeg import FFmpegInfo
 from reduvid.core.plan import (
+    HDR_TO_SDR_FILTERS,
     PlanOptions,
     build_plan,
     estimate_stream_bytes,
@@ -125,7 +126,7 @@ def test_odd_max_height_rounds_down_to_even() -> None:
 def test_hdr_cinecat_and_modern() -> None:
     video = VideoStream(0, "hevc", 1920, 1080, 24, hdr=True, hdr_variant="hdr10")
     supported = build_plan(media(videos=[video]), ffmpeg("zscale", "tonemap"))
-    assert supported.videos[0].filters == ("zscale", "tonemap")
+    assert supported.videos[0].filters == HDR_TO_SDR_FILTERS
     assert "hdr_tonemap_unavailable" not in {item.code for item in supported.warnings}
     unavailable = build_plan(media(videos=[video]), ffmpeg())
     assert any(item.code == "hdr_tonemap_unavailable" for item in unavailable.warnings)

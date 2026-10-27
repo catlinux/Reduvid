@@ -20,6 +20,11 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 - MP4 files are written with `+faststart`, so the browser can start playing without downloading the end of the file.
 
+### Fixed
+
+- **HDR to SDR conversion did not convert the colours**: `zscale,tonemap` was applied without parameters and the file stayed tagged as HDR, so players showed the colours wrong. Now the video is linearised, converted to BT.709 with Hable tone mapping and the output is tagged as BT.709. The resolution is also reduced before tone mapping, which on a 4K source works on a quarter of the pixels.
+- The progress bar went backwards at the end of MP4 files while FFmpeg moved the index to the front (`+faststart`).
+
 ### Removed
 
 - The `jellyfin` destination and `reduvid-cli --target jellyfin`.

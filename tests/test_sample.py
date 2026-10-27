@@ -161,7 +161,7 @@ def test_build_sample_command_shares_the_scale_and_filter_arguments() -> None:
         SampleSegment(0.0, 20.0),
     )
 
-    assert arguments[arguments.index("-filter:v:0") + 1] == "zscale,tonemap,scale=-2:720"
+    assert arguments[arguments.index("-filter:v:0") + 1] == "scale=-2:720,zscale,tonemap"
 
 
 def test_build_sample_command_maps_only_the_first_video_of_the_plan() -> None:
