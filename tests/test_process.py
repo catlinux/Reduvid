@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import io
+import os
 import subprocess
+import sys
 from pathlib import Path
 from subprocess import CompletedProcess
 from types import SimpleNamespace
@@ -129,3 +131,32 @@ def test_hardware_uses_hidden_window_kwargs(
     hardware.probe_hardware_encoders(info, cache_dir=tmp_path / "cache")
 
     assert calls[0]["creationflags"] == WINDOWS_CREATIONFLAGS
+
+
+def test_power_throttling_is_a_no_op_outside_windows(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(process, "sys", SimpleNamespace(platform="linux"))
+
+    assert process.disable_power_throttling(1234) is False
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="real Windows API call")
+def test_power_throttling_can_be_disabled_for_a_real_process() -> None:
+    assert process.disable_power_throttling(os.getpid()) is True
+
+
+def test_runner_disables_power_throttling_on_windows(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[int] = []
+    monkeypatch.setattr(runner, "sys", SimpleNamespace(platform="win32"))
+    monkeypatch.setattr(runner, "disable_power_throttling", calls.append)
+    monkeypatch.setattr(
+        runner.psutil, "Process", lambda pid: SimpleNamespace(nice=lambda value: None)
+    )
+    monkeypatch.setattr(runner.psutil, "BELOW_NORMAL_PRIORITY_CLASS", 0x4000, raising=False)
+    handle = object.__new__(runner.EncodeHandle)
+    handle._process = SimpleNamespace(pid=4321)  # type: ignore[assignment]
+
+    handle._lower_priority()
+
+    assert calls == [4321]

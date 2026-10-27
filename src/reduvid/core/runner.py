@@ -16,7 +16,7 @@ from typing import Literal, cast
 
 import psutil  # type: ignore[import-untyped]
 
-from reduvid.core.process import hidden_window_kwargs
+from reduvid.core.process import disable_power_throttling, hidden_window_kwargs
 
 EncodeErrorCode = Literal[
     "no_space", "corrupt_input", "missing_codec", "permission_denied", "unknown"
@@ -133,6 +133,7 @@ class EncodeHandle:
             process = psutil.Process(self._process.pid)
             if sys.platform == "win32":
                 process.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS)
+                disable_power_throttling(self._process.pid)
             elif sys.platform.startswith("linux"):
                 process.nice(10)
         except (OSError, psutil.Error):

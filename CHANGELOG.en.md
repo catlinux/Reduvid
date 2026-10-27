@@ -23,6 +23,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 ### Fixed
 
 - **HDR to SDR conversion did not convert the colours**: `zscale,tonemap` was applied without parameters and the file stayed tagged as HDR, so players showed the colours wrong. Now the video is linearised, converted to BT.709 with Hable tone mapping and the output is tagged as BT.709. The resolution is also reduced before tone mapping, which on a 4K source works on a quarter of the pixels.
+- **On Windows 11 with hybrid CPUs (performance and efficiency cores) conversions were about three times slower**: since FFmpeg was launched with low priority, Windows treated it as background work and kept it on the efficiency cores only (4 of 16 threads on an i5-14400F). The priority stays low so the computer remains responsive, but Windows is now asked not to throttle the process and it uses every core.
 - On Windows, the installed application opened empty console windows in front of the program every time it launched FFmpeg or ffprobe (for example, when estimating the size). Child processes now start without a window.
 - The progress bar went backwards at the end of MP4 files while FFmpeg moved the index to the front (`+faststart`).
 
