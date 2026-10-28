@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-28
+
+### Fixed
+
+- The queue panel had the same defect as the Summary: with several videos and warnings, rows were squashed and overlapped. It now has its own scroll.
+
 ## [0.8.1] - 2026-10-27
 
 ### Fixed

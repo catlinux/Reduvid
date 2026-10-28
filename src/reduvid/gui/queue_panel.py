@@ -10,9 +10,11 @@ from pathlib import Path
 from typing import Literal
 
 from PySide6.QtWidgets import (
+    QFrame,
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -72,6 +74,7 @@ class QueuePanel(QWidget):
             widget = entry.widget()
             if widget is not None:
                 widget.deleteLater()
+        self.items_layout.addStretch(1)
         self._items.clear()
         self.current_name.clear()
         self.size_label.clear()
@@ -144,14 +147,20 @@ class QueuePanel(QWidget):
         self.items_layout = QVBoxLayout(self.items_container)
         self.items_layout.setContentsMargins(0, 0, 0, 0)
         self.items_layout.setSpacing(8)
-        layout.addWidget(self.items_container)
+        self.items_layout.addStretch(1)
+        scroll = QScrollArea(self)
+        scroll.setObjectName("queueScroll")
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setAccessibleName(_("Conversion queue"))
+        scroll.setWidget(self.items_container)
+        layout.addWidget(scroll, 1)
 
         self.total_label = QLabel(self)
         self.total_label.setObjectName("queueTotal")
         self.total_label.setProperty("role", "muted")
         self.total_label.setWordWrap(True)
         layout.addWidget(self.total_label)
-        layout.addStretch(1)
 
     def _set_state(self, state: PanelState) -> None:
         self._state = state
@@ -274,7 +283,7 @@ class QueuePanel(QWidget):
         chips_layout.setSpacing(2)
         column.addWidget(name)
         column.addWidget(chips)
-        self.items_layout.addWidget(container)
+        self.items_layout.insertWidget(self.items_layout.count() - 1, container)
         self._items[path] = (container, name, chips_layout)
 
     def _update_item(self, report: FileReport) -> None:

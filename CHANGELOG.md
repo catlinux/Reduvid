@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.8.2] - 2026-10-28
+
+### Corregido
+
+- El panel de la cola tenía el mismo defecto que el Resumen: con varios vídeos y avisos, las filas se aplastaban y se pisaban. Ahora tiene su propio scroll.
+
 ## [0.8.1] - 2026-10-27
 
 ### Corregido
