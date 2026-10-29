@@ -6,6 +6,10 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+### Corregido
+
+- El CI de Linux fallaba al recolectar los tests de la interfaz porque el runner no traía las librerías del sistema que necesita Qt (`libEGL`); ahora se instalan y los tests corren con la plataforma `offscreen`.
+
 ## [0.8.3] - 2026-10-29
 
 ### Cambiado

@@ -6,6 +6,10 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Fixed
+
+- The Linux CI failed while collecting the GUI tests because the runner lacked the system libraries Qt needs (`libEGL`); they are now installed and the tests run with the `offscreen` platform.
+
 ## [0.8.3] - 2026-10-29
 
 ### Changed
