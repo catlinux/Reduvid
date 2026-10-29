@@ -5,11 +5,12 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import urllib.request
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import replace
 from pathlib import Path
 
-from PySide6.QtCore import QSize, Qt, QThread
+from PySide6.QtCore import QSize, Qt, QThread, QTimer, Slot
 from PySide6.QtGui import QCloseEvent, QResizeEvent
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -34,6 +35,7 @@ from reduvid.gui.advanced_page import AdvancedPage
 from reduvid.gui.preferences import PreferencesDialog
 from reduvid.gui.queue_panel import QueuePanel
 from reduvid.gui.theme.manager import ThemeManager
+from reduvid.gui.update_notice import UpdateNotice
 from reduvid.gui.widgets.step_list import StepList
 from reduvid.gui.widgets.wizard_nav import WizardNav
 from reduvid.gui.wizard.step_destination import StepDestination
@@ -111,6 +113,8 @@ class MainWindow(QMainWindow):
         self.queue_panel.setMinimumWidth(QUEUE_PANEL_WIDTH)
         self.queue_worker: QueueWorker | None = None
         self.queue_thread: QThread | None = None
+        self.update_notice = UpdateNotice(self._config, self)
+        self.update_notice.config_changed.connect(self._on_update_config_changed)
         self.splitter = QSplitter(Qt.Orientation.Horizontal, self)
         self.splitter.setObjectName("bodySplitter")
         self.splitter.setAccessibleName(_("Main panels"))
@@ -124,6 +128,7 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(self._build_top_bar())
+        layout.addWidget(self.update_notice)
         layout.addWidget(self.splitter, 1)
         self.setCentralWidget(central)
         QWidget.setTabOrder(self.wizard_button, self.advanced_button)
@@ -204,10 +209,38 @@ class MainWindow(QMainWindow):
         return self.step_summary
 
     def open_preferences(self) -> None:
+        previous_updates = self._config.check_updates
         dialog = PreferencesDialog(self._config, self._theme_manager, self)
         if dialog.exec():
             self._config = dialog.config
             self.wizard_state.set_hw_decode(self._config.hw_decode)
+            self.update_notice.set_config(self._config)
+            if self._config.check_updates and not previous_updates:
+                self.update_notice.check_now()
+
+    @Slot(object)
+    def _on_update_config_changed(self, config: object) -> None:
+        if isinstance(config, Config):
+            self._config = config
+
+    def start_update_checks(
+        self,
+        *,
+        opener: Callable[[urllib.request.Request, float], bytes] | None = None,
+        state_dir: Path | None = None,
+        download_dir: Path | None = None,
+        opener_stream: Callable[[str], Iterable[bytes]] | None = None,
+    ) -> None:
+        """Start the update notice after the window and event loop exist."""
+        QTimer.singleShot(
+            0,
+            lambda: self.update_notice.start(
+                opener=opener,
+                state_dir=state_dir,
+                download_dir=download_dir,
+                opener_stream=opener_stream,
+            ),
+        )
 
     def start_queue(
         self,
@@ -234,6 +267,7 @@ class MainWindow(QMainWindow):
         worker.finished.connect(self._on_queue_finished)
         self.queue_panel.connect_worker(worker)
         self.queue_worker = worker
+        self.update_notice.set_queue_running(True)
         self.queue_thread = start_worker_thread(worker)
         return worker
 
@@ -267,6 +301,7 @@ class MainWindow(QMainWindow):
         # The worker and thread schedule their own deletion after finishing.
         self.queue_worker = None
         self.queue_thread = None
+        self.update_notice.set_queue_running(False)
 
     def has_running_queue(self) -> bool:
         return self.queue_thread is not None and self.queue_thread.isRunning()
@@ -290,6 +325,7 @@ class MainWindow(QMainWindow):
             return
         if self.has_running_queue():
             self.cancel_queue()
+        self.update_notice.prepare_close()
         self._cancel_estimates()
         super().closeEvent(event)
 

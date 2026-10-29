@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import threading
+import urllib.request
 from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
 
@@ -23,6 +24,13 @@ from reduvid.core.sample import (
     TotalEstimate,
     audio_bytes_for_plan,
     estimate_total,
+)
+from reduvid.core.updates import (
+    InstallKind,
+    UpdateError,
+    UpdateInfo,
+    check_for_update,
+    download_update,
 )
 from reduvid.i18n import _
 
@@ -282,6 +290,97 @@ class LevelsWorker(QObject):
             runner.cancel()
 
 
+class UpdateCheckWorker(QObject):
+    """Check GitHub for a newer release outside the GUI thread."""
+
+    done = Signal(object)
+    finished = Signal()
+
+    def __init__(
+        self,
+        current: str,
+        *,
+        state_dir: Path | None = None,
+        opener: Callable[[urllib.request.Request, float], bytes] | None = None,
+        parent: QObject | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._current = current
+        self._state_dir = state_dir
+        self._opener = opener
+
+    @Slot()
+    def run(self) -> None:
+        try:
+            info = check_for_update(
+                self._current,
+                state_dir=self._state_dir,
+                opener=self._opener,
+            )
+        except Exception:
+            info = None
+        self.done.emit(info)
+        self.finished.emit()
+
+
+class UpdateDownloadWorker(QObject):
+    """Download and verify an update asset outside the GUI thread."""
+
+    progress = Signal(int, object)
+    done = Signal(object)
+    failed = Signal(str, str)
+    finished = Signal()
+
+    def __init__(
+        self,
+        info: UpdateInfo,
+        kind: InstallKind,
+        dest_dir: Path,
+        *,
+        opener_stream: Callable[[str], Iterable[bytes]] | None = None,
+        parent: QObject | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._info = info
+        self._kind = kind
+        self._dest_dir = dest_dir
+        self._opener_stream = opener_stream
+        self._lock = threading.Lock()
+        self._cancelled = False
+
+    @Slot()
+    def run(self) -> None:
+        try:
+            path = download_update(
+                self._info,
+                self._kind,
+                self._dest_dir,
+                opener_stream=self._opener_stream,
+                progress=self._emit_progress,
+                cancel=self._is_cancelled,
+            )
+        except UpdateError as error:
+            self.failed.emit(error.code, error.detail)
+        except Exception as error:
+            self.failed.emit("network", str(error))
+        else:
+            self.done.emit(path)
+        finally:
+            self.finished.emit()
+
+    def _emit_progress(self, downloaded: int, total: int | None) -> None:
+        self.progress.emit(downloaded, total)
+
+    def _is_cancelled(self) -> bool:
+        with self._lock:
+            return self._cancelled
+
+    def cancel(self) -> None:
+        """Ask the engine to stop and remove the partial file."""
+        with self._lock:
+            self._cancelled = True
+
+
 class _ThreadReaper(QObject):
     """Release a finished worker thread from the GUI thread.
 
@@ -303,7 +402,12 @@ _reaper: _ThreadReaper | None = None
 
 
 def start_worker_thread(
-    worker: ProbeWorker | QueueWorker | SampleWorker | LevelsWorker,
+    worker: ProbeWorker
+    | QueueWorker
+    | SampleWorker
+    | LevelsWorker
+    | UpdateCheckWorker
+    | UpdateDownloadWorker,
 ) -> QThread:
     """Move *worker* to a new thread, start it and return the thread.
 

@@ -15,6 +15,8 @@ def test_missing_file_returns_defaults(tmp_path: Path) -> None:
 
     assert loaded == Config()
     assert loaded.hw_decode is True
+    assert loaded.check_updates is True
+    assert loaded.updates_notice_seen is False
     assert invalid == ()
 
 
@@ -33,6 +35,8 @@ def test_round_trip_keeps_spaces_accents_and_quotes(tmp_path: Path) -> None:
         quality="max_savings",
         container="mp4",
         hw_decode=False,
+        check_updates=False,
+        updates_notice_seen=True,
     )
 
     save_config(original, target)
@@ -139,6 +143,34 @@ def test_invalid_hw_decode_is_reported_and_uses_the_default(tmp_path: Path) -> N
 
     assert loaded.hw_decode is True
     assert invalid == ("hw_decode",)
+
+
+def test_update_flags_can_be_disabled_in_toml(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text(
+        "check_updates = false\nupdates_notice_seen = true\n",
+        encoding="utf-8",
+    )
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.check_updates is False
+    assert loaded.updates_notice_seen is True
+    assert invalid == ()
+
+
+def test_invalid_update_flags_are_reported_and_use_defaults(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text(
+        "check_updates = 'no'\nupdates_notice_seen = 1\n",
+        encoding="utf-8",
+    )
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.check_updates is True
+    assert loaded.updates_notice_seen is False
+    assert set(invalid) == {"check_updates", "updates_notice_seen"}
 
 
 def test_ffmpeg_path_is_accepted_at_root_and_in_section(tmp_path: Path) -> None:

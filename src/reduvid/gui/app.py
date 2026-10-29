@@ -68,6 +68,8 @@ def create_screen(config: Config, theme_manager: ThemeManager) -> QWidget:
 def run_application(app: QApplication, screen: QWidget) -> int:
     """Show *screen* and run the Qt event loop."""
     screen.show()
+    if isinstance(screen, MainWindow):
+        screen.start_update_checks()
     return app.exec()
 
 
@@ -90,6 +92,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         def show_main_window(info: FFmpegInfo) -> None:
             window = MainWindow(config, info, theme_manager)
             window.show()
+            window.start_update_checks()
             screen.close()
 
         screen.ffmpeg_found.connect(show_main_window)

@@ -112,6 +112,20 @@ def test_check_button_reports_a_missing_ffmpeg(monkeypatch: pytest.MonkeyPatch, 
     assert "not found" in dialog.ffmpeg_status.text().lower()
 
 
+def test_check_updates_option_loads_and_saves(qapp) -> None:
+    dialog = PreferencesDialog(Config(check_updates=False), ThemeManager(qapp))
+
+    assert dialog.check_updates.objectName() == "checkUpdatesCheck"
+    assert dialog.check_updates.accessibleName()
+    assert not dialog.check_updates.isChecked()
+    assert dialog.check_updates_hint.property("role") == "muted"
+
+    dialog.check_updates.setChecked(True)
+    dialog.accept()
+
+    assert dialog.config.check_updates is True
+
+
 def test_dialog_shows_the_version(qapp) -> None:
     dialog = PreferencesDialog(Config(), ThemeManager(qapp))
 

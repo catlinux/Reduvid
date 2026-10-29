@@ -101,6 +101,19 @@ class PreferencesDialog(QDialog):
         self.hw_decode_hint.setProperty("role", "muted")
         self.hw_decode_hint.setWordWrap(True)
 
+        self.check_updates = QCheckBox(_("Look for updates automatically"), self)
+        self.check_updates.setObjectName("checkUpdatesCheck")
+        self.check_updates.setAccessibleName(_("Look for updates automatically"))
+        self.check_updates_hint = QLabel(
+            _(
+                "Checks GitHub once a day; only the request is sent, with no personal "
+                "or usage data."
+            ),
+            self,
+        )
+        self.check_updates_hint.setProperty("role", "muted")
+        self.check_updates_hint.setWordWrap(True)
+
         self.ffmpeg_edit = QLineEdit(self)
         self.ffmpeg_edit.setObjectName("ffmpegPathEdit")
         self.ffmpeg_edit.setAccessibleName(_("FFmpeg path"))
@@ -131,6 +144,8 @@ class PreferencesDialog(QDialog):
         form.addRow("", self.reduce_motion)
         form.addRow("", self.hw_decode)
         form.addRow("", self.hw_decode_hint)
+        form.addRow("", self.check_updates)
+        form.addRow("", self.check_updates_hint)
         form.addRow(_("FFmpeg path"), path_row)
         form.addRow("", self.ffmpeg_status)
         self.form = form
@@ -160,7 +175,8 @@ class PreferencesDialog(QDialog):
         QWidget.setTabOrder(self.mode_combo, self.language_combo)
         QWidget.setTabOrder(self.language_combo, self.reduce_motion)
         QWidget.setTabOrder(self.reduce_motion, self.hw_decode)
-        QWidget.setTabOrder(self.hw_decode, self.ffmpeg_edit)
+        QWidget.setTabOrder(self.hw_decode, self.check_updates)
+        QWidget.setTabOrder(self.check_updates, self.ffmpeg_edit)
         QWidget.setTabOrder(self.ffmpeg_edit, self.browse_button)
         QWidget.setTabOrder(self.browse_button, self.check_button)
         if ok_button is not None:
@@ -176,6 +192,7 @@ class PreferencesDialog(QDialog):
         )
         self.reduce_motion.setChecked(config.reduce_motion)
         self.hw_decode.setChecked(config.hw_decode)
+        self.check_updates.setChecked(config.check_updates)
         self.ffmpeg_edit.setText(str(config.ffmpeg_path) if config.ffmpeg_path else "")
 
     def _ffmpeg_path(self) -> Path | None:
@@ -210,6 +227,7 @@ class PreferencesDialog(QDialog):
             language=self.language_combo.currentData() or None,
             reduce_motion=self.reduce_motion.isChecked(),
             hw_decode=self.hw_decode.isChecked(),
+            check_updates=self.check_updates.isChecked(),
             ffmpeg_path=self._ffmpeg_path(),
         )
         save_config(config)

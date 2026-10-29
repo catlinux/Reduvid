@@ -40,6 +40,8 @@ class Config:
     quality: Quality = "balanced"
     container: Container | None = None
     hw_decode: bool = True
+    check_updates: bool = True
+    updates_notice_seen: bool = False
 
 
 def config_path() -> Path:
@@ -159,6 +161,22 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         else:
             invalid.append("hw_decode")
 
+    check_updates = True
+    raw_check_updates = raw.get("check_updates")
+    if raw_check_updates is not None:
+        if isinstance(raw_check_updates, bool):
+            check_updates = raw_check_updates
+        else:
+            invalid.append("check_updates")
+
+    updates_notice_seen = False
+    raw_updates_notice_seen = raw.get("updates_notice_seen")
+    if raw_updates_notice_seen is not None:
+        if isinstance(raw_updates_notice_seen, bool):
+            updates_notice_seen = raw_updates_notice_seen
+        else:
+            invalid.append("updates_notice_seen")
+
     config = Config(
         ffmpeg_path=ffmpeg_path,
         language=language,
@@ -171,6 +189,8 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         quality=quality,
         container=container,
         hw_decode=hw_decode,
+        check_updates=check_updates,
+        updates_notice_seen=updates_notice_seen,
     )
     return config, tuple(invalid)
 
@@ -196,6 +216,8 @@ def save_config(config: Config, path: Path | None = None) -> None:
     if config.container is not None:
         entries.append(("container", _toml_string(config.container)))
     entries.append(("hw_decode", "true" if config.hw_decode else "false"))
+    entries.append(("check_updates", "true" if config.check_updates else "false"))
+    entries.append(("updates_notice_seen", "true" if config.updates_notice_seen else "false"))
     payload = "".join(f"{key} = {value}\n" for key, value in entries)
 
     descriptor, temporary_name = tempfile.mkstemp(
