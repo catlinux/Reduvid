@@ -10,6 +10,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Cambiado
 
+- Las herramientas de desarrollo acotan ruff a la serie 0.15 para que el CI no falle cuando sale una versión nueva con reglas distintas.
 - El instalador de Windows pasa a ser una instalación por usuario, sin pedir permisos de administrador. Quien tenga la 0.8.0 instalada en `Program Files` debe desinstalarla una vez a mano.
 
 ### Añadido

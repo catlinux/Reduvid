@@ -35,7 +35,7 @@ reduvid-cli = "reduvid.cli:main"
 reduvid = "reduvid.gui.app:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11", "pre-commit>=3.8", "babel>=2.16"]
+dev = ["pytest>=8", "ruff>=0.15,<0.16", "mypy>=1.11", "pre-commit>=3.8", "babel>=2.16"]
 build = ["pyinstaller>=6", "babel>=2.16"]
 
 [tool.hatch.version]

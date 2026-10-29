@@ -10,6 +10,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Changed
 
+- The development tools pin ruff to the 0.15 series so CI does not break when a new version with different rules is released.
 - The Windows installer is now a per-user installation and does not request administrator permissions. Anyone with 0.8.0 installed in `Program Files` must uninstall it once by hand.
 
 ### Added
