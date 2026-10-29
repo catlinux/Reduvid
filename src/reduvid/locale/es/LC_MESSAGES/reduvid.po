@@ -48,7 +48,7 @@ msgstr "&Examinar…"
 msgid "&Cancel"
 msgstr "&Cancelar"
 
-#: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
+#: gui/ffmpeg_missing.py:69 gui/ffmpeg_missing.py:71
 msgid "&Choose ffmpeg…"
 msgstr "&Elegir ffmpeg…"
 
@@ -86,7 +86,7 @@ msgstr "&Preferencias"
 msgid "&Resume"
 msgstr "&Reanudar"
 
-#: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
+#: gui/ffmpeg_missing.py:73 gui/ffmpeg_missing.py:75
 msgid "&Search again"
 msgstr "&Volver a buscar"
 
@@ -346,7 +346,7 @@ msgstr "Elige los idiomas de audio y de subtítulos que entiendas."
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Elige el dispositivo que usarás más. Puedes cambiarlo más adelante."
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:205
+#: gui/ffmpeg_missing.py:117 gui/preferences.py:205
 msgid "Choose the ffmpeg executable"
 msgstr "Elige el ejecutable de ffmpeg"
 
@@ -443,7 +443,7 @@ msgstr ""
 "Las escenas oscuras, el grano de la película y el movimiento rápido se ven más suaves y pueden "
 "mostrar bloques."
 
-#: gui/ffmpeg_missing.py:64
+#: gui/ffmpeg_missing.py:65
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
@@ -622,7 +622,7 @@ msgstr "Estimando: {percent}%"
 msgid "Explanation"
 msgstr "Explicación"
 
-#: gui/ffmpeg_missing.py:47
+#: gui/ffmpeg_missing.py:48
 msgid "FFmpeg is required"
 msgstr "Se necesita FFmpeg"
 
@@ -634,7 +634,7 @@ msgstr "Ruta de FFmpeg"
 msgid "FFmpeg was not found at that path."
 msgstr "No se ha encontrado FFmpeg en esa ruta."
 
-#: gui/ffmpeg_missing.py:124
+#: gui/ffmpeg_missing.py:134
 msgid "FFmpeg was still not found."
 msgstr "Todavía no se ha encontrado FFmpeg."
 
@@ -647,7 +647,7 @@ msgstr "Se ha detectado FFmpeg {version}."
 msgid "Faster, with the same result. If it fails, Reduvid uses the processor instead."
 msgstr "Más rápido y con el mismo resultado. Si falla, Reduvid usa el procesador."
 
-#: gui/ffmpeg_missing.py:65
+#: gui/ffmpeg_missing.py:66
 msgid "Fedora"
 msgstr "Fedora"
 
@@ -757,7 +757,7 @@ msgstr "Incluir subcarpetas"
 msgid "Increase: {percent}% ({size} larger)"
 msgstr "Aumento: {percent}% ({size} más)"
 
-#: gui/ffmpeg_missing.py:99
+#: gui/ffmpeg_missing.py:109
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Comando de instalación para {system}"
@@ -1039,7 +1039,7 @@ msgstr ""
 "Reduvid puede consultar las releases públicas de GitHub como mucho una vez cada 24 horas. No "
 "envía identificadores ni datos de uso, descarga solo mediante HTTPS y verifica el SHA256."
 
-#: gui/ffmpeg_missing.py:55
+#: gui/ffmpeg_missing.py:56
 msgid ""
 "Reduvid uses FFmpeg to convert videos. Install it, or choose the ffmpeg executable if you already"
 " have it."
@@ -1165,7 +1165,8 @@ msgstr "Sistema"
 msgid "System language"
 msgstr "Idioma del sistema"
 
-#: gui/error_view.py:40 gui/wizard/step_quality.py:231
+#: gui/error_view.py:40 gui/ffmpeg_missing.py:93 gui/ffmpeg_missing.py:141
+#: gui/wizard/step_quality.py:231
 msgid "Technical details"
 msgstr "Detalles técnicos"
 
@@ -1472,7 +1473,7 @@ msgstr ""
 "¿Por qué Máximo ahorro? Si archivas, la prioridad es ahorrar espacio y una codificación más lenta"
 " no importa."
 
-#: gui/ffmpeg_missing.py:63
+#: gui/ffmpeg_missing.py:64
 msgid "Windows"
 msgstr "Windows"
 
@@ -1688,3 +1689,4 @@ msgstr "~{size} estimados"
 #~ "La salida con el perfil {destination} no es la"
 #~ " de Jellyfin, así que es posible que Jellyfin "
 #~ "tenga que transcodificarla."
+

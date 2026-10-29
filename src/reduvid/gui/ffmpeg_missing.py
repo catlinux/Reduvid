@@ -5,10 +5,11 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import replace
 from pathlib import Path
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -20,7 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from reduvid.core.config import Config, save_config
-from reduvid.core.ffmpeg import detect_ffmpeg
+from reduvid.core.ffmpeg import describe_search, detect_ffmpeg
 from reduvid.i18n import _
 
 
@@ -84,6 +85,15 @@ class FFmpegMissingWidget(QWidget):
         self.status_label.setProperty("role", "muted")
         self.status_label.setWordWrap(True)
         layout.addWidget(self.status_label)
+
+        self.details_label = QLabel(self)
+        self.details_label.setObjectName("ffmpegMissingDetails")
+        self.details_label.setProperty("role", "muted")
+        self.details_label.setWordWrap(True)
+        self.details_label.setAccessibleName(_("Technical details"))
+        self.details_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        layout.addWidget(self.details_label)
+        self._show_details(self._config.ffmpeg_path)
         layout.addStretch(1)
 
     def _command_row(self, title: str, command: str) -> QWidget:
@@ -122,5 +132,10 @@ class FFmpegMissingWidget(QWidget):
             info = None
         if info is None:
             self.status_label.setText(_("FFmpeg was still not found."))
+            self._show_details(path)
             return
         self.ffmpeg_found.emit(info)
+
+    def _show_details(self, path: Path | None) -> None:
+        text = describe_search(path)
+        self.details_label.setText(f"{_('Technical details')}:{os.linesep}{text}")

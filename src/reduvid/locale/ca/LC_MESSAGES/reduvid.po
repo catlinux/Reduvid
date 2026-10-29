@@ -48,7 +48,7 @@ msgstr "&Examina…"
 msgid "&Cancel"
 msgstr "&Cancel·la"
 
-#: gui/ffmpeg_missing.py:68 gui/ffmpeg_missing.py:70
+#: gui/ffmpeg_missing.py:69 gui/ffmpeg_missing.py:71
 msgid "&Choose ffmpeg…"
 msgstr "&Tria el ffmpeg…"
 
@@ -86,7 +86,7 @@ msgstr "&Preferències"
 msgid "&Resume"
 msgstr "&Reprèn"
 
-#: gui/ffmpeg_missing.py:72 gui/ffmpeg_missing.py:74
+#: gui/ffmpeg_missing.py:73 gui/ffmpeg_missing.py:75
 msgid "&Search again"
 msgstr "Torna a &buscar"
 
@@ -346,7 +346,7 @@ msgstr "Tria els idiomes d'àudio i de subtítols que entenguis."
 msgid "Choose the device you will use the most. You can change this later."
 msgstr "Tria el dispositiu que faràs servir més. Ho pots canviar més endavant."
 
-#: gui/ffmpeg_missing.py:107 gui/preferences.py:205
+#: gui/ffmpeg_missing.py:117 gui/preferences.py:205
 msgid "Choose the ffmpeg executable"
 msgstr "Tria l'executable de ffmpeg"
 
@@ -443,7 +443,7 @@ msgstr ""
 "Les escenes fosques, el gra de la pel·lícula i el moviment ràpid es veuen més suaus i poden "
 "mostrar blocs."
 
-#: gui/ffmpeg_missing.py:64
+#: gui/ffmpeg_missing.py:65
 msgid "Debian / Ubuntu"
 msgstr "Debian / Ubuntu"
 
@@ -622,7 +622,7 @@ msgstr "Estimant: {percent}%"
 msgid "Explanation"
 msgstr "Explicació"
 
-#: gui/ffmpeg_missing.py:47
+#: gui/ffmpeg_missing.py:48
 msgid "FFmpeg is required"
 msgstr "Cal FFmpeg"
 
@@ -634,7 +634,7 @@ msgstr "Ruta de FFmpeg"
 msgid "FFmpeg was not found at that path."
 msgstr "No s'ha trobat FFmpeg en aquesta ruta."
 
-#: gui/ffmpeg_missing.py:124
+#: gui/ffmpeg_missing.py:134
 msgid "FFmpeg was still not found."
 msgstr "Encara no s'ha trobat FFmpeg."
 
@@ -647,7 +647,7 @@ msgstr "S'ha detectat FFmpeg {version}."
 msgid "Faster, with the same result. If it fails, Reduvid uses the processor instead."
 msgstr "Més ràpid i amb el mateix resultat. Si falla, Reduvid fa servir el processador."
 
-#: gui/ffmpeg_missing.py:65
+#: gui/ffmpeg_missing.py:66
 msgid "Fedora"
 msgstr "Fedora"
 
@@ -757,7 +757,7 @@ msgstr "Inclou les subcarpetes"
 msgid "Increase: {percent}% ({size} larger)"
 msgstr "Augment: {percent}% ({size} més)"
 
-#: gui/ffmpeg_missing.py:99
+#: gui/ffmpeg_missing.py:109
 #, python-brace-format
 msgid "Install command for {system}"
 msgstr "Ordre d'instal·lació per a {system}"
@@ -1039,7 +1039,7 @@ msgstr ""
 "Reduvid pot consultar les versions públiques de GitHub com a màxim un cop cada 24 hores. No envia"
 " identificadors ni dades d'ús, descarrega només per HTTPS i verifica el SHA256."
 
-#: gui/ffmpeg_missing.py:55
+#: gui/ffmpeg_missing.py:56
 msgid ""
 "Reduvid uses FFmpeg to convert videos. Install it, or choose the ffmpeg executable if you already"
 " have it."
@@ -1165,7 +1165,8 @@ msgstr "Sistema"
 msgid "System language"
 msgstr "Idioma del sistema"
 
-#: gui/error_view.py:40 gui/wizard/step_quality.py:231
+#: gui/error_view.py:40 gui/ffmpeg_missing.py:93 gui/ffmpeg_missing.py:141
+#: gui/wizard/step_quality.py:231
 msgid "Technical details"
 msgstr "Detalls tècnics"
 
@@ -1468,7 +1469,7 @@ msgstr ""
 "Per què Estalvi màxim? Si arxives, la prioritat és estalviar espai i una codificació més lenta no"
 " importa."
 
-#: gui/ffmpeg_missing.py:63
+#: gui/ffmpeg_missing.py:64
 msgid "Windows"
 msgstr "Windows"
 
@@ -1684,3 +1685,4 @@ msgstr "~{size} estimats"
 #~ "La sortida amb el perfil {destination} no és "
 #~ "la de Jellyfin, així que és possible que el"
 #~ " Jellyfin l'hagi de transcodificar."
+

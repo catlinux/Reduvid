@@ -4,6 +4,8 @@
 from pathlib import Path
 from subprocess import CompletedProcess
 
+import pytest
+
 from reduvid.core import ffmpeg
 
 
@@ -162,3 +164,34 @@ def test_registry_fallback_is_skipped_outside_windows(monkeypatch) -> None:
     monkeypatch.setattr(ffmpeg, "_registry_path", fail_registry_path)
 
     assert ffmpeg.detect_ffmpeg() is None
+
+
+def test_describe_search_reports_what_was_found_and_launch_errors(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    fake = tmp_path / "ffmpeg"
+    fake.write_text("")
+    monkeypatch.setattr(
+        ffmpeg, "_find_executable", lambda name, _path: fake if name == "ffmpeg" else None
+    )
+
+    def refuse(*_args: object, **_kwargs: object) -> None:
+        raise OSError(6, "The handle is invalid")
+
+    monkeypatch.setattr(ffmpeg.subprocess, "run", refuse)
+
+    text = ffmpeg.describe_search(None)
+
+    assert f"ffmpeg: {fake}" in text
+    assert "ffprobe: not found" in text
+    assert "launching ffmpeg failed" in text
+    assert "handle is invalid" in text
+
+
+def test_describe_search_says_when_nothing_was_found(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(ffmpeg, "_find_executable", lambda _name, _path: None)
+
+    text = ffmpeg.describe_search(None)
+
+    assert "ffmpeg: not found" in text
+    assert "launching" not in text

@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
@@ -85,6 +86,37 @@ def _registry_path() -> str:
         except OSError:
             continue
     return ";".join(values)
+
+
+def describe_search(configured_path: Path | None = None) -> str:
+    """Explain, in plain technical lines, what the FFmpeg search found and why it failed.
+
+    Shown on the missing-FFmpeg screen so a failure can be diagnosed from a
+    screenshot: the search itself swallows launch errors and reports only "not found".
+    """
+    lines = []
+    ffmpeg_path = _find_executable("ffmpeg", configured_path)
+    lines.append(f"ffmpeg: {ffmpeg_path if ffmpeg_path is not None else 'not found'}")
+    ffprobe_path = _find_executable("ffprobe", None)
+    lines.append(f"ffprobe: {ffprobe_path if ffprobe_path is not None else 'not found'}")
+    path_entries = [entry for entry in os.environ.get("PATH", "").split(os.pathsep) if entry]
+    lines.append(f"PATH entries: {len(path_entries)}")
+    if sys.platform == "win32":
+        registry = [entry for entry in _registry_path().split(";") if entry]
+        lines.append(f"registry PATH entries: {len(registry)}")
+    if ffmpeg_path is not None:
+        try:
+            subprocess.run(  # noqa: S603
+                [str(ffmpeg_path), "-version"],
+                capture_output=True,
+                check=False,
+                **hidden_window_kwargs(),
+            )
+        except OSError as error:
+            lines.append(f"launching ffmpeg failed: {error!r}")
+        else:
+            lines.append("launching ffmpeg: ok")
+    return os.linesep.join(lines)
 
 
 def _listed_names(output: str) -> set[str]:

@@ -10,7 +10,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Fixed
 
-- On Windows, the app launched by the installer reported FFmpeg as missing even when it was installed. Child processes now start with standard input closed, so they no longer inherit invalid handles from the installer.
+- When the app started by the Windows installer reported FFmpeg as missing even though it was installed, the screen now shows the search's "Technical details" (which paths it found and the error from launching FFmpeg) so it can be diagnosed. Child processes also start with standard input closed, in case the cause was inherited handles; that is not confirmed to be the cause.
 - The Linux CI failed while collecting the GUI tests because the runner lacked the system libraries Qt needs (`libEGL`); they are now installed and the tests run with the `offscreen` platform.
 
 ## [0.8.3] - 2026-10-29
