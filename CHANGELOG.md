@@ -6,6 +6,8 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.8.3] - 2026-10-29
+
 ### Cambiado
 
 - El instalador de Windows pasa a ser una instalación por usuario, sin pedir permisos de administrador. Quien tenga la 0.8.0 instalada en `Program Files` debe desinstalarla una vez a mano.

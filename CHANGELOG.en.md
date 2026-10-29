@@ -6,6 +6,8 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-10-29
+
 ### Changed
 
 - The Windows installer is now a per-user installation and does not request administrator permissions. Anyone with 0.8.0 installed in `Program Files` must uninstall it once by hand.
