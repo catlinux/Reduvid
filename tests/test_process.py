@@ -27,7 +27,10 @@ def windows(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_hidden_window_kwargs_on_windows(windows: None) -> None:
-    assert process.hidden_window_kwargs() == {"creationflags": WINDOWS_CREATIONFLAGS}
+    assert process.hidden_window_kwargs() == {
+        "creationflags": WINDOWS_CREATIONFLAGS,
+        "stdin": subprocess.DEVNULL,
+    }
 
 
 def test_hidden_window_kwargs_on_other_platforms(monkeypatch: pytest.MonkeyPatch) -> None:

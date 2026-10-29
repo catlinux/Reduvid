@@ -6,8 +6,11 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.8.4] - 2026-10-30
+
 ### Corregido
 
+- Al terminar la instalación en Windows, la app que lanzaba el instalador decía que no encontraba FFmpeg aunque estuviera instalado. Los procesos hijos se lanzan ahora con la entrada estándar cerrada, para no heredar manejadores inválidos del instalador.
 - El CI de Linux fallaba al recolectar los tests de la interfaz porque el runner no traía las librerías del sistema que necesita Qt (`libEGL`); ahora se instalan y los tests corren con la plataforma `offscreen`.
 
 ## [0.8.3] - 2026-10-29

@@ -19,10 +19,13 @@ def hidden_window_kwargs() -> dict[str, Any]:
     """Keep child processes from opening a console window on Windows.
 
     The packaged application runs without a console, so every child process
-    would otherwise create its own console window.
+    would otherwise create its own console window. Standard input is closed
+    explicitly: a windowed app can inherit invalid standard handles from the
+    process that launched it (the installer, for instance), and without this
+    `subprocess` fails with "WinError 6, the handle is invalid".
     """
     if sys.platform == "win32":
-        return {"creationflags": subprocess.CREATE_NO_WINDOW}
+        return {"creationflags": subprocess.CREATE_NO_WINDOW, "stdin": subprocess.DEVNULL}
     return {}
 
 

@@ -393,7 +393,7 @@ def test_launch_windows_installer_uses_detached_flags(
                 "/SUPPRESSMSGBOXES",
                 "/NORESTART",
             ],
-            {"creationflags": expected},
+            {"creationflags": expected, "stdin": subprocess.DEVNULL},
         )
     ]
 
