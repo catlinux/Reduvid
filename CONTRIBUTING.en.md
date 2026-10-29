@@ -78,4 +78,4 @@ python scripts/compile_translations.py   # compile the .po files to .mo for loca
   ```
 - External processes are always started with an argument list, never with `shell=True` or string concatenation.
 - The engine (`src/reduvid/core/`) never imports Qt; the interface never builds FFmpeg commands.
-- No telemetry and no network connections.
+- No telemetry. The only network connection is the update check, which can be turned off (see [Privacy](README.en.md#privacy)).

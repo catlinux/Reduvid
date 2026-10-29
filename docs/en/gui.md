@@ -15,7 +15,7 @@ The wizard's Summary step, in all three themes (paths relative to this guide):
 
 ## First start
 
-Reduvid needs FFmpeg. If it cannot find it (neither at the configured path nor on the `PATH`), it shows a screen explaining how to install it (`winget install Gyan.FFmpeg` on Windows; `apt` or `dnf` on Linux) and offers **Choose ffmpeg…** to point to the executable and **Search again**. It never uses the network.
+Reduvid needs FFmpeg. If it cannot find it (neither at the configured path nor on the `PATH`), it shows a screen explaining how to install it (`winget install Gyan.FFmpeg` on Windows; `apt` or `dnf` on Linux) and offers **Choose ffmpeg…** to point to the executable and **Search again**. FFmpeg detection is local; Reduvid's only network connection is the update check.
 
 ## Wizard mode
 
@@ -57,6 +57,15 @@ On the right (below, in narrow windows) you see the current video with its perce
 - **Language:** System, català, castellano or English. It applies after a restart.
 - **Reduce animations.**
 - **Use the graphics card to read videos, when there is one.** Faster, with the same result; if it fails, Reduvid uses the processor.
+- **Look for updates automatically.** Checks GitHub at most once a day; only the request is sent, with no personal or usage data.
 - **FFmpeg path:** with **Browse…** and **Check**.
 
 They are saved in the configuration file, the same one the command line uses (see [the CLI guide](cli.md)).
+
+## Updates
+
+Update checks are enabled by default. At most once every 24 hours, at startup and in the background, Reduvid checks the public GitHub releases. It sends the request only with the `User-Agent: Reduvid/<version>` header, with no identifiers or usage data. You can turn it off in Preferences with **Look for updates automatically**.
+
+The first time, a notice explains what it does, with **Got it** and **Turn off**. When a newer version exists, a banner appears in the main window with **What's new** (shows the release notes), **Install now**, **On close** and **Not now**. The download uses HTTPS and is verified with `SHA256SUMS`; this protects against corrupt downloads, not against a compromised GitHub account. There is no code signing, so Windows SmartScreen may warn about an "unknown publisher".
+
+On Windows, **Install now** downloads the installer and launches it silently over the same installation, without asking for administrator permissions. With the AppImage, the file is replaced and **Restart now** or **Later** is offered. From source code, only **Open page** is shown to go to the release, without downloading anything. **On close** downloads the update and applies it when the window closes. If you close before the download finishes, it is cancelled and nothing is installed. Reduvid never installs or interrupts a conversion: if a queue is active, it waits for it to finish.

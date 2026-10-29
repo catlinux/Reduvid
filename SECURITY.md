@@ -18,7 +18,7 @@ Reduvid ejecuta FFmpeg sobre archivos que tú eliges. Interesan especialmente:
 
 - Ejecución de órdenes a través de nombres de archivo o metadatos manipulados.
 - Pérdida o sobrescritura de archivos originales.
-- Cualquier conexión de red: el programa no debe hacer ninguna.
+- Cualquier conexión de red inesperada: la única conexión prevista es la comprobación de actualizaciones.
 
 Las vulnerabilidades de FFmpeg se comunican a [FFmpeg](https://ffmpeg.org/security.html).
 
@@ -38,6 +38,6 @@ Reduvid runs FFmpeg on files you choose. Of particular interest:
 
 - Command execution through crafted file names or metadata.
 - Loss or overwriting of original files.
-- Any network connection: the program should make none.
+- Any unexpected network connection: the only expected one is the update check.
 
 FFmpeg vulnerabilities should be reported to [FFmpeg](https://ffmpeg.org/security.html).

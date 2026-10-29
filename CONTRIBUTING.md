@@ -78,4 +78,4 @@ python scripts/compile_translations.py   # compila los .po a .mo para probarlo e
   ```
 - Los procesos externos se lanzan siempre con una lista de argumentos, nunca con `shell=True` ni concatenando texto.
 - El motor (`src/reduvid/core/`) no importa Qt; la interfaz no construye órdenes de FFmpeg.
-- Nada de telemetría ni conexiones de red.
+- Nada de telemetría. La única conexión de red es la comprobación de actualizaciones, que se puede desactivar (ver [Privacidad](README.md#privacidad)).

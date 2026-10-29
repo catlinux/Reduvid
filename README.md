@@ -96,7 +96,7 @@ Cinecat solo reproduce directamente MP4 en el navegador. El H.264 de 8 bits en M
 
 ## Privacidad
 
-Reduvid no tiene telemetría ni estadísticas de uso, y no se conecta a internet. Todo ocurre en tu equipo.
+Reduvid no tiene telemetría ni estadísticas de uso. La única conexión de red es la comprobación de actualizaciones: como mucho una vez cada 24 horas, al arrancar y en segundo plano, consulta las releases públicas de GitHub. Solo se envía la petición con la cabecera `User-Agent: Reduvid/<versión>`, sin identificadores ni datos de uso. Viene activada por defecto y se desactiva en Preferencias con **Buscar actualizaciones automáticamente**. Las actualizaciones se descargan solo por HTTPS y se verifican con `SHA256SUMS`; esto protege de descargas corruptas, no de una cuenta de GitHub comprometida. No hay firma de código, así que Windows SmartScreen puede avisar de «editor desconocido».
 
 ## FFmpeg y licencias
 
