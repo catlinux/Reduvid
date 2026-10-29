@@ -6,6 +6,14 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+### Cambiado
+
+- El instalador de Windows pasa a ser una instalación por usuario, sin pedir permisos de administrador. Quien tenga la 0.8.0 instalada en `Program Files` debe desinstalarla una vez a mano.
+
+### Añadido
+
+- Workflow de GitHub Actions que, al subir un tag `vX.Y.Z`, genera el instalador y el AppImage, publica `SHA256SUMS` y crea la release con las notas del CHANGELOG.
+
 ## [0.8.2] - 2026-10-28
 
 ### Corregido

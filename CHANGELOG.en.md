@@ -6,6 +6,14 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Changed
+
+- The Windows installer is now a per-user installation and does not request administrator permissions. Anyone with 0.8.0 installed in `Program Files` must uninstall it once by hand.
+
+### Added
+
+- GitHub Actions workflow that, when a `vX.Y.Z` tag is pushed, builds the installer and AppImage, publishes `SHA256SUMS` and creates the release with the CHANGELOG notes.
+
 ## [0.8.2] - 2026-10-28
 
 ### Fixed

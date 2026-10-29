@@ -57,7 +57,7 @@ If `ISCC.exe` is not available, the script finishes successfully after building 
 
 ### What the installer does
 
-- Installs Reduvid in `C:\Program Files\Reduvid`.
+- Installs Reduvid in your user folder, by default `C:\Users\<user>\AppData\Local\Programs\Reduvid`, without requesting administrator permissions.
 - Creates a **Reduvid** shortcut in the Start menu.
 - Offers a desktop shortcut, unchecked by default.
 - Adds an uninstaller in **Installed apps** that removes the installed files without touching the user's configuration or videos.

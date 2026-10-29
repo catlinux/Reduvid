@@ -57,7 +57,7 @@ Si `ISCC.exe` no está disponible, el script termina correctamente tras generar 
 
 ### Qué hace el instalador
 
-- Instala Reduvid en `C:\Program Files\Reduvid` (Archivos de programa).
+- Instala Reduvid en tu carpeta de usuario, por defecto `C:\Users\<usuario>\AppData\Local\Programs\Reduvid`, sin pedir permisos de administrador.
 - Crea un acceso directo **Reduvid** en el menú Inicio.
 - Ofrece un acceso directo en el escritorio, desmarcado por defecto.
 - Añade un desinstalador en **Aplicaciones instaladas** que borra los archivos instalados, sin tocar la configuración ni los vídeos del usuario.

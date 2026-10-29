@@ -1,0 +1,126 @@
+# SPDX-License-Identifier: LicenseRef-WNCL-CU-1.0
+# Copyright (C) 2026 Catlinux
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify tag, version and changelog
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          current="$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' src/reduvid/__init__.py)"
+          if [[ "$version" != "$current" ]]; then
+            echo "Tag version ($version) does not match __version__ ($current)." >&2
+            exit 1
+          fi
+          python scripts/release_notes.py "$version" > /dev/null
+
+  build-windows:
+    needs: verify
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -e ".[build]"
+      # Chocolatey is preinstalled on windows-latest and its innosetup package
+      # provides the ISCC shim, so no third-party action is needed.
+      - run: choco install innosetup -y --no-progress
+      - name: Ensure ISCC.exe is on PATH
+        shell: pwsh
+        run: |
+          if (Get-Command ISCC.exe -ErrorAction SilentlyContinue) { exit 0 }
+          $paths = @(
+            "${env:ProgramFiles(x86)}\Inno Setup 6",
+            "$env:ProgramFiles\Inno Setup 6",
+            "$env:LOCALAPPDATA\Programs\Inno Setup 6"
+          )
+          $inno = $paths | Where-Object { Test-Path (Join-Path $_ "ISCC.exe") } | Select-Object -First 1
+          if (-not $inno) { throw "ISCC.exe was not found after installing Inno Setup." }
+          Add-Content -Path $env:GITHUB_PATH -Value $inno
+      - run: python scripts/build_windows.py
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: dist/windows/Reduvid-Setup-*.exe
+          if-no-files-found: error
+
+  build-linux:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -e ".[build]"
+      # appimagetool needs file and desktop-file-validate; the runner already
+      # has mksquashfs inside appimagetool and doesn't need libfuse2 in extract mode.
+      - run: sudo apt-get update && sudo apt-get install -y file desktop-file-utils
+      - run: bash packaging/linux/build_appimage.sh
+      - name: Upload Linux AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: dist/linux/Reduvid-*.AppImage
+          if-no-files-found: error
+
+  publish:
+    needs: [verify, build-windows, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release
+      - name: Download Linux AppImage
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-appimage
+          path: release
+      - name: Prepare checksums and notes
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          test -f "release/Reduvid-Setup-${version}.exe"
+          test -f "release/Reduvid-${version}-x86_64.AppImage"
+          (cd release && sha256sum "Reduvid-Setup-${version}.exe" \
+            "Reduvid-${version}-x86_64.AppImage" > SHA256SUMS)
+          python scripts/release_notes.py "$version" > release-notes.md
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Reduvid $version" \
+            --notes-file release-notes.md \
+            "release/Reduvid-Setup-${version}.exe" \
+            "release/Reduvid-${version}-x86_64.AppImage" \
+            release/SHA256SUMS

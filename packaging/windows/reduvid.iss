@@ -32,7 +32,9 @@ UninstallDisplayName={#MyAppName} {#MyAppVersion}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-PrivilegesRequired=admin
+; Per-user install (no UAC): with PrivilegesRequired=lowest, {autopf} maps to
+; {localappdata}\Programs, so automatic updates never request administrator rights.
+PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 
