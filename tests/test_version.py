@@ -5,4 +5,4 @@ from reduvid import __version__
 
 
 def test_version() -> None:
-    assert __version__ == "0.8.4"
+    assert __version__ == "0.9.0"

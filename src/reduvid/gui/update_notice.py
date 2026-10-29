@@ -187,6 +187,7 @@ class UpdateNotice(QWidget):
         self.notes_label.setObjectName("updateNotes")
         self.notes_label.setProperty("role", "muted")
         self.notes_label.setWordWrap(True)
+        self.notes_label.setTextFormat(Qt.TextFormat.MarkdownText)
         self.notes_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         layout.addWidget(self.notes_label)
 

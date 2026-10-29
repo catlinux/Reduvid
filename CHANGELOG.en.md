@@ -6,7 +6,11 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
-## [0.8.4] - 2026-10-30
+## [0.9.0] - 2026-10-30
+
+### Added
+
+- **Automatic updates from GitHub.** Reduvid checks at most once a day whether a new release exists (only the request is sent, no usage data), with an explanatory notice the first time and a Preferences checkbox to turn it off. When a new version exists, a banner offers "What's new", "Install now", "On close" and "Not now". Downloads are HTTPS only and verified against `SHA256SUMS`. With the Windows installer it updates in place without asking for administrator rights; with the AppImage the file is replaced; from source it only opens the release page. It never interrupts a conversion.
 
 ### Fixed
 
