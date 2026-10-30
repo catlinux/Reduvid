@@ -6,6 +6,16 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-10-30
+
+### Changed
+
+- On Windows, "Install now" opens Reduvid again when the update finishes. With "On close" it is not reopened.
+
+### Fixed
+
+- After installing on Windows, the app opened by the installer reported FFmpeg as missing even though it was installed. The cause was an inherited `PATHEXT` without `.EXE`, which made `shutil.which` miss the executable; `ffmpeg.exe` is now looked up directly in every PATH and registry folder.
+
 ## [0.9.0] - 2026-10-30
 
 ### Added

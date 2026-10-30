@@ -22,7 +22,6 @@ El plan detallado de cada paso está en [.agents/plans/reduvid/reduvid.PLAN.md](
 - Aceleración por hardware (NVENC, QSV, VAAPI) pulida: en 0.1.0 solo se detecta e informa.
 - Instalación sin Qt para servidores Linux (solo `reduvid-cli`): decidir en la Fase 4 cómo separar la dependencia de PySide6.
 - Firmar `SHA256SUMS` con una clave propia (minisign) o firmar el instalador, porque hoy no hay firma de código; Windows SmartScreen puede avisar de «editor desconocido».
-- Que «Instalar ahora» en Windows vuelva a abrir Reduvid al terminar; ahora se abre a mano.
 - OCR de subtítulos de imagen a texto (necesitaría Tesseract como herramienta externa).
 - Paquetes .deb y Flatpak.
 - macOS: no es objetivo ahora; no romperlo sin motivo.

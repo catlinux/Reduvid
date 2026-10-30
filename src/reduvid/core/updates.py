@@ -305,9 +305,15 @@ def download_update(
                 part.unlink(missing_ok=True)
 
 
-def launch_windows_installer(installer: Path) -> None:
-    """Start a detached silent Windows installer."""
+def launch_windows_installer(installer: Path, *, relaunch: bool = False) -> None:
+    """Start a detached silent Windows installer.
+
+    With *relaunch* the installer opens Reduvid again when it finishes (see the
+    ``relaunch`` switch in ``packaging/windows/reduvid.iss``).
+    """
     arguments = [str(installer), "/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART"]
+    if relaunch:
+        arguments.append("/relaunch=1")
     try:
         kwargs = hidden_window_kwargs()
     except AttributeError:

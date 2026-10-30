@@ -414,7 +414,7 @@ class UpdateNotice(QWidget):
 
         if self._kind == "windows_installer":
             try:
-                launch_windows_installer(path)
+                launch_windows_installer(path, relaunch=True)
             except (OSError, UpdateError) as error:
                 self._show_error(getattr(error, "code", "install_failed"))
                 self._reset_actions()

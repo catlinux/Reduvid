@@ -109,6 +109,8 @@ def test_missing_capabilities_are_false(monkeypatch) -> None:
 
 def test_missing_ffmpeg_returns_none(monkeypatch) -> None:
     monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
+    monkeypatch.setattr(ffmpeg, "_registry_path", lambda: "")
+    monkeypatch.setenv("PATH", "")
 
     assert ffmpeg.detect_ffmpeg(Path("missing-ffmpeg")) is None
 
@@ -131,20 +133,15 @@ def test_invalid_configured_path_falls_back_to_path(monkeypatch) -> None:
     assert info.ffprobe_path == probe
 
 
-def test_falls_back_to_registry_path_on_windows(monkeypatch) -> None:
-    binary = Path("/mock/bin/ffmpeg")
-    probe = Path("/mock/bin/ffprobe")
-    monkeypatch.setattr(Path, "is_file", lambda self: self in (binary, probe))
+def test_falls_back_to_registry_path_on_windows(monkeypatch, tmp_path: Path) -> None:
+    binary = tmp_path / "ffmpeg.exe"
+    probe = tmp_path / "ffprobe.exe"
+    binary.write_text("")
+    probe.write_text("")
     monkeypatch.setattr(ffmpeg, "sys", type("S", (), {"platform": "win32"}))
-    monkeypatch.setattr(ffmpeg, "_registry_path", lambda: "C:\\registry\\bin")
-
-    def which(name: str, path: str | None = None) -> str | None:
-        if path is None:
-            return None
-        assert path == "C:\\registry\\bin"
-        return str(binary if name == "ffmpeg" else probe)
-
-    monkeypatch.setattr(ffmpeg.shutil, "which", which)
+    monkeypatch.setattr(ffmpeg, "_registry_path", lambda: f"C:/nowhere;{tmp_path}")
+    monkeypatch.setattr(ffmpeg.shutil, "which", lambda name, path=None: None)
+    monkeypatch.setenv("PATH", "")
     _run_mock(monkeypatch, "Encoders:\n", "Filters:\n")
 
     info = ffmpeg.detect_ffmpeg()
@@ -195,3 +192,16 @@ def test_describe_search_says_when_nothing_was_found(monkeypatch: pytest.MonkeyP
 
     assert "ffmpeg: not found" in text
     assert "launching" not in text
+
+
+def test_scan_for_exe_finds_the_executable_without_pathext(tmp_path: Path) -> None:
+    other = tmp_path / "other"
+    other.mkdir()
+    tools = tmp_path / "tools"
+    tools.mkdir()
+    (tools / "ffmpeg.exe").write_text("")
+
+    found = ffmpeg._scan_for_exe("ffmpeg", f'{other};"{tools}";', ";")
+
+    assert found == tools / "ffmpeg.exe"
+    assert ffmpeg._scan_for_exe("ffprobe", f"{other};{tools}", ";") is None

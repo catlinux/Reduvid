@@ -212,7 +212,11 @@ def test_cancelled_download_is_deleted_and_not_installed(
     path = tmp_path / "Reduvid-Setup-1.3.0.exe"
     path.write_bytes(b"installer")
     launched: list[Path] = []
-    monkeypatch.setattr(update_notice, "launch_windows_installer", launched.append)
+    monkeypatch.setattr(
+        update_notice,
+        "launch_windows_installer",
+        lambda installer, *, relaunch=False: launched.append(installer),
+    )
     notice = UpdateNotice(Config(updates_notice_seen=True))
     notice._kind = "windows_installer"
     notice._download_cancelled = True
@@ -243,6 +247,7 @@ def test_on_close_download_is_applied_only_at_close(
     path = tmp_path / "Reduvid-Setup-1.3.0.exe"
     path.write_bytes(b"installer")
     launched: list[Path] = []
+    relaunches: list[bool] = []
 
     class FakeDownloadWorker(QObject):
         progress = Signal(int, object)
@@ -266,7 +271,10 @@ def test_on_close_download_is_applied_only_at_close(
     monkeypatch.setattr(
         update_notice,
         "launch_windows_installer",
-        lambda installer: launched.append(installer),
+        lambda installer, *, relaunch=False: (
+            launched.append(installer),
+            relaunches.append(relaunch),
+        ),
     )
     notice = UpdateNotice(Config(updates_notice_seen=True), download_dir=tmp_path)
     notice.show_info(info())
@@ -277,6 +285,7 @@ def test_on_close_download_is_applied_only_at_close(
     assert launched == []
     notice.prepare_close()
     assert launched == [path]
+    assert relaunches == [False]
 
 
 def test_saved_first_run_choice_is_persisted(tmp_path: Path, qapp) -> None:

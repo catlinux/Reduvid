@@ -58,3 +58,11 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDi
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram}"; Flags: nowait postinstall skipifsilent
+; An update started from Reduvid ("Install now") passes /relaunch=1 so the app opens again.
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait runasoriginaluser; Check: RelaunchRequested
+
+[Code]
+function RelaunchRequested: Boolean;
+begin
+  Result := ExpandConstant('{param:relaunch|0}') = '1';
+end;

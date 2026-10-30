@@ -52,9 +52,22 @@ def _find_executable(name: str, configured_path: Path | None) -> Path | None:
     if executable is not None:
         return Path(executable)
     if sys.platform == "win32":
-        executable = shutil.which(name, path=_registry_path())
-        if executable is not None:
-            return Path(executable)
+        # shutil.which depends on PATHEXT, and a process started by the installer can
+        # inherit one without .EXE; looking for "<name>.exe" directly does not.
+        found = _scan_for_exe(name, os.environ.get("PATH", ""), os.pathsep)
+        return found or _scan_for_exe(name, _registry_path(), ";")
+    return None
+
+
+def _scan_for_exe(name: str, path_value: str, separator: str) -> Path | None:
+    """Return ``<dir>/<name>.exe`` for the first directory of *path_value* that has it."""
+    for entry in path_value.split(separator):
+        directory = os.path.expandvars(entry.strip().strip('"'))
+        if not directory:
+            continue
+        candidate = Path(directory) / f"{name}.exe"
+        if candidate.is_file():
+            return candidate
     return None
 
 

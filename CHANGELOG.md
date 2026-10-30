@@ -6,6 +6,16 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.9.1] - 2026-10-30
+
+### Cambiado
+
+- En Windows, «Instalar ahora» vuelve a abrir Reduvid cuando termina la actualización. Con «Al cerrar» no se reabre.
+
+### Corregido
+
+- Al terminar la instalación en Windows, la app abierta por el instalador decía que no encontraba FFmpeg aunque estuviera instalado. La causa era que heredaba una variable `PATHEXT` sin `.EXE`, y `shutil.which` no encontraba entonces el ejecutable; ahora se busca `ffmpeg.exe` directamente en cada carpeta del PATH y del registro.
+
 ## [0.9.0] - 2026-10-30
 
 ### Añadido

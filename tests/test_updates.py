@@ -424,3 +424,17 @@ def test_assets_without_https_are_ignored(tmp_path: Path) -> None:
     assert info is not None
     assert "Reduvid-Setup-1.3.0.exe" not in info.assets
     assert updates.asset_name(info, "windows_installer") is None
+
+
+def test_launch_windows_installer_asks_to_relaunch_only_when_requested(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[list[str]] = []
+    monkeypatch.setattr(updates.subprocess, "Popen", lambda args, **_kwargs: calls.append(args))
+    installer = tmp_path / "Reduvid-Setup-1.3.0.exe"
+
+    updates.launch_windows_installer(installer)
+    updates.launch_windows_installer(installer, relaunch=True)
+
+    assert "/relaunch=1" not in calls[0]
+    assert calls[1][-1] == "/relaunch=1"
