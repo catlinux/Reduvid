@@ -14,6 +14,7 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ### Fixed
 
+- Detection of absolute Windows paths failed when running the tests with Python 3.11 on Linux, which kept the Linux CI red.
 - When the app started by the Windows installer reported FFmpeg as missing even though it was installed, the screen now shows the search's "Technical details" (which paths it found and the error from launching FFmpeg) so it can be diagnosed. Child processes also start with standard input closed, in case the cause was inherited handles; that is not confirmed to be the cause.
 - The Linux CI failed while collecting the GUI tests because the runner lacked the system libraries Qt needs (`libEGL`); they are now installed and the tests run with the `offscreen` platform.
 

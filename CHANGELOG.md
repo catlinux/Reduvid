@@ -14,6 +14,7 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ### Corregido
 
+- La detección de rutas absolutas de Windows fallaba al ejecutar los tests con Python 3.11 en Linux, y el CI de Linux seguía en rojo.
 - Si la app arrancada por el instalador de Windows decía que no encontraba FFmpeg aunque estuviera instalado, ahora la pantalla muestra los «Detalles técnicos» de la búsqueda (qué rutas encontró y el error al lanzar FFmpeg) para poder diagnosticarlo. Además, los procesos hijos se lanzan con la entrada estándar cerrada, por si el fallo venía de manejadores heredados; no está comprobado que sea la causa.
 - El CI de Linux fallaba al recolectar los tests de la interfaz porque el runner no traía las librerías del sistema que necesita Qt (`libEGL`); ahora se instalan y los tests corren con la plataforma `offscreen`.
 

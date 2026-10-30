@@ -326,7 +326,9 @@ def _parse(payload: object, path: Path) -> MediaInfo:
 
 
 def _is_absolute(path: Path) -> bool:
-    return path.is_absolute() or PureWindowsPath(path).is_absolute()
+    # str(): in Python 3.11 PureWindowsPath(PosixPath('C:/x')) keeps the parts apart and
+    # loses the root, so a Windows path built on Linux would look relative.
+    return path.is_absolute() or PureWindowsPath(str(path)).is_absolute()
 
 
 def probe_media(ffprobe_path: Path, media_path: Path) -> MediaInfo:
