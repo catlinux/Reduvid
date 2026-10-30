@@ -144,7 +144,10 @@ class StepVideos(QWidget):
 
     def _choose_files(self) -> None:
         patterns = " ".join(f"*{extension}" for extension in sorted(VIDEO_EXTENSIONS))
-        filters = f"{_('Video files')} ({patterns});;{_('All files (*)')}"
+        # Translated outside the f-string: Babel on Python 3.11 does not look inside it.
+        video_files = _("Video files")
+        all_files = _("All files (*)")
+        filters = f"{video_files} ({patterns});;{all_files}"
         filenames, _selected = QFileDialog.getOpenFileNames(self, _("Choose videos"), "", filters)
         if filenames:
             self.add_paths([Path(filename) for filename in filenames])

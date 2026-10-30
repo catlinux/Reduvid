@@ -138,4 +138,5 @@ class FFmpegMissingWidget(QWidget):
 
     def _show_details(self, path: Path | None) -> None:
         text = describe_search(path)
-        self.details_label.setText(f"{_('Technical details')}:{os.linesep}{text}")
+        title = _("Technical details")
+        self.details_label.setText(f"{title}:{os.linesep}{text}")

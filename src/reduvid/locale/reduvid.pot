@@ -176,7 +176,7 @@ msgstr ""
 msgid "Advanced options"
 msgstr ""
 
-#: gui/wizard/step_videos.py:147
+#: gui/wizard/step_videos.py:149
 msgid "All files (*)"
 msgstr ""
 
@@ -196,7 +196,7 @@ msgid ""
 "format is lost."
 msgstr ""
 
-#: gui/wizard/step_videos.py:198
+#: gui/wizard/step_videos.py:201
 msgid "Analysing…"
 msgstr ""
 
@@ -271,7 +271,7 @@ msgstr ""
 msgid "CRF: {crf}"
 msgstr ""
 
-#: gui/update_notice.py:204 gui/update_notice.py:206 gui/wizard/step_quality.py:195
+#: gui/update_notice.py:205 gui/update_notice.py:207 gui/wizard/step_quality.py:195
 #: gui/wizard/step_summary.py:358
 msgid "Cancel"
 msgstr ""
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Chinese"
 msgstr ""
 
-#: gui/wizard/step_videos.py:153
+#: gui/wizard/step_videos.py:156
 msgid "Choose a folder"
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 msgid "Choose the output folder"
 msgstr ""
 
-#: gui/wizard/step_videos.py:148
+#: gui/wizard/step_videos.py:151
 msgid "Choose videos"
 msgstr ""
 
@@ -867,7 +867,7 @@ msgstr ""
 msgid "No language indicated"
 msgstr ""
 
-#: gui/update_notice.py:295
+#: gui/update_notice.py:296
 msgid "No release notes."
 msgstr ""
 
@@ -979,7 +979,7 @@ msgstr ""
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr ""
 
-#: gui/wizard/step_videos.py:186
+#: gui/wizard/step_videos.py:189
 msgid "Ready"
 msgstr ""
 
@@ -1026,7 +1026,7 @@ msgstr ""
 msgid "Reduvid {version}"
 msgstr ""
 
-#: gui/update_notice.py:294
+#: gui/update_notice.py:295
 #, python-brace-format
 msgid "Reduvid {version} is available"
 msgstr ""
@@ -1159,7 +1159,7 @@ msgstr ""
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr ""
 
-#: gui/update_notice.py:467
+#: gui/update_notice.py:468
 msgid "The downloaded file is corrupt, so it was not installed."
 msgstr ""
 
@@ -1189,7 +1189,7 @@ msgstr ""
 msgid "The picture is scaled down from {from_height}p to {to_height}p."
 msgstr ""
 
-#: gui/update_notice.py:466
+#: gui/update_notice.py:467
 msgid "The release has no checksum file, so the update was not installed."
 msgstr ""
 
@@ -1206,19 +1206,19 @@ msgstr ""
 msgid "The smallest files: H.265 with the slowest, most careful encoding. Conversion takes longer."
 msgstr ""
 
-#: gui/update_notice.py:468
+#: gui/update_notice.py:469
 msgid "The update could not be downloaded. Check your connection."
 msgstr ""
 
-#: gui/update_notice.py:469 gui/update_notice.py:471
+#: gui/update_notice.py:470 gui/update_notice.py:472
 msgid "The update could not be installed."
 msgstr ""
 
-#: gui/update_notice.py:410
+#: gui/update_notice.py:411
 msgid "The update is ready and will be installed when Reduvid closes."
 msgstr ""
 
-#: gui/update_notice.py:439
+#: gui/update_notice.py:440
 msgid "The update is ready. Restart Reduvid to use it."
 msgstr ""
 
@@ -1257,7 +1257,7 @@ msgstr ""
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr ""
 
-#: gui/update_notice.py:465
+#: gui/update_notice.py:466
 msgid "This release does not include the file needed for this installation."
 msgstr ""
 
@@ -1329,7 +1329,7 @@ msgstr ""
 msgid "Very little detail is lost, so the file stays large."
 msgstr ""
 
-#: gui/wizard/step_videos.py:147
+#: gui/wizard/step_videos.py:148
 msgid "Video files"
 msgstr ""
 
@@ -1546,7 +1546,7 @@ msgstr ""
 msgid "{minutes} min left"
 msgstr ""
 
-#: gui/wizard/step_videos.py:185
+#: gui/wizard/step_videos.py:188
 #, python-brace-format
 msgid "{name} · {duration} · {state}"
 msgstr ""
@@ -1556,7 +1556,7 @@ msgstr ""
 msgid "{name} · {size}"
 msgstr ""
 
-#: gui/wizard/step_videos.py:191 gui/wizard/step_videos.py:198
+#: gui/wizard/step_videos.py:194 gui/wizard/step_videos.py:201
 #, python-brace-format
 msgid "{name} · {state}"
 msgstr ""

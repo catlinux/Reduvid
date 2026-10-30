@@ -182,7 +182,7 @@ msgstr "Avanzado"
 msgid "Advanced options"
 msgstr "Opciones avanzadas"
 
-#: gui/wizard/step_videos.py:147
+#: gui/wizard/step_videos.py:149
 msgid "All files (*)"
 msgstr "Todos los archivos (*)"
 
@@ -206,7 +206,7 @@ msgstr ""
 "el audio lo recodifica a AAC: en un equipo normal la calidad es casi la misma, pero se pierde el "
 "formato original."
 
-#: gui/wizard/step_videos.py:198
+#: gui/wizard/step_videos.py:201
 msgid "Analysing…"
 msgstr "Analizando…"
 
@@ -281,7 +281,7 @@ msgstr "Buscar la carpeta de salida"
 msgid "CRF: {crf}"
 msgstr "CRF: {crf}"
 
-#: gui/update_notice.py:204 gui/update_notice.py:206 gui/wizard/step_quality.py:195
+#: gui/update_notice.py:205 gui/update_notice.py:207 gui/wizard/step_quality.py:195
 #: gui/wizard/step_summary.py:358
 msgid "Cancel"
 msgstr "Cancelar"
@@ -326,7 +326,7 @@ msgstr "Consulta GitHub una vez al día; solo se envía la petición, sin datos 
 msgid "Chinese"
 msgstr "Chino"
 
-#: gui/wizard/step_videos.py:153
+#: gui/wizard/step_videos.py:156
 msgid "Choose a folder"
 msgstr "Elige una carpeta"
 
@@ -354,7 +354,7 @@ msgstr "Elige el ejecutable de ffmpeg"
 msgid "Choose the output folder"
 msgstr "Elige la carpeta de salida"
 
-#: gui/wizard/step_videos.py:148
+#: gui/wizard/step_videos.py:151
 msgid "Choose videos"
 msgstr "Elige vídeos"
 
@@ -887,7 +887,7 @@ msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que 
 msgid "No language indicated"
 msgstr "Sin idioma indicado"
 
-#: gui/update_notice.py:295
+#: gui/update_notice.py:296
 msgid "No release notes."
 msgstr "No hay notas de la versión."
 
@@ -1001,7 +1001,7 @@ msgstr "Cola · {count} vídeos"
 msgid "Re-encode audio tracks to AAC to save space"
 msgstr "Recodifica las pistas de audio a AAC para ahorrar espacio"
 
-#: gui/wizard/step_videos.py:186
+#: gui/wizard/step_videos.py:189
 msgid "Ready"
 msgstr "Listo"
 
@@ -1052,7 +1052,7 @@ msgstr ""
 msgid "Reduvid {version}"
 msgstr "Reduvid {version}"
 
-#: gui/update_notice.py:294
+#: gui/update_notice.py:295
 #, python-brace-format
 msgid "Reduvid {version} is available"
 msgstr "Reduvid {version} disponible"
@@ -1187,7 +1187,7 @@ msgstr "Se ha cancelado la conversión."
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr "El archivo convertido no ha superado las comprobaciones de seguridad y se ha descartado."
 
-#: gui/update_notice.py:467
+#: gui/update_notice.py:468
 msgid "The downloaded file is corrupt, so it was not installed."
 msgstr "El archivo descargado está dañado, así que no se ha instalado."
 
@@ -1217,7 +1217,7 @@ msgstr "El original solo va a la papelera si la copia se verifica."
 msgid "The picture is scaled down from {from_height}p to {to_height}p."
 msgstr "La imagen se reduce de {from_height}p a {to_height}p."
 
-#: gui/update_notice.py:466
+#: gui/update_notice.py:467
 msgid "The release has no checksum file, so the update was not installed."
 msgstr ""
 "La versión no incluye un archivo de sumas de comprobación, así que la actualización no se ha "
@@ -1238,19 +1238,19 @@ msgstr ""
 "Los archivos más pequeños: H.265 con la codificación más lenta y cuidadosa. La conversión tarda "
 "más."
 
-#: gui/update_notice.py:468
+#: gui/update_notice.py:469
 msgid "The update could not be downloaded. Check your connection."
 msgstr "No se ha podido descargar la actualización. Comprueba tu conexión."
 
-#: gui/update_notice.py:469 gui/update_notice.py:471
+#: gui/update_notice.py:470 gui/update_notice.py:472
 msgid "The update could not be installed."
 msgstr "No se ha podido instalar la actualización."
 
-#: gui/update_notice.py:410
+#: gui/update_notice.py:411
 msgid "The update is ready and will be installed when Reduvid closes."
 msgstr "La actualización está lista y se instalará cuando cierres Reduvid."
 
-#: gui/update_notice.py:439
+#: gui/update_notice.py:440
 msgid "The update is ready. Restart Reduvid to use it."
 msgstr "La actualización está lista. Reinicia Reduvid para usarla."
 
@@ -1295,7 +1295,7 @@ msgstr "No hay suficiente espacio libre en el disco de destino."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
-#: gui/update_notice.py:465
+#: gui/update_notice.py:466
 msgid "This release does not include the file needed for this installation."
 msgstr "Esta versión no incluye el archivo necesario para esta instalación."
 
@@ -1371,7 +1371,7 @@ msgstr ""
 msgid "Very little detail is lost, so the file stays large."
 msgstr "Se pierde muy poco detalle, así que el archivo sigue siendo grande."
 
-#: gui/wizard/step_videos.py:147
+#: gui/wizard/step_videos.py:148
 msgid "Video files"
 msgstr "Archivos de vídeo"
 
@@ -1598,7 +1598,7 @@ msgstr "{language} · {formats}"
 msgid "{minutes} min left"
 msgstr "quedan {minutes} min"
 
-#: gui/wizard/step_videos.py:185
+#: gui/wizard/step_videos.py:188
 #, python-brace-format
 msgid "{name} · {duration} · {state}"
 msgstr "{name} · {duration} · {state}"
@@ -1608,7 +1608,7 @@ msgstr "{name} · {duration} · {state}"
 msgid "{name} · {size}"
 msgstr "{name} · {size}"
 
-#: gui/wizard/step_videos.py:191 gui/wizard/step_videos.py:198
+#: gui/wizard/step_videos.py:194 gui/wizard/step_videos.py:201
 #, python-brace-format
 msgid "{name} · {state}"
 msgstr "{name} · {state}"
