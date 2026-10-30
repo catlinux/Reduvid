@@ -6,6 +6,16 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-10-30
+
+### Added
+
+- After an update, Reduvid says so on first start: "Reduvid was updated to version X". It does not appear on a fresh install or when the same version is opened again. The first update from a version older than 0.9.2 will not show this notice, because those versions did not store the version in use.
+
+### Changed
+
+- With "Install now" on Windows, the banner announces what is happening before closing ("Installing Reduvid X… Reduvid will open again when it finishes") and the application closes a few seconds later instead of at once. If the installer cannot be started, it does not close.
+
 ## [0.9.1] - 2026-10-30
 
 ### Changed

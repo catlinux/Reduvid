@@ -37,6 +37,7 @@ def test_round_trip_keeps_spaces_accents_and_quotes(tmp_path: Path) -> None:
         hw_decode=False,
         check_updates=False,
         updates_notice_seen=True,
+        last_run_version="9.8.7",
     )
 
     save_config(original, target)
@@ -159,6 +160,31 @@ def test_update_flags_can_be_disabled_in_toml(tmp_path: Path) -> None:
     assert invalid == ()
 
 
+def test_last_run_version_is_saved_and_loaded(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text('last_run_version = "1.2.3"\n', encoding="utf-8")
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.last_run_version == "1.2.3"
+    assert invalid == ()
+
+    save_config(loaded, target)
+    loaded_again, invalid_again = load_config(target)
+    assert loaded_again.last_run_version == "1.2.3"
+    assert invalid_again == ()
+
+
+def test_invalid_last_run_version_is_reported_and_ignored(tmp_path: Path) -> None:
+    target = tmp_path / "config.toml"
+    target.write_text('last_run_version = "not-a-version"\n', encoding="utf-8")
+
+    loaded, invalid = load_config(target)
+
+    assert loaded.last_run_version is None
+    assert invalid == ("last_run_version",)
+
+
 def test_invalid_update_flags_are_reported_and_use_defaults(tmp_path: Path) -> None:
     target = tmp_path / "config.toml"
     target.write_text(
@@ -170,6 +196,7 @@ def test_invalid_update_flags_are_reported_and_use_defaults(tmp_path: Path) -> N
 
     assert loaded.check_updates is True
     assert loaded.updates_notice_seen is False
+    assert loaded.last_run_version is None
     assert set(invalid) == {"check_updates", "updates_notice_seen"}
 
 

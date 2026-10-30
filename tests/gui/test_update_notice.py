@@ -15,8 +15,9 @@ pytest.importorskip("PySide6")
 
 from PySide6.QtCore import QObject, Signal
 
+from reduvid import __version__
 from reduvid.core.config import Config, load_config
-from reduvid.core.updates import UpdateInfo
+from reduvid.core.updates import UpdateError, UpdateInfo
 from reduvid.gui import update_notice
 from reduvid.gui.update_notice import UpdateNotice
 
@@ -96,10 +97,152 @@ def test_intro_runs_before_the_background_check(tmp_path: Path, qapp) -> None:
 
     assert FakeIntroDialog.calls == [1]
     assert opener.calls == 1
-    assert changes[0].updates_notice_seen is True
-    assert changes[0].check_updates is True
+    assert changes[-1].updates_notice_seen is True
+    assert changes[-1].check_updates is True
     assert not notice.isHidden()
     assert notice.message_label.text() == "Reduvid 1.3.0 is available"
+
+
+def test_updated_notice_is_shown_and_saved(tmp_path: Path, qapp) -> None:
+    target = tmp_path / "config.toml"
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr("reduvid.core.config.config_path", lambda: target)
+    try:
+        notice = UpdateNotice(
+            Config(
+                updates_notice_seen=True,
+                check_updates=False,
+                last_run_version="0.8.0",
+            )
+        )
+        changes: list[Config] = []
+        notice.config_changed.connect(changes.append)
+        notice.start()
+    finally:
+        monkeypatch.undo()
+
+    assert notice._updated_version == __version__
+    assert notice.message_label.text() == f"Reduvid was updated to version {__version__}."
+    assert not notice.got_it_button.isHidden()
+    assert notice.install_button.isHidden()
+    assert changes[-1].last_run_version == __version__
+    loaded, invalid = load_config(target)
+    assert loaded.last_run_version == __version__
+    assert invalid == ()
+
+    notice.got_it_button.click()
+
+    assert notice.isHidden()
+
+
+@pytest.mark.parametrize("last_run_version", [None, __version__, "99.0.0"])
+def test_no_updated_notice_for_new_same_or_newer_start(last_run_version: str | None, qapp) -> None:
+    notice = UpdateNotice(
+        Config(
+            updates_notice_seen=True,
+            check_updates=False,
+            last_run_version=last_run_version,
+        )
+    )
+
+    notice.start()
+
+    assert notice._updated_version is None
+    assert notice.isHidden()
+
+
+def test_updated_notice_has_priority_over_available_update(
+    qapp, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(update_notice, "install_kind", lambda: "windows_installer")
+    notice = UpdateNotice(
+        Config(
+            updates_notice_seen=True,
+            check_updates=False,
+            last_run_version="0.8.0",
+        )
+    )
+    notice.start()
+
+    notice.show_info(info())
+
+    assert notice.message_label.text() == f"Reduvid was updated to version {__version__}."
+    assert notice.install_button.isHidden()
+
+    notice.got_it_button.click()
+
+    assert notice.message_label.text() == "Reduvid 1.3.0 is available"
+    assert not notice.install_button.isHidden()
+
+
+def test_windows_install_shows_progress_message_before_closing(
+    tmp_path: Path, qapp, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "Reduvid-Setup-1.3.0.exe"
+    path.write_bytes(b"installer")
+    launched: list[tuple[Path, bool]] = []
+    timers: list[tuple[int, object]] = []
+    quits: list[bool] = []
+
+    def launch(installer: Path, *, relaunch: bool = False) -> None:
+        launched.append((installer, relaunch))
+
+    class FakeApplication:
+        def quit(self) -> None:
+            quits.append(True)
+
+    monkeypatch.setattr(update_notice, "launch_windows_installer", launch)
+    monkeypatch.setattr(
+        update_notice.QTimer,
+        "singleShot",
+        lambda delay, callback: timers.append((delay, callback)),
+    )
+    monkeypatch.setattr(
+        update_notice.QApplication,
+        "instance",
+        lambda: FakeApplication(),
+    )
+    notice = UpdateNotice(Config(updates_notice_seen=True))
+    notice._info = info()
+    notice._kind = "windows_installer"
+
+    notice._download_done(path)
+
+    assert launched == [(path, True)]
+    assert timers and timers[0][0] == 2500
+    assert quits == []
+    assert notice.message_label.text() == (
+        "Installing Reduvid 1.3.0… Reduvid will open again when it finishes."
+    )
+    assert notice.got_it_button.isHidden()
+    assert notice.install_button.isHidden()
+
+    timers[0][1]()
+    assert quits == [True]
+
+
+def test_windows_install_does_not_close_when_launch_fails(
+    tmp_path: Path, qapp, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "Reduvid-Setup-1.3.0.exe"
+    timers: list[object] = []
+
+    def launch(_installer: Path, *, relaunch: bool = False) -> None:
+        raise UpdateError("install_failed", "cannot start")
+
+    monkeypatch.setattr(update_notice, "launch_windows_installer", launch)
+    monkeypatch.setattr(
+        update_notice.QTimer, "singleShot", lambda _delay, callback: timers.append(callback)
+    )
+    notice = UpdateNotice(Config(updates_notice_seen=True))
+    notice._info = info()
+    notice._kind = "windows_installer"
+
+    notice._download_done(path)
+
+    assert timers == []
+    assert not notice.error_label.isHidden()
+    assert "not be installed" in notice.error_label.text()
 
 
 def test_first_run_can_disable_checks_without_network(tmp_path: Path, qapp) -> None:
@@ -122,8 +265,8 @@ def test_first_run_can_disable_checks_without_network(tmp_path: Path, qapp) -> N
         monkeypatch.undo()
 
     assert opener.calls == 0
-    assert changes[0].updates_notice_seen is True
-    assert changes[0].check_updates is False
+    assert changes[-1].updates_notice_seen is True
+    assert changes[-1].check_updates is False
 
 
 def test_update_disabled_shows_no_intro_and_no_network(tmp_path: Path, qapp) -> None:

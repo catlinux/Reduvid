@@ -6,6 +6,16 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.9.2] - 2026-10-30
+
+### Añadido
+
+- Tras actualizarse, Reduvid avisa en el primer arranque con «Reduvid se ha actualizado a la versión X». No sale en una instalación nueva ni al abrir de nuevo la misma versión. La primera actualización que parta de una versión anterior a la 0.9.2 no mostrará este aviso, porque esas versiones no guardaban la versión en uso.
+
+### Cambiado
+
+- Con «Instalar ahora» en Windows, la franja avisa antes de cerrar («Instalando Reduvid X… se abrirá de nuevo al terminar») y la aplicación se cierra unos segundos después, en lugar de cerrarse de golpe. Si el instalador no llega a lanzarse, no se cierra.
+
 ## [0.9.1] - 2026-10-30
 
 ### Cambiado

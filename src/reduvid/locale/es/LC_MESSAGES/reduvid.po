@@ -281,7 +281,7 @@ msgstr "Buscar la carpeta de salida"
 msgid "CRF: {crf}"
 msgstr "CRF: {crf}"
 
-#: gui/update_notice.py:205 gui/update_notice.py:207 gui/wizard/step_quality.py:195
+#: gui/update_notice.py:214 gui/update_notice.py:216 gui/wizard/step_quality.py:195
 #: gui/wizard/step_summary.py:358
 msgid "Cancel"
 msgstr "Cancelar"
@@ -684,7 +684,7 @@ msgstr "Francés"
 msgid "German"
 msgstr "Alemán"
 
-#: gui/update_notice.py:67 gui/update_notice.py:69
+#: gui/update_notice.py:69 gui/update_notice.py:71 gui/update_notice.py:188 gui/update_notice.py:190
 msgid "Got it"
 msgstr "Entendido"
 
@@ -762,9 +762,14 @@ msgstr "Aumento: {percent}% ({size} más)"
 msgid "Install command for {system}"
 msgstr "Comando de instalación para {system}"
 
-#: gui/update_notice.py:149 gui/update_notice.py:151
+#: gui/update_notice.py:152 gui/update_notice.py:154
 msgid "Install now"
 msgstr "Instalar ahora"
+
+#: gui/update_notice.py:511
+#, python-brace-format
+msgid "Installing Reduvid {version}… Reduvid will open again when it finishes."
+msgstr "Instalando Reduvid {version}… Reduvid se abrirá de nuevo al terminar."
 
 #: gui/wizard/step_quality.py:209
 msgid "It can take a couple of minutes, depending on the video and your computer."
@@ -822,7 +827,7 @@ msgstr "Los cambios de idioma se aplican al reiniciar Reduvid."
 msgid "Language for messages"
 msgstr "Idioma de los mensajes"
 
-#: gui/update_notice.py:179 gui/update_notice.py:181
+#: gui/update_notice.py:182 gui/update_notice.py:184
 msgid "Later"
 msgstr "Más tarde"
 
@@ -887,7 +892,7 @@ msgstr "Ninguna pista de audio coincide con los idiomas seleccionados, así que 
 msgid "No language indicated"
 msgstr "Sin idioma indicado"
 
-#: gui/update_notice.py:296
+#: gui/update_notice.py:356
 msgid "No release notes."
 msgstr "No hay notas de la versión."
 
@@ -895,7 +900,7 @@ msgstr "No hay notas de la versión."
 msgid "No videos added yet."
 msgstr "Todavía no has añadido ningún vídeo."
 
-#: gui/update_notice.py:161 gui/update_notice.py:163
+#: gui/update_notice.py:164 gui/update_notice.py:166
 msgid "Not now"
 msgstr "Ahora no"
 
@@ -903,7 +908,7 @@ msgstr "Ahora no"
 msgid "Number of encoding threads"
 msgstr "Número de hilos de codificación"
 
-#: gui/update_notice.py:155 gui/update_notice.py:157
+#: gui/update_notice.py:158 gui/update_notice.py:160
 msgid "On close"
 msgstr "Al cerrar"
 
@@ -911,7 +916,7 @@ msgstr "Al cerrar"
 msgid "One audio track per language (the best one is kept)"
 msgstr "Una sola pista de audio por idioma (se conserva la mejor)"
 
-#: gui/update_notice.py:167 gui/update_notice.py:169
+#: gui/update_notice.py:170 gui/update_notice.py:172
 msgid "Open page"
 msgstr "Abrir la página"
 
@@ -1031,7 +1036,7 @@ msgstr "Reducir el peso del audio"
 msgid "Reduvid"
 msgstr "Reduvid"
 
-#: gui/update_notice.py:60
+#: gui/update_notice.py:62
 msgid ""
 "Reduvid can check the public GitHub releases at most once every 24 hours. It sends no identifiers"
 " or usage data, downloads only over HTTPS and verifies the SHA256."
@@ -1047,12 +1052,17 @@ msgstr ""
 "Reduvid usa FFmpeg para convertir vídeos. Instálalo o elige el ejecutable de ffmpeg si ya lo "
 "tienes."
 
+#: gui/update_notice.py:273
+#, python-brace-format
+msgid "Reduvid was updated to version {version}."
+msgstr "Reduvid se ha actualizado a la versión {version}."
+
 #: gui/main_window.py:79
 #, python-brace-format
 msgid "Reduvid {version}"
 msgstr "Reduvid {version}"
 
-#: gui/update_notice.py:295
+#: gui/update_notice.py:354
 #, python-brace-format
 msgid "Reduvid {version} is available"
 msgstr "Reduvid {version} disponible"
@@ -1069,7 +1079,7 @@ msgstr "Reemplazar el original"
 msgid "Resolution"
 msgstr "Resolución"
 
-#: gui/update_notice.py:173 gui/update_notice.py:175
+#: gui/update_notice.py:176 gui/update_notice.py:178
 msgid "Restart now"
 msgstr "Reiniciar ahora"
 
@@ -1187,7 +1197,7 @@ msgstr "Se ha cancelado la conversión."
 msgid "The converted file did not pass the safety checks and was discarded."
 msgstr "El archivo convertido no ha superado las comprobaciones de seguridad y se ha descartado."
 
-#: gui/update_notice.py:468
+#: gui/update_notice.py:557
 msgid "The downloaded file is corrupt, so it was not installed."
 msgstr "El archivo descargado está dañado, así que no se ha instalado."
 
@@ -1217,7 +1227,7 @@ msgstr "El original solo va a la papelera si la copia se verifica."
 msgid "The picture is scaled down from {from_height}p to {to_height}p."
 msgstr "La imagen se reduce de {from_height}p a {to_height}p."
 
-#: gui/update_notice.py:467
+#: gui/update_notice.py:556
 msgid "The release has no checksum file, so the update was not installed."
 msgstr ""
 "La versión no incluye un archivo de sumas de comprobación, así que la actualización no se ha "
@@ -1238,19 +1248,19 @@ msgstr ""
 "Los archivos más pequeños: H.265 con la codificación más lenta y cuidadosa. La conversión tarda "
 "más."
 
-#: gui/update_notice.py:469
+#: gui/update_notice.py:558
 msgid "The update could not be downloaded. Check your connection."
 msgstr "No se ha podido descargar la actualización. Comprueba tu conexión."
 
-#: gui/update_notice.py:470 gui/update_notice.py:472
+#: gui/update_notice.py:559 gui/update_notice.py:561
 msgid "The update could not be installed."
 msgstr "No se ha podido instalar la actualización."
 
-#: gui/update_notice.py:411
+#: gui/update_notice.py:472
 msgid "The update is ready and will be installed when Reduvid closes."
 msgstr "La actualización está lista y se instalará cuando cierres Reduvid."
 
-#: gui/update_notice.py:440
+#: gui/update_notice.py:500
 msgid "The update is ready. Restart Reduvid to use it."
 msgstr "La actualización está lista. Reinicia Reduvid para usarla."
 
@@ -1295,7 +1305,7 @@ msgstr "No hay suficiente espacio libre en el disco de destino."
 msgid "This FFmpeg installation is missing an encoder that is needed to convert the file."
 msgstr "Esta instalación de FFmpeg no incluye un codificador necesario para convertir el archivo."
 
-#: gui/update_notice.py:466
+#: gui/update_notice.py:555
 msgid "This release does not include the file needed for this installation."
 msgstr "Esta versión no incluye el archivo necesario para esta instalación."
 
@@ -1331,7 +1341,7 @@ msgstr "Total: {original} → {estimated} estimados"
 msgid "Total: {original} → {final}"
 msgstr "Total: {original} → {final}"
 
-#: gui/update_notice.py:71 gui/update_notice.py:73
+#: gui/update_notice.py:73 gui/update_notice.py:75
 msgid "Turn off"
 msgstr "Desactivar"
 
@@ -1340,11 +1350,11 @@ msgstr "Desactivar"
 msgid "Unknown warning: {code}"
 msgstr "Aviso desconocido: {code}"
 
-#: gui/update_notice.py:106
+#: gui/update_notice.py:108
 msgid "Update available"
 msgstr "Actualización disponible"
 
-#: gui/update_notice.py:57
+#: gui/update_notice.py:59
 msgid "Update checks"
 msgstr "Comprobación de actualizaciones"
 
@@ -1439,7 +1449,7 @@ msgstr "Aviso: {text}"
 msgid "What to keep"
 msgstr "Qué conservar"
 
-#: gui/update_notice.py:143 gui/update_notice.py:145
+#: gui/update_notice.py:146 gui/update_notice.py:148
 msgid "What's new"
 msgstr "Qué cambia"
 
@@ -1689,4 +1699,3 @@ msgstr "~{size} estimados"
 #~ "La salida con el perfil {destination} no es la"
 #~ " de Jellyfin, así que es posible que Jellyfin "
 #~ "tenga que transcodificarla."
-

@@ -14,6 +14,8 @@ from typing import Literal
 
 from platformdirs import user_config_dir
 
+from reduvid.core.updates import parse_version
+
 Language = Literal["ca", "es", "en"]
 Theme = Literal["plegat", "riso", "cinta"]
 ColorMode = Literal["system", "light", "dark"]
@@ -42,6 +44,7 @@ class Config:
     hw_decode: bool = True
     check_updates: bool = True
     updates_notice_seen: bool = False
+    last_run_version: str | None = None
 
 
 def config_path() -> Path:
@@ -177,6 +180,17 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         else:
             invalid.append("updates_notice_seen")
 
+    last_run_version: str | None = None
+    raw_last_run_version = raw.get("last_run_version")
+    if raw_last_run_version is not None:
+        if (
+            isinstance(raw_last_run_version, str)
+            and parse_version(raw_last_run_version) is not None
+        ):
+            last_run_version = raw_last_run_version
+        else:
+            invalid.append("last_run_version")
+
     config = Config(
         ffmpeg_path=ffmpeg_path,
         language=language,
@@ -191,6 +205,7 @@ def load_config(path: Path | None = None) -> tuple[Config, tuple[str, ...]]:
         hw_decode=hw_decode,
         check_updates=check_updates,
         updates_notice_seen=updates_notice_seen,
+        last_run_version=last_run_version,
     )
     return config, tuple(invalid)
 
@@ -218,6 +233,8 @@ def save_config(config: Config, path: Path | None = None) -> None:
     entries.append(("hw_decode", "true" if config.hw_decode else "false"))
     entries.append(("check_updates", "true" if config.check_updates else "false"))
     entries.append(("updates_notice_seen", "true" if config.updates_notice_seen else "false"))
+    if config.last_run_version is not None:
+        entries.append(("last_run_version", _toml_string(config.last_run_version)))
     payload = "".join(f"{key} = {value}\n" for key, value in entries)
 
     descriptor, temporary_name = tempfile.mkstemp(

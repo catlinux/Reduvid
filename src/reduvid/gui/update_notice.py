@@ -14,7 +14,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import platformdirs
-from PySide6.QtCore import QProcess, Qt, QThread, QUrl, Signal, Slot
+from PySide6.QtCore import QProcess, Qt, QThread, QTimer, QUrl, Signal, Slot
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QApplication,
@@ -35,6 +35,7 @@ from reduvid.core.updates import (
     UpdateInfo,
     install_kind,
     launch_windows_installer,
+    parse_version,
     replace_appimage,
 )
 from reduvid.gui.workers import (
@@ -45,6 +46,7 @@ from reduvid.gui.workers import (
 from reduvid.i18n import _
 
 _UPDATE_DOWNLOAD_DIR = "updates"
+_INSTALL_CLOSE_DELAY_MS = 2500
 
 
 class UpdateIntroDialog(QDialog):
@@ -114,6 +116,7 @@ class UpdateNotice(QWidget):
         )
         self._opener_stream = opener_stream
         self._info: UpdateInfo | None = None
+        self._updated_version: str | None = None
         self._kind: InstallKind = "source"
         self._queue_running = False
         self._started = False
@@ -181,6 +184,12 @@ class UpdateNotice(QWidget):
         self.restart_later_button.setAccessibleName(_("Later"))
         self.restart_later_button.clicked.connect(self._later)
         row.addWidget(self.restart_later_button)
+
+        self.got_it_button = QPushButton(_("Got it"), self)
+        self.got_it_button.setObjectName("updateGotIt")
+        self.got_it_button.setAccessibleName(_("Got it"))
+        self.got_it_button.clicked.connect(self._dismiss_updated)
+        row.addWidget(self.got_it_button)
         layout.addLayout(row)
 
         self.notes_label = QLabel(self)
@@ -215,6 +224,7 @@ class UpdateNotice(QWidget):
         self.cancel_button.hide()
         self.restart_button.hide()
         self.restart_later_button.hide()
+        self.got_it_button.hide()
 
     def set_config(self, config: Config) -> None:
         """Use *config* for later checks and notices."""
@@ -241,10 +251,52 @@ class UpdateNotice(QWidget):
         if opener_stream is not None:
             self._opener_stream = opener_stream
 
+        previous_version = self._config.last_run_version
+        self._config = replace(self._config, last_run_version=__version__)
+        with suppress(OSError):
+            save_config(self._config)
+        if previous_version is not None:
+            previous = parse_version(previous_version)
+            current = parse_version(__version__)
+            if previous is not None and current is not None and previous < current:
+                self._show_updated(__version__)
+        self.config_changed.emit(self._config)
+
         if not self._config.updates_notice_seen:
             self._show_intro()
         if self._config.check_updates:
             self._start_check()
+
+    def _show_updated(self, version: str) -> None:
+        self._updated_version = version
+        self.message_label.setText(
+            _("Reduvid was updated to version {version}.").format(version=version)
+        )
+        for button in (
+            self.whats_new_button,
+            self.install_button,
+            self.on_close_button,
+            self.later_button,
+            self.page_button,
+            self.restart_button,
+            self.restart_later_button,
+        ):
+            button.hide()
+        self.got_it_button.show()
+        self.notes_label.hide()
+        self.error_label.hide()
+        self.progress_bar.hide()
+        self.cancel_button.hide()
+        if not self._queue_is_running():
+            self.show()
+
+    def _dismiss_updated(self) -> None:
+        self._updated_version = None
+        self.got_it_button.hide()
+        if self._info is not None:
+            self.show_info(self._info)
+        else:
+            self.hide()
 
     def check_now(self) -> None:
         """Start a check if updates are enabled and the first-run notice is done."""
@@ -289,11 +341,19 @@ class UpdateNotice(QWidget):
         self._check_thread = None
 
     def show_info(self, info: UpdateInfo) -> None:
-        """Show the banner for *info*, unless a conversion is running."""
+        """Show the banner for *info*, unless an update notice has priority."""
         self._info = info
         self._kind = install_kind()
-        self.message_label.setText(_("Reduvid {version} is available").format(version=info.version))
-        self.notes_label.setText(info.notes or _("No release notes."))
+        if self._updated_version is None:
+            self._display_available()
+
+    def _display_available(self) -> None:
+        if self._info is None:
+            return
+        self.message_label.setText(
+            _("Reduvid {version} is available").format(version=self._info.version)
+        )
+        self.notes_label.setText(self._info.notes or _("No release notes."))
         self.notes_label.hide()
         self.error_label.hide()
         self._show_actions()
@@ -303,9 +363,9 @@ class UpdateNotice(QWidget):
     def set_queue_running(self, running: bool) -> None:
         """Hide the banner during a conversion and show it again afterwards."""
         self._queue_running = running
-        if running:
+        if running or self._queue_is_running():
             self.hide()
-        elif self._info is not None and not self._queue_is_running():
+        elif self._updated_version is not None or self._info is not None:
             self.show()
 
     def _queue_is_running(self) -> bool:
@@ -321,6 +381,7 @@ class UpdateNotice(QWidget):
         self.page_button.setVisible(not install)
         self.later_button.setVisible(True)
         self.whats_new_button.setVisible(True)
+        self.got_it_button.hide()
         self.restart_button.hide()
         self.restart_later_button.hide()
         self.progress_bar.hide()
@@ -419,9 +480,8 @@ class UpdateNotice(QWidget):
                 self._show_error(getattr(error, "code", "install_failed"))
                 self._reset_actions()
                 return
-            application = QApplication.instance()
-            if application is not None:
-                application.quit()
+            self._show_installing()
+            QTimer.singleShot(_INSTALL_CLOSE_DELAY_MS, self._quit_after_install)
             return
 
         if self._kind == "appimage":
@@ -444,6 +504,35 @@ class UpdateNotice(QWidget):
             self.later_button.hide()
             self.restart_button.show()
             self.restart_later_button.show()
+
+    def _show_installing(self) -> None:
+        version = self._info.version if self._info is not None else ""
+        self.message_label.setText(
+            _("Installing Reduvid {version}… Reduvid will open again when it finishes.").format(
+                version=version
+            )
+        )
+        for button in (
+            self.whats_new_button,
+            self.install_button,
+            self.on_close_button,
+            self.later_button,
+            self.page_button,
+            self.restart_button,
+            self.restart_later_button,
+            self.got_it_button,
+        ):
+            button.hide()
+        self.notes_label.hide()
+        self.error_label.hide()
+        self.progress_bar.hide()
+        self.cancel_button.hide()
+        self.show()
+
+    def _quit_after_install(self) -> None:
+        application = QApplication.instance()
+        if application is not None:
+            application.quit()
 
     @Slot(str, str)
     def _download_failed(self, code: str, _detail: str) -> None:
