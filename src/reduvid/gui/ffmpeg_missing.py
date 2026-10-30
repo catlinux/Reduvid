@@ -137,6 +137,10 @@ class FFmpegMissingWidget(QWidget):
         self.ffmpeg_found.emit(info)
 
     def _show_details(self, path: Path | None) -> None:
-        text = describe_search(path)
+        try:
+            text = describe_search(path)
+        except OSError as error:
+            # This screen is the fallback: failing to explain must never stop the app.
+            text = f"search failed: {error!r}"
         title = _("Technical details")
         self.details_label.setText(f"{title}:{os.linesep}{text}")

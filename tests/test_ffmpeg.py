@@ -205,3 +205,55 @@ def test_scan_for_exe_finds_the_executable_without_pathext(tmp_path: Path) -> No
 
     assert found == tools / "ffmpeg.exe"
     assert ffmpeg._scan_for_exe("ffprobe", f"{other};{tools}", ";") is None
+
+
+def _untrusted_link(monkeypatch: pytest.MonkeyPatch, link: Path, target_text: str) -> None:
+    """Make *link* behave like winget's link under Windows' redirection trust (WinError 448)."""
+    real_is_file = Path.is_file
+
+    def is_file(self: Path) -> bool:
+        if self == link:
+            raise OSError(448, "untrusted mount point")
+        return real_is_file(self)
+
+    monkeypatch.setattr(Path, "is_file", is_file)
+    monkeypatch.setattr(Path, "readlink", lambda self: Path(target_text))
+
+
+def test_existing_file_uses_the_target_of_a_link_it_cannot_follow(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    target = tmp_path / "real" / "ffmpeg.exe"
+    target.parent.mkdir()
+    target.write_text("")
+    link = tmp_path / "Links" / "ffmpeg.exe"
+    _untrusted_link(monkeypatch, link, "\\\\?\\" + str(target))
+
+    assert ffmpeg._existing_file(link) == target
+
+
+def test_existing_file_gives_up_quietly_when_the_link_cannot_be_read(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    link = tmp_path / "ffmpeg.exe"
+    _untrusted_link(monkeypatch, link, str(tmp_path / "missing.exe"))
+
+    assert ffmpeg._existing_file(link) is None
+
+    def unreadable(_self: Path) -> Path:
+        raise OSError(448, "untrusted mount point")
+
+    monkeypatch.setattr(Path, "readlink", unreadable)
+    assert ffmpeg._existing_file(link) is None
+
+
+def test_scan_for_exe_follows_an_untrusted_link_to_its_target(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    target = tmp_path / "real" / "ffmpeg.exe"
+    target.parent.mkdir()
+    target.write_text("")
+    links = tmp_path / "Links"
+    _untrusted_link(monkeypatch, links / "ffmpeg.exe", str(target))
+
+    assert ffmpeg._scan_for_exe("ffmpeg", str(links), ";") == target

@@ -6,6 +6,12 @@ Todos los cambios relevantes de Reduvid se documentan aquí. El formato sigue [K
 
 ## [Sin publicar]
 
+## [0.9.3] - 2026-10-31
+
+### Corregido
+
+- **Reduvid se cerraba al arrancar tras actualizarse** (y antes decía que no encontraba FFmpeg) cuando lo abría el instalador. Causa real: la app que abre el instalador hereda la protección de redirección de Windows, que impide recorrer el enlace que winget crea en `WinGet\Links` (`WinError 448`, punto de montaje no confiable), tanto para comprobarlo como para ejecutarlo. Ahora, si no se puede recorrer, se lee el enlace (sin recorrerlo) y se usa el FFmpeg al que apunta. La pantalla de «FFmpeg no encontrado» tampoco puede ya tumbar la aplicación.
+
 ## [0.9.2] - 2026-10-30
 
 ### Añadido

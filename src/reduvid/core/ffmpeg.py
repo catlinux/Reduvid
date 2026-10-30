@@ -45,9 +45,32 @@ class FFmpegInfo:
         return "tonemap" in self.filters
 
 
+def _existing_file(path: Path) -> Path | None:
+    """Return *path* if it is a file; for a link Windows refuses to follow, its target.
+
+    The app that the installer starts inherits "redirection trust", and then every
+    access to the link winget creates in WinGet/Links fails with WinError 448, both
+    to check it and to run it. Reading the link does not follow it, so its target
+    can still be used.
+    """
+    try:
+        return path if path.is_file() else None
+    except OSError:
+        pass
+    try:
+        target = Path(str(path.readlink()).removeprefix("\\\\?\\"))
+        if not target.is_absolute():
+            target = path.parent / target
+        return target if target.is_file() else None
+    except OSError:
+        return None
+
+
 def _find_executable(name: str, configured_path: Path | None) -> Path | None:
-    if configured_path is not None and configured_path.is_file():
-        return configured_path
+    if configured_path is not None:
+        configured = _existing_file(configured_path)
+        if configured is not None:
+            return configured
     executable = shutil.which(name)
     if executable is not None:
         return Path(executable)
@@ -65,9 +88,9 @@ def _scan_for_exe(name: str, path_value: str, separator: str) -> Path | None:
         directory = os.path.expandvars(entry.strip().strip('"'))
         if not directory:
             continue
-        candidate = Path(directory) / f"{name}.exe"
-        if candidate.is_file():
-            return candidate
+        found = _existing_file(Path(directory) / f"{name}.exe")
+        if found is not None:
+            return found
     return None
 
 

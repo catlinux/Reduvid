@@ -6,6 +6,12 @@ All notable changes to Reduvid are documented here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-10-31
+
+### Fixed
+
+- **Reduvid closed at start-up after an update** (and before that reported FFmpeg as missing) when the installer opened it. Actual cause: the app the installer opens inherits Windows' redirection protection, which stops it from traversing the link winget creates in `WinGet\Links` (`WinError 448`, untrusted mount point), both to check it and to run it. Now, when it cannot be traversed, the link is read (without following it) and the FFmpeg it points to is used. The "FFmpeg not found" screen can no longer bring the application down either.
+
 ## [0.9.2] - 2026-10-30
 
 ### Added

@@ -109,3 +109,16 @@ def test_choosing_a_path_saves_it_in_the_configuration(
     assert invalid == ()
     assert loaded.ffmpeg_path == executable
     assert widget.status_label.text()
+
+
+def test_missing_screen_survives_a_search_that_raises(
+    monkeypatch: pytest.MonkeyPatch, qapp
+) -> None:
+    def explode(_path: Path | None) -> str:
+        raise OSError(448, "untrusted mount point")
+
+    monkeypatch.setattr("reduvid.gui.ffmpeg_missing.describe_search", explode)
+
+    widget = FFmpegMissingWidget(Config())
+
+    assert "search failed" in widget.details_label.text()
